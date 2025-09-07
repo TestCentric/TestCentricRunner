@@ -5,7 +5,9 @@
 
 namespace TestCentric.Gui.Presenters.NUnitGrouping
 {
+    using System.Collections.Generic;
     using TestCentric.Gui.Model;
+    using TestCentric.Gui.Model.Filter;
 
     /// <summary>
     /// A specialist TestGroup class which provides the associated TestNode within the NUnit tree
@@ -25,5 +27,29 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         }
 
         public TestNode AssociatedTestNode { get; set; }
+
+        public override TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
+        {
+            TestFilterBuilder builder = new TestFilterBuilder(guiFilter);
+
+            foreach (TestNode test in GetNonExplicitTests())
+                builder.AddSelectedTest(test);
+
+            // Special case in which no filter can be composed and a fallback to individual IDs must be applied
+            builder.AllTestCaseProvider = GetNonExplicitTests;
+            return builder.Build();
+        }
+
+        protected IList<TestNode> GetNonExplicitTests()
+        {
+            IList<TestNode> result = new List<TestNode>();
+
+            foreach (TestNode test in this)
+                if (test.RunState != RunState.Explicit &&
+                    (test.Parent.RunState != RunState.Explicit || test.Parent == AssociatedTestNode))
+                    result.Add(test);
+
+            return result;
+        }
     }
 }

@@ -16,12 +16,5 @@ namespace TestCentric.Gui.Model
         /// The name of this item
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Get a TestFilter for use in selecting this item
-        /// to be run by the engine.
-        /// </summary>
-        /// <returns></returns>
-        TestFilter GetTestFilter();
     }
 }

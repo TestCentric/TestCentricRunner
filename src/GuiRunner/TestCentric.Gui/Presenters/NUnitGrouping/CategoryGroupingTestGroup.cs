@@ -6,6 +6,7 @@
 namespace TestCentric.Gui.Presenters.NUnitGrouping
 {
     using TestCentric.Gui.Model;
+    using TestCentric.Gui.Model.Filter;
 
     /// <summary>
     /// A specialist TestGroup class which provides the Category for the TestFilter
@@ -20,5 +21,16 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         }
 
         public string Category { get; set; }
+
+        public override TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
+        {
+            TestFilterBuilder builder = new TestFilterBuilder(guiFilter);
+            builder.AddCategory(Category);
+            builder.AddSelectedTest(AssociatedTestNode);
+
+            // Special case in which no filter can be composed and a fallback to individual IDs must be applied
+            builder.AllTestCaseProvider = GetNonExplicitTests;
+            return builder.Build();
+        }
     }
 }

@@ -45,6 +45,9 @@ namespace TestCentric.Gui.Model
 
         public static TestFilter MakeIdFilter(TestNode test)
         {
+            if (test.Type == "TestRun")
+                return TestFilter.Empty;
+
             return new TestFilter($"<filter><id>{test.Id}</id></filter>");
         }
 
@@ -61,6 +64,14 @@ namespace TestCentric.Gui.Model
             sb.Append("</or></filter>");
 
             return new TestFilter(sb.ToString());
+        }
+
+        /// <summary>
+        /// Creates a category filter matching all tests without any defined category 
+        /// </summary>
+        public static TestFilter MakeEmptyCategoryFilter()
+        {
+            return new TestFilter("<filter><not><cat re=\"1\">.+</cat></not></filter>");
         }
 
         public static TestFilter MakeCategoryFilter(IList<string> categories)
@@ -82,40 +93,11 @@ namespace TestCentric.Gui.Model
         }
 
         /// <summary>
-        /// Creates a TestFilter which contains the IDs of all visible child nodes
+        /// Creates a test name filter using a regular expression to match 'text' at any location
         /// </summary>
-        public static TestFilter MakeVisibleIdFilter(IEnumerable<TestNode> testNodes)
+        public static TestFilter MakeTestFilter(string text)
         {
-            StringBuilder sb = new StringBuilder("<filter><or>");
-
-            foreach (TestNode test in testNodes)
-                MakeVisibleIdFilter(test, sb, t => testNodes.Contains(t));
-
-            sb.Append("</or></filter>");
-
-            return new TestFilter(sb.ToString());
-        }
-
-        private static void MakeVisibleIdFilter(TestNode testNode, StringBuilder sb, Func<TestNode, bool> isTestNodeSelected)
-        {
-            // If testNode is not visible, don't add it or any child to filter
-            if (!testNode.IsVisible)
-                return;
-
-            // Add only Id for leaf nodes
-            if (!testNode.IsProject && !testNode.IsSuite && IsExplicitTestSelected(testNode, isTestNodeSelected) && testNode.Children.Count == 0)
-                sb.Append($"<id>{testNode.Id}</id>");
-
-            foreach (TestNode childNode in testNode.Children)
-                MakeVisibleIdFilter(childNode, sb, isTestNodeSelected);
-        }
-
-        private static bool IsExplicitTestSelected(TestNode testNode, Func<TestNode, bool> isTestNodeSelected)
-        {
-            if (testNode.RunState != RunState.Explicit)
-                return true;
-
-            return isTestNodeSelected(testNode);
+            return new TestFilter($"<filter><test re=\"1\">(.)*{text}(.)*</test></filter>");
         }
 
         public static TestFilter MakeNotFilter(TestFilter filter)
@@ -125,12 +107,35 @@ namespace TestCentric.Gui.Model
 
         public static TestFilter MakeAndFilter(params TestFilter[] filters)
         {
-            StringBuilder sb = new StringBuilder("<filter><and>");
+            var nonEmptyFilters = filters.Where(f => !f.IsEmpty).ToList();
+            if (nonEmptyFilters.Count == 0)
+                return Empty;
+            if (nonEmptyFilters.Count == 1)
+                return nonEmptyFilters.First();
 
-            foreach (var filter in filters)
+            StringBuilder sb = new StringBuilder("<filter><and>");
+            foreach (var filter in nonEmptyFilters)
                 sb.Append(filter.InnerXml);
 
             sb.Append("</and></filter>");
+
+            return new TestFilter(sb.ToString());
+        }
+
+        public static TestFilter MakeOrFilter(params TestFilter[] filters)
+        {
+            var nonEmptyFilters = filters.Where(f => !f.IsEmpty).ToList();
+
+            if (nonEmptyFilters.Count == 0)
+                return Empty;
+            if (nonEmptyFilters.Count == 1)
+                return nonEmptyFilters.First();
+
+            StringBuilder sb = new StringBuilder("<filter><or>");
+            foreach (var filter in nonEmptyFilters)
+                sb.Append(filter.InnerXml);
+
+            sb.Append("</or></filter>");
 
             return new TestFilter(sb.ToString());
         }

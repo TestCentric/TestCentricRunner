@@ -10,6 +10,8 @@ using NUnit.Framework;
 namespace TestCentric.Gui.Presenters
 {
     using Model;
+    using NSubstitute;
+    using TestCentric.Gui.Model.Filter;
     using TestCentric.Gui.Views;
 
     public class TestGroupTests
@@ -40,7 +42,8 @@ namespace TestCentric.Gui.Presenters
         [Test]
         public void TestTestFilter()
         {
-            var filter = XmlHelper.CreateXmlNode(_group.GetTestFilter().XmlText);
+            ITestCentricTestFilter guiFilter = Substitute.For<ITestCentricTestFilter>();
+            var filter = XmlHelper.CreateXmlNode(_group.GetTestFilter(guiFilter).XmlText);
             Assert.That(filter.Name, Is.EqualTo("filter"));
             Assert.That(filter.ChildNodes.Count, Is.EqualTo(1));
 

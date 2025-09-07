@@ -269,6 +269,7 @@ namespace TestCentric.Gui.Presenters
                 foreach (var node in checkedNodes)
                     selection.Add(node.Tag as ITestItem);
                 
+                selection.AddExplicitChildTests();
                 _model.SelectedTests = selection;
             };
 

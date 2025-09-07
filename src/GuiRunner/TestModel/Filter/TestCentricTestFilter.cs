@@ -55,7 +55,12 @@ namespace TestCentric.Gui.Model.Filter
             }
         }
 
-        public bool IsActive => _filters.Any(x => x.IsActive);
+        public bool IsActive => IsNUnitTree && _filters.Any(x => x.IsActive);
+
+        /// <summary>
+        /// Filtering is not supported yet for category list or test list tree view 
+        /// </summary>
+        private bool IsNUnitTree => TestModel.Settings == null || TestModel.Settings.Gui.TestTree.DisplayFormat == "NUNIT_TREE";
 
         public void ResetAll(bool suppressFilterChangedEvent = false)
         {

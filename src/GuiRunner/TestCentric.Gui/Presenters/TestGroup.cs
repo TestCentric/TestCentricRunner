@@ -10,6 +10,7 @@ namespace TestCentric.Gui.Presenters
 {
     using System;
     using Model;
+    using TestCentric.Gui.Model.Filter;
 
     /// <summary>
     /// A TestGroup is essentially a TestSelection with a
@@ -44,17 +45,15 @@ namespace TestCentric.Gui.Presenters
 
         #endregion
 
-        public override TestFilter GetTestFilter()
+        public override TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
         {
-            StringBuilder sb = new StringBuilder("<filter><or>");
+            TestFilterBuilder builder = new TestFilterBuilder(guiFilter);
 
             foreach (TestNode test in this)
                 if (test.RunState != RunState.Explicit)
-                    sb.AppendFormat("<id>{0}</id>", test.Id);
+                    builder.AddSelectedTest(test);
 
-            sb.Append("</or></filter>");
-
-            return new TestFilter(sb.ToString());
+            return builder.Build();
         }
 
         /// <summary>

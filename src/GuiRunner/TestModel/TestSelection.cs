@@ -10,6 +10,8 @@ using System.Linq;
 
 namespace TestCentric.Gui.Model
 {
+    using TestCentric.Gui.Model.Filter;
+
     /// <summary>
     /// TestSelection is a collection of TestNodes, implementing
     /// the ITestItem interface so that the entire selection
@@ -31,14 +33,21 @@ namespace TestCentric.Gui.Model
 
         public virtual string Name { get { return GetType().Name; } }
 
-        public virtual TestFilter GetTestFilter()
+        public virtual TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
         {
-            return _nodes.Count == 1
-                ? this.First().GetTestFilter() // This allows nodes with special handling for filters to apply it.
-                : TestFilter.MakeIdFilter(this);
+            TestFilterBuilder builder = new TestFilterBuilder(guiFilter);
+
+            var nodes = IsProjectNode ? _nodes.First().Children : _nodes.ToList();
+
+            foreach (TestNode node in nodes)
+                builder.AddSelectedTest(node);
+
+            return builder.Build();
         }
 
-        // <summary>
+        private bool IsProjectNode => _nodes.Count == 1 && _nodes.First().IsSuite && _nodes.First().Type == "Project";
+
+        /// <summary>
         /// Remove the test node with a specific id from the selection
         /// </summary>
         /// <param name="id"></param>
@@ -82,6 +91,33 @@ namespace TestCentric.Gui.Model
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void AddExplicitChildTests()
+        {
+            List<TestNode> nodes = GetExplicitChildNodes();
+            foreach (TestNode testNode in nodes)
+                Add(testNode);
+        }
+
+        public List<TestNode> GetExplicitChildNodes()
+        {
+            List<TestNode> explicitChildTests = new List<TestNode>();
+
+            foreach (TestNode testNode in this)
+                foreach (TestNode child in testNode.Children)
+                    AddExplicitTests(child, explicitChildTests);
+
+            return explicitChildTests;
+        }
+
+        private static void AddExplicitTests(TestNode testNode, IList<TestNode> result)
+        {
+            if (testNode.RunState == RunState.Explicit)
+                result.Add(testNode);
+
+            foreach (TestNode testNodeChild in testNode.Children)
+                AddExplicitTests(testNodeChild, result);
         }
     }
 }

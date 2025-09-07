@@ -823,15 +823,9 @@ namespace TestCentric.Gui.Model
             if (_lastTestRun == null)
                 throw new InvalidOperationException("Field '_lastTestRun' is null");
 
-            // Create a test filter incorporating both the
-            // selected tests and the category filter.
-            var filter = runSpec.SelectedTests.GetTestFilter();
-            if (!runSpec.CategoryFilter.IsEmpty)
-                filter = TestFilter.MakeAndFilter(filter, runSpec.CategoryFilter);
-
-            // If a filter is active in the UI, a TestFilter must be created accordingly that contains the ID all visible children of the selected nodes.
-            if (Settings.Gui.TestTree.DisplayFormat == "NUNIT_TREE" && TestCentricTestFilter.IsActive)
-                filter = TestFilter.MakeVisibleIdFilter(runSpec.SelectedTests);
+            // Create a test filter incorporating the selected tests, the tree grouping
+            // and the UI tree filter (category, outcome or duration)
+            TestFilter filter = runSpec.SelectedTests.GetTestFilter(TestCentricTestFilter);
 
             // We need to re-create the test runner because settings such
             // as debugging have already been passed to the test runner.

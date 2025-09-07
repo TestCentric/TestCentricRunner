@@ -55,15 +55,6 @@ namespace TestCentric.Gui.Model
 
         public string Name => Xml.GetAttribute("name");
 
-        public TestFilter GetTestFilter()
-        {
-            return Xml.Name == "test-run"
-                ? TestFilter.Empty
-                : IsSuite && Type == "Project"
-                    ? TestFilter.MakeIdFilter(Children)
-                    : TestFilter.MakeIdFilter(this);
-        }
-
         #endregion
 
         #region Additonal Public Properties

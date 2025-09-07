@@ -12,228 +12,214 @@ namespace TestCentric.Gui.Model
     internal class TestFilterTests
     {
         [Test]
-        public void MakeVisibleIdFilter_NoSelectedNodes_ReturnsFilter()
+        public void MakeIdFilter_TestRunNode_ReturnsEmptyFilter()
         {
             // Arrange
-            var testNodes = new List<TestNode>();
+            var testNode = new TestNode("<test-run type='TestRun' />");
 
             // Act
-            TestFilter filter = TestFilter.MakeVisibleIdFilter(testNodes);
+            TestFilter filter = TestFilter.MakeIdFilter(testNode);
 
             // Assert
-            Assert.That(filter.XmlText, Is.EqualTo("<filter><or></or></filter>"));
+            Assert.That(filter.IsEmpty, Is.True);
         }
 
         [Test]
-        public void MakeVisibleIdFilter_AllTestNodesVisible_ReturnsFilter()
+        public void MakeIdFilter_Testcase_ReturnsIdFilter()
         {
             // Arrange
-            var testNodes = new List<TestNode>()
-            {
-                new TestNode("<test-case id='1' />"),
-                new TestNode("<test-case id='2' />"),
-            };
+            var testNode = new TestNode("<test-case id='1' />");
 
             // Act
-            TestFilter filter = TestFilter.MakeVisibleIdFilter(testNodes);
+            TestFilter filter = TestFilter.MakeIdFilter(testNode);
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><id>1</id></filter>"));
+        }
+
+        [Test]
+        public void MakeIdFilter_TestFixture_ReturnsIdFilter()
+        {
+            // Arrange
+            var testNode = new TestNode("<test-suite type='TestFixture' id='100' />");
+
+            // Act
+            TestFilter filter = TestFilter.MakeIdFilter(testNode);
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><id>100</id></filter>"));
+        }
+
+        [Test]
+        public void MakeIdFilter_TestSelection_SingleTestRunNode_ReturnsEmptyFilter()
+        {
+            // Arrange
+            var testNode = new TestNode("<test-run type='TestRun' />");
+            var testSelection = new TestSelection(new[] { testNode });
+
+            // Act
+            TestFilter filter = TestFilter.MakeIdFilter(testSelection);
+
+            // Assert
+            Assert.That(filter.IsEmpty, Is.True);
+        }
+
+        [Test]
+        public void MakeIdFilter_TestSelection_SingleTestcase_ReturnsIdFilter()
+        {
+            // Arrange
+            var testNode = new TestNode("<test-case id='1' />");
+            var testSelection = new TestSelection(new[] { testNode });
+
+            // Act
+            TestFilter filter = TestFilter.MakeIdFilter(testSelection);
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><id>1</id></filter>"));
+        }
+
+        [Test]
+        public void MakeIdFilter_TestSelection_MultipleTests_ReturnsIdFilter()
+        {
+            // Arrange
+            var testNode1 = new TestNode("<test-case id='1' />");
+            var testNode2 = new TestNode("<test-suite type='TestFixture' id='100' />");
+
+            var testSelection = new TestSelection(new[] { testNode1, testNode2 });
+
+            // Act
+            TestFilter filter = TestFilter.MakeIdFilter(testSelection);
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><or><id>1</id><id>100</id></or></filter>"));
+        }
+
+        [Test]
+        public void MakeCategoryFilter_SingleCategory_ReturnsCategoryFilter()
+        {
+            // Arrange
+            // Act
+            TestFilter filter = TestFilter.MakeCategoryFilter(new[] { "CategoryA" });
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><cat>CategoryA</cat></filter>"));
+        }
+
+        [Test]
+        public void MakeCategoryFilter_MultipleCategory_ReturnsCategoryFilter()
+        {
+            // Arrange
+            // Act
+            TestFilter filter = TestFilter.MakeCategoryFilter(new[] { "CategoryA", "CategoryB" });
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><or><cat>CategoryA</cat><cat>CategoryB</cat></or></filter>"));
+        }
+
+        [Test]
+        public void MakeAndFilter_OfOneEmptyFilter_ReturnsEmptyFilter()
+        {
+            // Arrange
+            // Act
+            TestFilter filter = TestFilter.MakeAndFilter(TestFilter.Empty);
+
+            // Assert
+            Assert.That(filter.IsEmpty, Is.True);
+        }
+
+        [Test]
+        public void MakeAndFilter_OfTwoEmptyFilters_ReturnsEmptyFilter()
+        {
+            // Arrange
+            // Act
+            TestFilter filter = TestFilter.MakeAndFilter(TestFilter.Empty, TestFilter.Empty);
+
+            // Assert
+            Assert.That(filter.IsEmpty, Is.True);
+        }
+
+        [Test]
+        public void MakeAndFilter_OfFilters_ReturnsAndFilter()
+        {
+            // Arrange
+            var testNode = new TestNode("<test-case id='1' />");
+            var filter1 = TestFilter.MakeIdFilter(testNode);
+
+            // Act
+            TestFilter filter = TestFilter.MakeAndFilter(TestFilter.Empty, filter1);
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><id>1</id></filter>"));
+        }
+
+        [Test]
+        public void MakeAndFilter_OfFilters2_ReturnsAndFilter()
+        {
+            // Arrange
+            var testNode1 = new TestNode("<test-case id='1' />");
+            var filter1 = TestFilter.MakeIdFilter(testNode1);
+
+            var testNode2 = new TestNode("<test-case id='2' />");
+            var filter2 = TestFilter.MakeIdFilter(testNode2);
+
+            // Act
+            TestFilter filter = TestFilter.MakeAndFilter(filter1, filter2);
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><and><id>1</id><id>2</id></and></filter>"));
+        }
+
+        [Test]
+        public void MakeOrFilter_OfOneEmptyFilter_ReturnsEmptyFilter()
+        {
+            // Arrange
+            // Act
+            TestFilter filter = TestFilter.MakeOrFilter(TestFilter.Empty);
+
+            // Assert
+            Assert.That(filter.IsEmpty, Is.True);
+        }
+
+        [Test]
+        public void MakeOrFilter_OfTwoEmptyFilters_ReturnsEmptyFilter()
+        {
+            // Arrange
+            // Act
+            TestFilter filter = TestFilter.MakeOrFilter(TestFilter.Empty, TestFilter.Empty);
+
+            // Assert
+            Assert.That(filter.IsEmpty, Is.True);
+        }
+
+        [Test]
+        public void MakeOrFilter_OfFilters_ReturnsOrFilter()
+        {
+            // Arrange
+            var testNode = new TestNode("<test-case id='1' />");
+            var filter1 = TestFilter.MakeIdFilter(testNode);
+
+            // Act
+            TestFilter filter = TestFilter.MakeOrFilter(TestFilter.Empty, filter1);
+
+            // Assert
+            Assert.That(filter.XmlText, Is.EqualTo("<filter><id>1</id></filter>"));
+        }
+
+        [Test]
+        public void MakeOrFilter_OfFilters2_ReturnsAndFilter()
+        {
+            // Arrange
+            var testNode1 = new TestNode("<test-case id='1' />");
+            var filter1 = TestFilter.MakeIdFilter(testNode1);
+
+            var testNode2 = new TestNode("<test-case id='2' />");
+            var filter2 = TestFilter.MakeIdFilter(testNode2);
+
+            // Act
+            TestFilter filter = TestFilter.MakeOrFilter(filter1, filter2);
 
             // Assert
             Assert.That(filter.XmlText, Is.EqualTo("<filter><or><id>1</id><id>2</id></or></filter>"));
-        }
-
-        [Test]
-        public void MakeVisibleIdFilter_TestNodesNotVisible_ReturnsFilter()
-        {
-            // Arrange
-            var testNodes = new List<TestNode>()
-            {
-                new TestNode("<test-case id='1' />") { IsVisible = false },
-                new TestNode("<test-case id='2' />") { IsVisible = true },
-            };
-
-            // Act
-            TestFilter filter = TestFilter.MakeVisibleIdFilter(testNodes);
-
-            // Assert
-            Assert.That(filter.XmlText, Is.EqualTo("<filter><or><id>2</id></or></filter>"));
-        }
-
-        private static object[] MakeVisibleIdFilter =
-{
-            new object[] { new[] { "3-1000", "3-1100", "3-1110", "3-1111" }, new[] { "3-1111" }, new[] { "3-1000", "3-1100", "3-1110", "3-1112" } },
-            new object[] { new[] { "3-1000", "3-1200", "3-1210", "3-1211", "3-1212" }, new[] { "3-1211", "3-1212" }, new[] { "3-1000", "3-1100", "3-1111", "3-1112", "3-1210" } },
-            new object[] { new[] { "3-1000", "3-1300", "3-1310", "3-1312", "3-1320", "3-1322" }, new[] { "3-1312", "3-1322" }, new[] { "3-1000", "3-1300", "3-1310", "3-1311", "3-1321" } },
-            new object[] { new[] { "3-1000", "3-1300", "3-1320", "3-1322" }, new[] { "3-1322" }, new[] { "3-1000", "3-1300", "3-1310", "3-1311", "3-1312", "3-1321" } },
-        };
-
-        [Test]
-        [TestCaseSource(nameof(MakeVisibleIdFilter))]
-        public void MakeVisibleIdFilter_TestNodesHierarchie_ReturnsFilter(IList<string> visibleNodeIds, IList<string> expectedIds, IList<string> expectedIdsNotInFilter)
-        {
-            // Arrange
-            TestNode testNode = new TestNode(
-                CreateTestSuiteXml("3-1000", 
-                    CreateTestSuiteXml("3-1100", 
-                        CreateTestFixtureXml("3-1110", 
-                            CreateTestcaseXml("3-1111"),
-                            CreateTestcaseXml("3-1112"))) +
-                    CreateTestSuiteXml("3-1200", 
-                        CreateTestFixtureXml("3-1210", 
-                            CreateTestcaseXml("3-1211"),
-                            CreateTestcaseXml("3-1212"))),
-                    CreateTestSuiteXml("3-1300", 
-                        CreateTestFixtureXml("3-1310", 
-                            CreateTestcaseXml("3-1311"),
-                            CreateTestcaseXml("3-1312")) +
-                        CreateTestFixtureXml("3-1320",
-                            CreateTestcaseXml("3-1321"),
-                            CreateTestcaseXml("3-1322")))));
-
-            SetVisibleNodes(testNode, visibleNodeIds);
-
-            // Act
-            TestFilter filter = TestFilter.MakeVisibleIdFilter(new[] { testNode });
-
-            // Assert
-            string xmlText = filter.XmlText;
-
-            foreach (string id in expectedIds)
-                Assert.That(xmlText, Does.Contain($"<id>{id}</id>"));
-
-            foreach (string id in expectedIdsNotInFilter)
-                Assert.That(xmlText, Does.Not.Contain($"{id}"));
-        }
-
-        private static object[] MakeVisibleIdFilter2 =
-{
-            new object[] { new[] { "3-1000", "3-1100", "3-1110", "3-1111", "3-1112" }, new[] { "3-1112" }, new[] { "3-1000", "3-1100", "3-1110" } },
-            new object[] { new[] { "3-1000", "3-1200", "3-1210", "3-1211", "3-1212" }, new List<string>(), new[] { "3-1000", "3-1100", "3-1111", "3-1112", "3-1210", "3-1211", "3-1212" } },
-        };
-
-        [Test]
-        [TestCaseSource(nameof(MakeVisibleIdFilter2))]
-        public void MakeVisibleIdFilter_WithExplicitTests_ReturnsFilter(IList<string> visibleNodeIds, IList<string> expectedIds, IList<string> expectedIdsNotInFilter)
-        {
-            // Arrange
-            TestNode testNode = new TestNode(
-                CreateTestSuiteXml("3-1000",
-                    CreateTestSuiteXml("3-1100",
-                        CreateTestFixtureXml("3-1110",
-                            CreateTestcaseXmlWithRunState("3-1111", "Explicit"),
-                            CreateTestcaseXml("3-1112"))) +
-                    CreateTestSuiteXml("3-1200",
-                        CreateTestFixtureXml("3-1210",
-                            CreateTestcaseXmlWithRunState("3-1211", "Explicit"),
-                            CreateTestcaseXmlWithRunState("3-1212", "Explicit")))));
-
-            SetVisibleNodes(testNode, visibleNodeIds);
-
-            // Act
-            TestFilter filter = TestFilter.MakeVisibleIdFilter(new[] { testNode });
-
-            // Assert
-            string xmlText = filter.XmlText;
-
-            foreach (string id in expectedIds)
-                Assert.That(xmlText, Does.Contain($"<id>{id}</id>"));
-
-            foreach (string id in expectedIdsNotInFilter)
-                Assert.That(xmlText, Does.Not.Contain($"{id}"));
-        }
-
-        [Test]
-        public void MakeVisibleIdFilter_TestFixture_WithExplicitTests_ReturnsFilter()
-        {
-            // Arrange
-            TestNode testNode1 = new TestNode(
-                        CreateTestFixtureXml("3-1000",
-                            CreateTestcaseXmlWithRunState("3-1001", "Explicit"),
-                            CreateTestcaseXml("3-1002")));
-
-            TestNode testNode2 = new TestNode(
-                        CreateTestFixtureXml("3-2000",
-                            CreateTestcaseXmlWithRunState("3-2001", "Explicit"),
-                            CreateTestcaseXml("3-2002")));
-
-            SetVisibleNodes(testNode1, new[] { "3-1000", "3-1001", "3-1002", "3-2000", "3-2001", "3-2002" });
-
-            // Act
-            TestFilter filter = TestFilter.MakeVisibleIdFilter(new[] { testNode1, testNode2 });
-
-            // Assert
-            string xmlText = filter.XmlText;
-
-            var expectedIds = new[] { "3-1002", "3-2002" };
-            foreach (string id in expectedIds)
-                Assert.That(xmlText, Does.Contain($"<id>{id}</id>"));
-
-            var expectedIdsNotInFilter = new[] { "3-1001", "3-2001"};
-            foreach (string id in expectedIdsNotInFilter)
-                Assert.That(xmlText, Does.Not.Contain($"{id}"));
-        }
-
-        [Test]
-        public void MakeVisibleIdFilter_TestCases_WithExplicitTests_ReturnsFilter()
-        {
-            // Arrange
-            TestNode testNode1 = new TestNode(CreateTestcaseXmlWithRunState("3-1000", "Explicit"));
-            TestNode testNode2 = new TestNode(CreateTestcaseXmlWithRunState("3-1001", "Explicit"));
-            TestNode testNode3 = new TestNode(CreateTestcaseXmlWithRunState("3-1002", "Runnable"));
-
-            SetVisibleNodes(testNode1, new[] { "3-1000", "3-1001", "3-1002" });
-
-            // Act
-            TestFilter filter = TestFilter.MakeVisibleIdFilter(new[] { testNode1, testNode2, testNode3 });
-
-            // Assert
-            string xmlText = filter.XmlText;
-
-            var expectedIds = new[] { "3-1000", "3-1001", "3-1002" };
-            foreach (string id in expectedIds)
-                Assert.That(xmlText, Does.Contain($"<id>{id}</id>"));
-        }
-
-        private void SetVisibleNodes(TestNode testNode, IList<string> visibleNodeIds)
-        {
-            testNode.IsVisible = visibleNodeIds.Contains(testNode.Id);
-
-            foreach(TestNode childNode in testNode.Children)
-                SetVisibleNodes(childNode, visibleNodeIds);
-        }
-
-        private string CreateTestcaseXml(string testId)
-        {
-            string str = $"<test-case id='{testId}' /> ";
-            return str;
-        }
-
-        private string CreateTestcaseXmlWithRunState(string testId, string runstate)
-        {
-            string str = $"<test-case id='{testId}' runstate='{runstate}' /> ";
-            return str;
-        }
-
-        private string CreateTestFixtureXml(string testId, params string[] testCases)
-        {
-            string str = $"<test-suite type='TestFixture' id='{testId}' > ";
-
-            foreach (string testCase in testCases)
-                str += testCase;
-
-            str += "</test-suite>";
-
-            return str;
-        }
-
-        private string CreateTestSuiteXml(string testId, params string[] testSuites)
-        {
-            string str = $"<test-suite type='TestSuite' id='{testId}' > ";
-            foreach (string testSuite in testSuites)
-                str += testSuite;
-
-            str += "</test-suite>";
-
-            return str;
         }
     }
 }
