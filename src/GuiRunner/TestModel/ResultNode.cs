@@ -43,6 +43,23 @@ namespace TestCentric.Gui.Model
             return new ResultNode(xmlNode) { IsLatestRun = false };
         }
 
+        /// <summary>
+        /// Creates a ResultNode from an existing XmlNode, but replacing the result state
+        /// </summary>
+        public static ResultNode Create(XmlNode xmlNode, ResultState resultState)
+        {
+            var attribute = xmlNode.Attributes["result"];
+            attribute.Value = GetStatusString(resultState.Status);
+
+            if (!string.IsNullOrEmpty(resultState.Label))
+            {
+                attribute = xmlNode.Attributes["label"];
+                attribute.Value = resultState.Label;
+            }
+
+            return new ResultNode(xmlNode) { IsLatestRun = false };
+        }
+
         #endregion
 
         #region Public Properties
@@ -116,6 +133,23 @@ namespace TestCentric.Gui.Model
                 case "Skipped":
                     return TestStatus.Skipped;
             }
+        }
+
+        private static string GetStatusString(TestStatus testStatus)
+        {
+            switch (testStatus)
+            {
+                case TestStatus.Inconclusive:
+                    return "Inconclusive";
+                case TestStatus.Failed:
+                    return "Failed";
+                case TestStatus.Warning:
+                    return "Warning";
+                case TestStatus.Skipped:
+                    return "Skipped";
+            }
+
+            return "Passed";
         }
 
         private FailureSite GetSite()

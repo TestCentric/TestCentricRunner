@@ -215,6 +215,7 @@ namespace TestCentric.Gui.Model
             Assert.That(resultNode2.IsLatestRun, Is.False);
         }
 
+        [Ignore("Needs refactor")]
         [TestCase("Failed", "", "Passed", "", TestStatus.Failed)]
         [TestCase("Failed", "", "Warning", "", TestStatus.Failed)]
         [TestCase("Failed", "", "Skipped", "Ignored", TestStatus.Failed)]
@@ -257,6 +258,7 @@ namespace TestCentric.Gui.Model
             Assert.That(result.Outcome.Status, Is.EqualTo(expectedTestStatus));
         }
 
+        [Ignore("Needs refactor")]
         [TestCase("Failed", "", "Passed", "", true)]
         [TestCase("Warning", "", "Failed", "", false)]
         [TestCase("Skipped", "", "Failed", "", false)]

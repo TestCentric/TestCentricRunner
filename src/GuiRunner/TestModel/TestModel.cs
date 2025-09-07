@@ -250,18 +250,21 @@ namespace TestCentric.Gui.Model
                 // Get list of testNodes only once
                 if (testNodes.Count == 0)
                 {
-                    GetTestNodes(SelectedTests);
+                    GetTestNodes(SelectedTests, SelectedTests.GetExplicitChildNodes());
                 }
 
                 return testNodes.Contains(testNode);
             }
 
-            private void GetTestNodes(IEnumerable<TestNode> selectedTests)
+            private void GetTestNodes(IEnumerable<TestNode> selectedTests, IList<TestNode> explicitTests)
             {
                 foreach (TestNode testNode in selectedTests)
                 {
+                    if (explicitTests.Contains(testNode))
+                        continue;
+
                     testNodes.Add(testNode);
-                    GetTestNodes(testNode.Children);
+                    GetTestNodes(testNode.Children, explicitTests);
                 }
             }
         }
@@ -611,10 +614,14 @@ namespace TestCentric.Gui.Model
         /// </summary>
         public ResultNode AddResult(ResultNode resultNode)
         {
-            if (resultNode.IsSuite &&
-                Results.TryGetValue(resultNode.Id, out ResultNode oldResult) &&
-                KeepOldResult(resultNode, oldResult))
-                resultNode = oldResult;
+            if (Results.TryGetValue(resultNode.Id, out ResultNode oldResult))
+            {
+                if (resultNode.Outcome.Equals(ResultState.Explicit))
+                    return oldResult;
+
+                if (resultNode.IsSuite && UpdateResultFromPreviousTestRun(resultNode, out ResultState newTestResult))
+                        resultNode = ResultNode.Create(resultNode.Xml, newTestResult);
+            }
 
             resultNode.IsLatestRun = true;
             Results[resultNode.Id] = resultNode;
@@ -622,11 +629,75 @@ namespace TestCentric.Gui.Model
             return resultNode;
         }
 
+        /// <summary>
+        /// If a TestNode was not executed entirely in the current test run
+        /// Some child TestNodes might contain TestResults from a previous test run
+        /// </summary>
+        private IList<ResultNode> GetPreviousTestRunResults(ResultNode resultNode)
+        {
+            var results = new List<ResultNode>();
+
+            TestNode node = GetTestById(resultNode.Id);
+            if (node == null) 
+                return results;
+
+            foreach (TestNode child in node.Children)
+            {
+                ResultNode childResult = GetResultForTest(child.Id);
+                if (childResult != null && !childResult.IsLatestRun)
+                    results.Add(childResult);
+            }
+
+            return results;
+        }
+
+        private bool UpdateResultFromPreviousTestRun(ResultNode testResult, out ResultState newResultState)
+        {
+            ResultState previousTestRunResult = GetPreviousTestRunResult(testResult);
+            bool updateTestResult = GetOutcome(previousTestRunResult) > GetOutcome(testResult.Outcome);
+            newResultState = updateTestResult ? previousTestRunResult : testResult.Outcome;
+            return updateTestResult;
+        }
+
+        private ResultState GetPreviousTestRunResult(ResultNode testResult)
+        {
+            IList<ResultNode> previousChildResults = GetPreviousTestRunResults(testResult);
+            if (!previousChildResults.Any())
+                return testResult.Outcome;
+
+            ResultState resultState = ResultState.Inconclusive;
+            foreach (ResultNode oldChildResult in previousChildResults)
+            {
+                if (GetOutcome(oldChildResult.Outcome) > GetOutcome(resultState))
+                    resultState = oldChildResult.Outcome;
+            }
+
+            return resultState;
+        }
+
         private bool KeepOldResult(ResultNode newResult, ResultNode oldResult)
         {
             int oldOutcome = GetOutcome(oldResult);
             int newOutcome = GetOutcome(newResult);
             return oldOutcome > newOutcome;
+        }
+
+        private int GetOutcome(ResultState resultState)
+        {
+            switch (resultState.Status)
+            {
+                case TestStatus.Inconclusive:
+                    return 1;
+                case TestStatus.Passed:
+                    return 2;
+                case TestStatus.Warning:
+                    return 4;
+                case TestStatus.Failed:
+                    return 5;
+                case TestStatus.Skipped:
+                default:
+                    return resultState.Label == "Ignored" ? 3 : 0;
+            }
         }
 
         private int GetOutcome(ResultNode resultNode)
