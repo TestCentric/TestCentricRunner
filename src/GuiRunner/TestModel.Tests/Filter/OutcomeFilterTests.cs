@@ -40,7 +40,7 @@ namespace TestCentric.Gui.Model.Filter
 
             TestNode testNode = new TestNode($"<test-case id='1' />");
             var resultNode = new ResultNode($"<test-case id='1' result='{testOutcome}' />");
-            testModel.GetResultForTest(testNode.Id).Returns(resultNode);
+            testModel.TestResultManager.GetResultForTest(testNode.Id).Returns(resultNode);
 
             // 2. Act
             bool isMatch = filter.IsMatching(testNode);
@@ -61,7 +61,7 @@ namespace TestCentric.Gui.Model.Filter
 
             TestNode testNode = new TestNode($"<test-case id='1' />");
             var resultNode = new ResultNode($"<test-case id='1' result='{testOutcome}' />");
-            testModel.GetResultForTest(testNode.Id).Returns(resultNode);
+            testModel.TestResultManager.GetResultForTest(testNode.Id).Returns(resultNode);
 
             // 2. Act
             bool isMatch = filter.IsMatching(testNode);
@@ -79,7 +79,7 @@ namespace TestCentric.Gui.Model.Filter
             filter.Condition = outcomeFilter;
 
             TestNode testNode = new TestNode($"<test-case id='1' />");
-            testModel.GetResultForTest(testNode.Id).Returns((ResultNode)null);
+            testModel.TestResultManager.GetResultForTest(testNode.Id).Returns((ResultNode)null);
 
             // 2. Act
             bool isMatch = filter.IsMatching(testNode);

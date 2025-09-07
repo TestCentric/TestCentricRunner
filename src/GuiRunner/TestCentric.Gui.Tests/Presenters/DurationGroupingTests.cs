@@ -79,7 +79,7 @@ namespace TestCentric.Gui.Presenters
             var testNode = new TestNode($"<test-case id='1' />");
             var tests = new List<TestNode> { testNode };
 
-            model.GetResultForTest("1").Returns(resultNode);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             // 2. Act
             DurationGrouping grouping = new DurationGrouping(strategy);
@@ -101,7 +101,7 @@ namespace TestCentric.Gui.Presenters
             var testNode = new TestNode($"<test-case id='1' />");
             var tests = new List<TestNode> { testNode };
 
-            model.GetResultForTest("1").Returns((ResultNode)null);
+            model.TestResultManager.GetResultForTest("1").Returns((ResultNode)null);
 
             // 2. Act
             DurationGrouping grouping = new DurationGrouping(strategy);
@@ -177,7 +177,7 @@ namespace TestCentric.Gui.Presenters
         private void CreateTestAndResultInGroup(TestGroup group, ITestModel model, string testId, string testResult)
         {
             group.Add(new TestNode($"<test-case id='{testId}' />"));
-            model.GetResultForTest(testId).Returns(CreateResultNode(testId, testResult));
+            model.TestResultManager.GetResultForTest(testId).Returns(CreateResultNode(testId, testResult));
         }
 
         private ResultNode CreateResultNode(string id, string result)

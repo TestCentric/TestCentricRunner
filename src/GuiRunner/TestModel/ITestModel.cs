@@ -157,9 +157,6 @@ namespace TestCentric.Gui.Model
         // Get a specific test given its id
         TestNode GetTestById(string id);
 
-        // Get the result for a specific test id if available
-        ResultNode GetResultForTest(string id);
-
         // Get the TestPackage represented by a test,if available
         TestPackage GetPackageForTest(string id);
         PackageSettings GetPackageSettingsForTest(string id);

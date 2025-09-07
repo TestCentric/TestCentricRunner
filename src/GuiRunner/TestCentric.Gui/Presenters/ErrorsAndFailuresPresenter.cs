@@ -76,7 +76,7 @@ namespace TestCentric.Gui.Presenters
             {
                 _selectedItem = e.TestItem;
                 var testNode = e.TestItem as TestNode;
-                _selectedResult = testNode == null ? null : _model.GetResultForTest(testNode.Id);
+                _selectedResult = testNode == null ? null : _model.TestResultManager.GetResultForTest(testNode.Id);
 
                 _view.Header = e.TestItem.Name;
                 UpdateDisplay();

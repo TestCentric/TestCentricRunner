@@ -220,9 +220,9 @@ namespace TestCentric.Gui.Presenters
                     "</test-suite>" +
                 "</test-suite>");
 
-            model.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(duration1) ? null : new ResultNode($"<test-case id='3-1000' duration='{duration1}' />"));
-            model.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(duration2) ? null : new ResultNode($"<test-case id='3-1001' duration='{duration2}' />"));
-            model.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(duration3) ? null : new ResultNode($"<test-case id='3-1002' duration='{duration3}' />"));
+            model.TestResultManager.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(duration1) ? null : new ResultNode($"<test-case id='3-1000' duration='{duration1}' />"));
+            model.TestResultManager.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(duration2) ? null : new ResultNode($"<test-case id='3-1001' duration='{duration2}' />"));
+            model.TestResultManager.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(duration3) ? null : new ResultNode($"<test-case id='3-1002' duration='{duration3}' />"));
 
             // 2. Act           
             TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
@@ -269,9 +269,9 @@ namespace TestCentric.Gui.Presenters
                     "</test-suite>" +
                 "</test-suite>");
 
-            model.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(resultState1) ? null : new ResultNode($"<test-case id='3-1000' result='{resultState1}' />"));
-            model.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(resultState2) ? null : new ResultNode($"<test-case id='3-1001' result='{resultState2}' />"));
-            model.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(resultState3) ? null : new ResultNode($"<test-case id='3-1002' result='{resultState3}' />"));
+            model.TestResultManager.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(resultState1) ? null : new ResultNode($"<test-case id='3-1000' result='{resultState1}' />"));
+            model.TestResultManager.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(resultState2) ? null : new ResultNode($"<test-case id='3-1001' result='{resultState2}' />"));
+            model.TestResultManager.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(resultState3) ? null : new ResultNode($"<test-case id='3-1002' result='{resultState3}' />"));
 
             // 2. Act           
             TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);

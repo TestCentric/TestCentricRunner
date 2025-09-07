@@ -247,7 +247,7 @@ namespace TestCentric.Gui.Presenters
         {
             TestNode testItem = FAKE_TEST_RUN;
             var resultNode = new ResultNode($"<test-case id='1'/>");
-            _model.GetResultForTest("1").Returns(resultNode);
+            _model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             _model.Events.SelectedItemChanged += Raise.Event<TestItemEventHandler>(new TestItemEventArgs(testItem));
 
@@ -260,7 +260,7 @@ namespace TestCentric.Gui.Presenters
             // Arrange
             TestNode testItem = new TestNode("<test-case id='1' name='TestA' />");
             var resultNode = new ResultNode($"<test-case id='1' name='TestA' />");
-            _model.GetResultForTest("1").Returns(resultNode);
+            _model.TestResultManager.GetResultForTest("1").Returns(resultNode);
             _model.Events.SelectedItemChanged += Raise.Event<TestItemEventHandler>(new TestItemEventArgs(testItem));
             _testResultPresenter.ClearReceivedCalls();
 
@@ -277,7 +277,7 @@ namespace TestCentric.Gui.Presenters
             // Arrange
             TestNode testItem = new TestNode("<test-case id='1' name='TestA' />");
             var resultNode = new ResultNode($"<test-case id='1' name='TestB' />");
-            _model.GetResultForTest("1").Returns(resultNode);
+            _model.TestResultManager.GetResultForTest("1").Returns(resultNode);
             _model.Events.SelectedItemChanged += Raise.Event<TestItemEventHandler>(new TestItemEventArgs(testItem));
             _testResultPresenter.ClearReceivedCalls();
 
@@ -321,7 +321,7 @@ namespace TestCentric.Gui.Presenters
             // Arrange
             TestNode testItem = new TestNode("<test-case id='1' name='TestA' />");
             var resultNode = new ResultNode($"<test-case id='1' name='TestA' />");
-            _model.GetResultForTest("1").Returns(resultNode);
+            _model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             TestGroup testGroup = new TestGroup("TestGroup") { testItem };
             _model.Events.SelectedItemChanged += Raise.Event<TestItemEventHandler>(new TestItemEventArgs(testGroup));
@@ -340,7 +340,7 @@ namespace TestCentric.Gui.Presenters
             // Arrange
             TestNode testItem = new TestNode("<test-case id='1' name='TestA' />");
             var resultNode = new ResultNode($"<test-case id='1' name='TestA' />");
-            _model.GetResultForTest("1").Returns(resultNode);
+            _model.TestResultManager.GetResultForTest("1").Returns(resultNode);
             _model.Events.SelectedItemChanged += Raise.Event<TestItemEventHandler>(new TestItemEventArgs(testItem));
             _testResultPresenter.ClearReceivedCalls();
 

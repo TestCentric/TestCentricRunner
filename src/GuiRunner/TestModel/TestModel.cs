@@ -596,8 +596,6 @@ namespace TestCentric.Gui.Model
             return _testsById.TryGetValue(id, out var node) ? node : null;
         }
 
-        public ResultNode GetResultForTest(string id) => TestResultManager.GetResultForTest(id);
-
         public bool IsInTestRun(TestNode testNode)
         {
             if (_lastTestRun == null)

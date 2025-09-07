@@ -84,8 +84,8 @@ namespace TestCentric.Gui.Presenters
             var resultNode1 = new ResultNode($"<test-case id='1' duration='{duration1}'/>");
             var resultNode2 = new ResultNode($"<test-case id='2' duration='{duration2}'/>");
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns(resultNode1);
-            model.GetResultForTest("2").Returns(resultNode2);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode1);
+            model.TestResultManager.GetResultForTest("2").Returns(resultNode2);
 
             TreeNode treeNode1 = new TreeNode() { Tag = testNode1 };
             TreeNode treeNode2 = new TreeNode() { Tag = testNode2 };
@@ -111,8 +111,8 @@ namespace TestCentric.Gui.Presenters
             var resultNode1 = new ResultNode($"<test-case id='1' duration='{duration1}'/>");
             var resultNode2 = new ResultNode($"<test-case id='2' duration='{duration2}'/>");
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns(resultNode1);
-            model.GetResultForTest("2").Returns(resultNode2);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode1);
+            model.TestResultManager.GetResultForTest("2").Returns(resultNode2);
 
             TreeNode treeNode1 = new TreeNode() { Tag = testNode1 };
             TreeNode treeNode2 = new TreeNode() { Tag = testNode2 };
@@ -134,8 +134,8 @@ namespace TestCentric.Gui.Presenters
             TestNode testNode1 = new TestNode($"<test-start id='1'/>");
             TestNode testNode2 = new TestNode($"<test-start id='2'/>");
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns((ResultNode)null);
-            model.GetResultForTest("2").Returns((ResultNode)null);
+            model.TestResultManager.GetResultForTest("1").Returns((ResultNode)null);
+            model.TestResultManager.GetResultForTest("2").Returns((ResultNode)null);
 
             TreeNode treeNode1 = new TreeNode(text1) { Tag = testNode1 };
             TreeNode treeNode2 = new TreeNode(text2) { Tag = testNode2 };

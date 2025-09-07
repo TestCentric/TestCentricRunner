@@ -25,7 +25,7 @@ namespace TestCentric.Gui.Presenters
             ResultNode resultNode = new ResultNode($"<test-case id='1' result='{resultState}' />");
 
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns(resultNode);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             // 2. Act
             TestResultCounts resultCounts = TestResultCounts.GetResultCounts(model, testNode);
@@ -52,7 +52,7 @@ namespace TestCentric.Gui.Presenters
             ResultNode resultNode = new ResultNode($"<test-case id='1' result='Skipped' label='{label}' />");
 
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns(resultNode);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             // 2. Act
             TestResultCounts resultCounts = TestResultCounts.GetResultCounts(model, testNode);
@@ -75,7 +75,7 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             TestNode testNode = new TestNode("<test-case id='1' />");
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns((ResultNode)null);
+            model.TestResultManager.GetResultForTest("1").Returns((ResultNode)null);
 
             // 2. Act
             TestResultCounts resultCounts = TestResultCounts.GetResultCounts(model, testNode);
@@ -135,9 +135,9 @@ namespace TestCentric.Gui.Presenters
             "</test-suite>");
 
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("2-1001").Returns(string.IsNullOrEmpty(resultState1) ? null : new ResultNode($"<test-case id='2-1001' result='{resultState1}' />"));
-            model.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(resultState2) ? null : new ResultNode($"<test-case id='3-1001' result='{resultState2}' />"));
-            model.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(resultState3) ? null : new ResultNode($"<test-case id='3-1002' result='{resultState3}' />"));
+            model.TestResultManager.GetResultForTest("2-1001").Returns(string.IsNullOrEmpty(resultState1) ? null : new ResultNode($"<test-case id='2-1001' result='{resultState1}' />"));
+            model.TestResultManager.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(resultState2) ? null : new ResultNode($"<test-case id='3-1001' result='{resultState2}' />"));
+            model.TestResultManager.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(resultState3) ? null : new ResultNode($"<test-case id='3-1002' result='{resultState3}' />"));
 
             // 2. Act
             TestResultCounts resultCounts = TestResultCounts.GetResultCounts(model, testNode);
@@ -161,7 +161,7 @@ namespace TestCentric.Gui.Presenters
             TestNode testNode = new TestNode("<test-case id='1' />");
             TestGroup testGroup = new TestGroup("TestGroup") { testNode };
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns((ResultNode)null);
+            model.TestResultManager.GetResultForTest("1").Returns((ResultNode)null);
 
             // 2. Act
             TestResultCounts resultCounts = TestResultCounts.GetResultCounts(model, testGroup);
@@ -215,8 +215,8 @@ namespace TestCentric.Gui.Presenters
             ResultNode resultNode2 = new ResultNode($"<test-case id='2' result='Failed' asserts='3' duration='1.0'/>");
 
             ITestModel model = Substitute.For<ITestModel>();
-            model.GetResultForTest("1").Returns(resultNode1);
-            model.GetResultForTest("2").Returns(resultNode2);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode1);
+            model.TestResultManager.GetResultForTest("2").Returns(resultNode2);
 
             TestGroup testGroup = new TestGroup("TestGroup") { testNode1, testNode2 };
 

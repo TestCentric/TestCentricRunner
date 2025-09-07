@@ -248,7 +248,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
 
         private void AddTestToGroups(IList<TreeNode> treeNodes, TestNode testNode)
         {
-            ResultNode resultNode = Model.GetResultForTest(testNode.Id);
+            ResultNode resultNode = Model.TestResultManager.GetResultForTest(testNode.Id);
 
             IList<TestGroup> testGroups = treeNodes.Select(t => t.Tag).OfType<TestGroup>().ToList();
             foreach (TestGroup testGroup in testGroups)

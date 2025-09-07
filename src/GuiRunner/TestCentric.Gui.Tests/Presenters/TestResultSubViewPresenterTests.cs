@@ -43,7 +43,7 @@ namespace TestCentric.Gui.Presenters
 
             TestNode testNode = new TestNode("<test-case id='1' />");
             ResultNode resultNode = new ResultNode($"<test-case id='1' result='Passed' />");
-            model.GetResultForTest("1").Returns(resultNode);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             // 2. Act
             TestResultSubViewPresenter presenter = new TestResultSubViewPresenter(view, model);

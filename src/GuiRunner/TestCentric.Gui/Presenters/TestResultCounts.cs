@@ -71,7 +71,7 @@ namespace TestCentric.Gui.Presenters
         private static TestResultCounts GetResultCounts(ITestModel model, TestNode testNode)
         {
             TestResultCounts testCounts = new TestResultCounts();
-            ResultNode result = model.GetResultForTest(testNode.Id);
+            ResultNode result = model.TestResultManager.GetResultForTest(testNode.Id);
 
             // Only consider outcome from test cases; and check if testNode is filtered out
             if (!testNode.IsProject && !testNode.IsSuite && !testNode.IsAssembly && testNode.IsVisible)

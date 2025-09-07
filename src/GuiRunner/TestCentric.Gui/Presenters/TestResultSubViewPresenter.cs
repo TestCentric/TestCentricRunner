@@ -52,7 +52,7 @@ namespace TestCentric.Gui.Presenters
             ResultState overallOutcome = null;
             if (testItem is TestNode testNode)
             {
-                ResultNode result = _model.GetResultForTest(testNode.Id);
+                ResultNode result = _model.TestResultManager.GetResultForTest(testNode.Id);
                 overallOutcome = result?.Outcome;
                 detailSectionVisible = testNode.IsAssembly || testNode.IsProject || testNode.IsSuite;
             }
@@ -78,7 +78,7 @@ namespace TestCentric.Gui.Presenters
             ResultState state = null;
             foreach(TestNode testNode in testGroup)
             {
-                ResultNode result = _model.GetResultForTest(testNode.Id);
+                ResultNode result = _model.TestResultManager.GetResultForTest(testNode.Id);
                 if (result == null)
                     continue;
 

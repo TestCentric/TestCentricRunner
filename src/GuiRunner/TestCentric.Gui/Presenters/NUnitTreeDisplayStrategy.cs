@@ -150,7 +150,7 @@ namespace TestCentric.Gui.Presenters
         public TreeNode MakeTreeNode(TestNode testNode)
         {
             TreeNode treeNode = MakeTreeNode(testNode, false);
-            ResultNode resultNode = _model.GetResultForTest(testNode.Id);
+            ResultNode resultNode = _model.TestResultManager.GetResultForTest(testNode.Id);
             if (resultNode != null)
                 _view.SetImageIndex(treeNode, DisplayStrategy.CalcImageIndex(resultNode));
 

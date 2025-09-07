@@ -149,7 +149,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             TestNode testNode = treeNode.Tag as TestNode;
             ResultNode resultNode = new ResultNode($"<test-case id='3-1011' result='Passed'/>");
             _model.GetTestById("3-1011").Returns(testNode);
-            _model.GetResultForTest("3-1011").Returns(resultNode);
+            _model.TestResultManager.GetResultForTest("3-1011").Returns(resultNode);
             _strategy.GetTreeNodesForTest(treeNode.Tag as TestNode).ReturnsForAnyArgs(new List<TreeNode>() { treeNode });
 
             // Act
@@ -387,7 +387,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             TestNode testNode = treeNode.Tag as TestNode;
             ResultNode resultNode = new ResultNode($"<test-case id='{nodeId}' result='{outcome}'/>");
             _model.GetTestById(nodeId).Returns(testNode);
-            _model.GetResultForTest(nodeId).Returns(resultNode);
+            _model.TestResultManager.GetResultForTest(nodeId).Returns(resultNode);
             _strategy.GetTreeNodesForTest(treeNode.Tag as TestNode).ReturnsForAnyArgs(new List<TreeNode>() { treeNode });
             return resultNode;
         }
@@ -441,7 +441,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             str += "</test-case> ";
 
             if (!string.IsNullOrEmpty(outcome))
-                _model.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
+                _model.TestResultManager.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
             return str;
         }
 
@@ -465,7 +465,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             str += "</test-suite>";
 
             if (!string.IsNullOrEmpty(outcome))
-                _model.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
+                _model.TestResultManager.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
 
             return str;
         }
@@ -479,7 +479,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             str += "</test-suite>";
 
             if (!string.IsNullOrEmpty(outcome))
-                _model.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
+                _model.TestResultManager.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
 
             return str;
         }
