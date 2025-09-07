@@ -973,18 +973,7 @@ namespace TestCentric.Gui.Presenters
 
         private void RunFailedTests()
         {
-            var failedTests = new TestSelection();
-
-            foreach (var entry in _model.Results)
-            {
-                var test = entry.Value;
-                if (!test.IsSuite && test.Outcome.Status == TestStatus.Failed)
-                {
-                    TestNode testNode = _model.GetTestById(test.Id);
-                    failedTests.Add(testNode);
-                }
-            }
-
+            var failedTests = new TestSelection(_model.TestResultManager.GetFailedTests());
             _model.RunTests(failedTests);
         }
 

@@ -58,6 +58,7 @@ namespace TestCentric.Gui.Model
 
             Services = new TestServices(testEngine);
             TestCentricTestFilter = new TestCentricTestFilter(this, () => _events.FireTestFilterChanged());
+            TestResultManager = new TestResultManager(this);
 
             AvailableAgents = new List<string>(
                 Services.TestAgentService.GetAvailableAgents().Select((a) => a.AgentName));
@@ -176,7 +177,8 @@ namespace TestCentric.Gui.Model
 
         public bool IsTestRunning => Runner != null && Runner.IsTestRunning;
 
-        public IDictionary<string, ResultNode> Results { get; } = new Dictionary<string, ResultNode>();
+        public ITestResultManager TestResultManager { get; }
+
         public ResultSummary ResultSummary { get; internal set; }
         public bool HasResults => ResultSummary != null;
 
@@ -510,7 +512,7 @@ namespace TestCentric.Gui.Model
             BuildTestIndex();
             TestCentricTestFilter.Init();
 
-            RestoreTestResults();
+            TestResultManager.ReloadTestResults();
 #endif
 
             _events.FireTestReloaded(LoadedTests);
@@ -579,7 +581,7 @@ namespace TestCentric.Gui.Model
             try
             {
                 var resultWriter = Services.ResultService.GetResultWriter(format, new object[0]);
-                var results = GetResultForTest(LoadedTests.Id);
+                var results = TestResultManager.GetResultForTest(LoadedTests.Id);
                 log.Debug(results.Xml.OuterXml);
                 resultWriter.WriteResultFile(results.Xml, filePath);
             }
@@ -594,129 +596,7 @@ namespace TestCentric.Gui.Model
             return _testsById.TryGetValue(id, out var node) ? node : null;
         }
 
-        public ResultNode GetResultForTest(string id)
-        {
-            if (!string.IsNullOrEmpty(id))
-            {
-                ResultNode result;
-                if (Results.TryGetValue(id, out result))
-                    return result;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// If a test result for a test suite is already present, either the old or new test
-        /// result can be stored in the result dictionary:
-        /// As we want an accumulated view of all previous test runs, we store the result
-        /// with the 'worst' outcome.
-        /// </summary>
-        public ResultNode AddResult(ResultNode resultNode)
-        {
-            if (Results.TryGetValue(resultNode.Id, out ResultNode oldResult))
-            {
-                if (resultNode.Outcome.Equals(ResultState.Explicit))
-                    return oldResult;
-
-                if (resultNode.IsSuite && UpdateResultFromPreviousTestRun(resultNode, out ResultState newTestResult))
-                        resultNode = ResultNode.Create(resultNode.Xml, newTestResult);
-            }
-
-            resultNode.IsLatestRun = true;
-            Results[resultNode.Id] = resultNode;
-
-            return resultNode;
-        }
-
-        /// <summary>
-        /// If a TestNode was not executed entirely in the current test run
-        /// Some child TestNodes might contain TestResults from a previous test run
-        /// </summary>
-        private IList<ResultNode> GetPreviousTestRunResults(ResultNode resultNode)
-        {
-            var results = new List<ResultNode>();
-
-            TestNode node = GetTestById(resultNode.Id);
-            if (node == null) 
-                return results;
-
-            foreach (TestNode child in node.Children)
-            {
-                ResultNode childResult = GetResultForTest(child.Id);
-                if (childResult != null && !childResult.IsLatestRun)
-                    results.Add(childResult);
-            }
-
-            return results;
-        }
-
-        private bool UpdateResultFromPreviousTestRun(ResultNode testResult, out ResultState newResultState)
-        {
-            ResultState previousTestRunResult = GetPreviousTestRunResult(testResult);
-            bool updateTestResult = GetOutcome(previousTestRunResult) > GetOutcome(testResult.Outcome);
-            newResultState = updateTestResult ? previousTestRunResult : testResult.Outcome;
-            return updateTestResult;
-        }
-
-        private ResultState GetPreviousTestRunResult(ResultNode testResult)
-        {
-            IList<ResultNode> previousChildResults = GetPreviousTestRunResults(testResult);
-            if (!previousChildResults.Any())
-                return testResult.Outcome;
-
-            ResultState resultState = ResultState.Inconclusive;
-            foreach (ResultNode oldChildResult in previousChildResults)
-            {
-                if (GetOutcome(oldChildResult.Outcome) > GetOutcome(resultState))
-                    resultState = oldChildResult.Outcome;
-            }
-
-            return resultState;
-        }
-
-        private bool KeepOldResult(ResultNode newResult, ResultNode oldResult)
-        {
-            int oldOutcome = GetOutcome(oldResult);
-            int newOutcome = GetOutcome(newResult);
-            return oldOutcome > newOutcome;
-        }
-
-        private int GetOutcome(ResultState resultState)
-        {
-            switch (resultState.Status)
-            {
-                case TestStatus.Inconclusive:
-                    return 1;
-                case TestStatus.Passed:
-                    return 2;
-                case TestStatus.Warning:
-                    return 4;
-                case TestStatus.Failed:
-                    return 5;
-                case TestStatus.Skipped:
-                default:
-                    return resultState.Label == "Ignored" ? 3 : 0;
-            }
-        }
-
-        private int GetOutcome(ResultNode resultNode)
-        {
-            switch (resultNode.Outcome.Status)
-            {
-                case TestStatus.Inconclusive:
-                    return 1;
-                case TestStatus.Passed:
-                    return 2;
-                case TestStatus.Warning:
-                    return 4;
-                case TestStatus.Failed:
-                    return 5;
-                case TestStatus.Skipped:
-                default:
-                    return resultNode.Outcome.Label == "Ignored" ? 3 : 0;
-            }
-        }
+        public ResultNode GetResultForTest(string id) => TestResultManager.GetResultForTest(id);
 
         public bool IsInTestRun(TestNode testNode)
         {
@@ -742,42 +622,8 @@ namespace TestCentric.Gui.Model
 
         public void ClearResults()
         {
-            Results.Clear();
+            TestResultManager.ClearResults();
             ResultSummary = null;
-        }
-
-        private void RestoreTestResults()
-        {
-            // Get all existing test results
-            List<ResultNode> oldResults = Results.Values.ToList();
-            Results.Clear();
-
-            // Search for TestFullName in all nodes
-            foreach (ResultNode oldResult in oldResults)
-            {
-                TestNode testNode = TryGetTestNode(LoadedTests, oldResult.FullName);
-                if (testNode != null)
-                {
-                    // Create new result: keep result content, but use current test ID
-                    ResultNode newResult = ResultNode.Create(oldResult.Xml, testNode.Id);
-                    Results.Add(testNode.Id, newResult);
-                }
-            }
-        }
-
-        private TestNode TryGetTestNode(TestNode testNode, string fullName)
-        {
-            if (testNode.FullName == fullName)
-                return testNode;
-
-            foreach (var childNode in testNode.Children)
-            {
-                var foundNode = TryGetTestNode(childNode, fullName);
-                if (foundNode != null)
-                    return foundNode;
-            }
-
-            return null;
         }
 
         public void SelectCategories(IList<string> categories, bool exclude)
@@ -920,9 +766,7 @@ namespace TestCentric.Gui.Model
             }
 
             _lastTestRun = runSpec;
-
-            foreach (ResultNode resultNode in this.Results.Values)
-                resultNode.IsLatestRun = false;
+            TestResultManager.TestRunStarting();
 
             log.Debug("Executing RunAsync");
             Runner.RunAsync(_events, filter.AsNUnitFilter());

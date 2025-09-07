@@ -201,13 +201,13 @@ namespace TestCentric.Gui.Model
 
                 case "test-case":
                     ResultNode resultNode = new ResultNode(xmlNode);
-                    resultNode = _model.AddResult(resultNode);
+                    resultNode = _model.TestResultManager.AddResult(resultNode);
                     InvokeHandler(TestFinished, new TestResultEventArgs(resultNode));
                     break;
 
                 case "test-suite":
                     resultNode = new ResultNode(xmlNode);
-                    resultNode = _model.AddResult(resultNode);
+                    resultNode = _model.TestResultManager.AddResult(resultNode);
 
                     CheckForProjectFinish(resultNode);
 
@@ -216,7 +216,7 @@ namespace TestCentric.Gui.Model
 
                 case "test-run":
                     resultNode = new ResultNode(xmlNode);
-                    _model.Results[resultNode.Id] = resultNode;
+                    resultNode = _model.TestResultManager.AddResult(resultNode);
                     _model.ResultSummary = ResultSummaryCreator.FromResultNode(resultNode);
                     InvokeHandler(RunFinished, new TestResultEventArgs(resultNode));
                     break;

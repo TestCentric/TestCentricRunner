@@ -204,8 +204,8 @@ namespace TestCentric.Gui.Model
 
             ResultNode resultNode1 = new ResultNode("<test-case id='1' />");
             ResultNode resultNode2 = new ResultNode("<test-case id='2' />");
-            model.Results.Add("1", resultNode1);
-            model.Results.Add("2", resultNode2);
+            model.TestResultManager.AddResult(resultNode1);
+            model.TestResultManager.AddResult(resultNode2);
 
             // Act
             model.RunTests(testNode);
@@ -213,116 +213,6 @@ namespace TestCentric.Gui.Model
             // Assert
             Assert.That(resultNode1.IsLatestRun, Is.False);
             Assert.That(resultNode2.IsLatestRun, Is.False);
-        }
-
-        [Ignore("Needs refactor")]
-        [TestCase("Failed", "", "Passed", "", TestStatus.Failed)]
-        [TestCase("Failed", "", "Warning", "", TestStatus.Failed)]
-        [TestCase("Failed", "", "Skipped", "Ignored", TestStatus.Failed)]
-        [TestCase("Failed", "", "Failed", "", TestStatus.Failed)]
-        [TestCase("Warning", "", "Failed", "", TestStatus.Failed)]
-        [TestCase("Skipped", "", "Failed", "", TestStatus.Failed)]
-        [TestCase("Skipped", "Ignored", "Failed", "", TestStatus.Failed)]
-        [TestCase("Warning", "", "Passed", "", TestStatus.Warning)]
-        [TestCase("Warning", "", "Inconclusive", "", TestStatus.Warning)]
-        [TestCase("Warning", "", "Skipped", "Ignored", TestStatus.Warning)]
-        [TestCase("Inconclusive", "", "Warning", "", TestStatus.Warning)]
-        [TestCase("Warning", "", "Warning", "", TestStatus.Warning)]
-        [TestCase("Passed", "", "Warning", "", TestStatus.Warning)]
-        [TestCase("Skipped", "Ignored", "Warning", "", TestStatus.Warning)]
-        [TestCase("Skipped", "Ignored", "Passed", "", TestStatus.Skipped)]
-        [TestCase("Skipped", "Ignored", "Inconclusive", "", TestStatus.Skipped)]
-        [TestCase("Passed", "", "Skipped", "Ignored", TestStatus.Skipped)]
-        [TestCase("Passed", "", "Inconclusive", "", TestStatus.Passed)]
-        [TestCase("Passed", "", "Skipped", "", TestStatus.Passed)]
-        [TestCase("Skipped", "", "Passed", "", TestStatus.Passed)]
-        [TestCase("Inconclusive", "", "Skipped", "", TestStatus.Inconclusive)]
-        public void AddResult_OldResultExists_KeepWorstResult(
-            string oldOutcome, string oldLabel, string newOutcome, string newLabel, TestStatus expectedTestStatus)
-        {
-            // Arrange
-            ResultNode oldResult = new ResultNode($"<test-suite id='1' result='{oldOutcome}' label='{oldLabel}' />");
-
-            var engine = Substitute.For<TestCentric.Engine.ITestEngine>();
-            var options = new GuiOptions("dummy.dll");
-            var model = TestModel.CreateTestModel(engine, options) as TestModel;
-
-            model.AddResult(oldResult);
-
-            // Act
-            ResultNode newResult = new ResultNode($"<test-suite id='1' result='{newOutcome}' label='{newLabel}' />");
-            model.AddResult(newResult);
-
-            // Assert
-            ResultNode result = model.GetResultForTest("1");
-            Assert.That(result.Outcome.Status, Is.EqualTo(expectedTestStatus));
-        }
-
-        [Ignore("Needs refactor")]
-        [TestCase("Failed", "", "Passed", "", true)]
-        [TestCase("Warning", "", "Failed", "", false)]
-        [TestCase("Skipped", "", "Failed", "", false)]
-        [TestCase("Warning", "", "Skipped", "Ignored", true)]
-        [TestCase("Passed", "", "Inconclusive", "", true)]
-        [TestCase("Inconclusive", "", "Skipped", "", true)]
-        public void AddResult_OldResultExists_ReturnsResultWithWorstOutcome(
-            string oldOutcome, string oldLabel, string newOutcome, string newLabel, bool returnsOldResult)
-        {
-            // Arrange
-            ResultNode oldResult = new ResultNode($"<test-suite id='1' result='{oldOutcome}' label='{oldLabel}' />");
-
-            var engine = Substitute.For<TestCentric.Engine.ITestEngine>();
-            var options = new GuiOptions("dummy.dll");
-            var model = TestModel.CreateTestModel(engine, options) as TestModel;
-
-            model.AddResult(oldResult);
-
-            // Act
-            ResultNode newResult = new ResultNode($"<test-suite id='1' result='{newOutcome}' label='{newLabel}' />");
-            ResultNode addedResult = model.AddResult(newResult);
-
-            // Assert
-            ResultNode expectedResult = returnsOldResult ? oldResult : newResult;
-            Assert.That(addedResult, Is.EqualTo(expectedResult));
-        }
-
-        [Test]
-        public void Reload()
-        {
-            // Arrange
-            var engine = Substitute.For<ITestEngine>();
-            var options = new GuiOptions("dummy.dll");
-            var model = TestModel.CreateTestModel(engine, options) as TestModel;
-
-            var runner = Substitute.For<ITestRunner>();
-            string xmlOriginal = "<test-run id='1'>" +
-                                 "<test-case id='2' fullname='Assembly.Folder1.TestA'/>" +
-                                 "<test-case id='3' fullname='Assembly.Folder1.TestB'/>" +
-                                 "</test-run>";
-            string xmlReload = "<test-run id='1'>" +
-                               "<test-case id='2' fullname='Assembly.Folder1.TestB'/>" +
-                               "</test-run>";
-
-            XmlNode xmlNode1 = XmlHelper.CreateXmlNode(xmlOriginal);
-            XmlNode xmlNode2 = XmlHelper.CreateXmlNode(xmlReload);
-
-            runner.Explore(null).ReturnsForAnyArgs(xmlNode1, xmlNode2);
-            engine.GetRunner(null).ReturnsForAnyArgs(runner);
-            model.CreateNewProject(new[] { "MyFile.dll" });
-
-            var resultXml = "<test-case id='3' fullname='Assembly.Folder1.TestB' result='Passed'/>";
-            model.Results.Add("3", new ResultNode(resultXml));
-
-            // Act
-            model.ReloadTests();
-
-            // Assert
-            var r = model.GetResultForTest("2");
-
-            Assert.That(r, Is.Not.Null);
-            Assert.That(r.Id, Is.EqualTo("2"));
-            Assert.That(r.Outcome.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(r.IsLatestRun, Is.False);
         }
     }
 }
