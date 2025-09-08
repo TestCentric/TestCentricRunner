@@ -169,7 +169,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             var treeNode = _strategy.MakeTreeNode(testNode, false);
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed'/>");
-            _model.GetResultForTest(testNode.Id).Returns(result);
+            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
 
             var nodes = new TreeNode().Nodes;
@@ -192,7 +192,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             var treeNode = _strategy.MakeTreeNode(testNode, false);
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.GetResultForTest(testNode.Id).Returns(result);
+            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
 
             var nodes = new TreeNode().Nodes;
@@ -215,7 +215,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             var treeNode = _strategy.MakeTreeNode(testNode, false);
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.GetResultForTest(testNode.Id).Returns(result);
+            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
             _view.SortCommand.SelectedItem.Returns(TreeViewNodeComparer.Duration);
 
@@ -238,7 +238,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _settings.Gui.TestTree.ShowTestDuration = true;
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.GetResultForTest(testNode.Id).Returns(result);
+            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
 
             // Act
             var treeNode = _strategy.MakeTreeNode(testNode, false);
@@ -254,7 +254,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _settings.Gui.TestTree.ShowTestDuration = false;
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.GetResultForTest(testNode.Id).Returns(result);
+            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
 
             // Act
             var treeNode = _strategy.MakeTreeNode(testNode, false);

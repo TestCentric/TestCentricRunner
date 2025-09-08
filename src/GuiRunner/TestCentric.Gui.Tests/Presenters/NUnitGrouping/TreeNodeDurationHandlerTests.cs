@@ -38,8 +38,8 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             TestNode testNode3 = new TestNode($"<test-start id='3'/>");
             var resultNode1 = new ResultNode($"<test-case id='1' duration='1'/>");
             var resultNode2 = new ResultNode($"<test-case id='2' duration='2'/>");
-            model.GetResultForTest("1").Returns(resultNode1);
-            model.GetResultForTest("2").Returns(resultNode2);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode1);
+            model.TestResultManager.GetResultForTest("2").Returns(resultNode2);
 
             TestGroup testGroup1 = new TestGroup("Group_1");
             TestGroup testGroup2 = new TestGroup("Group_2");

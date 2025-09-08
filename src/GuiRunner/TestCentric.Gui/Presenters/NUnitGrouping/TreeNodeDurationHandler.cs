@@ -29,7 +29,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             {
                 foreach (TestNode testNode in group)
                 {
-                    ResultNode result = model.GetResultForTest(testNode.Id);
+                    ResultNode result = model.TestResultManager.GetResultForTest(testNode.Id);
                     if (result == null)
                         continue;
 

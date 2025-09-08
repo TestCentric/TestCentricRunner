@@ -547,7 +547,7 @@ namespace TestCentric.Gui.Model.Filter
             str += "</test-case> ";
 
             if (!string.IsNullOrEmpty(outcome))
-                _model.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
+                _model.TestResultManager.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
             return str;
         }
 
@@ -571,7 +571,7 @@ namespace TestCentric.Gui.Model.Filter
             str += "</test-suite>";
 
             if (!string.IsNullOrEmpty(outcome))
-                _model.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
+                _model.TestResultManager.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
 
             return str;
         }
@@ -585,7 +585,7 @@ namespace TestCentric.Gui.Model.Filter
             str += "</test-suite>";
 
             if (!string.IsNullOrEmpty(outcome))
-                _model.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
+                _model.TestResultManager.GetResultForTest(testId).Returns(new ResultNode($"<test-case id='{testId}' result='{outcome}' />"));
 
             return str;
         }

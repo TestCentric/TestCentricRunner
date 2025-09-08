@@ -63,8 +63,8 @@ namespace TestCentric.Gui.Model
         // See if a test is running
         bool IsTestRunning { get; }
 
-        // Dictionary of test results by test id
-        IDictionary<string, ResultNode> Results { get; }
+        // Manager maintaining all test results
+        ITestResultManager TestResultManager { get; }
 
         // Summary of last test run
         ResultSummary ResultSummary { get; }
@@ -156,9 +156,6 @@ namespace TestCentric.Gui.Model
 
         // Get a specific test given its id
         TestNode GetTestById(string id);
-
-        // Get the result for a specific test id if available
-        ResultNode GetResultForTest(string id);
 
         // Get the TestPackage represented by a test,if available
         TestPackage GetPackageForTest(string id);

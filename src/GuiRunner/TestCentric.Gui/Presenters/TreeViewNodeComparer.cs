@@ -108,13 +108,13 @@ namespace TestCentric.Gui.Presenters
                 if (testNode1 == null || testNode2 == null)
                     return 1;
 
-                ResultNode resultNode1 = _model.GetResultForTest(testNode1.Id);
-                ResultNode resultNode2 = _model.GetResultForTest(testNode2.Id);
+                ResultNode resultNode1 = _model.TestResultManager.GetResultForTest(testNode1.Id);
+                ResultNode resultNode2 = _model.TestResultManager.GetResultForTest(testNode2.Id);
 
                 if (resultNode1 != null && resultNode2 != null)
                         return resultNode1.Duration.CompareTo(resultNode2.Duration);
 
-                return node1.Text.CompareTo(node2.Text); ;
+                return node1.Text.CompareTo(node2.Text);
             }
         }
 

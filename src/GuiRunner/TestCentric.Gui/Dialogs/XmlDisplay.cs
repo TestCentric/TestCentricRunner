@@ -74,7 +74,7 @@ namespace TestCentric.Gui.Dialogs
 
         private XmlNode GetFullXml(TestNode testNode)
         {
-            ResultNode resultNode = _model.GetResultForTest(testNode.Id);
+            ResultNode resultNode = _model.TestResultManager.GetResultForTest(testNode.Id);
             XmlNode currentXml;
             if (resultNode != null)
             {

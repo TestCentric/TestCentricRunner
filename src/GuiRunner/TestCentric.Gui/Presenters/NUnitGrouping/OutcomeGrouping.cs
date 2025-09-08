@@ -25,7 +25,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
 
         private string GetOutcome(TestNode child)
         {
-            var result = Model.GetResultForTest(child.Id);
+            var result = Model.TestResultManager.GetResultForTest(child.Id);
             if (result == null)
                 return "Not run";
 

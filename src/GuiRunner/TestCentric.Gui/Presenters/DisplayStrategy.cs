@@ -201,7 +201,7 @@ namespace TestCentric.Gui.Presenters
             string treeNodeName = GetTreeNodeName(testNode);
 
             // Check if test result is available for this node
-            ResultNode result = _model.GetResultForTest(testNode.Id);
+            ResultNode result = _model.TestResultManager.GetResultForTest(testNode.Id);
             if (_settings.Gui.TestTree.ShowTestDuration && result != null)
                 treeNodeName += $" [{result.Duration:0.000}s]";
 
@@ -405,7 +405,7 @@ namespace TestCentric.Gui.Presenters
 
         public ResultNode GetResultForTest(TestNode testNode)
         {
-            return _model.GetResultForTest(testNode.Id);
+            return _model.TestResultManager.GetResultForTest(testNode.Id);
         }
 
         #endregion

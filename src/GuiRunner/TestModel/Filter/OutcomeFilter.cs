@@ -43,7 +43,7 @@ namespace TestCentric.Gui.Model.Filter
 
             string outcome = NotRunOutcome;
 
-            var result = TestModel.GetResultForTest(testNode.Id);
+            var result = TestModel.TestResultManager.GetResultForTest(testNode.Id);
             if (result != null)
             {
                 switch (result.Outcome.Status)

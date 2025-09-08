@@ -63,7 +63,7 @@ namespace TestCentric.Gui.Presenters
             var testNode = new TestNode($"<test-case id='1' />");
             var tests = new List<TestNode> { testNode };
 
-            model.GetResultForTest("1").Returns(resultNode);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             // 2. Act
             OutcomeGrouping grouping = new OutcomeGrouping(strategy);
@@ -96,7 +96,7 @@ namespace TestCentric.Gui.Presenters
             var testNode = new TestNode($"<test-case id='1' />");
             var tests = new List<TestNode> { testNode };
 
-            model.GetResultForTest("1").Returns(resultNode);
+            model.TestResultManager.GetResultForTest("1").Returns(resultNode);
             model.IsInTestRun(testNode).Returns(isLatestRun);
 
             // 2. Act
@@ -119,7 +119,7 @@ namespace TestCentric.Gui.Presenters
             var testNode = new TestNode($"<test-case id='1' />");
             var tests = new List<TestNode> { testNode };
 
-            model.GetResultForTest("1").Returns((ResultNode)null);
+            model.TestResultManager.GetResultForTest("1").Returns((ResultNode)null);
 
             // 2. Act
             OutcomeGrouping grouping = new OutcomeGrouping(strategy);
