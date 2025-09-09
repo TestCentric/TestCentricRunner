@@ -21,6 +21,13 @@ BuildSettings.Initialize(
 // COMMON DEFINITIONS USED IN BOTH PACKAGES
 //////////////////////////////////////////////////////////////////////
 
+// Change this list to bundle a different set of agents
+static readonly ExtensionSpecifier[] BUNDLED_AGENTS = {
+	KnownExtensions.Net462PluggableAgent, KnownExtensions.Net80PluggableAgent };
+// Use LatestDevBuild until all agents are stable
+static readonly PackageReference[] BUNDLED_NUGET_AGENTS = BUNDLED_AGENTS.Select(a => a.NuGetPackage.LatestDevBuild).ToArray();
+static readonly PackageReference[] BUNDLED_CHOCO_AGENTS = BUNDLED_AGENTS.Select(a => a.ChocoPackage.LatestDevBuild).ToArray();
+
 static readonly FilePath[] ENGINE_FILES = {
         "testcentric.engine.dll", "testcentric.engine.api.dll", "testcentric.metadata.dll"};
 static readonly FilePath[] GUI_FILES = {
@@ -68,10 +75,7 @@ var NuGetGuiPackage = new NuGetPackage(
 				"Images/Tree/Visual Studio/Success.png", "Images/Tree/Visual Studio/Failure.png", "Images/Tree/Visual Studio/Warning.png", "Images/Tree/Visual Studio/Ignored.png", "Images/Tree/Visual Studio/Inconclusive.png", 
 				"Images/Tree/Visual Studio/Success_NotLatestRun.png", "Images/Tree/Visual Studio/Failure_NotLatestRun.png", "Images/Tree/Visual Studio/Warning_NotLatestRun.png", "Images/Tree/Visual Studio/Ignored_NotLatestRun.png", "Images/Tree/Visual Studio/Inconclusive_NotLatestRun.png", 
 				"Images/Tree/Visual Studio/Running.png",  "Images/Tree/Visual Studio/Skipped.png") )
-		.WithDependencies(
-            KnownExtensions.Net462PluggableAgent.NuGetPackage.LatestDevBuild,
-            KnownExtensions.Net80PluggableAgent.NuGetPackage.LatestDevBuild
-        ),
+		.WithDependencies( BUNDLED_NUGET_AGENTS ),
     testRunner: new GuiSelfTester(BuildSettings.PackageTestDirectory + "TestCentric.GuiRunner/TestCentric.GuiRunner." + BuildSettings.PackageVersion + "/tools/testcentric.exe"),
 	checks: new PackageCheck[] {
 		HasFiles("CHANGES.txt", "LICENSE.txt", "NOTICES.txt", "testcentric.png"),
@@ -108,10 +112,7 @@ var ChocolateyGuiPackage = new ChocolateyPackage(
                 "Images/Tree/Visual Studio/Success.png", "Images/Tree/Visual Studio/Failure.png", "Images/Tree/Visual Studio/Warning.png", "Images/Tree/Visual Studio/Ignored.png", "Images/Tree/Visual Studio/Inconclusive.png", 
 				"Images/Tree/Visual Studio/Success_NotLatestRun.png", "Images/Tree/Visual Studio/Failure_NotLatestRun.png", "Images/Tree/Visual Studio/Warning_NotLatestRun.png", "Images/Tree/Visual Studio/Ignored_NotLatestRun.png", "Images/Tree/Visual Studio/Inconclusive_NotLatestRun.png", 
 				"Images/Tree/Visual Studio/Running.png", "Images/Tree/Visual Studio/Skipped.png"))
-        .WithDependencies(
-			KnownExtensions.Net462PluggableAgent.ChocoPackage.LatestDevBuild,
-			KnownExtensions.Net80PluggableAgent.ChocoPackage.LatestDevBuild
-        ),
+        .WithDependencies( BUNDLED_CHOCO_AGENTS ),
     testRunner: new GuiSelfTester(BuildSettings.PackageTestDirectory + "testcentric-gui/testcentric-gui." + BuildSettings.PackageVersion + "/tools/testcentric.exe"),
 	checks: new PackageCheck[] {
 		HasDirectory("tools").WithFiles("CHANGES.txt", "LICENSE.txt", "NOTICES.txt", "VERIFICATION.txt").AndFiles(GUI_FILES).AndFiles(ENGINE_FILES),
@@ -220,7 +221,7 @@ public class TestCentricEngineTestBed : TestRunner, IPackageTestRunner
 }
 
 //////////////////////////////////////////////////////////////////////
-// INDIVIDUAL PACKAGES
+// ADDITIONAL TARGETS
 //////////////////////////////////////////////////////////////////////
 
 Task("PackageNuGet")
@@ -235,6 +236,13 @@ Task("PackageChocolatey")
 	.Does(() =>
 	{
 		ChocolateyGuiPackage.BuildVerifyAndTest();
+	});
+
+Task("InstallAgents")
+	.Does(() =>
+	{
+		foreach (var agent in BUNDLED_NUGET_AGENTS)
+			agent.Install(BuildSettings.ProjectDirectory + BIN_DIR);
 	});
 
 //////////////////////////////////////////////////////////////////////
