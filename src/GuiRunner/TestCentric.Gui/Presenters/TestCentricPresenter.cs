@@ -538,6 +538,11 @@ namespace TestCentric.Gui.Presenters
                 System.Diagnostics.Process.Start("https://docs.nunit.org/articles/nunit/intro.html");
             };
 
+            _view.CommandLineHelpCommand.Execute += () =>
+            {
+                _view.MessageDisplay.Info(_model.Options.GetHelpText());
+            };
+
             _view.AboutCommand.Execute += () =>
             {
                 using (AboutBox aboutBox = new AboutBox())

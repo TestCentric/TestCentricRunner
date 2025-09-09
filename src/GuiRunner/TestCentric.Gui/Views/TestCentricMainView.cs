@@ -64,6 +64,7 @@ namespace TestCentric.Gui.Views
         private ToolStripMenuItem addTestFileMenuItem;
         private ToolStripMenuItem extensionsMenuItem;
         private ToolStripMenuItem testCentricHelpMenuItem;
+        private ToolStripMenuItem commandLineHelpMenuItem;
         private TabPage errorTab;
         private TabPage outputTab;
         private TabPage propertiesTab;
@@ -171,6 +172,7 @@ namespace TestCentric.Gui.Views
             // Initialize Help Menu
             TestCentricHelpCommand = new CommandMenuElement(testCentricHelpMenuItem);
             NUnitHelpCommand = new CommandMenuElement(nunitHelpMenuItem);
+            CommandLineHelpCommand = new CommandMenuElement(commandLineHelpMenuItem);
             AboutCommand = new CommandMenuElement(aboutMenuItem);
 
             // Initialize Toolbar
@@ -297,6 +299,7 @@ namespace TestCentric.Gui.Views
             this.helpItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testCentricHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commandLineHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeSplitter = new System.Windows.Forms.Splitter();
@@ -912,6 +915,7 @@ namespace TestCentric.Gui.Views
             this.helpItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.testCentricHelpMenuItem,
             this.nunitHelpMenuItem,
+            this.commandLineHelpMenuItem,
             this.helpMenuSeparator1,
             this.aboutMenuItem});
             this.helpItem.Name = "helpItem";
@@ -932,6 +936,12 @@ namespace TestCentric.Gui.Views
             this.nunitHelpMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F1)));
             this.nunitHelpMenuItem.Size = new System.Drawing.Size(177, 22);
             this.nunitHelpMenuItem.Text = "NUnit ...";
+            // 
+            // commandLineHelpMenuItem
+            // 
+            this.commandLineHelpMenuItem.Name = "commandLineHelpMenuItem";
+            this.commandLineHelpMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.commandLineHelpMenuItem.Text = "Command-Line Options ...";
             // 
             // helpMenuSeparator1
             // 
@@ -1247,6 +1257,7 @@ namespace TestCentric.Gui.Views
         // Help Menu Items
         public ICommand TestCentricHelpCommand { get; }
         public ICommand NUnitHelpCommand { get; }
+        public ICommand CommandLineHelpCommand { get; }
         public ICommand AboutCommand { get; }
 
         // ToolBar Elements

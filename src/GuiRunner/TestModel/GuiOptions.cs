@@ -24,6 +24,11 @@ namespace TestCentric.Gui
         private bool _validated;
         private List<Option> _options = new List<Option>();
         private Dictionary<string, Option> _optionIndex = new Dictionary<string, Option>();
+#if DEBUG
+        private bool _isDebug = true;
+#else
+        private bool _isDebug = false;
+#endif
 
         #region Constructor
 
@@ -95,23 +100,21 @@ namespace TestCentric.Gui
                     }
                 });
 
-#if DEBUG
             Add("debug-agent", "Launch debugger in testcentric-agent when it starts.", false,
-                v => DebugAgent = true);
+                v => DebugAgent = _isDebug, true);
 
             Add("simulate-unload-error", "Throw CannotUnloadAppDomainException when unloading AppDomain.", false,
-                v => SimulateUnloadError = true);
+                v => SimulateUnloadError = _isDebug, true);
 
             Add("simulate-unload-timeout", "Inject infinite loop when unloading AppDomain.", false,
-                v => SimulateUnloadTimeout = true);
-#endif
+                v => SimulateUnloadTimeout = _isDebug, true);
 
             Add("help|h", "Display the help message and exit.", false,
                 v => ShowHelp = true);
 
-            void Add(string pattern, string description, bool requiresValue, Action<string> action)
+            void Add(string pattern, string description, bool requiresValue, Action<string> action, bool debugOnly=false)
             {
-                var option = new Option(pattern, description, requiresValue, action);
+                var option = new Option(pattern, description, requiresValue, action, debugOnly);
                 _options.Add(option);
                 foreach (string alias in option.Aliases)
                     _optionIndex.Add(alias, option);
@@ -245,11 +248,13 @@ namespace TestCentric.Gui
 
             writer.WriteLine("TESTCENTRIC [inputfiles] [options]");
             writer.WriteLine();
-            writer.WriteLine("Starts the TestCentric Runner, optionally loading and running a set of NUnit tests. You may specify any combination of assemblies and supported project files as arguments.");
+            writer.WriteLine("Starts the TestCentric Runner, optionally loading and running a set of NUnit tests. Various options are provided, most of which are intended for use in running unattended.");
+            writer.WriteLine();
+            writer.WriteLine("Options only available in a Debug build are marked '(DEBUG)'.");
             writer.WriteLine();
             writer.WriteLine("InputFiles:");
             writer.WriteLine();
-            writer.WriteLine("One or more assemblies or test projects of a recognized type. If no input files are given, the tests contained in the most recently used project or assembly are loaded, unless the --noload option is specified");
+            writer.WriteLine("One or more assemblies or supported test projects. If no input files are given, the tests contained in the most recently used project or assembly are loaded, unless the --noload option is specified");
             writer.WriteLine();
             writer.WriteLine("Options:");
             writer.WriteLine();
@@ -285,18 +290,20 @@ namespace TestCentric.Gui
 
     internal class Option
     {
-        public Option(string aliases, string description, bool requiresValue, Action<string> action)
+        public Option(string aliases, string description, bool requiresValue, Action<string> action, bool debugOnly = false)
         {
             Aliases = aliases.Split('|');
             Description = description;
             RequiresValue = requiresValue;
             Action = action;
+            DebugOnly = debugOnly;
         }
 
         public string[] Aliases { get; }
         public bool RequiresValue { get; }
         public string Description { get; }
         public Action<string> Action { get; }
+        public bool DebugOnly { get; }
         public string HelpText
         {
             get
@@ -305,6 +312,7 @@ namespace TestCentric.Gui
                 var sb = new StringBuilder();
 
                 sb.Append($"{string.Join(", ", Aliases.Select(a => (a.Length == 1 ? "-" : "--") + a))}");
+               
                 if (RequiresValue)
                 {
                     var match = Regex.Match(Description, "\\{(.*?)\\}");
@@ -312,7 +320,10 @@ namespace TestCentric.Gui
                         ? match.Groups[1].Value : "VALUE";
                     sb.Append($"={valueName}");
                 }
+                if (DebugOnly)
+                    sb.Append(" (DEBUG)");
                 sb.AppendLine();
+
                 sb.AppendLine($"{Description.Replace("{", "").Replace("}", "")}");
 
                 return sb.ToString();

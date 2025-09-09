@@ -66,6 +66,7 @@ namespace TestCentric.Gui.Views
         // Help Menu Items
         ICommand TestCentricHelpCommand { get; }
         ICommand NUnitHelpCommand { get; }
+        ICommand CommandLineHelpCommand { get; }
         ICommand AboutCommand { get; }
 
         // Toolbar Items
