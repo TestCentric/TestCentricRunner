@@ -27,7 +27,12 @@ namespace TestCentric.Engine.Services
             "/TestCentric/Engine/TypeExtensions/ITestEventListener",
             "/TestCentric/Engine/TypeExtensions/IDriverFactory",
             "/TestCentric/Engine/TypeExtensions/IService",
-            "/TestCentric/Engine/TypeExtensions/IAgentLauncher"
+            "/TestCentric/Engine/TypeExtensions/IAgentLauncher",
+            "/NUnit/Engine/TypeExtensions/IProjectLoader",
+            "/NUnit/Engine/TypeExtensions/IResultWriter",
+            "/NUnit/Engine/TypeExtensions/ITestEventListener",
+            "/NUnit/Engine/TypeExtensions/IDriverFactory",
+            "/NUnit/Engine/TypeExtensions/IService"
         };
 
         private static readonly Type[] KnownExtensionPointTypes = {
@@ -36,7 +41,12 @@ namespace TestCentric.Engine.Services
             typeof(ITestEventListener),
             typeof(IDriverFactory),
             typeof(IService),
-            typeof(IAgentLauncher)
+            typeof(IAgentLauncher),
+            typeof(NUnit.Engine.Extensibility.IProjectLoader),
+            typeof(NUnit.Engine.Extensibility.IResultWriter),
+            typeof(NUnit.Engine.ITestEventListener),
+            typeof(NUnit.Engine.Extensibility.IDriverFactory),
+            typeof(NUnit.Engine.IService)
         };
 
         private static readonly int[] KnownExtensionPointCounts = { 1, 1, 2, 0, 1 };
