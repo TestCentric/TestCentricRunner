@@ -24,9 +24,10 @@ namespace TestCentric.Engine.Services
 
         private const string ENGINE_TYPE_EXTENSION_PATH = "/TestCentric/Engine/TypeExtensions/";
 
-        static readonly Assembly ENGINE_ASSEMBLY = Assembly.GetExecutingAssembly();
-        static readonly Assembly ENGINE_API_ASSEMBLY = typeof(ITestEngine).Assembly;
-        static readonly string ENGINE_DIRECTORY = Path.GetDirectoryName(AssemblyHelper.GetAssemblyPath(ENGINE_ASSEMBLY));
+        static readonly Assembly TESTCENTRIC_ENGINE_ASSEMBLY = Assembly.GetExecutingAssembly();
+        static readonly Assembly TESTCENTRIC_ENGINE_API_ASSEMBLY = typeof(ITestEngine).Assembly;
+        static readonly Assembly NUNIT_ENGINE_API_ASSEMBLY = typeof(NUnit.Engine.ITestEngine).Assembly;
+        static readonly string ENGINE_DIRECTORY = Path.GetDirectoryName(AssemblyHelper.GetAssemblyPath(TESTCENTRIC_ENGINE_ASSEMBLY));
 
         private static readonly bool RUNNING_UNDER_CHOCOLATEY =
             File.Exists(Path.Combine(ENGINE_DIRECTORY, "VERIFICATION.txt"));
@@ -109,8 +110,14 @@ namespace TestCentric.Engine.Services
         {
             try
             {
-                _extensionManager.FindExtensionPoints(ENGINE_ASSEMBLY, ENGINE_API_ASSEMBLY);
-                ((ExtensionManager)_extensionManager).FindExtensionAssemblies(ENGINE_ASSEMBLY);
+                _extensionManager.FindExtensionPoints(
+                    TESTCENTRIC_ENGINE_ASSEMBLY,
+                    TESTCENTRIC_ENGINE_API_ASSEMBLY,
+                    NUNIT_ENGINE_API_ASSEMBLY);
+                
+                _extensionManager.FindExtensionAssemblies(
+                    TESTCENTRIC_ENGINE_ASSEMBLY);
+                
                 Status = ServiceStatus.Started;
             }
             catch

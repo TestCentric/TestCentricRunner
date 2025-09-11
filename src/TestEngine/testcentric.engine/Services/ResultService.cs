@@ -73,8 +73,8 @@ namespace TestCentric.Engine.Services
 
                 if (extensionService != null && extensionService.Status == ServiceStatus.Started)
                 {
-                    _extensionNodes.AddRange(extensionService.GetExtensionNodes<IResultWriter>());
-                    _extensionNodes.AddRange(extensionService.GetExtensionNodes<NUnit.Engine.Extensibility.IResultWriter>());
+                    _extensionNodes.AddRange(extensionService.GetExtensionNodes<IResultWriter>(true));
+                    _extensionNodes.AddRange(extensionService.GetExtensionNodes<NUnit.Engine.Extensibility.IResultWriter>(true));
                 }
 
                 // If there is no extension service, we start anyway using builtin writers
