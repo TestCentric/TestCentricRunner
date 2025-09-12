@@ -23,7 +23,7 @@
     <ProjectReference Include="..\TestCentric.Engine.Api\TestCentric.Engine.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="TestCentric.Extensibility" Version="4.0.0" />
+    <PackageReference Include="TestCentric.Extensibility" Version="$(ExtensibilityVersion)" />
     <PackageReference Include="TestCentric.Metadata" Version="$(MetadataVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>
