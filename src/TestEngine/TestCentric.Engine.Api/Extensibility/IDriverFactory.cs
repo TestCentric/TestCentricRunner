@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -11,8 +11,6 @@ namespace TestCentric.Engine.Extensibility
     /// <summary>
     /// Interface implemented by a Type that knows how to create a driver for a test assembly.
     /// </summary>
-    [TypeExtensionPoint(
-        Description = "Supplies a driver to run tests that use a specific test framework.")]
     public interface IDriverFactory
     {
         /// <summary>

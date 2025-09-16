@@ -15,8 +15,6 @@ namespace TestCentric.Engine
     /// any driver and framework may add additional events and the engine will
     /// simply pass them on through this interface.
     /// </summary>
-    [TypeExtensionPoint(
-        Description = "Allows an extension to process progress reports and other events from the test.")]
     public interface ITestEventListener
     {
         /// <summary>

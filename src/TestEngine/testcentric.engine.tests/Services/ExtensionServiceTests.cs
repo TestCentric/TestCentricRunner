@@ -22,11 +22,6 @@ namespace TestCentric.Engine.Services
 
 #pragma warning disable 414
         private static readonly string[] KnownExtensionPointPaths = {
-            "/TestCentric/Engine/TypeExtensions/IProjectLoader",
-            "/TestCentric/Engine/TypeExtensions/IResultWriter",
-            "/TestCentric/Engine/TypeExtensions/ITestEventListener",
-            "/TestCentric/Engine/TypeExtensions/IDriverFactory",
-            "/TestCentric/Engine/TypeExtensions/IService",
             "/TestCentric/Engine/TypeExtensions/IAgentLauncher",
             "/NUnit/Engine/TypeExtensions/IProjectLoader",
             "/NUnit/Engine/TypeExtensions/IResultWriter",
@@ -36,11 +31,6 @@ namespace TestCentric.Engine.Services
         };
 
         private static readonly Type[] KnownExtensionPointTypes = {
-            typeof(IProjectLoader),
-            typeof(IResultWriter),
-            typeof(ITestEventListener),
-            typeof(IDriverFactory),
-            typeof(IService),
             typeof(IAgentLauncher),
             typeof(NUnit.Engine.Extensibility.IProjectLoader),
             typeof(NUnit.Engine.Extensibility.IResultWriter),
