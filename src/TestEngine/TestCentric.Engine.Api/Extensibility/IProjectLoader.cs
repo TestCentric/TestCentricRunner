@@ -11,8 +11,6 @@ namespace TestCentric.Engine.Extensibility
     /// The IProjectLoader interface is implemented by any class
     /// that knows how to load projects in a specific format.
     /// </summary>
-    [TypeExtensionPoint(
-        Description = "Recognizes and loads assemblies from various types of project formats.")]
     public interface IProjectLoader
     {
         /// <summary>

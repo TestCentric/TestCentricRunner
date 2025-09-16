@@ -21,12 +21,8 @@ namespace TestCentric.Engine.Services
     }
 
     /// <summary>
-    /// The IService interface is implemented by all Services. Although it
-    /// is extensible, it does not reside in the Extensibility namespace
-    /// because it is so widely used by the engine.
+    /// The IService interface is implemented by all Services.
     /// </summary>
-    [TypeExtensionPoint(
-        Description="Provides a service within the engine and possibly externally as well.")]
     public interface IService
     {
         /// <summary>
