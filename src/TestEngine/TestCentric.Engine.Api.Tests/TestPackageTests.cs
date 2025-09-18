@@ -115,7 +115,12 @@ namespace TestCentric.Engine.Api
         {
             Assert.That(actual.ID, Is.EqualTo(expected.ID));
             Assert.That(actual.FullName, Is.EqualTo(expected.FullName));
-            //Assert.That(actual.Settings, Is.EquivalentTo(expected.Settings));
+            foreach (PackageSetting setting in expected.Settings)
+            {
+                Assert.That(actual.Settings.HasSetting(setting.Name), Is.True);
+                Assert.That(actual.Settings.GetSetting(setting.Name), Is.EqualTo(setting.Value));
+            }
+
             Assert.That(actual.SubPackages.Count, Is.EqualTo(expected.SubPackages.Count));
 
             for (int i = 0; i < expected.SubPackages.Count; i++)
@@ -140,6 +145,7 @@ namespace TestCentric.Engine.Api
             package = new TestPackage("test1.dll", "test2.dll", "test3.dll");
             package.AddSetting("StringSetting", "xyz");
             package.AddSetting("IntSetting", 123);
+            package.AddSetting("BoolSetting", true);
             package.SubPackages[0].AddSetting("Comment", "This is test1");
             package.SubPackages[1].AddSetting("Comment", "This is test2");
             package.SubPackages[2].AddSetting("Comment", "This is test3");

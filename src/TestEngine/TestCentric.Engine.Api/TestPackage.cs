@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -279,7 +279,15 @@ namespace TestCentric.Engine
                             {
                                 case "Settings":
                                     while (reader.MoveToNextAttribute())
-                                        package.AddSetting(reader.Name, reader.Value);
+                                    {
+                                        string value = reader.Value;
+                                        if (Boolean.TryParse(value, out bool boolValue))
+                                            package.AddSetting(reader.Name, boolValue);
+                                        else if (int.TryParse(value, out int intValue))
+                                            package.AddSetting(reader.Name, intValue);
+                                        else
+                                            package.AddSetting(reader.Name, value);
+                                    }
                                     reader.MoveToElement();
                                     break;
 
