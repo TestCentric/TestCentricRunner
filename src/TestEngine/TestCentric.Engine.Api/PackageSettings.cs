@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -68,13 +68,17 @@ namespace TestCentric.Engine
         public void Add(PackageSetting setting) => _settings.Add(setting.Name, setting);
 
         /// <summary>
-        /// Creates and adds a custom string setting to the list, specifying the name and value.
+        /// Creates and adds a setting to the list, specifyied by the name and a string value.
+        /// The string value is converted to a typed PackageSetting if the name specifies a known SettingDefinition.
         /// </summary>
         /// <param name="name">The name of the setting.</param>
         /// <param name="value">The corresponding value to set.</param>
         public void Add(string name, string value)
         {
-            Add(new PackageSetting<string>(name, value));
+            SettingDefinition definition = SettingDefinitions.Lookup(name);
+            PackageSetting setting = definition != null ? definition.WithParsedValue(value) : new PackageSetting<string>(name, value);
+            Add(setting);
+
         }
 
         /// <summary>

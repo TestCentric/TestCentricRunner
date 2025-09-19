@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -42,6 +42,24 @@ namespace TestCentric.Engine
         {
             return new PackageSetting<T>(Name, value);
         }
+
+        /// <summary>
+        /// Create a PackageSetting based on this definition.
+        /// </summary>
+        /// <param name="value">A string value which is parsed to the target type (ValueType).</param>
+        /// <returns>A PackageSetting.</returns>
+        public PackageSetting WithParsedValue(string value)
+        {
+            if (ValueType == typeof(bool) && bool.TryParse(value, out bool boolValue))
+                return new PackageSetting<bool>(Name, boolValue);
+            if (ValueType == typeof(int) && int.TryParse(value, out int intValue))
+                return new PackageSetting<int>(Name, intValue);
+            if (ValueType == typeof(string))
+                return new PackageSetting<string>(Name, value);
+
+            throw new NotSupportedException($"Unsupported type {ValueType}");
+        }
+
     }
 
     /// <summary>
