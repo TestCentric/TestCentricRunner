@@ -118,7 +118,12 @@ namespace TestCentric.Engine.Api
             foreach (PackageSetting setting in expected.Settings)
             {
                 Assert.That(actual.Settings.HasSetting(setting.Name), Is.True);
-                Assert.That(actual.Settings.GetSetting(setting.Name), Is.EqualTo(setting.Value));
+
+                object expectedSettingValue = setting.Value;
+                if (setting.Name.StartsWith("UnknownSetting"))
+                    expectedSettingValue = setting.Value.ToString();        // Unknown settings are deserialized as strings
+
+                Assert.That(actual.Settings.GetSetting(setting.Name), Is.EqualTo(expectedSettingValue));
             }
 
             Assert.That(actual.SubPackages.Count, Is.EqualTo(expected.SubPackages.Count));
@@ -136,7 +141,7 @@ namespace TestCentric.Engine.Api
 
             package = new TestPackage("test.dll");
             package.AddSetting("StringSetting", "xyz");
-            package.AddSetting("IntSetting", 123);
+            package.AddSetting(nameof(SettingDefinitions.MaxAgents), 123);
             yield return new TestFixtureData(package, GetExpectedXml(package)) { TestName = "TestPackageTests(Single Assembly with Settings)" };
 
             package = new TestPackage("test1.dll", "test2.dll", "test3.dll");
@@ -144,8 +149,12 @@ namespace TestCentric.Engine.Api
 
             package = new TestPackage("test1.dll", "test2.dll", "test3.dll");
             package.AddSetting("StringSetting", "xyz");
-            package.AddSetting("IntSetting", 123);
-            package.AddSetting("BoolSetting", true);
+            package.AddSetting(nameof(SettingDefinitions.MaxAgents), 123);
+            package.AddSetting(nameof(SettingDefinitions.ShadowCopyFiles), true);
+            package.AddSetting("UnknownSetting1", true);
+            package.AddSetting("UnknownSetting2", 123);
+            package.AddSetting("UnknownSetting3", "xyz");
+
             package.SubPackages[0].AddSetting("Comment", "This is test1");
             package.SubPackages[1].AddSetting("Comment", "This is test2");
             package.SubPackages[2].AddSetting("Comment", "This is test3");
@@ -193,6 +202,7 @@ namespace TestCentric.Engine.Api
         }
     }
 
+    [TestFixture]
     public class AddAndRemoveTestPackageTests
     {
         [Test]
@@ -221,6 +231,50 @@ namespace TestCentric.Engine.Api
             package.SubPackages.RemoveAt(0);
             Assert.That(package.SubPackages.Count, Is.EqualTo(1));
             Assert.That(package.SubPackages[0].Name, Is.EqualTo("test2.dll"));
+        }
+    }
+
+    [TestFixture]
+    public class AddAndRemoveTestSettingsTests
+    {
+        [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "True", true)]
+        [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "False", false)]
+        [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "false", false)]
+        [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "FALSE", false)]
+        [TestCase(nameof(SettingDefinitions.TestRunTimeout), "10", 10)]
+        [TestCase(nameof(SettingDefinitions.TestRunTimeout), "0", 0)]
+        [TestCase(nameof(SettingDefinitions.TestRunTimeout), "-100", -100)]
+        [TestCase(nameof(SettingDefinitions.SelectedAgentName), "Agent", "Agent")]
+        [TestCase(nameof(SettingDefinitions.SelectedAgentName), "", "")]
+        public void AddSetting_KnownSetting_StringIsConvertedIntoTargetType(string settingName, string stringValue, object expectedValue)
+        {
+            // Arrange
+            var package = new TestPackage(new[] { "test1.dll", "test2.dll" });
+
+            // Act
+            package.AddSetting(settingName, stringValue);
+
+            // Assert
+            Assert.That(package.Settings.HasSetting(settingName), Is.True);
+
+            object value = package.Settings.GetSetting(settingName);
+            Assert.That(value, Is.EqualTo(expectedValue));
+        }
+
+        [TestCase("UnknownSetting", "Value", "Value")]
+        public void AddSetting_UnknownSetting_StringIsStored(string settingName, string stringValue, string expectedValue)
+        {
+            // Arrange
+            var package = new TestPackage(new[] { "test1.dll", "test2.dll" });
+
+            // Act
+            package.AddSetting(settingName, stringValue);
+
+            // Assert
+            Assert.That(package.Settings.HasSetting(settingName), Is.True);
+
+            object value = package.Settings.GetSetting(settingName);
+            Assert.That(value, Is.EqualTo(expectedValue));
         }
     }
 }

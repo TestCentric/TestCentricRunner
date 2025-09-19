@@ -18,6 +18,8 @@ namespace TestCentric.Engine
     /// </summary>
     public static class SettingDefinitions
     {
+        private static IList<PropertyInfo> _propertyInfos;
+
         #region Settings Used by the Engine
 
         /// <summary>
@@ -350,10 +352,11 @@ namespace TestCentric.Engine
         /// </summary>
         public static SettingDefinition Lookup(string name)
         {
-            // Get a list of all public properties
-            var properties = typeof(SettingDefinitions).GetProperties(BindingFlags.Public | BindingFlags.Static);
+            // Get a list of all public properties only once
+            if (_propertyInfos == null)
+                _propertyInfos = typeof(SettingDefinitions).GetProperties(BindingFlags.Public | BindingFlags.Static);
 
-            foreach (PropertyInfo propertyInfo in properties)
+            foreach (PropertyInfo propertyInfo in _propertyInfos)
                 if (propertyInfo.Name == name)
                     return propertyInfo.GetValue(null, null) as SettingDefinition;
 

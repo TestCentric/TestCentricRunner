@@ -180,7 +180,8 @@ namespace TestCentric.Engine
         }
 
         /// <summary>
-        /// Create and add a custom string setting to a package and all of its subpackages.
+        /// Create and add a custom setting to a package and all of its subpackages.
+        /// The string value is converted to a typed PackageSetting if the name specifies a known SettingDefinition.
         /// </summary>
         /// <param name="name">The name of the setting.</param>
         /// <param name="value">The corresponding value to set.</param>
@@ -193,7 +194,7 @@ namespace TestCentric.Engine
         /// </remarks>
         public void AddSetting(string name, string value)
         {
-            AddSetting(new PackageSetting<string>(name, value));
+            AddSetting(PackageSettingFactory.Create(name, value));
         }
 
         /// <summary>
@@ -279,15 +280,7 @@ namespace TestCentric.Engine
                             {
                                 case "Settings":
                                     while (reader.MoveToNextAttribute())
-                                    {
-                                        string value = reader.Value;
-                                        if (Boolean.TryParse(value, out bool boolValue))
-                                            package.AddSetting(reader.Name, boolValue);
-                                        else if (int.TryParse(value, out int intValue))
-                                            package.AddSetting(reader.Name, intValue);
-                                        else
-                                            package.AddSetting(reader.Name, value);
-                                    }
+                                        package.AddSetting(reader.Name, reader.Value);
                                     reader.MoveToElement();
                                     break;
 

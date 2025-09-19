@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace TestCentric.Engine
 {
     [TestFixture]
-    internal class PackageSettingsTests
+    internal class PackageSettingFactoryTests
     {
         [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "True", true)]
         [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "False", false)]
@@ -19,33 +19,25 @@ namespace TestCentric.Engine
         [TestCase(nameof(SettingDefinitions.TestRunTimeout), "-100", -100)]
         [TestCase(nameof(SettingDefinitions.SelectedAgentName), "Agent", "Agent")]
         [TestCase(nameof(SettingDefinitions.SelectedAgentName), "", "")]
-        public void Add_Setting_AsString(string settingName, string stringValue, object expectedValue)
+        public void Create_KnownSetting_StringIsConvertedIntoTargetType(string settingName, string stringValue, object expectedValue)
         {
-            // Arrange
-            PackageSettings settings = new PackageSettings();
-
             // Act
-            settings.Add(settingName, stringValue);
+            PackageSetting setting = PackageSettingFactory.Create(settingName, stringValue);
 
             // Assert
-            var value = settings.GetSetting(settingName);
-            Assert.That(value, Is.EqualTo(expectedValue));
+            Assert.That(setting.Value, Is.EqualTo(expectedValue));
         }
 
         [TestCase("UnknownSetting", "Value", "Value")]
-        public void Add_UnknownSetting_AsString(string settingName, string stringValue, string expectedValue)
+        [TestCase("UnknownSetting", "100", "100")]
+        [TestCase("UnknownSetting", "true", "true")]
+        public void Create_UnknownSetting_StringIsStored(string settingName, string stringValue, object expectedValue)
         {
-            // Arrange
-            PackageSettings settings = new PackageSettings();
-
             // Act
-            settings.Add(settingName, stringValue);
+            PackageSetting setting = PackageSettingFactory.Create(settingName, stringValue);
 
             // Assert
-            Assert.That(settings.HasSetting(settingName), Is.True);
-
-            var value = settings.GetSetting(settingName);
-            Assert.That(value, Is.EqualTo(expectedValue));
+            Assert.That(setting.Value, Is.EqualTo(expectedValue));
         }
     }
 }
