@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -74,6 +74,23 @@ namespace TestCentric.Engine
             int hash = Name.GetHashCode();
             hash ^= Value.GetHashCode();
             return hash;
+        }
+    }
+
+    /// <summary>
+    /// Factory class to create PackageSetting objects
+    /// </summary>
+    public static class PackageSettingFactory
+    {
+        /// <summary>
+        /// Creates a PackageSetting<T> object
+        /// If the name is a known SettingDefinition name, the string is converted to the TargeType of that SettingDefinition.
+        /// Otherwise a PackageSetting<string> object is created 
+        /// This method is required to deserialize PackageSettings from a string representation back to a typed PackageSetting<T>
+        public static PackageSetting Create(string name, string value)
+        {
+            SettingDefinition definition = SettingDefinitions.Lookup(name);
+            return definition != null ? definition.WithParsedValue(value) : new PackageSetting<string>(name, value);
         }
     }
 }

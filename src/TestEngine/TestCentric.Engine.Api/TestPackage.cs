@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -180,7 +180,8 @@ namespace TestCentric.Engine
         }
 
         /// <summary>
-        /// Create and add a custom string setting to a package and all of its subpackages.
+        /// Create and add a custom setting to a package and all of its subpackages.
+        /// The string value is converted to a typed PackageSetting if the name specifies a known SettingDefinition.
         /// </summary>
         /// <param name="name">The name of the setting.</param>
         /// <param name="value">The corresponding value to set.</param>
@@ -193,7 +194,7 @@ namespace TestCentric.Engine
         /// </remarks>
         public void AddSetting(string name, string value)
         {
-            AddSetting(new PackageSetting<string>(name, value));
+            AddSetting(PackageSettingFactory.Create(name, value));
         }
 
         /// <summary>

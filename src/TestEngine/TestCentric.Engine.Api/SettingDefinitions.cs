@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace TestCentric.Engine
 {
@@ -17,6 +18,8 @@ namespace TestCentric.Engine
     /// </summary>
     public static class SettingDefinitions
     {
+        private static IList<PropertyInfo> _propertyInfos;
+
         #region Settings Used by the Engine
 
         /// <summary>
@@ -341,6 +344,24 @@ namespace TestCentric.Engine
         /// </summary>
         public static SettingDefinition<IDictionary<string, string>> TestParametersDictionary { get; } = new(nameof(TestParametersDictionary), new Dictionary<string, string>());
 
-#endregion
+        #endregion
+
+        /// <summary>
+        /// Search for one of the defined SettingsDefinition by name
+        /// Return null if no SettingDefinition is defined with this name
+        /// </summary>
+        public static SettingDefinition Lookup(string name)
+        {
+            // Get a list of all public properties only once
+            if (_propertyInfos == null)
+                _propertyInfos = typeof(SettingDefinitions).GetProperties(BindingFlags.Public | BindingFlags.Static);
+
+            foreach (PropertyInfo propertyInfo in _propertyInfos)
+                if (propertyInfo.Name == name)
+                    return propertyInfo.GetValue(null, null) as SettingDefinition;
+
+            return null;
+        }
+
     }
 }
