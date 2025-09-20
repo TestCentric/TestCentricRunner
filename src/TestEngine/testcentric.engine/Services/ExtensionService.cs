@@ -111,9 +111,8 @@ namespace TestCentric.Engine.Services
             try
             {
                 _extensionManager.FindExtensionPoints(
-                    TESTCENTRIC_ENGINE_ASSEMBLY,
-                    TESTCENTRIC_ENGINE_API_ASSEMBLY,
-                    NUNIT_ENGINE_API_ASSEMBLY);
+                    TESTCENTRIC_ENGINE_ASSEMBLY);
+                    //TESTCENTRIC_ENGINE_API_ASSEMBLY);
                 
                 _extensionManager.FindExtensionAssemblies(
                     TESTCENTRIC_ENGINE_ASSEMBLY);

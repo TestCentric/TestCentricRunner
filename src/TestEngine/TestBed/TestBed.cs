@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -84,6 +84,7 @@ namespace TestCentric.Engine.TestBed
             var eventHandler = new TestEventHandler();
             eventHandler.RunStarted += () => OnRunStarted(runner, options);
 
+            // TODO: Handle case with no files passed in arguments
             XmlNode resultNode = runner.Run(eventHandler, TestFilter.Empty);
 
             ResultReporter.ReportResults(resultNode);

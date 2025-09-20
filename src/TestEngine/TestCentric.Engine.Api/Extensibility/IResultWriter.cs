@@ -5,7 +5,6 @@
 
 using System.IO;
 using System.Xml;
-using TestCentric.Extensibility;
 
 namespace TestCentric.Engine.Extensibility
 {

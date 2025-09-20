@@ -64,7 +64,7 @@ namespace TestCentric.Gui
                 return 3;
             }
 
-            var installedAgents = model.Services.ExtensionService.GetExtensionNodes("/TestCentric/Engine/TypeExtensions/IAgentLauncher");
+            var installedAgents = model.Services.ExtensionService.GetExtensionNodes("/TestCentric/Engine/AgentLaunchers");
                 
             if (installedAgents.Count() == 0)
             {

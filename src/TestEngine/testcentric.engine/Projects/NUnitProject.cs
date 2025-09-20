@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -99,7 +99,7 @@ namespace TestCentric.Engine.Projects
         {
             var package = new TestPackage(nunitPackage.SubPackages.Select(p => p.FullName).ToArray());
             foreach (var setting in nunitPackage.Settings)
-                package.Settings.Add(setting.Key, (string)setting.Value);
+                package.Settings.Add(setting.Name, (string)setting.Value);
 
             return package;
         }

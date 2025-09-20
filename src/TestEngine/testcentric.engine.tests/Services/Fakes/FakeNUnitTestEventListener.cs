@@ -1,13 +1,14 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
 using System.Collections.Generic;
+using TestCentric.Extensibility;
 
 namespace TestCentric.Tests.Fakes
 {
-    [NUnit.Engine.Extensibility.Extension]
+    [Extension]
     public class FakeNUnitTestEventListener : NUnit.Engine.ITestEventListener
     {
         public List<string> Output { get; } = new List<string>();
