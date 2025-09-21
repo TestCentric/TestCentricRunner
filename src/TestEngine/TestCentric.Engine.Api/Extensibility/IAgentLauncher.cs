@@ -5,12 +5,9 @@
 
 using System;
 using System.Diagnostics;
-using TestCentric.Extensibility;
 
 namespace TestCentric.Engine.Extensibility
 {
-    [TypeExtensionPoint(
-        Description = "Launches an Agent Process for supported target runtimes")]
     public interface IAgentLauncher
     {
         TestAgentInfo AgentInfo { get; }

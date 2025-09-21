@@ -3,8 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using TestCentric.Extensibility;
-
 namespace TestCentric.Engine.Extensibility
 {
     /// <summary>

@@ -24,15 +24,13 @@ namespace TestCentric.Gui.Model.Fakes
             // ExtensionPoints are all known, so we add in constructor. Extensions
             // may vary, so we use a method to add them.
             _extensionPoints.Add(new ExtensionPoint(
-                "/NUnit/Engine/TypeExtensions/IService", "TestCentric.Engine.Extensibility.IService", "Provides a service within the engine and possibly externally as well."));
+                "/TestCentric/Engine/TestEventListeners", "NUnit.Engine.ITestEventListener", "Allows an extension to process progress reports and other events from the test."));
             _extensionPoints.Add(new ExtensionPoint(
-                "/NUnit/Engine/TypeExtensions/ITestEventListener", "TestCentric.Engine.Extensibility.ITestEventListener", "Allows an extension to process progress reports and other events from the test."));
+                "/TestCentric/Engine/DriverFactories", "NUnit.Engine.Extensibility.IDriverFactory", "Supplies a driver to run tests that use a specific test framework."));
             _extensionPoints.Add(new ExtensionPoint(
-                "/NUnit/Engine/TypeExtensions/IDriverFactory", "TestCentric.Engine.Extensibility.IDriverFactory", "Supplies a driver to run tests that use a specific test framework."));
+                "/TestCentric/Engine/ProjectLoaders", "NUnit.Engine.Extensibility.IProjectLoader", "Recognizes and loads assemblies from various types of project formats."));
             _extensionPoints.Add(new ExtensionPoint(
-                "/NUnit/Engine/TypeExtensions/IProjectLoader", "TestCentric.Engine.Extensibility.IProjectLoader", "Recognizes and loads assemblies from various types of project formats."));
-            _extensionPoints.Add(new ExtensionPoint(
-                "/NUnit/Engine/TypeExtensions/IResultWriter", "TestCentric.Engine.Extensibility.IResultWriter", "Supplies a writer to write the result of a test to a file using a specific format."));
+                "/TestCentric/Engine/ResultWriters", "NUnit.Engine.Extensibility.IResultWriter", "Supplies a writer to write the result of a test to a file using a specific format."));
         }
 
         public void AddExtensions(params IExtensionNode[] extensions)

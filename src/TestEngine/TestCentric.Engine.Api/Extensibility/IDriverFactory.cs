@@ -4,7 +4,6 @@
 // ***********************************************************************
 
 using System.Reflection;
-using TestCentric.Extensibility;
 
 namespace TestCentric.Engine.Extensibility
 {
