@@ -12,11 +12,12 @@ using NUnit.Framework;
 
 namespace TestCentric.Gui.Presenters.Main
 {
+    using System.Runtime.InteropServices;
+    using System.Windows.Forms;
     using Elements;
-    using Views;
     using Model;
     using NSubstitute.Core.Arguments;
-    using System.Windows.Forms;
+    using Views;
 
     public class CommandTests : MainPresenterTestBase
     {
@@ -190,29 +191,35 @@ namespace TestCentric.Gui.Presenters.Main
         public void SaveResultsCommand_DisplaysDialogCorrectly()
         {
             // Return no file path so model is not called
-            _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs(NO_FILE_PATH);
+            int selectedFilterIndex = 0;
+            _model.ResultFormats.Returns(new[] { "nunit3" });
+            _view.DialogManager.GetFileSavePath(null, null, null, null, out selectedFilterIndex).ReturnsForAnyArgs(NO_FILE_PATH);
             _model.WorkDirectory.Returns("WORKDIRECTORY");
 
             _view.SaveResultsCommand.Execute += Raise.Event<CommandHandler>();
 
-            _view.DialogManager.Received().GetFileSavePath("Save Results in nunit3 format", "XML Files (*.xml)|*.xml|All Files (*.*)|*.*", "WORKDIRECTORY", "TestResult.xml");
+            _view.DialogManager.Received().GetFileSavePath("Save results", "Result format nunit3 (*.xml)|*.xml", "WORKDIRECTORY", "TestResult.xml", out selectedFilterIndex);
         }
 
         [Test]
         public void SaveResultsCommand_FilePathSelected_SavesResults()
         {
+            int selectedFilterIndex = 1;
+            _model.ResultFormats.Returns(new[] { "nunit3" });
             var savePath = Path.GetFullPath("/path/to/TestResult.xml");
-            _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs(savePath);
+            _view.DialogManager.GetFileSavePath(null, null, null, null, out selectedFilterIndex).ReturnsForAnyArgs(x => { x[4] = 1;  return savePath; });
 
             _view.SaveResultsCommand.Execute += Raise.Event<CommandHandler>();
 
-            _model.Received().SaveResults(savePath);
+            _model.Received().SaveResults(savePath, "nunit3");
         }
 
         [Test]
         public void SaveResultsCommand_NoFilePathSelected_DoesNotSaveResults()
         {
-            _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs(NO_FILE_PATH);
+            int selectedFilterIndex = 1;
+            _model.ResultFormats.Returns(new[] { "nunit3" });
+            _view.DialogManager.GetFileSavePath(null, null, null, null, out selectedFilterIndex).ReturnsForAnyArgs(NO_FILE_PATH);
 
             _view.SaveResultsCommand.Execute += Raise.Event<CommandHandler>();
 

@@ -18,6 +18,8 @@ namespace TestCentric.Gui.Views
 
         string GetFileSavePath(string title, string filter, string initialDirectory, string suggestedName);
 
+        string GetFileSavePath(string title, string filter, string initialDirectory, string suggestedName, out int selectedFilterIndex);
+
         string GetFolderPath(string message, string initialPath);
 
         Font SelectFont(Font currentFont);

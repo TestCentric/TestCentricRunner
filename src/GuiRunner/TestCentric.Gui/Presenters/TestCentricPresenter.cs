@@ -56,8 +56,6 @@ namespace TestCentric.Gui.Presenters
 
         private AgentSelectionController _agentSelectionController;
 
-        private List<string> _resultFormats = new List<string>();
-
         private string[] _lastFilesLoaded = null;
 
         private bool _stopRequested;
@@ -83,10 +81,6 @@ namespace TestCentric.Gui.Presenters
             UpdateViewCommands();
             UpdateTreeDisplayMenuItem();
             UpdateRunSelectedTestsTooltip();
-
-            foreach (string format in _model.ResultFormats)
-                if (format != "cases" && format != "user")
-                    _resultFormats.Add(format);
 
             WireUpEvents();
             _view.ShowHideFilterButton.Checked = _settings.Gui.TestTree.ShowFilter;
@@ -496,18 +490,6 @@ namespace TestCentric.Gui.Presenters
 
             _view.RunParametersButton.Execute += DisplayTestParametersDialog;
 
-            _view.ToolsMenu.Popup += () =>
-            {
-                _view.SaveResultsAsMenu.MenuItems.Clear();
-
-                foreach (string format in _resultFormats)
-                {
-                    var formatItem = new ToolStripMenuItem(format);
-                    formatItem.Click += (s, e) => SaveResults(format);
-                    _view.SaveResultsAsMenu.MenuItems.Add(formatItem);
-                }
-            };
-
             _view.SaveResultsCommand.Execute += () => SaveResults();
 
             _view.OpenWorkDirectoryCommand.Execute += () => System.Diagnostics.Process.Start(_model.WorkDirectory);
@@ -699,17 +681,22 @@ namespace TestCentric.Gui.Presenters
 
         #region Save Methods
 
-        public void SaveResults(string format = "nunit3")
+        public void SaveResults()
         {
-            string savePath = _view.DialogManager.GetFileSavePath($"Save Results in {format} format", "XML Files (*.xml)|*.xml|All Files (*.*)|*.*", _model.WorkDirectory, "TestResult.xml");
+            var resultFormats = _model.ResultFormats.Except(new[] { "user", "cases" }).ToList();
+
+            string filter = String.Join("|", resultFormats.Select(format => $"Result format {format} (*.xml)|*.xml"));
+            
+            string savePath = _view.DialogManager.GetFileSavePath($"Save results", filter, _model.WorkDirectory, "TestResult.xml", out int selectedFilterIndex);
 
             if (savePath != null)
             {
                 try
                 {
-                    _model.SaveResults(savePath, format);
+                    string resultFormat = resultFormats.ElementAtOrDefault(selectedFilterIndex-1);
+                    _model.SaveResults(savePath, resultFormat);
 
-                    _view.MessageDisplay.Info(String.Format($"Results saved in {format} format as {savePath}"));
+                    _view.MessageDisplay.Info(String.Format($"Results saved in {resultFormat} format as {savePath}"));
                 }
                 catch (Exception exception)
                 {
@@ -779,7 +766,7 @@ namespace TestCentric.Gui.Presenters
             _view.ReloadTestsCommand.Enabled = testLoaded && !testRunning;
             _view.RecentFilesMenu.Enabled = !testRunning && !testLoading;
             _view.ExitCommand.Enabled = !testLoading;
-            _view.SaveResultsCommand.Enabled = _view.SaveResultsAsMenu.Enabled = !testRunning && !testLoading && hasResults;
+            _view.SaveResultsCommand.Enabled = !testRunning && !testLoading && hasResults;
         }
 
         private void UpdateRunSelectedTestsTooltip()

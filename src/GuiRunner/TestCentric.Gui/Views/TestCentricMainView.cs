@@ -71,7 +71,6 @@ namespace TestCentric.Gui.Views
         private ErrorsAndFailuresView errorsAndFailuresView1;
         private ToolStripMenuItem recentFilesDummyMenuItem;
         private ToolStripMenuItem openWorkDirectoryMenuItem;
-        private ToolStripMenuItem saveResultsAsMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripSeparator toolStripSeparator3;
@@ -164,7 +163,6 @@ namespace TestCentric.Gui.Views
             // Initialize Tools Menu Comands
             ToolsMenu = new PopupMenuElement(toolsMenu);
             SaveResultsCommand = new CommandMenuElement(saveResultsMenuItem);
-            SaveResultsAsMenu = new PopupMenuElement(saveResultsAsMenuItem);
             OpenWorkDirectoryCommand = new CommandMenuElement(openWorkDirectoryMenuItem);
             ExtensionsCommand = new CommandMenuElement(extensionsMenuItem);
             SettingsCommand = new CommandMenuElement(settingsMenuItem);
@@ -291,7 +289,6 @@ namespace TestCentric.Gui.Views
             this.restoreFixedFontMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.saveResultsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveResultsAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWorkDirectoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.extensionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -866,7 +863,6 @@ namespace TestCentric.Gui.Views
             // 
             this.toolsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveResultsMenuItem,
-            this.saveResultsAsMenuItem,
             this.openWorkDirectoryMenuItem,
             this.toolStripSeparator7,
             this.extensionsMenuItem,
@@ -880,12 +876,6 @@ namespace TestCentric.Gui.Views
             this.saveResultsMenuItem.Name = "saveResultsMenuItem";
             this.saveResultsMenuItem.Size = new System.Drawing.Size(194, 22);
             this.saveResultsMenuItem.Text = "&Save Test Results...";
-            // 
-            // saveResultsAsMenuItem
-            // 
-            this.saveResultsAsMenuItem.Name = "saveResultsAsMenuItem";
-            this.saveResultsAsMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.saveResultsAsMenuItem.Text = "Save Test Results As";
             // 
             // openWorkDirectoryMenuItem
             // 
@@ -1249,7 +1239,6 @@ namespace TestCentric.Gui.Views
         // Tools Menu Items
         public IPopup ToolsMenu { get; }
         public ICommand SaveResultsCommand { get; }
-        public IPopup SaveResultsAsMenu { get; }
         public ICommand OpenWorkDirectoryCommand { get; }
         public ICommand ExtensionsCommand { get; }
         public ICommand SettingsCommand { get; }
