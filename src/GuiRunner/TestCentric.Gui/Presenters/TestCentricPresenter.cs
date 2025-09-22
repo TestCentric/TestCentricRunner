@@ -490,11 +490,12 @@ namespace TestCentric.Gui.Presenters
 
             _view.RunParametersButton.Execute += DisplayTestParametersDialog;
 
-            _view.SaveResultsCommand.Execute += () => SaveResults();
+            _view.SaveResultsCommand.Execute += SaveResults;
+            _view.TransformResultsCommand.Execute += TransformResults;
 
             _view.OpenWorkDirectoryCommand.Execute += () => System.Diagnostics.Process.Start(_model.WorkDirectory);
 
-            _view.TreeView.ShowCheckBoxes.CheckedChanged += () => UpdateRunSelectedTestsTooltip();
+            _view.TreeView.ShowCheckBoxes.CheckedChanged += UpdateRunSelectedTestsTooltip;
 
             _view.ExtensionsCommand.Execute += () =>
             {
@@ -686,14 +687,14 @@ namespace TestCentric.Gui.Presenters
             var resultFormats = _model.ResultFormats.Except(new[] { "user", "cases" }).ToList();
 
             string filter = String.Join("|", resultFormats.Select(format => $"Result format {format} (*.xml)|*.xml"));
-            
+
             string savePath = _view.DialogManager.GetFileSavePath($"Save results", filter, _model.WorkDirectory, "TestResult.xml", out int selectedFilterIndex);
 
             if (savePath != null)
             {
                 try
                 {
-                    string resultFormat = resultFormats.ElementAtOrDefault(selectedFilterIndex-1);
+                    string resultFormat = resultFormats.ElementAtOrDefault(selectedFilterIndex - 1);
                     _model.SaveResults(savePath, resultFormat);
 
                     _view.MessageDisplay.Info(String.Format($"Results saved in {resultFormat} format as {savePath}"));
@@ -705,9 +706,29 @@ namespace TestCentric.Gui.Presenters
             }
         }
 
+        public void TransformResults()
+        {
+            TransformTestResultDialog dlg = new TransformTestResultDialog();
+            if (dlg.ShowDialog() != DialogResult.OK)
+                return;
+
+            try
+            {
+                string fileName = dlg.TransformationFile;
+                string targetFileName = dlg.TargetFile;
+                _model.TransformResults(targetFileName, fileName);
+
+                _view.MessageDisplay.Info(String.Format($"Results transformed into {targetFileName} using {fileName}"));
+            }
+            catch (Exception exception)
+            {
+                _view.MessageDisplay.Error("Unable to Transform Results\n\n" + MessageBuilder.FromException(exception));
+            }
+        }
+
         #endregion
 
-        #region Reload Methods
+            #region Reload Methods
 
         public void ReloadTests()
         {
@@ -766,7 +787,7 @@ namespace TestCentric.Gui.Presenters
             _view.ReloadTestsCommand.Enabled = testLoaded && !testRunning;
             _view.RecentFilesMenu.Enabled = !testRunning && !testLoading;
             _view.ExitCommand.Enabled = !testLoading;
-            _view.SaveResultsCommand.Enabled = !testRunning && !testLoading && hasResults;
+            _view.SaveResultsCommand.Enabled = _view.TransformResultsCommand.Enabled = !testRunning && !testLoading && hasResults;
         }
 
         private void UpdateRunSelectedTestsTooltip()

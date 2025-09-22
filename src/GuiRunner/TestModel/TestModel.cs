@@ -591,6 +591,13 @@ namespace TestCentric.Gui.Model
             }
         }
 
+        public void TransformResults(string targetFile, string xsltFile)
+        {
+            var resultWriter = Services.ResultService.GetResultWriter("user", new[] { xsltFile });
+            var results = TestResultManager.GetResultForTest(LoadedTests.Id);
+            resultWriter?.WriteResultFile(results.Xml, targetFile);
+        }
+
         public TestNode GetTestById(string id)
         {
             return _testsById.TryGetValue(id, out var node) ? node : null;

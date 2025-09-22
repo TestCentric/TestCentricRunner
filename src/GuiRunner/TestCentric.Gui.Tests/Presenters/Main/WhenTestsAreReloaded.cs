@@ -36,6 +36,7 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("RecentFilesMenu", true)]
         [TestCase("ExitCommand", true)]
         [TestCase("SaveResultsCommand", false)]
+        [TestCase("TransformResultsCommand", false)]
         [TestCase("RunAllButton", true)]
         [TestCase("RunSelectedButton", true)]
         [TestCase("RerunButton", false)]
