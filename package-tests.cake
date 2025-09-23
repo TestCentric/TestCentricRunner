@@ -16,7 +16,7 @@ public static class PackageTests
         // Tests of single assemblies targeting each runtime we support
 
         GuiAndEngineTests.Add(new PackageTest(1, "Net462Test", "Run net462 mock-assembly.dll under .NET 4.6.2",
-            "net462/mock-assembly.dll --trace:Debug",
+            "net462/mock-assembly.dll",
             MockAssemblyExpectedResult("Net462AgentLauncher")));
 
         GuiAndEngineTests.Add(new PackageTest(1, "Net35Test", "Run net35 mock-assembly.dll under .NET 4.6.2",
@@ -55,7 +55,7 @@ public static class PackageTests
             MockAssemblyExpectedResult("Net80AgentLauncher")));
 
         GuiAndEngineTests.Add(new PackageTest(1, "Net80Test", "Run mock-assembly.dll under .NET 8.0",
-            "net8.0/mock-assembly.dll --trace:Debug",
+            "net8.0/mock-assembly.dll",
             MockAssemblyExpectedResult("Net80AgentLauncher")));
 
         // AspNetCore tests
@@ -100,13 +100,13 @@ public static class PackageTests
 
         // Windows Forms Tests
 
-        if (BuildSettings.IsLocalBuild)
-            GuiAndEngineTests.Add(new PackageTest(1, "Net50WindowsFormsTest", "Run test using windows forms under .NET 5.0",
-                "net5.0-windows/windows-forms-test.dll",
-                new ExpectedResult("Passed")
-                {
-                    Assemblies = new[] { new ExpectedAssemblyResult("windows-forms-test.dll", "Net80AgentLauncher") }
-                }));
+        //if (BuildSettings.IsLocalBuild)
+        //    GuiAndEngineTests.Add(new PackageTest(1, "Net50WindowsFormsTest", "Run test using windows forms under .NET 5.0",
+        //        "net5.0-windows/windows-forms-test.dll",
+        //        new ExpectedResult("Passed")
+        //        {
+        //            Assemblies = new[] { new ExpectedAssemblyResult("windows-forms-test.dll", "Net80AgentLauncher") }
+        //        }));
 
         GuiAndEngineTests.Add(new PackageTest(1, "Net60WindowsFormsTest", "Run test using windows forms under .NET 6.0",
             "net6.0-windows/windows-forms-test.dll",

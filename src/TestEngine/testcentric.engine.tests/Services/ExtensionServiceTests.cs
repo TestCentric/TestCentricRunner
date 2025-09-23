@@ -30,7 +30,7 @@ namespace TestCentric.Engine.Services
         };
 
         private static readonly Type[] KnownExtensionPointTypes = {
-            typeof(IAgentLauncher),
+            typeof(NUnit.Engine.Extensibility.IAgentLauncher),
             typeof(NUnit.Engine.Extensibility.IProjectLoader),
             typeof(NUnit.Engine.Extensibility.IResultWriter),
             typeof(NUnit.Engine.ITestEventListener),
