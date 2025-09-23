@@ -57,7 +57,7 @@ namespace TestCentric.Gui.Views
 
         // Tools Menu Items
         IPopup ToolsMenu { get; }
-        ICommand SaveResultsCommand { get; }
+        IPopup SaveResultsCommand { get; }
         ICommand TransformResultsCommand { get; }
         ICommand OpenWorkDirectoryCommand { get; }
         ICommand ExtensionsCommand { get; }

@@ -81,6 +81,7 @@ namespace TestCentric.Gui.Presenters
             UpdateViewCommands();
             UpdateTreeDisplayMenuItem();
             UpdateRunSelectedTestsTooltip();
+            UpdateSaveResultFormatsMenuItem();
 
             WireUpEvents();
             _view.ShowHideFilterButton.Checked = _settings.Gui.TestTree.ShowFilter;
@@ -490,7 +491,6 @@ namespace TestCentric.Gui.Presenters
 
             _view.RunParametersButton.Execute += DisplayTestParametersDialog;
 
-            _view.SaveResultsCommand.Execute += SaveResults;
             _view.TransformResultsCommand.Execute += TransformResults;
 
             _view.OpenWorkDirectoryCommand.Execute += () => System.Diagnostics.Process.Start(_model.WorkDirectory);
@@ -682,22 +682,17 @@ namespace TestCentric.Gui.Presenters
 
         #region Save Methods
 
-        public void SaveResults()
+        public void SaveResults(string format = "nunit3")
         {
-            var resultFormats = _model.ResultFormats.Except(new[] { "user", "cases" }).ToList();
-
-            string filter = String.Join("|", resultFormats.Select(format => $"Result format {format} (*.xml)|*.xml"));
-
-            string savePath = _view.DialogManager.GetFileSavePath($"Save results", filter, _model.WorkDirectory, "TestResult.xml", out int selectedFilterIndex);
+            string savePath = _view.DialogManager.GetFileSavePath($"Save results in {format} format", "XML Files (*.xml)|*.xml|All Files (*.*)|*.*", _model.WorkDirectory, "TestResult.xml");
 
             if (savePath != null)
             {
                 try
                 {
-                    string resultFormat = resultFormats.ElementAtOrDefault(selectedFilterIndex - 1);
-                    _model.SaveResults(savePath, resultFormat);
+                    _model.SaveResults(savePath, format);
 
-                    _view.MessageDisplay.Info(String.Format($"Results saved in {resultFormat} format as {savePath}"));
+                    _view.MessageDisplay.Info(String.Format($"Results saved in {format} format as {savePath}"));
                 }
                 catch (Exception exception)
                 {
@@ -709,6 +704,7 @@ namespace TestCentric.Gui.Presenters
         public void TransformResults()
         {
             TransformTestResultDialog dlg = new TransformTestResultDialog();
+            dlg.StartPosition = FormStartPosition.CenterParent;
             if (dlg.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -796,6 +792,17 @@ namespace TestCentric.Gui.Presenters
             IToolTip tooltip = _view.RunSelectedButton as IToolTip;
             if (tooltip != null)
                 tooltip.ToolTipText = showCheckBoxes ? "Run Checked Tests" : "Run Selected Tests";
+        }
+
+        private void UpdateSaveResultFormatsMenuItem()
+        {
+            int index = 0;
+            foreach (string format in _model.ResultFormats.Except(new[] { "user", "cases" }))
+            {
+                var formatItem = new ToolStripMenuItem($"Format: {format}");
+                formatItem.Click += (s, e) => SaveResults(format);
+                _view.SaveResultsCommand.MenuItems?.Insert(index++, formatItem);
+            }
         }
 
         private string CreateOpenFileFilter(bool testCentricProject = false)
