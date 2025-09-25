@@ -5,6 +5,7 @@
 
 namespace TestCentric.Gui.Model
 {
+    using System.Linq;
     using NSubstitute;
     using NUnit.Framework;
 
@@ -104,7 +105,7 @@ namespace TestCentric.Gui.Model
         [TestCase("Passed", "", "Skipped", "", TestStatus.Passed)]
         [TestCase("Skipped", "", "Passed", "", TestStatus.Passed)]
         [TestCase("Inconclusive", "", "Skipped", "", TestStatus.Inconclusive)]
-        public void AddResult_ResultExistsFromPreviousRun_ReturnsMergedResultFromCurrentAndPreviousRun(
+        public void AddResult_ResultExistsFromPreviousRun_MergedResultFromCurrentAndPreviousRun_IsStored(
             string oldOutcome, string oldLabel, string newOutcome, string newLabel, TestStatus expectedTestStatus)
         {
             // Arrange
@@ -137,8 +138,8 @@ namespace TestCentric.Gui.Model
         [TestCase("Warning", "", "Skipped", "Ignored", TestStatus.Warning)]
         [TestCase("Passed", "", "Inconclusive", "", TestStatus.Passed)]
         [TestCase("Inconclusive", "", "Skipped", "", TestStatus.Inconclusive)]
-        public void AddResult_ResultExistsFromPreviousRun_ReturnsResultMergedResultFromCurrentAndPreviousRun(
-            string oldOutcome, string oldLabel, string newOutcome, string newLabel, TestStatus returnsOldResult)
+        public void AddResult_ResultExistsFromPreviousRun_Returns_MergedResultFromCurrentAndPreviousRun(
+            string oldOutcome, string oldLabel, string newOutcome, string newLabel, TestStatus expectedTestStatus)
         {
             // Arrange
             ResultNode oldResult = new ResultNode($"<test-suite id='1' result='{oldOutcome}' label='{oldLabel}' />");
@@ -161,7 +162,69 @@ namespace TestCentric.Gui.Model
 
             // Assert
             Assert.That(addedResult.Id, Is.EqualTo("1"));
-            Assert.That(addedResult.Outcome.Status, Is.EqualTo(returnsOldResult));
+            Assert.That(addedResult.Outcome.Status, Is.EqualTo(expectedTestStatus));
+        }
+
+        [TestCase("Failed", "", "Passed", "", TestStatus.Failed)]
+        [TestCase("Failed", "", "Warning", "", TestStatus.Failed)]
+        [TestCase("Failed", "", "Skipped", "Ignored", TestStatus.Failed)]
+        [TestCase("Failed", "", "Failed", "", TestStatus.Failed)]
+        [TestCase("Warning", "", "Failed", "", TestStatus.Failed)]
+        [TestCase("Skipped", "", "Failed", "", TestStatus.Failed)]
+        [TestCase("Skipped", "Ignored", "Failed", "", TestStatus.Failed)]
+        [TestCase("Warning", "", "Passed", "", TestStatus.Warning)]
+        [TestCase("Warning", "", "Inconclusive", "", TestStatus.Warning)]
+        [TestCase("Warning", "", "Skipped", "Ignored", TestStatus.Warning)]
+        [TestCase("Inconclusive", "", "Warning", "", TestStatus.Warning)]
+        [TestCase("Warning", "", "Warning", "", TestStatus.Warning)]
+        [TestCase("Passed", "", "Warning", "", TestStatus.Warning)]
+        [TestCase("Skipped", "Ignored", "Warning", "", TestStatus.Warning)]
+        [TestCase("Skipped", "Ignored", "Passed", "", TestStatus.Skipped)]
+        [TestCase("Skipped", "Ignored", "Inconclusive", "", TestStatus.Skipped)]
+        [TestCase("Passed", "", "Skipped", "Ignored", TestStatus.Skipped)]
+        [TestCase("Passed", "", "Inconclusive", "", TestStatus.Passed)]
+        [TestCase("Passed", "", "Skipped", "", TestStatus.Passed)]
+        [TestCase("Skipped", "", "Passed", "", TestStatus.Passed)]
+        [TestCase("Inconclusive", "", "Skipped", "", TestStatus.Inconclusive)]
+        public void AddResult_FromTwoTestRuns_ltFromCurrentAndPreviousRun(
+            string outcome1stRun, string label1stRun, string outcome2ndRun, string label2ndRun, TestStatus expectedTestStatus)
+        {
+            // Arrange
+            TestNode testNode1 = new TestNode($"<test-suite id='1' type='TestSuite'> <test-suite id='2' type='TestFixture'> <test-case id='3' />  <test-case id='4' /> </test-suite> </test-suite>");
+
+            // Simulate 2 test runs in which only one part of the tests are executed.: 1st run executes test case '3'; 2nd run executes test case '4'
+            ResultNode resultNode1_1stRun = new ResultNode($"<test-suite id='1' type='TestSuite' result='{outcome1stRun}' label='{label1stRun}' />");
+            ResultNode resultNode2_1stRun = new ResultNode($"<test-suite id='2' type='TestFixture' result='{outcome1stRun}' label='{label1stRun}' />");
+            ResultNode resultNode3_1stRun = new ResultNode($"<test-suite id='3' result='{outcome1stRun}' label='{label1stRun}' />");
+
+            ResultNode resultNode1_2ndRun = new ResultNode($"<test-suite id='1' type='TestSuite' result='{outcome2ndRun}' label='{label2ndRun}' />");
+            ResultNode resultNode2_2ndRun = new ResultNode($"<test-suite id='2' type='TestFixture' result='{outcome2ndRun}' label='{label2ndRun}' />");
+            ResultNode resultNode4_2ndRun = new ResultNode($"<test-suite id='4' result='{outcome2ndRun}' label='{label2ndRun}' />");
+
+            ITestModel model = Substitute.For<ITestModel>();
+            model.GetTestById("1").Returns(testNode1);
+            model.GetTestById("2").Returns(testNode1.Children.First());
+
+            var manager = new TestResultManager(model);
+
+            // Act: Add results from first test run
+            manager.TestRunStarting();
+            manager.AddResult(resultNode3_1stRun);
+            manager.AddResult(resultNode2_1stRun);
+            manager.AddResult(resultNode1_1stRun);
+
+            // Act: Add results from second test run
+            manager.TestRunStarting();
+            manager.AddResult(resultNode4_2ndRun);
+            manager.AddResult(resultNode2_2ndRun);
+            manager.AddResult(resultNode1_2ndRun);
+
+            // Assert
+            ResultNode result = manager.GetResultForTest("1");
+            Assert.That(result.Outcome.Status, Is.EqualTo(expectedTestStatus));
+
+            result = manager.GetResultForTest("2");
+            Assert.That(result.Outcome.Status, Is.EqualTo(expectedTestStatus));
         }
 
         [Test]

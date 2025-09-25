@@ -257,7 +257,12 @@ namespace TestCentric.Gui.Presenters
 
         public static int CalcImageIndex(ResultNode resultNode, bool latestRun)
         {
-            switch (resultNode.Outcome.Status)
+            return CalcImageIndex(resultNode.Outcome, latestRun);
+        }
+
+        public static int CalcImageIndex(ResultState resultState, bool latestRun)
+        {
+            switch (resultState.Status)
             {
                 case TestStatus.Inconclusive:
                     return latestRun ? TestTreeView.InconclusiveIndex : TestTreeView.InconclusiveIndex_NotLatestRun;
@@ -269,7 +274,7 @@ namespace TestCentric.Gui.Presenters
                     return latestRun ? TestTreeView.WarningIndex : TestTreeView.WarningIndex_NotLatestRun;
                 case TestStatus.Skipped:
                 default:
-                    return resultNode.Outcome.Label == "Ignored"
+                    return resultState.Label == "Ignored"
                         ? latestRun ? TestTreeView.IgnoredIndex : TestTreeView.IgnoredIndex_NotLatestRun
                         : TestTreeView.SkippedIndex;
             }

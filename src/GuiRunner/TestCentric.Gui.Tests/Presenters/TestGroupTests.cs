@@ -57,24 +57,24 @@ namespace TestCentric.Gui.Presenters
             Assert.That(ids, Is.EqualTo(new string[] { "1", "3" }));
         }
 
-        [TestCase(TestTreeView.InitIndex, "Passed", TestTreeView.SuccessIndex)]
-        [TestCase(TestTreeView.InitIndex, "Failed", TestTreeView.FailureIndex)]
-        [TestCase(TestTreeView.SkippedIndex, "Warning", TestTreeView.WarningIndex)]
-        [TestCase(TestTreeView.SuccessIndex, "Failed", TestTreeView.FailureIndex)]
-        [TestCase(TestTreeView.SuccessIndex, "Warning", TestTreeView.WarningIndex)]
-        [TestCase(TestTreeView.WarningIndex, "Failed", TestTreeView.FailureIndex)]
-        [TestCase(TestTreeView.InconclusiveIndex, "Passed", TestTreeView.SuccessIndex)]
-        [TestCase(TestTreeView.IgnoredIndex, "Passed", TestTreeView.IgnoredIndex)]
-        [TestCase(TestTreeView.FailureIndex, "Passed", TestTreeView.FailureIndex)]
-        public void AddTestWithResult(int imageIndex, string outcome, int expectedImageIndex)
+        [TestCase("Skipped", "Ignored", "Warning", TestTreeView.WarningIndex)]
+        [TestCase("Passed", "Ignored", "Failed", TestTreeView.FailureIndex)]
+        [TestCase("Passed", "Ignored", "Warning", TestTreeView.WarningIndex)]
+        [TestCase("Warning", "Ignored", "Failed", TestTreeView.FailureIndex)]
+        [TestCase("Inconclusive", "Ignored", "Passed", TestTreeView.SuccessIndex)]
+        [TestCase("Skipped", "Ignored", "Passed", TestTreeView.IgnoredIndex)]
+        [TestCase("Failed", "Ignored", "Passed", TestTreeView.FailureIndex)]
+        public void AddTestsWithResults_CheckImageIndex(string outcome1, string label1, string outcome2, int expectedImageIndex)
         {
             // Arrange
-            var group = new TestGroup("TestGroup", imageIndex);
+            var group = new TestGroup("TestGroup");
             var testNode = MakeTestNode("1", "Tom", "Runnable");
-            var resultNode = new ResultNode($"<test-case id='1' result='{outcome}'/>");
+            var resultNode1 = new ResultNode($"<test-case id='1' result='{outcome1}' label='{label1}'/>");
+            var resultNode2 = new ResultNode($"<test-case id='1' result='{outcome2}'/>");
 
             // Act
-            group.Add(testNode, resultNode);
+            group.Add(testNode, resultNode1);
+            group.Add(testNode, resultNode2);
 
             // Assert
             Assert.That(group.ImageIndex, Is.EqualTo(expectedImageIndex));

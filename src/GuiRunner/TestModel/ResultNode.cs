@@ -54,7 +54,10 @@ namespace TestCentric.Gui.Model
             if (!string.IsNullOrEmpty(resultState.Label))
             {
                 attribute = xmlNode.Attributes["label"];
-                attribute.Value = resultState.Label;
+                if (attribute == null)
+                    xmlNode.AddAttribute("label", resultState.Label);
+                else
+                    attribute.Value = resultState.Label;
             }
 
             return new ResultNode(xmlNode) { IsLatestRun = false };
