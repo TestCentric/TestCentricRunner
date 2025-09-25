@@ -155,11 +155,7 @@ namespace TestCentric.Gui.Model
             return failedTests;
         }
 
-        /// <summary>
-        /// If a TestNode was not executed entirely in the current test run
-        /// Some child TestNodes might contain TestResults from a previous test run
-        /// </summary>
-        private IList<ResultNode> GetPreviousTestRunResults(ResultNode resultNode)
+        private IList<ResultNode> GetChildTestResults(ResultNode resultNode)
         {
             var results = new List<ResultNode>();
 
@@ -170,39 +166,43 @@ namespace TestCentric.Gui.Model
             foreach (TestNode child in node.Children)
             {
                 ResultNode childResult = GetResultForTest(child.Id);
-                if (childResult != null && !childResult.IsLatestRun)
+                if (childResult != null)
                     results.Add(childResult);
             }
 
             return results;
         }
 
+        /// <summary>
+        /// If a TestNode was not executed entirely in the current test run
+        /// Some child TestNodes might contain contracting TestResults from a previous test run
+        /// </summary>
         private bool UpdateResultFromPreviousTestRun(ResultNode testResult, out ResultState newResultState)
         {
             newResultState = null;
-            IList<ResultNode> previousChildResults = GetPreviousTestRunResults(testResult);
-            if (!previousChildResults.Any())
+            IList<ResultNode> childResults = GetChildTestResults(testResult);
+            if (!childResults.Any())
                 return false;
 
-            ResultState previousTestRunResult = GetPreviousTestRunResultOutcome(previousChildResults);
-            bool updateTestResult = GetOutcome(previousTestRunResult) > GetOutcome(testResult.Outcome);
-            newResultState = updateTestResult ? previousTestRunResult : testResult.Outcome;
+            ResultState worstChildResult = GetWorstChildResult(childResults);
+            bool updateTestResult = GetOutcome(worstChildResult) > GetOutcome(testResult.Outcome);
+            newResultState = updateTestResult ? worstChildResult : testResult.Outcome;
             return updateTestResult;
         }
 
-        private ResultState GetPreviousTestRunResultOutcome(IList<ResultNode> previousChildResults)
+        private ResultState GetWorstChildResult(IList<ResultNode> childResults)
         {
             ResultState resultState = ResultState.Inconclusive;
-            foreach (ResultNode oldChildResult in previousChildResults)
+            foreach (ResultNode childResult in childResults)
             {
-                if (GetOutcome(oldChildResult.Outcome) > GetOutcome(resultState))
-                    resultState = oldChildResult.Outcome;
+                if (GetOutcome(childResult.Outcome) > GetOutcome(resultState))
+                    resultState = childResult.Outcome;
             }
 
             return resultState;
         }
 
-        private int GetOutcome(ResultState resultState)
+        public static int GetOutcome(ResultState resultState)
         {
             switch (resultState.Status)
             {

@@ -3,12 +3,10 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using System.Text;
-using System.Windows.Forms;
 
 namespace TestCentric.Gui.Presenters
 {
-    using System;
+    using System.Windows.Forms;
     using Model;
     using TestCentric.Gui.Model.Filter;
 
@@ -21,6 +19,10 @@ namespace TestCentric.Gui.Presenters
     /// </summary>
     public class TestGroup : TestSelection, ITestItem
     {
+        private ResultState _groupResultState;
+        private bool _isResultFromLatestRun;
+
+
         #region Constructors
 
         public TestGroup(string name) : this(name, -1) { }
@@ -64,8 +66,12 @@ namespace TestCentric.Gui.Presenters
             Add(testNode);
             if (resultNode != null)
             {
-                int imageIndex = DisplayStrategy.CalcImageIndex(resultNode);
-                ImageIndex = Math.Max(imageIndex, ImageIndex);
+                if (_groupResultState == null || TestResultManager.GetOutcome(_groupResultState) < TestResultManager.GetOutcome(resultNode.Outcome))
+                    _groupResultState = resultNode.Outcome;
+
+                _isResultFromLatestRun = _isResultFromLatestRun || resultNode.IsLatestRun;
+
+                ImageIndex = DisplayStrategy.CalcImageIndex(_groupResultState, _isResultFromLatestRun);
             }
         }
     }
