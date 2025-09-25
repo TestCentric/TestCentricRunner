@@ -12,11 +12,13 @@ using NUnit.Framework;
 
 namespace TestCentric.Gui.Presenters.Main
 {
+    using System;
+    using System.Runtime.InteropServices;
+    using System.Windows.Forms;
     using Elements;
-    using Views;
     using Model;
     using NSubstitute.Core.Arguments;
-    using System.Windows.Forms;
+    using Views;
 
     public class CommandTests : MainPresenterTestBase
     {
@@ -193,9 +195,9 @@ namespace TestCentric.Gui.Presenters.Main
             _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs(NO_FILE_PATH);
             _model.WorkDirectory.Returns("WORKDIRECTORY");
 
-            _view.SaveResultsCommand.Execute += Raise.Event<CommandHandler>();
+            _presenter.SaveResults("nunit3");
 
-            _view.DialogManager.Received().GetFileSavePath("Save Results in nunit3 format", "XML Files (*.xml)|*.xml|All Files (*.*)|*.*", "WORKDIRECTORY", "TestResult.xml");
+            _view.DialogManager.Received().GetFileSavePath("Save results in nunit3 format", "XML Files (*.xml)|*.xml|All Files (*.*)|*.*", "WORKDIRECTORY", "TestResult.xml");
         }
 
         [Test]
@@ -204,9 +206,9 @@ namespace TestCentric.Gui.Presenters.Main
             var savePath = Path.GetFullPath("/path/to/TestResult.xml");
             _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs(savePath);
 
-            _view.SaveResultsCommand.Execute += Raise.Event<CommandHandler>();
+            _presenter.SaveResults("nunit3");
 
-            _model.Received().SaveResults(savePath);
+            _model.Received().SaveResults(savePath, "nunit3");
         }
 
         [Test]
@@ -214,7 +216,7 @@ namespace TestCentric.Gui.Presenters.Main
         {
             _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs(NO_FILE_PATH);
 
-            _view.SaveResultsCommand.Execute += Raise.Event<CommandHandler>();
+            _presenter.SaveResults("nunit3");
 
             _model.DidNotReceiveWithAnyArgs().SaveResults(null);
         }

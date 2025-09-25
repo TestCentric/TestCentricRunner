@@ -154,6 +154,9 @@ namespace TestCentric.Gui.Model
         // Save the results of the last run in the specified format
         void SaveResults(string fileName, string format="nunit3");
 
+        // Use xslt file to transform the results of the last run into target file
+        void TransformResults(string targetFile, string xsltFile);
+
         // Get a specific test given its id
         TestNode GetTestById(string id);
 

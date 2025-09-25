@@ -35,6 +35,7 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("RunParametersButton", false)]
         [TestCase("ForceStopButton", false)]
         [TestCase("SaveResultsCommand", false)]
+        [TestCase("TransformResultsCommand", false)]
         public void CheckCommandEnabled(string propName, bool enabled)
         {
             ViewElement(propName).Received().Enabled = enabled;

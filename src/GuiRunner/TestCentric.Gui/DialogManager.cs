@@ -36,11 +36,17 @@ namespace TestCentric.Gui.Views
 
         public string GetFileSavePath(string title, string filter, string initialDirectory, string suggestedName)
         {
+            return GetFileSavePath(title, filter, initialDirectory, suggestedName, out int _);
+        }
+
+        public string GetFileSavePath(string title, string filter, string initialDirectory, string suggestedName, out int selectedFilterIndex)
+        {
             SaveFileDialog dlg = CreateSaveFileDialog(title, filter, initialDirectory, suggestedName);
 
-            return dlg.ShowDialog() == DialogResult.OK
-                ? dlg.FileName
-                : null;
+            var dialogResult = dlg.ShowDialog();
+            selectedFilterIndex = dlg.FilterIndex;
+
+            return dialogResult == DialogResult.OK ? dlg.FileName : null;
         }
 
         public string GetFolderPath(string message, string initialPath)

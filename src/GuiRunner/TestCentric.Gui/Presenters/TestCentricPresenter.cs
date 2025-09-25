@@ -56,8 +56,6 @@ namespace TestCentric.Gui.Presenters
 
         private AgentSelectionController _agentSelectionController;
 
-        private List<string> _resultFormats = new List<string>();
-
         private string[] _lastFilesLoaded = null;
 
         private bool _stopRequested;
@@ -83,10 +81,7 @@ namespace TestCentric.Gui.Presenters
             UpdateViewCommands();
             UpdateTreeDisplayMenuItem();
             UpdateRunSelectedTestsTooltip();
-
-            foreach (string format in _model.ResultFormats)
-                if (format != "cases" && format != "user")
-                    _resultFormats.Add(format);
+            UpdateSaveResultFormatsMenuItem();
 
             WireUpEvents();
             _view.ShowHideFilterButton.Checked = _settings.Gui.TestTree.ShowFilter;
@@ -496,23 +491,11 @@ namespace TestCentric.Gui.Presenters
 
             _view.RunParametersButton.Execute += DisplayTestParametersDialog;
 
-            _view.ToolsMenu.Popup += () =>
-            {
-                _view.SaveResultsAsMenu.MenuItems.Clear();
-
-                foreach (string format in _resultFormats)
-                {
-                    var formatItem = new ToolStripMenuItem(format);
-                    formatItem.Click += (s, e) => SaveResults(format);
-                    _view.SaveResultsAsMenu.MenuItems.Add(formatItem);
-                }
-            };
-
-            _view.SaveResultsCommand.Execute += () => SaveResults();
+            _view.TransformResultsCommand.Execute += TransformResults;
 
             _view.OpenWorkDirectoryCommand.Execute += () => System.Diagnostics.Process.Start(_model.WorkDirectory);
 
-            _view.TreeView.ShowCheckBoxes.CheckedChanged += () => UpdateRunSelectedTestsTooltip();
+            _view.TreeView.ShowCheckBoxes.CheckedChanged += UpdateRunSelectedTestsTooltip;
 
             _view.ExtensionsCommand.Execute += () =>
             {
@@ -701,7 +684,7 @@ namespace TestCentric.Gui.Presenters
 
         public void SaveResults(string format = "nunit3")
         {
-            string savePath = _view.DialogManager.GetFileSavePath($"Save Results in {format} format", "XML Files (*.xml)|*.xml|All Files (*.*)|*.*", _model.WorkDirectory, "TestResult.xml");
+            string savePath = _view.DialogManager.GetFileSavePath($"Save results in {format} format", "XML Files (*.xml)|*.xml|All Files (*.*)|*.*", _model.WorkDirectory, "TestResult.xml");
 
             if (savePath != null)
             {
@@ -718,9 +701,30 @@ namespace TestCentric.Gui.Presenters
             }
         }
 
+        public void TransformResults()
+        {
+            TransformTestResultDialog dlg = new TransformTestResultDialog();
+            dlg.StartPosition = FormStartPosition.CenterParent;
+            if (dlg.ShowDialog() != DialogResult.OK)
+                return;
+
+            try
+            {
+                string fileName = dlg.TransformationFile;
+                string targetFileName = dlg.TargetFile;
+                _model.TransformResults(targetFileName, fileName);
+
+                _view.MessageDisplay.Info(String.Format($"Results transformed into {targetFileName} using {fileName}"));
+            }
+            catch (Exception exception)
+            {
+                _view.MessageDisplay.Error("Unable to Transform Results\n\n" + MessageBuilder.FromException(exception));
+            }
+        }
+
         #endregion
 
-        #region Reload Methods
+            #region Reload Methods
 
         public void ReloadTests()
         {
@@ -779,7 +783,7 @@ namespace TestCentric.Gui.Presenters
             _view.ReloadTestsCommand.Enabled = testLoaded && !testRunning;
             _view.RecentFilesMenu.Enabled = !testRunning && !testLoading;
             _view.ExitCommand.Enabled = !testLoading;
-            _view.SaveResultsCommand.Enabled = _view.SaveResultsAsMenu.Enabled = !testRunning && !testLoading && hasResults;
+            _view.SaveResultsCommand.Enabled = _view.TransformResultsCommand.Enabled = !testRunning && !testLoading && hasResults;
         }
 
         private void UpdateRunSelectedTestsTooltip()
@@ -788,6 +792,17 @@ namespace TestCentric.Gui.Presenters
             IToolTip tooltip = _view.RunSelectedButton as IToolTip;
             if (tooltip != null)
                 tooltip.ToolTipText = showCheckBoxes ? "Run Checked Tests" : "Run Selected Tests";
+        }
+
+        private void UpdateSaveResultFormatsMenuItem()
+        {
+            int index = 0;
+            foreach (string format in _model.ResultFormats.Except(new[] { "user", "cases" }))
+            {
+                var formatItem = new ToolStripMenuItem($"Format: {format}");
+                formatItem.Click += (s, e) => SaveResults(format);
+                _view.SaveResultsCommand.MenuItems?.Insert(index++, formatItem);
+            }
         }
 
         private string CreateOpenFileFilter(bool testCentricProject = false)

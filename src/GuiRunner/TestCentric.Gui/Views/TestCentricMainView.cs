@@ -43,6 +43,7 @@ namespace TestCentric.Gui.Views
         private System.Windows.Forms.ToolStripMenuItem toolsMenu;
         private System.Windows.Forms.ToolStripMenuItem settingsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveResultsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transformResultsMenuItem;
 
         private System.Windows.Forms.ToolStripMenuItem nunitHelpMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpItem;
@@ -71,15 +72,15 @@ namespace TestCentric.Gui.Views
         private ErrorsAndFailuresView errorsAndFailuresView1;
         private ToolStripMenuItem recentFilesDummyMenuItem;
         private ToolStripMenuItem openWorkDirectoryMenuItem;
-        private ToolStripMenuItem saveResultsAsMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripSeparator toolStripSeparator4;
+        private ToolStripSeparator toolStripSeparator7;
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripSeparator toolStripSeparator11;
-        private ToolStripSeparator toolStripSeparator7;
+        private ToolStripSeparator toolStripSeparator12;
         private ToolStripMenuItem runAsX86MenuItem;
         private ToolStripMenuItem selectAgentMenu;
         private ToolStripMenuItem selectAgentDummyMenuItem;
@@ -163,8 +164,8 @@ namespace TestCentric.Gui.Views
 
             // Initialize Tools Menu Comands
             ToolsMenu = new PopupMenuElement(toolsMenu);
-            SaveResultsCommand = new CommandMenuElement(saveResultsMenuItem);
-            SaveResultsAsMenu = new PopupMenuElement(saveResultsAsMenuItem);
+            SaveResultsCommand = new PopupMenuElement(saveResultsMenuItem);
+            TransformResultsCommand = new CommandMenuElement(transformResultsMenuItem);
             OpenWorkDirectoryCommand = new CommandMenuElement(openWorkDirectoryMenuItem);
             ExtensionsCommand = new CommandMenuElement(extensionsMenuItem);
             SettingsCommand = new CommandMenuElement(settingsMenuItem);
@@ -291,7 +292,8 @@ namespace TestCentric.Gui.Views
             this.restoreFixedFontMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.saveResultsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveResultsAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
+            this.transformResultsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWorkDirectoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.extensionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -866,7 +868,6 @@ namespace TestCentric.Gui.Views
             // 
             this.toolsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveResultsMenuItem,
-            this.saveResultsAsMenuItem,
             this.openWorkDirectoryMenuItem,
             this.toolStripSeparator7,
             this.extensionsMenuItem,
@@ -875,17 +876,25 @@ namespace TestCentric.Gui.Views
             this.toolsMenu.Size = new System.Drawing.Size(46, 20);
             this.toolsMenu.Text = "T&ools";
             // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(118, 6);
+            // 
             // saveResultsMenuItem
             // 
             this.saveResultsMenuItem.Name = "saveResultsMenuItem";
             this.saveResultsMenuItem.Size = new System.Drawing.Size(194, 22);
             this.saveResultsMenuItem.Text = "&Save Test Results...";
+            this.saveResultsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.toolStripSeparator12,
+                this.transformResultsMenuItem });
             // 
-            // saveResultsAsMenuItem
+            // transformResultsMenuItem
             // 
-            this.saveResultsAsMenuItem.Name = "saveResultsAsMenuItem";
-            this.saveResultsAsMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.saveResultsAsMenuItem.Text = "Save Test Results As";
+            this.transformResultsMenuItem.Name = "transformResultsMenuItem";
+            this.transformResultsMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.transformResultsMenuItem.Text = "&Transform Test Results...";
             // 
             // openWorkDirectoryMenuItem
             // 
@@ -1248,8 +1257,8 @@ namespace TestCentric.Gui.Views
 
         // Tools Menu Items
         public IPopup ToolsMenu { get; }
-        public ICommand SaveResultsCommand { get; }
-        public IPopup SaveResultsAsMenu { get; }
+        public IPopup SaveResultsCommand { get; }
+        public ICommand TransformResultsCommand { get; }
         public ICommand OpenWorkDirectoryCommand { get; }
         public ICommand ExtensionsCommand { get; }
         public ICommand SettingsCommand { get; }
