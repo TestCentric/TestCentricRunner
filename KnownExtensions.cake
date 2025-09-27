@@ -12,20 +12,20 @@ public static class KnownExtensions
         "NUnit.Extension.VSProjectLoader", "nunit-extension-vs-project-loader", "3.9.0");
     public static ExtensionSpecifier NUnitV2ResultWriter = new ExtensionSpecifier(
         "NUnit.Extension.NUnitV2ResultWriter", "nunit-extension-nunit-v2-result-writer", "4.0.0-beta.1");
-    public static ExtensionSpecifier Net20PluggableAgent = new ExtensionSpecifier(
-        "NUnit.Extension.Net20PluggableAgent", "nunit-extension-net20-pluggable-agent", "2.1.1");
+    //public static ExtensionSpecifier Net20PluggableAgent = new ExtensionSpecifier(
+    //    "NUnit.Extension.Net20PluggableAgent", "nunit-extension-net20-pluggable-agent", "2.1.1");
     public static ExtensionSpecifier Net462PluggableAgent = new ExtensionSpecifier(
         "NUnit.Extension.Net462PluggableAgent", "nunit-extension-net462-pluggable-agent", "4.1.0-alpha.3");
-    public static ExtensionSpecifier NetCore21PluggableAgent = new ExtensionSpecifier(
-        "NUnit.Extension.NetCore21PluggableAgent", "nunit-extension-netcore21-pluggable-agent", "2.1.1");
-    public static ExtensionSpecifier NetCore31PluggableAgent = new ExtensionSpecifier(
-        "NUnit.Extension.NetCore31PluggableAgent", "nunit-extension-netcore31-pluggable-agent", "2.1.0");
-    public static ExtensionSpecifier Net50PluggableAgent = new ExtensionSpecifier(
-        "NUnit.Extension.Net50PluggableAgent", "nunit-extension-net50-pluggable-agent", "2.1.0");
-    public static ExtensionSpecifier Net60PluggableAgent = new ExtensionSpecifier(
-        "NUnit.Extension.Net60PluggableAgent", "nunit-extension-net60-pluggable-agent", "2.1.0");
-    public static ExtensionSpecifier Net70PluggableAgent = new ExtensionSpecifier(
-        "NUnit.Extension.Net70PluggableAgent", "nunit-extension-net70-pluggable-agent", "2.1.0");
+    //public static ExtensionSpecifier NetCore21PluggableAgent = new ExtensionSpecifier(
+    //    "NUnit.Extension.NetCore21PluggableAgent", "nunit-extension-netcore21-pluggable-agent", "2.1.1");
+    //public static ExtensionSpecifier NetCore31PluggableAgent = new ExtensionSpecifier(
+    //    "NUnit.Extension.NetCore31PluggableAgent", "nunit-extension-netcore31-pluggable-agent", "2.1.0");
+    //public static ExtensionSpecifier Net50PluggableAgent = new ExtensionSpecifier(
+    //    "NUnit.Extension.Net50PluggableAgent", "nunit-extension-net50-pluggable-agent", "2.1.0");
+    //public static ExtensionSpecifier Net60PluggableAgent = new ExtensionSpecifier(
+    //    "TestCentric.Extension.Net60PluggableAgent", "testcentric-extension-net60-pluggable-agent", "2.5.3-dev00010");
+    //public static ExtensionSpecifier Net70PluggableAgent = new ExtensionSpecifier(
+    //    "NUnit.Extension.Net70PluggableAgent", "nunit-extension-net70-pluggable-agent", "2.1.0");
     public static ExtensionSpecifier Net80PluggableAgent = new ExtensionSpecifier(
         "NUnit.Extension.Net80PluggableAgent", "nunit-extension-net80-pluggable-agent", "4.1.0-alpha.4");
     public static ExtensionSpecifier Net90PluggableAgent = new ExtensionSpecifier(
