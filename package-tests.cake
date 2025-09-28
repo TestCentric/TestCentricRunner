@@ -58,6 +58,10 @@ public static class PackageTests
             "net8.0/mock-assembly.dll",
             MockAssemblyExpectedResult("Net80AgentLauncher")));
 
+        GuiAndEngineTests.Add(new PackageTest(1, "Net90Test", "Run mock-assembly.dll under .NET 9.0",
+            "net9.0/mock-assembly.dll",
+            MockAssemblyExpectedResult("Net90AgentLauncher")));
+
         // AspNetCore tests
 
         if (BuildSettings.IsLocalBuild)

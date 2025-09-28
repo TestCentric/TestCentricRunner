@@ -37,7 +37,8 @@ public static class KnownExtensions
     private static ExtensionSpecifier[] BundledAgents =>
     [
         Net462PluggableAgent,
-        Net80PluggableAgent
+        Net80PluggableAgent,
+        Net90PluggableAgent
     ];
 
     public static IEnumerable<PackageReference> BundledNuGetAgents =>
