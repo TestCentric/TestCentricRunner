@@ -1,0 +1,55 @@
+TestCentric.Engine.Api
+│   AsyncTestEngineResult.cs
+│   ITestAgent.cs
+│   ITestEngine.cs
+│   ITestEngineRunner.cs
+│   ITestEventListener.cs
+│   ITestRun.cs
+│   ITestRunner.cs
+│   PackageSetting.cs
+│   PackageSettings.cs
+│   SettingDefinition.cs
+│   SettingDefinitions.cs
+│   TestAgentInfo.cs
+│   TestAgentType.cs
+│   TestCentric.Engine.Api.csproj
+│   TestEngineResult.cs
+│   TestFilter.cs
+│   TestPackage.cs
+│
+├───Agents
+│       AgentExitCodes.cs
+│
+├───Communication
+│   ├───Messages
+│   │       MessageCode.cs
+│   │       TestEngineMessage.cs
+│   │
+│   └───Protocols
+│           ISerializationProtocol.cs
+│
+├───Exceptions
+│       EngineException.cs
+│       EngineUnloadException.cs
+│       TestSelectionParserException.cs
+│
+├───Extensibility
+│       IAgentLauncher.cs
+│       IDriverFactory.cs
+│       IFrameworkDriver.cs
+│       IProject.cs
+│       IProjectLoader.cs
+│       IResultWriter.cs
+│
+└───Services
+        IAvailableRuntimes.cs
+        IExtensionService.cs
+        IResultService.cs
+        IRuntimeFramework.cs
+        IRuntimeFrameworkService.cs
+        IService.cs
+        IServiceLocator.cs
+        ITestAgency.cs
+        ITestAgentInfo.cs
+        ITestFilterBuilder.cs
+        ITestFilterService.cs

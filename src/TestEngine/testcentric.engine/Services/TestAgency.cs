@@ -16,6 +16,7 @@ using TestCentric.Engine.Internal;
 using TestCentric.Engine.Communication.Transports.Remoting;
 using TestCentric.Engine.Communication.Transports.Tcp;
 using TestCentric.Extensibility;
+using System.Runtime.Remoting.Messaging;
 
 namespace TestCentric.Engine.Services
 {
@@ -32,7 +33,7 @@ namespace TestCentric.Engine.Services
 
         private readonly AgentStore _agentStore = new AgentStore();
 
-        private ExtensionService _extensionService;
+        private IExtensionService _extensionService;
 
         private readonly List<IExtensionNode> _launcherNodes = new List<IExtensionNode>();
 
@@ -289,13 +290,13 @@ namespace TestCentric.Engine.Services
 
         public void StartService()
         {
-            _extensionService = ServiceContext.GetService<ExtensionService>();
+            _extensionService = ServiceContext.GetService<IExtensionService>();
 
             try
             {
                 // Add nodes for pluggable agent extensions
                 if (_extensionService != null)
-                    foreach (var launcherNode in _extensionService.GetExtensionNodes<IAgentLauncher>())
+                    foreach (var launcherNode in _extensionService.GetExtensionNodes("/TestCentric/Engine/AgentLaunchers"))
                         _launcherNodes.Add(launcherNode);
 
                 // TODO: Sorting is temporarily suppressed until agents can be fixed.
@@ -378,34 +379,48 @@ namespace TestCentric.Engine.Services
 
         private bool CanCreateAgent(IExtensionNode node, TestPackage package)
         {
+            // Newer implementations use a TargetFramework property to avoid
+            // intantiating any agents, which will not be used.
             var runtimes = node.GetValues("TargetFramework");
 
-            if (runtimes.Count() > 0)
+            // If there is no property, we have to instantiate it to check.
+            if (runtimes.Count() == 0)
             {
-                var agentTarget = new FrameworkName(runtimes.First());
-                log.Debug($"Agent {node.TypeName} targets {agentTarget}");
-                var packageTargetSetting = 
-                    package.Settings.GetValueOrDefault(SettingDefinitions.ImageTargetFrameworkName);
-
-                if (!string.IsNullOrEmpty(packageTargetSetting))
-                {
-                    var packageTarget = new FrameworkName(packageTargetSetting);
-                    return agentTarget.Identifier == packageTarget.Identifier
-                        && agentTarget.Version.Major >= packageTarget.Version.Major;
-                }
-
-                var packageRuntimeVersion =
-                    package.Settings.GetValueOrDefault(SettingDefinitions.ImageRuntimeVersion);
-                if (!string.IsNullOrEmpty(packageRuntimeVersion))
-                    return agentTarget.Identifier == FrameworkIdentifiers.NetFramework &&
-                        new Version(packageRuntimeVersion).Major <= agentTarget.Version.Major;
+                var launcher = GetLauncherInstance(node);
+                return launcher is not null && launcher.CanCreateProcess(package);
             }
+
+            // The property is present, so no instantiation is needed.
+            var agentTarget = new FrameworkName(runtimes.First());
+            log.Debug($"Agent {node.TypeName} targets {agentTarget}");
+            var packageTargetSetting = 
+                package.Settings.GetValueOrDefault(SettingDefinitions.ImageTargetFrameworkName);
+
+            if (!string.IsNullOrEmpty(packageTargetSetting))
+            {
+                var packageTarget = new FrameworkName(packageTargetSetting);
+                return agentTarget.Identifier == packageTarget.Identifier
+                    && agentTarget.Version.Major >= packageTarget.Version.Major;
+            }
+
+            var packageRuntimeVersion =
+                package.Settings.GetValueOrDefault(SettingDefinitions.ImageRuntimeVersion);
+            if (!string.IsNullOrEmpty(packageRuntimeVersion))
+                return agentTarget.Identifier == FrameworkIdentifiers.NetFramework &&
+                    new Version(packageRuntimeVersion).Major <= agentTarget.Version.Major;
 
             return false;
         }
 
         private IAgentLauncher GetLauncherInstance(IExtensionNode node)
-            => (IAgentLauncher)node.ExtensionObject;
+        {
+            var obj = node.ExtensionObject;
+            if (obj is IAgentLauncher)
+                return (IAgentLauncher)obj;
+            if (obj is NUnit.Engine.Extensibility.IAgentLauncher)
+                return new AgentLauncherWrapper((NUnit.Engine.Extensibility.IAgentLauncher)obj);
+            return null;
+        }
 
         private string GetAgentName(IExtensionNode node) => node.TypeName;
 

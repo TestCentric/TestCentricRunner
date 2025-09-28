@@ -59,7 +59,7 @@ namespace TestCentric.Engine.Services
                             {
                                 // HACK until we change IExtensionNode definition or use ExtensionNode directly
                                 var obj = ((ExtensionNode)node).ExtensionObject;
-                                return obj as IResultWriter ?? new NUnitResultWriterWrapper(obj as NUnit.Engine.Extensibility.IResultWriter);
+                                return obj as IResultWriter ?? new ResultWriterWrapper(obj as NUnit.Engine.Extensibility.IResultWriter);
                             }
                     return null;
             }
