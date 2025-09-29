@@ -286,11 +286,7 @@ namespace TestCentric.Engine
         /// <summary>
         /// A list of tests to be loaded.
         /// </summary>
-#if NET20
-        public static SettingDefinition<IList<string>> LOAD { get; } = new(nameof(LOAD), new string[0]);
-#else
         public static SettingDefinition<IList<string>> LOAD { get; } = new(nameof(LOAD), Array.Empty<string>());
-#endif
 
         /// <summary>
         /// The number of test threads to run for the assembly. If set to

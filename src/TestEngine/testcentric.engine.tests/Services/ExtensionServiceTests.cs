@@ -238,7 +238,7 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Returns a directory in the parent directory that the current test assembly is in. This
         /// is used to load assemblies that target different frameworks than the current tests. So
-        /// if these tests are in bin\release\net35 and dir is netstandard2.0, this will return
+        /// if these tests are in bin\release\net462 and dir is netstandard2.0, this will return
         /// bin\release\netstandard2.0.
         /// </summary>
         /// <param name="dir">The sibling directory</param>

@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<RootNamespace>TestCentric.Engine</RootNamespace>
-		<TargetFrameworks>net35;net462;net6.0</TargetFrameworks>
+		<TargetFrameworks>net462;net6.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
