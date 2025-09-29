@@ -147,7 +147,6 @@ var EngineApiPackage = new NuGetPackage(
     source: "nuget/TestCentric.Engine.Api.nuspec",
     checks: new PackageCheck[] {
         HasFiles("LICENSE.txt", "testcentric.png"),
-        HasDirectory("lib/net20").WithFiles("TestCentric.Engine.Api.dll"),
         HasDirectory("lib/net462").WithFiles("TestCentric.Engine.Api.dll"),
         HasDirectory("lib/netstandard2.0").WithFiles("Testcentric.Engine.Api.dll")
     });
