@@ -13,24 +13,24 @@ namespace TestCentric.Engine.Runners
 
         protected abstract NotRunnableAssemblyResult Result { get; }
 
-        protected override TestEngineResult LoadPackage()
+        protected override NUnit.Engine.TestEngineResult LoadPackage()
         {
-            return new TestEngineResult(Result.LoadResult);
+            return new NUnit.Engine.TestEngineResult(Result.LoadResult);
         }
 
-        public override int CountTestCases(TestFilter filter)
+        public override int CountTestCases(NUnit.Engine.TestFilter filter)
         {
             return 0;
         }
 
-        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
+        protected override NUnit.Engine.TestEngineResult RunTests(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
-            return new TestEngineResult(Result.RunResult);
+            return new NUnit.Engine.TestEngineResult(Result.RunResult);
         }
 
-        public override TestEngineResult Explore(TestFilter filter)
+        public override NUnit.Engine.TestEngineResult Explore(NUnit.Engine.TestFilter filter)
         {
-            return new TestEngineResult(Result.LoadResult);
+            return new NUnit.Engine.TestEngineResult(Result.LoadResult);
         }
 
         public override void RequestStop()

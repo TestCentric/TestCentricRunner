@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -13,7 +13,7 @@ namespace TestCentric.Engine.TestBed
     delegate void StartRunHandler();
 
 
-    class TestEventHandler : ITestEventListener
+    class TestEventHandler : NUnit.Engine.ITestEventListener
     {
         public event StartRunHandler RunStarted;
 

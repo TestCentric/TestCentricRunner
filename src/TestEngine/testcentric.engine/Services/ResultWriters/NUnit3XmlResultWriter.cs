@@ -15,7 +15,7 @@ namespace TestCentric.Engine.Services
     /// NUnit3XmlResultWriter is responsible for writing the results
     /// of a test to a file in NUnit 3 format.
     /// </summary>
-    public class NUnit3XmlResultWriter : IResultWriter
+    public class NUnit3XmlResultWriter : NUnit.Engine.Extensibility.IResultWriter
     {
         /// <summary>
         /// Checks if the output is writable by creating a stub result file. If the output is not

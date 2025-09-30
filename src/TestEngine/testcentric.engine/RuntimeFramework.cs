@@ -13,7 +13,7 @@ namespace TestCentric.Engine
     /// of a common language runtime implementation.
     /// </summary>
     [Serializable]
-    public sealed class RuntimeFramework : IRuntimeFramework
+    public sealed class RuntimeFramework : NUnit.Engine.IRuntimeFramework
     {
         /// <summary>
         /// Construct from a Runtime and Version.
@@ -77,8 +77,6 @@ namespace TestCentric.Engine
         /// The framework version for this runtime framework
         /// </summary>
         public Version FrameworkVersion { get; private set; }
-
-        public Version ClrVersion => throw new NotImplementedException();
 
         /// <summary>
         /// The Profile for this framework, where relevant.
@@ -153,7 +151,7 @@ namespace TestCentric.Engine
             return Runtime.Supports(this.FrameworkVersion, target.FrameworkVersion);
         }
 
-        public bool CanLoad(IRuntimeFramework requested)
+        public bool CanLoad(NUnit.Engine.IRuntimeFramework requested)
         {
             return FrameworkVersion >= requested.FrameworkVersion;
         }

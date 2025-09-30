@@ -14,7 +14,7 @@ namespace TestCentric.Engine.Runners
     /// interface, which uses TestEngineResults to communicate back
     /// to higher level runners.
     /// </summary>
-    public abstract class AbstractTestRunner : ITestEngineRunner
+    public abstract class AbstractTestRunner : NUnit.Engine.ITestEngineRunner
     {
         public AbstractTestRunner(TestPackage package)
         {
@@ -31,7 +31,7 @@ namespace TestCentric.Engine.Runners
         /// The result of the last call to LoadPackage
         /// for this runner's TestPackage.
         /// </summary>
-        protected TestEngineResult LoadResult { get; set; }
+        protected NUnit.Engine.TestEngineResult LoadResult { get; set; }
 
         /// <summary>
         /// Indicates whether the runner's TestPackage is loaded.
@@ -42,14 +42,14 @@ namespace TestCentric.Engine.Runners
         /// Loads the TestPackage for exploration or execution.
         /// </summary>
         /// <returns>A TestEngineResult.</returns>
-        protected abstract TestEngineResult LoadPackage();
+        protected abstract NUnit.Engine.TestEngineResult LoadPackage();
 
         /// <summary>
         /// Reload the currently loaded test package. Overridden
         /// in derived classes to take any additional action.
         /// </summary>
         /// <returns>A TestEngineResult.</returns>
-        protected virtual TestEngineResult ReloadPackage()
+        protected virtual NUnit.Engine.TestEngineResult ReloadPackage()
         {
             return LoadPackage();
         }
@@ -68,7 +68,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        protected abstract TestEngineResult RunTests(ITestEventListener listener, TestFilter filter);
+        protected abstract NUnit.Engine.TestEngineResult RunTests(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage, returning immediately.
@@ -78,9 +78,9 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
-        protected virtual AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
+        protected virtual NUnit.Engine.AsyncTestEngineResult RunTestsAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
-            var testRun = new AsyncTestEngineResult();
+            var testRun = new NUnit.Engine.AsyncTestEngineResult();
 
             using (var worker = new BackgroundWorker())
             {
@@ -111,13 +111,13 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">The TestFilter to be used to select tests</param>
         /// <returns>A TestEngineResult.</returns>
-        public abstract TestEngineResult Explore(TestFilter filter);
+        public abstract NUnit.Engine.TestEngineResult Explore(NUnit.Engine.TestFilter filter);
 
         /// <summary>
         /// Loads the TestPackage for exploration or execution, saving the result.
         /// </summary>
         /// <returns>A TestEngineResult.</returns>
-        public TestEngineResult Load()
+        public NUnit.Engine.TestEngineResult Load()
         {
             return LoadResult = LoadPackage();
         }
@@ -127,7 +127,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <returns>A TestEngineResult.</returns>
         /// <exception cref="InvalidOperationException">If no package has been loaded</exception>
-        public TestEngineResult Reload()
+        public NUnit.Engine.TestEngineResult Reload()
         {
             if (this.TestPackage == null)
                 throw new InvalidOperationException("MasterTestRunner: Reload called before Load");
@@ -150,7 +150,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases.</returns>
-        public abstract int CountTestCases(TestFilter filter);
+        public abstract int CountTestCases(NUnit.Engine.TestFilter filter);
 
         /// <summary>
         /// Run the tests in the TestPackage, loading the package
@@ -159,7 +159,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public TestEngineResult Run(ITestEventListener listener, TestFilter filter)
+        public NUnit.Engine.TestEngineResult Run(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             return RunTests(listener, filter);
         }
@@ -171,7 +171,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An <see cref="AsyncTestEngineResult"/> that will provide the result of the test execution</returns>
-        public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
+        public NUnit.Engine.AsyncTestEngineResult RunAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             return RunTestsAsync(listener, filter);
         }

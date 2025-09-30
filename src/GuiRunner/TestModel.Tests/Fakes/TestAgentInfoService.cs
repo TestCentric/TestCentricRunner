@@ -9,16 +9,16 @@ using TestCentric.Engine.Services;
 
 namespace TestCentric.Gui.Model.Fakes
 {
-    public class TestAgentInfoService : ITestAgentInfo
+    public class TestAgentInfoService : Service
     {
-        public IList<TestAgentInfo> GetAvailableAgents()
+        public IList<NUnit.Engine.TestAgentInfo> GetAvailableAgents()
         {
-            return new TestAgentInfo[0];
+            return new NUnit.Engine.TestAgentInfo[0];
         }
 
-        public IList<TestAgentInfo> GetAgentsForPackage(TestPackage package)
+        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(TestPackage package)
         {
-            return new TestAgentInfo[0];
+            return new NUnit.Engine.TestAgentInfo[0];
         }
     }
 }

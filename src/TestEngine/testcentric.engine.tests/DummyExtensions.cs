@@ -27,7 +27,7 @@ namespace TestCentric.Engine
     }
 
     [Extension]
-    public class DummyResultWriterExtension : IResultWriter
+    public class DummyResultWriterExtension : NUnit.Engine.Extensibility.IResultWriter
     {
         public void CheckWritability(string outputPath)
         {
@@ -46,7 +46,7 @@ namespace TestCentric.Engine
     }
 
     [Extension]
-    public class DummyEventListenerExtension : ITestEventListener
+    public class DummyEventListenerExtension : NUnit.Engine.ITestEventListener
     {
         public void OnTestEvent(string report)
         {
@@ -90,7 +90,7 @@ namespace TestCentric.Engine
     }
 
     [Extension(Enabled=false)]
-    public class DummyDisabledExtension : ITestEventListener
+    public class DummyDisabledExtension : NUnit.Engine.ITestEventListener
     {
         public void OnTestEvent(string report)
         {

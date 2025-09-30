@@ -19,7 +19,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
     /// TestAgentTcpProxy wraps a RemoteTestAgent so that certain
     /// of its properties may be accessed directly.
     /// </summary>
-    internal class TestAgentTcpProxy : ITestAgent, ITestEngineRunner
+    internal class TestAgentTcpProxy : ITestAgent, NUnit.Engine.ITestEngineRunner
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(TestAgentTcpProxy));
 
@@ -35,7 +35,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
 
         public Guid Id { get; }
 
-        public ITestEngineRunner CreateRunner(TestPackage package)
+        public NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package)
         {
             var writer = new StringWriter();
             var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings() { OmitXmlDeclaration = true });
@@ -55,48 +55,48 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
 
         public void Stop() => SendCommandMessage(MessageCode.StopAgent);
 
-        public TestEngineResult Load()
+        public NUnit.Engine.TestEngineResult Load()
         {
             SendCommandMessage(MessageCode.LoadCommand);
-            return new TestEngineResult(GetCommandResult());
+            return new NUnit.Engine.TestEngineResult(GetCommandResult());
         }
 
         public void Unload() => SendCommandMessage(MessageCode.UnloadCommand);
 
-        public TestEngineResult Reload()
+        public NUnit.Engine.TestEngineResult Reload()
         {
             SendCommandMessage(MessageCode.ReloadCommand);
-            return new TestEngineResult(GetCommandResult());
+            return new NUnit.Engine.TestEngineResult(GetCommandResult());
         }
 
-        public int CountTestCases(TestFilter filter)
+        public int CountTestCases(NUnit.Engine.TestFilter filter)
         {
             SendCommandMessage(MessageCode.CountCasesCommand, filter.Text);
             return int.Parse(GetCommandResult());
         }
 
-        public TestEngineResult Run(ITestEventListener listener, TestFilter filter)
+        public NUnit.Engine.TestEngineResult Run(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             SendCommandMessage(MessageCode.RunCommand, filter.Text);
 
             return TestRunResult(listener);
         }
 
-        public AsyncTestEngineResult RunAsync(ITestEventListener listener, TestFilter filter)
+        public NUnit.Engine.AsyncTestEngineResult RunAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
-            SendCommandMessage(MessageCode.RunAsyncCommand, ((TestFilter)filter).Text);
+            SendCommandMessage(MessageCode.RunAsyncCommand, ((NUnit.Engine.TestFilter)filter).Text);
 
-            return new AsyncTestEngineResult();
+            return new NUnit.Engine.AsyncTestEngineResult();
         }
 
         public void RequestStop() => SendCommandMessage(MessageCode.RequestStopCommand);
 
         public void ForcedStop() => SendCommandMessage(MessageCode.ForcedStopCommand);
 
-        public TestEngineResult Explore(TestFilter filter)
+        public NUnit.Engine.TestEngineResult Explore(NUnit.Engine.TestFilter filter)
         {
             SendCommandMessage(MessageCode.ExploreCommand, filter.Text);
-            return new TestEngineResult(GetCommandResult());
+            return new NUnit.Engine.TestEngineResult(GetCommandResult());
         }
 
         public void Dispose()
@@ -118,7 +118,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
 
         // Return the result of a test run as a TestEngineResult. ProgressMessages
         // preceding the final CommandReturnMessage are handled as well.
-        private TestEngineResult TestRunResult(ITestEventListener listener)
+        private NUnit.Engine.TestEngineResult TestRunResult(NUnit.Engine.ITestEventListener listener)
         {
             var rdr = new SocketReader(_socket, _wireProtocol);
             while (true)
@@ -128,7 +128,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
                 switch(message.Code)
                 {
                     case MessageCode.CommandResult:
-                        return new TestEngineResult(message.Data);
+                        return new NUnit.Engine.TestEngineResult(message.Data);
                     case MessageCode.ProgressReport:
                         listener.OnTestEvent(message.Data);
                         break;

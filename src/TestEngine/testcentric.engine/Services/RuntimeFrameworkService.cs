@@ -28,7 +28,7 @@ namespace TestCentric.Engine.Services
         /// which the code is currently running.
         /// </summary>
         private RuntimeFramework _currentFramework;
-        public IRuntimeFramework CurrentFramework => _currentFramework;
+        public NUnit.Engine.IRuntimeFramework CurrentFramework => _currentFramework;
 
         #region Service Overrides
 
@@ -145,7 +145,7 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Gets a list of available runtimes.
         /// </summary>
-        public IList<IRuntimeFramework> AvailableRuntimes
+        public IList<NUnit.Engine.IRuntimeFramework> AvailableRuntimes
         {
             get { return _availableRuntimes.ToArray(); }
         }

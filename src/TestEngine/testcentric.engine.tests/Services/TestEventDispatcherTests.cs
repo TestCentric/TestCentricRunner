@@ -45,7 +45,7 @@ namespace TestCentric.Engine.Services
         public void NUnitListener()
         {
             var listener = new FakeNUnitTestEventListener();
-            _dispatcher.Listeners.Add(new TestEventListenerWrapper(listener));
+            _dispatcher.Listeners.Add(listener);
 
             DispatchEvents();
 
@@ -60,7 +60,7 @@ namespace TestCentric.Engine.Services
             var listener3 = new FakeTestEventListener();
 
             _dispatcher.Listeners.Add(listener1);
-            _dispatcher.Listeners.Add(new TestEventListenerWrapper(listener2));
+            _dispatcher.Listeners.Add(listener2);
             _dispatcher.Listeners.Add(listener3);
 
             DispatchEvents();

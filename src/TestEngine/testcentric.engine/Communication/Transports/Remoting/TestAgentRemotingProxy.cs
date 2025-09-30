@@ -24,7 +24,7 @@ namespace TestCentric.Engine.Communication.Transports.Remoting
 
         public Guid Id { get; private set; }
 
-        public ITestEngineRunner CreateRunner(TestPackage package)
+        public NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package)
         {
             return _remoteAgent.CreateRunner(package);
         }

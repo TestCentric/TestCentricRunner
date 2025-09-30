@@ -18,6 +18,6 @@ namespace TestCentric.Gui.Model
         IResultService ResultService { get; }
         // TODO: Figure out how to handle this
         //IProjectService ProjectService { get; }
-        ITestAgentInfo TestAgentService { get; }
+        TestAgentService TestAgentService { get; }
     }
 }

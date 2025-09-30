@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -48,7 +48,7 @@ namespace TestCentric.Engine
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        int CountTestCases(TestFilter filter);
+        int CountTestCases(NUnit.Engine.TestFilter filter);
 
         /// <summary>
         /// Run the tests in the loaded TestPackage and return a test result. The tests
@@ -57,7 +57,7 @@ namespace TestCentric.Engine
         /// <param name="listener">The listener that is notified as the run progresses</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode giving the result of the test execution</returns>
-        XmlNode Run(ITestEventListener listener, TestFilter filter);
+        XmlNode Run(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage. The tests are run
@@ -66,7 +66,7 @@ namespace TestCentric.Engine
         /// <param name="listener">The listener that is notified as the run progresses</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns></returns>
-        ITestRun RunAsync(ITestEventListener listener, TestFilter filter);
+        NUnit.Engine.ITestRun RunAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter);
 
         /// <summary>
         /// Cancel the ongoing test run. If no  test is running, the call is ignored.
@@ -79,6 +79,6 @@ namespace TestCentric.Engine
         /// </summary>
         /// <param name="filter">The TestFilter to be used in selecting tests to explore.</param>
         /// <returns>An XmlNode representing the tests found.</returns>
-        XmlNode Explore(TestFilter filter);
+        XmlNode Explore(NUnit.Engine.TestFilter filter);
     }
 }

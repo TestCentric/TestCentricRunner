@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -24,6 +24,6 @@ namespace TestCentric.Engine.Services
         /// <param name="format">The name of the format to be used</param>
         /// <param name="args">A set of arguments to be used in constructing the writer or null if non arguments are needed</param>
         /// <returns>An IResultWriter</returns>
-        IResultWriter GetResultWriter(string format, object[] args);
+        NUnit.Engine.Extensibility.IResultWriter GetResultWriter(string format, object[] args);
     }
 }

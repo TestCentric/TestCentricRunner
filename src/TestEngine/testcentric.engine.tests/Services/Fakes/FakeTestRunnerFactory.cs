@@ -9,12 +9,12 @@ namespace TestCentric.Engine.Services.Fakes
 {
     public class FakeTestRunnerFactory : Service, ITestRunnerFactory
     {
-        public bool CanReuse(ITestEngineRunner runner, TestPackage package)
+        public bool CanReuse(NUnit.Engine.ITestEngineRunner runner, TestPackage package)
         {
             return true;
         }
 
-        public ITestEngineRunner MakeTestRunner(TestPackage package)
+        public NUnit.Engine.ITestEngineRunner MakeTestRunner(TestPackage package)
         {
             return new AssemblyRunner(ServiceContext, package);
         }

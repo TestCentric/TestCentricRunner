@@ -29,7 +29,7 @@ namespace TestCentric.Engine.Services.ResultWriters
     {
         private ITestEngine engine;
 
-        protected TestEngineResult EngineResult { get; private set; }
+        protected NUnit.Engine.TestEngineResult EngineResult { get; private set; }
 
         protected const string AssemblyName = "mock-assembly.dll";
         protected string AssemblyPath { get; private set; }
@@ -68,7 +68,7 @@ namespace TestCentric.Engine.Services.ResultWriters
             // Create a TestEngineResult from the string, just as the TestEngine does,
             // then add a test-run element to the result, wrapping the result so it
             // looks just like what the engine would return!
-            this.EngineResult = new TestEngineResult(xmlText).Aggregate("test-run", "ID", AssemblyName, AssemblyPath);
+            this.EngineResult = new NUnit.Engine.TestEngineResult(xmlText).Aggregate("test-run", "ID", AssemblyName, AssemblyPath);
         }
     }
 }

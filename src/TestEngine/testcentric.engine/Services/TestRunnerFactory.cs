@@ -21,7 +21,7 @@ namespace TestCentric.Engine.Services
         /// </summary>
         /// <param name="package">The TestPackage to be loaded and run</param>
         /// <returns>A TestRunner</returns>
-        public ITestEngineRunner MakeTestRunner(TestPackage package)
+        public NUnit.Engine.ITestEngineRunner MakeTestRunner(TestPackage package)
         {
             var packageList = package.Select(p => !p.HasSubPackages);
 
@@ -31,7 +31,7 @@ namespace TestCentric.Engine.Services
             return MakeRunnerForSingleTestFile(packageList[0]);
         }
 
-        private ITestEngineRunner MakeRunnerForSingleTestFile(TestPackage package)
+        private NUnit.Engine.ITestEngineRunner MakeRunnerForSingleTestFile(TestPackage package)
         {
             if (!File.Exists(package.FullName))
                 return new InvalidAssemblyRunner(package, "File not found: " + package.FullName);
@@ -48,7 +48,7 @@ namespace TestCentric.Engine.Services
 
         // TODO: Review this method once used by a gui - currently unused.
         // The current implementation doesn't allow any runners to be reused.
-        public bool CanReuse(ITestEngineRunner runner, TestPackage package)
+        public bool CanReuse(NUnit.Engine.ITestEngineRunner runner, TestPackage package)
         {
             return false;
         }

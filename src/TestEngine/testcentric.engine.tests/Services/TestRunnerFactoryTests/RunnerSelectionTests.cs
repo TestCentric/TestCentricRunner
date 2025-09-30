@@ -61,7 +61,7 @@ namespace TestCentric.Engine.Services.TestRunnerFactoryTests
             Assert.That(GetRunnerResult(runner), Is.EqualTo(expectedResult));
         }
 
-        private static RunnerResult GetRunnerResult(ITestEngineRunner runner)
+        private static RunnerResult GetRunnerResult(NUnit.Engine.ITestEngineRunner runner)
         {
             var result = new RunnerResult { TestRunner = runner.GetType() };
 

@@ -11,12 +11,12 @@ namespace TestCentric.Engine
 {
     public class AsyncTestEngineResultTests
     {
-        private AsyncTestEngineResult _asyncResult;
+        private NUnit.Engine.AsyncTestEngineResult _asyncResult;
 
         [SetUp]
         public void SetUp()
         {
-            _asyncResult = new AsyncTestEngineResult();
+            _asyncResult = new NUnit.Engine.AsyncTestEngineResult();
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace TestCentric.Engine
         [Test]
         public void SetResult_ThrowsIfSetTwice()
         {
-            var result = new TestEngineResult();
+            var result = new NUnit.Engine.TestEngineResult();
             _asyncResult.SetResult(result);
             Assert.Throws<InvalidOperationException>(() => _asyncResult.SetResult(result));
         }
@@ -49,7 +49,7 @@ namespace TestCentric.Engine
         [Test]
         public void IsComplete_TrueIfComplete()
         {
-            var result = new TestEngineResult();
+            var result = new NUnit.Engine.TestEngineResult();
             _asyncResult.SetResult(result);
             Assert.That(_asyncResult.IsComplete, Is.True);
         }
@@ -57,7 +57,7 @@ namespace TestCentric.Engine
         [Test]
         public void Wait_ReturnsFalseTillTestCompletes()
         {
-            var result = new TestEngineResult("<test-assembly />");
+            var result = new NUnit.Engine.TestEngineResult("<test-assembly />");
 
             Assert.That(_asyncResult.Wait(0), Is.False, "Expected wait to be false because test hasn't completed yet");
 
@@ -71,7 +71,7 @@ namespace TestCentric.Engine
         [Test]
         public void Wait_AllowsMultipleWaits()
         {
-            _asyncResult.SetResult(new TestEngineResult());
+            _asyncResult.SetResult(new NUnit.Engine.TestEngineResult());
             
             Assert.That(_asyncResult.Wait(0), Is.True, "Expected wait to be true because the test is complete");
 

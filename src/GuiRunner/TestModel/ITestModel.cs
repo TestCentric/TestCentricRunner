@@ -37,7 +37,7 @@ namespace TestCentric.Gui.Model
 
         // List of available runtimes, based on the engine's list
         // but filtered to meet the GUI's requirements
-        IList<IRuntimeFramework> AvailableRuntimes { get; }
+        IList<NUnit.Engine.IRuntimeFramework> AvailableRuntimes { get; }
 
         IList<string> AvailableAgents { get; }
 

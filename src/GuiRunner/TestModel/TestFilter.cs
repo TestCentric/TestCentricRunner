@@ -34,11 +34,11 @@ namespace TestCentric.Gui.Model
 
         public bool IsEmpty { get; }
 
-        public TestCentric.Engine.TestFilter AsNUnitFilter()
+        public NUnit.Engine.TestFilter AsNUnitFilter()
         {
             return IsEmpty
-                ? TestCentric.Engine.TestFilter.Empty
-                : new TestCentric.Engine.TestFilter(XmlText);
+                ? NUnit.Engine.TestFilter.Empty
+                : new NUnit.Engine.TestFilter(XmlText);
         }
 
         #region Static Methods to Create TestFilters

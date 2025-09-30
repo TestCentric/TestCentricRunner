@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace TestCentric.Engine.Services
 {
-    class TestAgentService : Service, ITestAgentInfo
+    public class TestAgentService : Service
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(TestAgentService));
 
@@ -19,9 +19,9 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Gets a list containing <see cref="TestAgentInfo"/> for all available agents.
         /// </summary>
-        public IList<TestAgentInfo> GetAvailableAgents()
+        public IList<NUnit.Engine.TestAgentInfo> GetAvailableAgents()
         {
-            var agents = new List<TestAgentInfo>();
+            var agents = new List<NUnit.Engine.TestAgentInfo>();
 
             foreach (var provider in _providers)
                 agents.AddRange(provider.GetAvailableAgents());
@@ -38,9 +38,9 @@ namespace TestCentric.Engine.Services
         /// A list of suitable agents for running the package or an empty
         /// list if no agent is available for the package.
         /// </returns>
-        public IList<TestAgentInfo> GetAgentsForPackage(TestPackage package)
+        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(TestPackage package)
         {
-            var agents = new List<TestAgentInfo>();
+            var agents = new List<NUnit.Engine.TestAgentInfo>();
 
             foreach (var provider in _providers)
                 agents.AddRange(provider.GetAgentsForPackage(package));

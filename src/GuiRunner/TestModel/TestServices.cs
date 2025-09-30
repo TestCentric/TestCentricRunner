@@ -24,7 +24,7 @@ namespace TestCentric.Gui.Model
 
             ExtensionService = GetService<IExtensionService>();
             ResultService = GetService<IResultService>();
-            TestAgentService = GetService<ITestAgentInfo>();
+            TestAgentService = new TestAgentService();
         }
 
         #region ITestServices Implementation
@@ -33,7 +33,7 @@ namespace TestCentric.Gui.Model
 
         public IResultService ResultService { get; }
 
-        public ITestAgentInfo TestAgentService { get; }
+        public TestAgentService TestAgentService { get; }
 
         #endregion
 

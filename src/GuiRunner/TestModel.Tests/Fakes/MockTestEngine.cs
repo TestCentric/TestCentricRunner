@@ -20,7 +20,7 @@ namespace TestCentric.Gui.Model.Fakes
         private ExtensionService _extensions = new ExtensionService();
         private ResultService _resultService = new ResultService();
         private AvailableRuntimesService _availableRuntimes = new AvailableRuntimesService();
-        private ITestAgentInfo _testAgentInfo = new TestAgentInfoService();
+        private TestAgentInfoService _testAgentInfoService = new TestAgentInfoService();
 
         #endregion
 
@@ -30,8 +30,8 @@ namespace TestCentric.Gui.Model.Fakes
         {
             _services.AddService<IExtensionService>(_extensions);
             _services.AddService<IResultService>(_resultService);
-            _services.AddService<IAvailableRuntimes>(_availableRuntimes);
-            _services.AddService<ITestAgentInfo>(_testAgentInfo);
+            _services.AddService<NUnit.Engine.IAvailableRuntimes>(_availableRuntimes);
+            _services.AddService<TestAgentInfoService>(_testAgentInfoService);
         }
 
         #endregion
@@ -93,7 +93,7 @@ namespace TestCentric.Gui.Model.Fakes
                 }
             }
 
-            int ITestRunner.CountTestCases(Engine.TestFilter filter)
+            int ITestRunner.CountTestCases(NUnit.Engine.TestFilter filter)
             {
                 throw new NotImplementedException();
             }
@@ -103,7 +103,7 @@ namespace TestCentric.Gui.Model.Fakes
                 throw new NotImplementedException();
             }
 
-            XmlNode ITestRunner.Explore(Engine.TestFilter filter)
+            XmlNode ITestRunner.Explore(NUnit.Engine.TestFilter filter)
             {
                 throw new NotImplementedException();
             }
@@ -118,12 +118,12 @@ namespace TestCentric.Gui.Model.Fakes
                 throw new NotImplementedException();
             }
 
-            XmlNode ITestRunner.Run(ITestEventListener listener, Engine.TestFilter filter)
+            XmlNode ITestRunner.Run(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
             {
                 throw new NotImplementedException();
             }
 
-            ITestRun ITestRunner.RunAsync(ITestEventListener listener, Engine.TestFilter filter)
+            NUnit.Engine.ITestRun ITestRunner.RunAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
             {
                 throw new NotImplementedException();
             }

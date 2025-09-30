@@ -35,7 +35,7 @@ namespace TestCentric.Engine.Runners
         // element, which wraps all the individual assembly and project
         // results.
 
-        private ITestEngineRunner _engineRunner;
+        private NUnit.Engine.ITestEngineRunner _engineRunner;
         private readonly IServiceLocator _services;
         private readonly TestPackageAnalyzer _packageAnalyzer;
         private readonly IRuntimeFrameworkService _runtimeService;
@@ -79,7 +79,7 @@ namespace TestCentric.Engine.Runners
         /// <summary>
         /// The result of the last call to LoadPackage
         /// </summary>
-        protected TestEngineResult LoadResult { get; set; }
+        protected NUnit.Engine.TestEngineResult LoadResult { get; set; }
 
         /// <summary>
         /// Gets an indicator of whether the package has been loaded.
@@ -136,7 +136,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases.</returns>
-        public int CountTestCases(TestFilter filter)
+        public int CountTestCases(NUnit.Engine.TestFilter filter)
         {
             return GetEngineRunner().CountTestCases(filter);
         }
@@ -149,7 +149,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode giving the result of the test execution</returns>
-        public XmlNode Run(ITestEventListener listener, TestFilter filter)
+        public XmlNode Run(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             return RunTests(listener, filter).Xml;
         }
@@ -161,7 +161,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">The listener that is notified as the run progresses</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns></returns>
-        public ITestRun RunAsync(ITestEventListener listener, TestFilter filter)
+        public NUnit.Engine.ITestRun RunAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             return RunTestsAsync(listener, filter);
         }
@@ -202,7 +202,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode representing the tests found.</returns>
-        public XmlNode Explore(TestFilter filter)
+        public XmlNode Explore(NUnit.Engine.TestFilter filter)
         {
             LoadResult = GetEngineRunner().Explore(filter)
                 .MakeTestRunResult(TestPackage);
@@ -231,7 +231,7 @@ namespace TestCentric.Engine.Runners
         }
 
         //Exposed for testing
-        internal ITestEngineRunner GetEngineRunner()
+        internal NUnit.Engine.ITestEngineRunner GetEngineRunner()
         {
             if (_engineRunner == null)
             {
@@ -273,7 +273,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        private int CountTests(TestFilter filter)
+        private int CountTests(NUnit.Engine.TestFilter filter)
         {
             if (!IsPackageLoaded) return 0;
 
@@ -287,7 +287,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        private TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
+        private NUnit.Engine.TestEngineResult RunTests(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             _eventDispatcher.InitializeForRun();
 
@@ -317,7 +317,7 @@ namespace TestCentric.Engine.Runners
                 _eventDispatcher.OnTestEvent(startRunNode.OuterXml);
 
                 // Insertions are done in reverse order, since each is added as the first child.
-                TestEngineResult result = GetEngineRunner().Run(_eventDispatcher, filter)
+                NUnit.Engine.TestEngineResult result = GetEngineRunner().Run(_eventDispatcher, filter)
                     .MakeTestRunResult(TestPackage)
                     .InsertFilterElement(filter)
                     .InsertCommandLineElement(Environment.CommandLine);
@@ -355,14 +355,14 @@ namespace TestCentric.Engine.Runners
             }
         }
 
-        private TestEngineResult CreateErrorResult(TestPackage package)
+        private NUnit.Engine.TestEngineResult CreateErrorResult(TestPackage package)
         {
-            return new TestEngineResult($"<test-run id='{package.ID}' result='Failed' label = 'Error' />");
+            return new NUnit.Engine.TestEngineResult($"<test-run id='{package.ID}' result='Failed' label = 'Error' />");
         }
 
-        private AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
+        private NUnit.Engine.AsyncTestEngineResult RunTestsAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
-            var testRun = new AsyncTestEngineResult();
+            var testRun = new NUnit.Engine.AsyncTestEngineResult();
 
             using (var worker = new BackgroundWorker())
             {

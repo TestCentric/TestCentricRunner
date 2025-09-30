@@ -13,18 +13,18 @@ namespace TestCentric.Engine.Internal
         private const string resultText1 = "<test-assembly result=\"Passed\" total=\"23\" passed=\"23\" failed=\"0\" inconclusive=\"0\" skipped=\"0\" warnings=\"0\" asserts=\"40\" />";
         private const string resultText2 = "<test-assembly result=\"Failed\" total=\"42\" passed=\"31\" failed=\"2\" inconclusive=\"5\" skipped=\"2\" warnings=\"2\" asserts=\"53\" />";
 
-        private TestEngineResult result1;
-        private TestEngineResult result2;
+        private NUnit.Engine.TestEngineResult result1;
+        private NUnit.Engine.TestEngineResult result2;
 
-        private TestEngineResult[] twoResults;
+        private NUnit.Engine.TestEngineResult[] twoResults;
 
         private XmlNode[] twoNodes;
 
         [SetUp]
         public void SetUp()
         {
-            result1 = new TestEngineResult(resultText1);
-            result2 = new TestEngineResult(resultText2);
+            result1 = new NUnit.Engine.TestEngineResult(resultText1);
+            result2 = new NUnit.Engine.TestEngineResult(resultText2);
             twoResults = new[] { result1, result2 };
             twoNodes = new[] { result1.Xml, result2.Xml };
         }
@@ -32,7 +32,7 @@ namespace TestCentric.Engine.Internal
         [Test]
         public void MergeTestResults()
         {
-            TestEngineResult mergedResult = ResultHelper.Merge(twoResults);
+            NUnit.Engine.TestEngineResult mergedResult = ResultHelper.Merge(twoResults);
 
             Assert.That(mergedResult.XmlNodes.Count, Is.EqualTo(2));
             Assert.That(mergedResult.XmlNodes[0].OuterXml, Is.EqualTo(resultText1));
@@ -42,7 +42,7 @@ namespace TestCentric.Engine.Internal
         [Test]
         public void AggregateTestResult()
         {
-            TestEngineResult combined = result2.Aggregate("test-run", "ID", "NAME", "FULLNAME");
+            NUnit.Engine.TestEngineResult combined = result2.Aggregate("test-run", "ID", "NAME", "FULLNAME");
             Assert.That(combined.IsSingle);
 
             XmlNode combinedNode = combined.Xml;
@@ -64,7 +64,7 @@ namespace TestCentric.Engine.Internal
         [Test]
         public void MergeAndAggregateTestResults()
         {
-            TestEngineResult combined = ResultHelper.Merge(twoResults).Aggregate("test-suite", "Project", "ID", "NAME", "FULLNAME");
+            NUnit.Engine.TestEngineResult combined = ResultHelper.Merge(twoResults).Aggregate("test-suite", "Project", "ID", "NAME", "FULLNAME");
             Assert.That(combined.IsSingle);
 
             XmlNode combinedNode = combined.Xml;
@@ -124,8 +124,8 @@ namespace TestCentric.Engine.Internal
             string firstResultText = $"<test-assembly result=\"{firstResult}\" total=\"23\" passed=\"23\" failed=\"0\" inconclusive=\"0\" skipped=\"0\" warnings=\"0\" asserts=\"40\" />";
             string secondResultText = $"<test-assembly result=\"{secondResult}\" total=\"42\" passed=\"31\" failed=\"2\" inconclusive=\"5\" skipped=\"2\" warnings=\"2\" asserts=\"53\" />";
 
-            var firstEngineResult = new TestEngineResult(firstResultText);
-            var secondEngineResult = new TestEngineResult(secondResultText);
+            var firstEngineResult = new NUnit.Engine.TestEngineResult(firstResultText);
+            var secondEngineResult = new NUnit.Engine.TestEngineResult(secondResultText);
             var data = new XmlNode[]{ firstEngineResult.Xml, secondEngineResult.Xml };
             XmlNode combined = ResultHelper.Aggregate("test-run", "ID", "NAME", "FULLNAME", data);
             Assert.That(combined.Attributes["result"].Value, Is.EqualTo(aggregateResult));

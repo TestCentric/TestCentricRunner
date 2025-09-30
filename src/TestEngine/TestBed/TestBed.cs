@@ -85,7 +85,7 @@ namespace TestCentric.Engine.TestBed
             eventHandler.RunStarted += () => OnRunStarted(runner, options);
 
             // TODO: Handle case with no files passed in arguments
-            XmlNode resultNode = runner.Run(eventHandler, TestFilter.Empty);
+            XmlNode resultNode = runner.Run(eventHandler, NUnit.Engine.TestFilter.Empty);
 
             ResultReporter.ReportResults(resultNode);
 

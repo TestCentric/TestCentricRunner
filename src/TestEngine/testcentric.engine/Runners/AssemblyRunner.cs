@@ -18,7 +18,7 @@ namespace TestCentric.Engine.Runners
         private static readonly Logger log = InternalTrace.GetLogger(typeof(AssemblyRunner));
 
         private ITestAgent _agent;
-        private ITestEngineRunner _remoteRunner;
+        private NUnit.Engine.ITestEngineRunner _remoteRunner;
         private TestAgentService _agentService;
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestFilter filter)
+        public override NUnit.Engine.TestEngineResult Explore(NUnit.Engine.TestFilter filter)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace TestCentric.Engine.Runners
         /// Load a TestPackage for possible execution
         /// </summary>
         /// <returns>A TestEngineResult.</returns>
-        protected override TestEngineResult LoadPackage()
+        protected override NUnit.Engine.TestEngineResult LoadPackage()
         {
             log.Info("Loading " + TestPackage.Name);
             Unload();
@@ -104,7 +104,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public override int CountTestCases(TestFilter filter)
+        public override int CountTestCases(NUnit.Engine.TestFilter filter)
         {
             CreateAgentAndRunnerIfNeeded();
 
@@ -117,7 +117,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestResult giving the result of the test execution</returns>
-        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
+        protected override NUnit.Engine.TestEngineResult RunTests(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             log.Info("Running " + TestPackage.Name);
 
@@ -144,7 +144,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An AsyncTestRun that will provide the result of the test execution</returns>
-        protected override AsyncTestEngineResult RunTestsAsync(ITestEventListener listener, TestFilter filter)
+        protected override NUnit.Engine.AsyncTestEngineResult RunTestsAsync(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
             log.Info("Running " + TestPackage.Name + " (async)");
 
@@ -157,7 +157,7 @@ namespace TestCentric.Engine.Runners
             catch (Exception e)
             {
                 log.Error("Failed to run remote tests {0}", ExceptionHelper.BuildMessageAndStackTrace(e));
-                var result = new AsyncTestEngineResult();
+                var result = new NUnit.Engine.AsyncTestEngineResult();
                 result.SetResult(CreateFailedResult(e));
                 return result;
             }
@@ -251,7 +251,7 @@ namespace TestCentric.Engine.Runners
             }
         }
 
-        TestEngineResult CreateFailedResult(Exception e)
+        NUnit.Engine.TestEngineResult CreateFailedResult(Exception e)
         {
             var suite = XmlHelper.CreateTopLevelElement("test-suite");
             XmlHelper.AddAttribute(suite, "type", "Assembly");
@@ -281,7 +281,7 @@ namespace TestCentric.Engine.Runners
                 failure.AddElementWithCDataSection("stack-trace", ExceptionHelper.BuildMessageAndStackTrace(e));
             }
 
-            return new TestEngineResult(suite);
+            return new NUnit.Engine.TestEngineResult(suite);
         }
     }
 }

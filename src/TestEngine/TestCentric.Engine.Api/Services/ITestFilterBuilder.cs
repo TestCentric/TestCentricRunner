@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -26,6 +26,6 @@ namespace TestCentric.Engine.Services
         /// Get a TestFilter constructed according to the criteria specified by the other calls.
         /// </summary>
         /// <returns>A TestFilter.</returns>
-        TestFilter GetFilter();
+        NUnit.Engine.TestFilter GetFilter();
     }
 }

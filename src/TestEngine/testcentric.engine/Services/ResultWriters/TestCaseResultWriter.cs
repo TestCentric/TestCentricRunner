@@ -9,7 +9,7 @@ using TestCentric.Engine.Extensibility;
 
 namespace TestCentric.Engine.Services
 {
-    public class TestCaseResultWriter : IResultWriter
+    public class TestCaseResultWriter : NUnit.Engine.Extensibility.IResultWriter
     {
         public void CheckWritability(string outputPath)
         {

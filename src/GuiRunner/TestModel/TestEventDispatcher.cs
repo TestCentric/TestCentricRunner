@@ -10,7 +10,7 @@ using TestCentric.Engine;
 
 namespace TestCentric.Gui.Model
 {
-    public class TestEventDispatcher : ITestEvents, ITestEventListener
+    public class TestEventDispatcher : ITestEvents, NUnit.Engine.ITestEventListener
     {
         private static Logger log = InternalTrace.GetLogger("TestEventDispatcher");
 
