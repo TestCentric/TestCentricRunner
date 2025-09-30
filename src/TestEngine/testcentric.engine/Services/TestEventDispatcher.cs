@@ -14,28 +14,28 @@ namespace TestCentric.Engine.Services
     /// <summary>
     /// TestEventDispatcher is used to send test events to a number of listeners
     /// </summary>
-    class TestEventDispatcher : MarshalByRefObject, ITestEventListener, IService
+    class TestEventDispatcher : MarshalByRefObject, NUnit.Engine.ITestEventListener, IService
     {
         private object _eventLock = new object();
         private ExtensionService _extensionService;
-        private List<ITestEventListener> _listenerExtensions = new List<ITestEventListener>();
+        private List<NUnit.Engine.ITestEventListener> _listenerExtensions = new List<NUnit.Engine.ITestEventListener>();
         private WorkItemTracker _workItemTracker = new WorkItemTracker();
         private ManualResetEvent _allItemsComplete = new ManualResetEvent(false);
         private bool _runCancelled;
 
         public TestEventDispatcher()
         {
-            Listeners = new List<ITestEventListener>();
+            Listeners = new List<NUnit.Engine.ITestEventListener>();
         }
 
-        public IList<ITestEventListener> Listeners { get; private set; }
+        public IList<NUnit.Engine.ITestEventListener> Listeners { get; private set; }
 
         public void InitializeForRun()
         {
             _runCancelled = false;
             _workItemTracker.Clear();
             _allItemsComplete.Reset();
-            Listeners = new List<ITestEventListener>(_listenerExtensions);
+            Listeners = new List<NUnit.Engine.ITestEventListener>(_listenerExtensions);
         }
 
         public bool WaitForCompletion(int millisecondsTimeout)
@@ -107,10 +107,8 @@ namespace TestCentric.Engine.Services
         void IService.StartService()
         {
             _extensionService = ServiceContext.GetService<ExtensionService>();
-            foreach (var extension in _extensionService.GetExtensions<ITestEventListener>())
-                _listenerExtensions.Add(extension);
             foreach (var extension in _extensionService.GetExtensions<NUnit.Engine.ITestEventListener>())
-                _listenerExtensions.Add(new TestEventListenerWrapper(extension));
+                _listenerExtensions.Add(extension);
 
             Status = _extensionService == null
                 ? ServiceStatus.Error

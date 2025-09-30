@@ -27,7 +27,7 @@ namespace TestCentric.Engine.Runners
 
         private readonly ITestRunnerFactory _testRunnerFactory;
 
-        public IList<ITestEngineRunner> Runners { get; }
+        public IList<NUnit.Engine.ITestEngineRunner> Runners { get; }
 
         public int LevelOfParallelism { get; }
 
@@ -36,7 +36,7 @@ namespace TestCentric.Engine.Runners
             _testRunnerFactory = services.GetService<ITestRunnerFactory>();
 
             _packageList = new List<TestPackage>(package.Select(p => !p.HasSubPackages));
-            Runners = new List<ITestEngineRunner>();
+            Runners = new List<NUnit.Engine.ITestEngineRunner>();
             foreach (var subPackage in _packageList)
                 Runners.Add(_testRunnerFactory.MakeTestRunner(subPackage));
 
@@ -52,11 +52,11 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestFilter filter)
+        public override NUnit.Engine.TestEngineResult Explore(NUnit.Engine.TestFilter filter)
         {
-            var results = new List<TestEngineResult>();
+            var results = new List<NUnit.Engine.TestEngineResult>();
 
-            foreach (ITestEngineRunner runner in Runners)
+            foreach (var runner in Runners)
                 results.Add(runner.Explore(filter));
 
             return ResultHelper.Merge(results);
@@ -66,9 +66,9 @@ namespace TestCentric.Engine.Runners
         /// Load a TestPackage for possible execution
         /// </summary>
         /// <returns>A TestEngineResult.</returns>
-        protected override TestEngineResult LoadPackage()
+        protected override NUnit.Engine.TestEngineResult LoadPackage()
         {
-            var results = new List<TestEngineResult>();
+            var results = new List<NUnit.Engine.TestEngineResult>();
 
             foreach (var runner in Runners)
                 results.Add(runner.Load());
@@ -81,7 +81,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         public override void UnloadPackage()
         {
-            foreach (ITestEngineRunner runner in Runners)
+            foreach (var runner in Runners)
             {
                 runner.Unload();
             }
@@ -93,11 +93,11 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public override int CountTestCases(TestFilter filter)
+        public override int CountTestCases(NUnit.Engine.TestFilter filter)
         {
             int count = 0;
 
-            foreach (ITestEngineRunner runner in Runners)
+            foreach (var runner in Runners)
                 count += runner.CountTestCases(filter);
 
             return count;
@@ -111,9 +111,9 @@ namespace TestCentric.Engine.Runners
         /// <returns>
         /// A TestEngineResult giving the result of the test execution.
         /// </returns>
-        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
+        protected override NUnit.Engine.TestEngineResult RunTests(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
         {
-            var results = new List<TestEngineResult>();
+            var results = new List<NUnit.Engine.TestEngineResult>();
 
             bool disposeRunners = TestPackage.Settings.GetValueOrDefault(SettingDefinitions.DisposeRunners);
 
@@ -131,9 +131,9 @@ namespace TestCentric.Engine.Runners
             return ResultHelper.Merge(results);
         }
 
-        private void RunTestsSequentially(ITestEventListener listener, TestFilter filter, List<TestEngineResult> results, bool disposeRunners)
+        private void RunTestsSequentially(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter, List<NUnit.Engine.TestEngineResult> results, bool disposeRunners)
         {
-            foreach (ITestEngineRunner runner in Runners)
+            foreach (var runner in Runners)
             {
                 var task = new TestExecutionTask(runner, listener, filter, disposeRunners);
                 task.Execute();
@@ -141,12 +141,12 @@ namespace TestCentric.Engine.Runners
             }
         }
 
-        private void RunTestsInParallel(ITestEventListener listener, TestFilter filter, List<TestEngineResult> results, bool disposeRunners)
+        private void RunTestsInParallel(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter, List<NUnit.Engine.TestEngineResult> results, bool disposeRunners)
         {
             var workerPool = new ParallelTaskWorkerPool(LevelOfParallelism);
             var tasks = new List<TestExecutionTask>();
 
-            foreach (ITestEngineRunner runner in Runners)
+            foreach (var runner in Runners)
             {
                 var task = new TestExecutionTask(runner, listener, filter, disposeRunners);
                 tasks.Add(task);
@@ -190,7 +190,7 @@ namespace TestCentric.Engine.Runners
             Runners.Clear();
         }
 
-        private static void LogResultsFromTask(TestExecutionTask task, List<TestEngineResult> results)
+        private static void LogResultsFromTask(TestExecutionTask task, List<NUnit.Engine.TestEngineResult> results)
         {
             var result = task.Result;
             if (result != null)

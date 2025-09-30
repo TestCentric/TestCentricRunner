@@ -42,7 +42,7 @@ namespace TestCentric.Engine.Services
         /// <param name="format">The name of the format to be used</param>
         /// <param name="args">A set of arguments to be used in constructing the writer or null if non arguments are needed</param>
         /// <returns>An IResultWriter</returns>
-        public IResultWriter GetResultWriter(string format, object[] args)
+        public NUnit.Engine.Extensibility.IResultWriter GetResultWriter(string format, object[] args)
         {
             switch (format)
             {
@@ -57,9 +57,8 @@ namespace TestCentric.Engine.Services
                         foreach (var supported in node.GetValues("Format"))
                             if (supported == format)
                             {
-                                // HACK until we change IExtensionNode definition or use ExtensionNode directly
-                                var obj = ((ExtensionNode)node).ExtensionObject;
-                                return obj as IResultWriter ?? new ResultWriterWrapper(obj as NUnit.Engine.Extensibility.IResultWriter);
+                                var obj = node.ExtensionObject;
+                                return obj as NUnit.Engine.Extensibility.IResultWriter;
                             }
                     return null;
             }
@@ -73,11 +72,10 @@ namespace TestCentric.Engine.Services
 
                 if (extensionService != null && extensionService.Status == ServiceStatus.Started)
                 {
-                    _extensionNodes.AddRange(extensionService.GetExtensionNodes<IResultWriter>(true));
                     _extensionNodes.AddRange(extensionService.GetExtensionNodes<NUnit.Engine.Extensibility.IResultWriter>(true));
                 }
 
-                // If there is no extension service, we start anyway using builtin writers
+                // If there is no extension service, we start anyway using built-in writers
                 Status = ServiceStatus.Started;
             }
             catch

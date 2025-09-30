@@ -19,7 +19,7 @@ namespace TestCentric.Gui.Model.Fakes
             }
         }
 
-        public IResultWriter GetResultWriter(string format, object[] args)
+        public NUnit.Engine.Extensibility.IResultWriter GetResultWriter(string format, object[] args)
         {
             throw new NotImplementedException();
         }

@@ -54,18 +54,18 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Gets a list containing <see cref="TestAgentInfo"/> for all available agents.
         /// </summary>
-        public IList<TestAgentInfo> GetAvailableAgents()
+        public IList<NUnit.Engine.TestAgentInfo> GetAvailableAgents()
         {
-            var agents = new List<TestAgentInfo>();
+            var agents = new List<NUnit.Engine.TestAgentInfo>();
 
             foreach (var node in _launcherNodes)
             {
                 var runtimes = node.GetValues("TargetFramework");
                 if (runtimes.Count() > 0)
-                    agents.Add(new TestAgentInfo(
+                    agents.Add(new NUnit.Engine.TestAgentInfo(
                         GetAgentName(node),
-                        TestAgentType.LocalProcess,
-                        runtimes.First()));
+                        NUnit.Engine.TestAgentType.LocalProcess,
+                        RuntimeFramework.Parse(runtimes.First()).FrameworkName));
             }
 
             return agents;
@@ -80,12 +80,12 @@ namespace TestCentric.Engine.Services
         /// A list of suitable agents for running the package or an empty
         /// list if no agent is available for the package.
         /// </returns>
-        public IList<TestAgentInfo> GetAgentsForPackage(TestPackage targetPackage)
+        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(TestPackage targetPackage)
         {
             Guard.ArgumentNotNull(targetPackage, nameof(targetPackage));
 
             // Initialize lists with ALL available agents
-            var availableAgents = new List<TestAgentInfo>(GetAvailableAgents());
+            var availableAgents = new List<NUnit.Engine.TestAgentInfo>(GetAvailableAgents());
             var validAgentNames = new List<string>(availableAgents.Select(info => info.AgentName));
 
             // Look at each included assembly package to see if any names should be removed
@@ -320,8 +320,8 @@ namespace TestCentric.Engine.Services
 
         private static int CompareLaunchers(IAgentLauncher launcher1, IAgentLauncher launcher2)
         {
-            var runtime1 = new FrameworkName(launcher1.AgentInfo.TargetRuntime);
-            var runtime2 = new FrameworkName(launcher2.AgentInfo.TargetRuntime);
+            var runtime1 = launcher1.AgentInfo.TargetRuntime;
+            var runtime2 = launcher2.AgentInfo.TargetRuntime;
 
             var result = runtime1.Identifier.CompareTo(runtime2.Identifier);
             if (result == 0)

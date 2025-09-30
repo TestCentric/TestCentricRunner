@@ -17,7 +17,7 @@ namespace TestCentric.Engine
         [Test]
         public void CanCreateFromXmlString()
         {
-            TestEngineResult result = new TestEngineResult(xmlText);
+            var result = new NUnit.Engine.TestEngineResult(xmlText);
             Assert.That(result.IsSingle, Is.True);
             Assert.That(result.Xml.Name, Is.EqualTo("test-assembly"));
             Assert.That(result.Xml.Attributes["result"].Value, Is.EqualTo("Passed"));
@@ -41,7 +41,7 @@ namespace TestCentric.Engine
             XmlHelper.AddAttribute(node, "skipped", "0");
             XmlHelper.AddAttribute(node, "asserts", "40");
 
-            TestEngineResult result = new TestEngineResult(node);
+            var result = new NUnit.Engine.TestEngineResult(node);
             Assert.That(result.IsSingle, Is.True);
             Assert.That(result.Xml.OuterXml, Is.EqualTo(xmlText));
         }

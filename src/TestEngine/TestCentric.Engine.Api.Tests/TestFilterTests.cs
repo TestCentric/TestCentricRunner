@@ -12,7 +12,7 @@ namespace TestCentric.Engine.Api
         [Test]
         public void EmptyFilter()
         {
-            TestFilter filter = TestFilter.Empty;
+            var filter = NUnit.Engine.TestFilter.Empty;
             Assert.That(filter.Text, Is.EqualTo("<filter/>"));
         }
 
@@ -20,7 +20,7 @@ namespace TestCentric.Engine.Api
         public void FilterWithOneTest()
         {
             string text = "<filter><tests><test>My.Test.Name</test></tests></filter>";
-            TestFilter filter = new TestFilter(text);
+            var filter = new NUnit.Engine.TestFilter(text);
             Assert.That(filter.Text, Is.EqualTo(text));
         }
 
@@ -28,7 +28,7 @@ namespace TestCentric.Engine.Api
         public void FilterWithThreeTests()
         {
             string text = "<filter><tests><test>My.First.Test</test><test>My.Second.Test</test><test>My.Third.Test</test></tests></filter>";
-            TestFilter filter = new TestFilter(text);
+            var filter = new NUnit.Engine.TestFilter(text);
             Assert.That(filter.Text, Is.EqualTo(text));
         }
     }

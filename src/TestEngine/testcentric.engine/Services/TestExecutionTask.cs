@@ -9,15 +9,15 @@ namespace TestCentric.Engine.Runners
 {
     public class TestExecutionTask : ITestExecutionTask
     {
-        private readonly ITestEngineRunner _runner;
-        private readonly ITestEventListener _listener;
-        private readonly TestFilter _filter;
-        private volatile TestEngineResult _result;
+        private readonly NUnit.Engine.ITestEngineRunner _runner;
+        private readonly NUnit.Engine.ITestEventListener _listener;
+        private readonly NUnit.Engine.TestFilter _filter;
+        private volatile NUnit.Engine.TestEngineResult _result;
         private readonly bool _disposeRunner;
         private bool _hasExecuted = false;
         private Exception _unloadException;
 
-        public TestExecutionTask(ITestEngineRunner runner, ITestEventListener listener, TestFilter filter, bool disposeRunner)
+        public TestExecutionTask(NUnit.Engine.ITestEngineRunner runner, NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter, bool disposeRunner)
         {
             _disposeRunner = disposeRunner;
             _filter = filter;
@@ -46,7 +46,7 @@ namespace TestCentric.Engine.Runners
             }
         }
 
-        public TestEngineResult Result
+        public NUnit.Engine.TestEngineResult Result
         {
             get
             {

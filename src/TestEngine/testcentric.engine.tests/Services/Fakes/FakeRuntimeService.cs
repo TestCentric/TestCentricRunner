@@ -24,6 +24,6 @@ namespace TestCentric.Engine.Services.Fakes
 
         public string SelectedRuntime { get; set; } = "NONE";
 
-        public IRuntimeFramework CurrentFramework => throw new NotImplementedException();
+        public NUnit.Engine.IRuntimeFramework CurrentFramework => throw new NotImplementedException();
     }
 }

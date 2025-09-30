@@ -15,7 +15,7 @@ namespace TestCentric.Engine.Services
         /// </summary>
         /// <param name="package">The test package to be loaded by the runner</param>
         /// <returns>A TestRunner</returns>
-        ITestEngineRunner MakeTestRunner(TestPackage package);
+        NUnit.Engine.ITestEngineRunner MakeTestRunner(TestPackage package);
 
         /// <summary>
         /// Return true if the provided runner is suitable for reuse in loading
@@ -25,6 +25,6 @@ namespace TestCentric.Engine.Services
         /// <param name="runner">An ITestRunner to possibly be used.</param>
         /// <param name="package">The TestPackage to be loaded.</param>
         /// <returns>True if the runner may be reused for the provided package.</returns>
-        bool CanReuse(ITestEngineRunner runner, TestPackage package);
+        bool CanReuse(NUnit.Engine.ITestEngineRunner runner, TestPackage package);
     }
 }

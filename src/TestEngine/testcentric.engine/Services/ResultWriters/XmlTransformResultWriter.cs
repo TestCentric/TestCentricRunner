@@ -11,7 +11,7 @@ using TestCentric.Engine.Extensibility;
 
 namespace TestCentric.Engine.Services
 {
-    public class XmlTransformResultWriter : IResultWriter
+    public class XmlTransformResultWriter : NUnit.Engine.Extensibility.IResultWriter
     {
         private string _xsltFile;
         private readonly XslCompiledTransform _transform = new XslCompiledTransform();

@@ -20,14 +20,14 @@ namespace TestCentric.Engine.Services
             _agentLauncher = agentLauncher;
         }
 
-        public TestAgentInfo AgentInfo
+        public NUnit.Engine.TestAgentInfo AgentInfo
         {
             get
             {
-                return new TestAgentInfo(
+                return new NUnit.Engine.TestAgentInfo(
                     _agentLauncher.AgentInfo.AgentName,
-                    (TestAgentType)Enum.Parse(typeof(TestAgentType), _agentLauncher.AgentInfo.AgentType.ToString()),
-                    _agentLauncher.AgentInfo.TargetRuntime.ToString());
+                    (NUnit.Engine.TestAgentType)Enum.Parse(typeof(NUnit.Engine.TestAgentType), _agentLauncher.AgentInfo.AgentType.ToString()),
+                    _agentLauncher.AgentInfo.TargetRuntime);
             }
         }
 

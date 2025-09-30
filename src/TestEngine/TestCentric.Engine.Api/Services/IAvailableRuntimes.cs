@@ -15,6 +15,6 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Gets a list of available runtime frameworks.
         /// </summary>
-        IList<IRuntimeFramework> AvailableRuntimes { get; }
+        IList<NUnit.Engine.IRuntimeFramework> AvailableRuntimes { get; }
     }
 }

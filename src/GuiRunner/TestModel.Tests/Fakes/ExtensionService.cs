@@ -99,7 +99,7 @@ namespace TestCentric.Gui.Model.Fakes
 
         public string TypeName { get; }
 
-        public IRuntimeFramework TargetFramework { get; }
+        public NUnit.Engine.IRuntimeFramework TargetFramework { get; }
 
         public IEnumerable<string> GetValues(string name)
         {

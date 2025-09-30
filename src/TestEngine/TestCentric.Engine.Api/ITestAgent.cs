@@ -33,6 +33,6 @@ namespace TestCentric.Engine
         /// </summary>
         /// <param name="package">The TestPackage for which a runner is to be created</param>
         /// <returns>An ITestEngineRunner</returns>
-        ITestEngineRunner CreateRunner(TestPackage package);
+        NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package);
     }
 }

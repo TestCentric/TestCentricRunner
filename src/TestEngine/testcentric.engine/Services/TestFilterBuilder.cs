@@ -38,7 +38,7 @@ namespace TestCentric.Engine.Services
         /// Get a TestFilter constructed according to the criteria specified by the other calls.
         /// </summary>
         /// <returns>A TestFilter.</returns>
-        public TestFilter GetFilter()
+        public NUnit.Engine.TestFilter GetFilter()
         {
             var filter = new StringBuilder("<filter>");
 
@@ -58,7 +58,7 @@ namespace TestCentric.Engine.Services
 
             filter.Append("</filter>");
 
-            return new TestFilter(filter.ToString());
+            return new NUnit.Engine.TestFilter(filter.ToString());
         }
 
         private static string XmlEscape(string text)

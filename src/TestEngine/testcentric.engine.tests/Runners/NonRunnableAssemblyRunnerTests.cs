@@ -46,7 +46,7 @@ namespace TestCentric.Engine.Runners
         {
             var package = TestPackageBuilder.MakeSubPackage(filePath);
             var runner = CreateRunner(package);
-            var result = runner.Explore(TestFilter.Empty).Xml;
+            var result = runner.Explore(NUnit.Engine.TestFilter.Empty).Xml;
 
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("id"), Is.EqualTo(package.ID));
@@ -64,8 +64,8 @@ namespace TestCentric.Engine.Runners
         [TestCase("junk.cfg")]
         public void CountTestCases(string filePath)
         {
-            ITestEngineRunner runner = CreateRunner(new TestPackage(filePath));
-            Assert.That(runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
+            NUnit.Engine.ITestEngineRunner runner = CreateRunner(new TestPackage(filePath));
+            Assert.That(runner.CountTestCases(NUnit.Engine.TestFilter.Empty), Is.EqualTo(0));
         }
 
         [TestCase("junk.dll", "Assembly")]
@@ -75,8 +75,8 @@ namespace TestCentric.Engine.Runners
         {
             // We only create runners for subpackages
             var package = TestPackageBuilder.MakeSubPackage(filePath);
-            ITestEngineRunner runner = CreateRunner(package);
-            var result = runner.Run(new NullListener(), TestFilter.Empty).Xml;
+            NUnit.Engine.ITestEngineRunner runner = CreateRunner(package);
+            var result = runner.Run(new NullListener(), NUnit.Engine.TestFilter.Empty).Xml;
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.GetAttribute("id"), Is.EqualTo(package.ID));
             Assert.That(result.GetAttribute("name"), Is.EqualTo(filePath));
@@ -91,7 +91,7 @@ namespace TestCentric.Engine.Runners
             Assert.That(result.SelectSingleNode("reason/message").InnerText, Is.EqualTo(_expectedReason));
         }
 
-        protected abstract ITestEngineRunner CreateRunner(TestPackage package);
+        protected abstract NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package);
 
         private static string GetSkipReason(XmlNode result)
         {
@@ -99,7 +99,7 @@ namespace TestCentric.Engine.Runners
             return propNode == null ? null : propNode.GetAttribute("value");
         }
 
-        private class NullListener : ITestEventListener
+        private class NullListener : NUnit.Engine.ITestEventListener
         {
             public void OnTestEvent(string testEvent)
             {
@@ -118,7 +118,7 @@ namespace TestCentric.Engine.Runners
             _expectedLabel = "Invalid";
         }
 
-        protected override ITestEngineRunner CreateRunner(TestPackage package)
+        protected override NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package)
         {
             return new InvalidAssemblyRunner(package, _expectedReason);
         }
@@ -134,7 +134,7 @@ namespace TestCentric.Engine.Runners
             _expectedLabel = "NoTests";
         }
 
-        protected override ITestEngineRunner CreateRunner(TestPackage package)
+        protected override NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package)
         {
             return new SkippedAssemblyRunner(package);
         }

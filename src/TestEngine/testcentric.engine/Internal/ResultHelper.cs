@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using NUnit.Engine;
 
 namespace TestCentric.Engine.Internal
 {
@@ -136,7 +137,7 @@ namespace TestCentric.Engine.Internal
             return Aggregate(result.AddProjectPackages(package), TEST_RUN_ELEMENT, package.ID, package.Name, package.FullName);
         }
 
-        public static TestEngineResult InsertFilterElement(this TestEngineResult result, TestFilter filter)
+        public static TestEngineResult InsertFilterElement(this TestEngineResult result, NUnit.Engine.TestFilter filter)
         {
             // Convert the filter to an XmlNode
             var tempNode = XmlHelper.CreateXmlNode(filter.Text);

@@ -130,8 +130,8 @@ namespace TestCentric.Gui.Model
         public bool VisualStudioSupport { get; }
 
         // Runtime Support
-        private List<IRuntimeFramework> _runtimes;
-        public IList<IRuntimeFramework> AvailableRuntimes
+        private List<NUnit.Engine.IRuntimeFramework> _runtimes;
+        public IList<NUnit.Engine.IRuntimeFramework> AvailableRuntimes
         {
             get
             {
@@ -393,7 +393,7 @@ namespace TestCentric.Gui.Model
             try
             {
                 log.Debug("Loading tests");
-                LoadedTests = new TestNode(Runner.Explore(Engine.TestFilter.Empty));
+                LoadedTests = new TestNode(Runner.Explore(NUnit.Engine.TestFilter.Empty));
                 log.Debug($"Loaded {LoadedTests.Xml.GetAttribute("TestCaseCount")} tests");
             }
             catch(Exception ex)
@@ -507,7 +507,7 @@ namespace TestCentric.Gui.Model
             Runner = TestEngine.GetRunner(TestCentricProject);
 
             // Discover tests
-            LoadedTests = new TestNode(Runner.Explore(Engine.TestFilter.Empty));
+            LoadedTests = new TestNode(Runner.Explore(NUnit.Engine.TestFilter.Empty));
             AvailableCategories = GetAvailableCategories();
             BuildTestIndex();
             TestCentricTestFilter.Init();
@@ -705,11 +705,11 @@ namespace TestCentric.Gui.Model
         // drop unwanted entries here. Even if some of these items
         // are removed in a later version of the engine, we may
         // have to retain this code to work with older engines.
-        private List<IRuntimeFramework> GetAvailableRuntimes()
+        private List<NUnit.Engine.IRuntimeFramework> GetAvailableRuntimes()
         {
-            var runtimes = new List<IRuntimeFramework>();
+            var runtimes = new List<NUnit.Engine.IRuntimeFramework>();
 
-            foreach (var runtime in Services.GetService<IAvailableRuntimes>().AvailableRuntimes)
+            foreach (var runtime in Services.GetService<NUnit.Engine.IAvailableRuntimes>().AvailableRuntimes)
             {
                 // We don't support anything below .NET Framework 2.0
                 if (runtime.Id.StartsWith("net-") && runtime.FrameworkVersion.Major < 2)

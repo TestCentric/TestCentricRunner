@@ -25,5 +25,6 @@
   <ItemGroup>
     <PackageReference Include="TestCentric.Extensibility.Api" Version="$(ExtensibilityVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
+	  <PackageReference Include="NUnit.Engine.Api" Version="$(NUnitApiVersion)" />
   </ItemGroup>
 </Project>

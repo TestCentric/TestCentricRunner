@@ -19,7 +19,7 @@ namespace TestCentric.Engine.Services
 
             public Guid Id { get; }
 
-            public ITestEngineRunner CreateRunner(TestPackage package)
+            public NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package)
             {
                 throw new NotImplementedException();
             }
