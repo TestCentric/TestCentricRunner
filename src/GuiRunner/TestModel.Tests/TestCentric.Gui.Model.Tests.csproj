@@ -16,7 +16,7 @@
     <PackageReference Include="NSubstitute" Version="$(NSubstituteVersion)" />
     <PackageReference Include="NUnit" Version="$(NUnitVersion)" />
     <PackageReference Include="NUnitLite" Version="$(NUnitVersion)" />
-    <PackageReference Include="TestCentric.Extensibility" Version="$(ExtensibilityVersion)" />
+    <PackageReference Include="NUnit.Extensibility" Version="$(NUnitApiVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>
 </Project>

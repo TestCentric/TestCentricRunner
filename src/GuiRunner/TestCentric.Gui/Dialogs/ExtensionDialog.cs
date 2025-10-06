@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using TestCentric.Engine.Services;
-using TestCentric.Extensibility;
+using NUnit.Extensibility;
 
 namespace TestCentric.Gui.Dialogs
 {
@@ -17,9 +17,9 @@ namespace TestCentric.Gui.Dialogs
     /// </summary>
     public class ExtensionDialog : System.Windows.Forms.Form
     {
-        private IList<TestCentric.Extensibility.IExtensionPoint> _extensionPoints;
-        private IList<TestCentric.Extensibility.IExtensionNode> _extensionPointExtensions;
-        private IList<TestCentric.Extensibility.IExtensionNode> _allExtensions;
+        private IList<NUnit.Extensibility.IExtensionPoint> _extensionPoints;
+        private IList<NUnit.Extensibility.IExtensionNode> _extensionPointExtensions;
+        private IList<NUnit.Extensibility.IExtensionNode> _allExtensions;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListView extensionListView2;
         private System.Windows.Forms.ColumnHeader extensionNameColumn;
