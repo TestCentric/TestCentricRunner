@@ -25,7 +25,7 @@
   <ItemGroup>
 	  <PackageReference Include="NUnit.Engine.Api" Version="$(NUnitApiVersion)" />
 	  <PackageReference Include="NUnit.Extensibility.Api" Version="$(NUnitApiVersion)" />
-	  <PackageReference Include="TestCentric.Extensibility" Version="$(ExtensibilityVersion)" />
+	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitApiVersion)" />
     <PackageReference Include="TestCentric.Metadata" Version="$(MetadataVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>

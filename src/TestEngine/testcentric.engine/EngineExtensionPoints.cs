@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 using TestCentric.Engine.Extensibility;
-using TestCentric.Extensibility;
+using NUnit.Extensibility;
 
 // ExtensionPoints supported by the engine
 [assembly: ExtensionPoint("/TestCentric/Engine/AgentLaunchers", typeof(NUnit.Engine.Extensibility.IAgentLauncher),

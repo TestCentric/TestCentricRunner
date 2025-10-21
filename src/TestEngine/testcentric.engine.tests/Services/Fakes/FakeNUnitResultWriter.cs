@@ -5,7 +5,7 @@
 
 using System.IO;
 using System.Xml;
-using TestCentric.Extensibility;
+using NUnit.Extensibility;
 
 namespace TestCentric.Engine.Services.Fakes
 {

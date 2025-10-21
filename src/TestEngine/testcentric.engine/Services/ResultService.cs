@@ -7,14 +7,14 @@ using NUnit.Engine;
 using System;
 using System.Collections.Generic;
 using TestCentric.Engine.Extensibility;
-using TestCentric.Extensibility;
+using NUnit.Extensibility;
 
 namespace TestCentric.Engine.Services
 {
     class ResultService : Service, IResultService
     {
         private readonly string[] BUILT_IN_FORMATS = new string[] { "nunit3", "cases", "user" };
-        private List<IExtensionNode> _extensionNodes = new List<IExtensionNode>();
+        private List<ExtensionNode> _extensionNodes = new List<ExtensionNode>();
 
         private string[] _formats;
         public string[] Formats
@@ -71,9 +71,8 @@ namespace TestCentric.Engine.Services
                 var extensionService = ServiceContext.GetService<ExtensionService>();
 
                 if (extensionService != null && extensionService.Status == ServiceStatus.Started)
-                {
-                    _extensionNodes.AddRange(extensionService.GetExtensionNodes<NUnit.Engine.Extensibility.IResultWriter>(true));
-                }
+                    foreach (var node in extensionService.GetExtensionNodes<NUnit.Engine.Extensibility.IResultWriter>(true))
+                        _extensionNodes.Add((ExtensionNode)node); // HACK: Remove need for cast
 
                 // If there is no extension service, we start anyway using built-in writers
                 Status = ServiceStatus.Started;

@@ -4,7 +4,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using TestCentric.Extensibility;
+using NUnit.Extensibility;
 
 namespace TestCentric.Engine.Services.Fakes
 {

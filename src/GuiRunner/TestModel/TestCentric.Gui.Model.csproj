@@ -11,7 +11,7 @@
     <ProjectReference Include="..\..\TestEngine\TestCentric.Engine.Api\TestCentric.Engine.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="TestCentric.Extensibility" Version="$(ExtensibilityVersion)" />
+    <PackageReference Include="NUnit.Extensibility" Version="$(NUnitApiVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>
 </Project>

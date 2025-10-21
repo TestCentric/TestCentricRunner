@@ -31,7 +31,7 @@ namespace TestCentric.Engine.Runners
         // returned as XmlNodes, created from the internal 
         // TestEngineResult representation.
         // 
-        // MasterTestRUnner is responsible for creating the test-run
+        // MasterTestRunner is responsible for creating the test-run
         // element, which wraps all the individual assembly and project
         // results.
 

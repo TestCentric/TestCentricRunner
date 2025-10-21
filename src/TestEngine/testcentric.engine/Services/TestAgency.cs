@@ -15,8 +15,7 @@ using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
 using TestCentric.Engine.Communication.Transports.Remoting;
 using TestCentric.Engine.Communication.Transports.Tcp;
-using TestCentric.Extensibility;
-using System.Runtime.Remoting.Messaging;
+using NUnit.Extensibility;
 
 namespace TestCentric.Engine.Services
 {
@@ -35,7 +34,7 @@ namespace TestCentric.Engine.Services
 
         private IExtensionService _extensionService;
 
-        private readonly List<IExtensionNode> _launcherNodes = new List<IExtensionNode>();
+        private readonly List<ExtensionNode> _launcherNodes = new List<ExtensionNode>();
 
         // Transports used for various target runtimes
         private TestAgencyTcpTransport _tcpTransport; // .NET Standard 2.0
@@ -297,7 +296,7 @@ namespace TestCentric.Engine.Services
                 // Add nodes for pluggable agent extensions
                 if (_extensionService != null)
                     foreach (var launcherNode in _extensionService.GetExtensionNodes("/TestCentric/Engine/AgentLaunchers"))
-                        _launcherNodes.Add(launcherNode);
+                        _launcherNodes.Add((ExtensionNode)launcherNode); // HACK: Remove need for cast
 
                 // TODO: Sorting is temporarily suppressed until agents can be fixed.
                 // The call to GetLogger in the static constructor causes an exception.
@@ -377,7 +376,7 @@ namespace TestCentric.Engine.Services
             return null;
         }
 
-        private bool CanCreateAgent(IExtensionNode node, TestPackage package)
+        private bool CanCreateAgent(ExtensionNode node, TestPackage package)
         {
             // Newer implementations use a TargetFramework property to avoid
             // intantiating any agents, which will not be used.
@@ -412,7 +411,7 @@ namespace TestCentric.Engine.Services
             return false;
         }
 
-        private IAgentLauncher GetLauncherInstance(IExtensionNode node)
+        private IAgentLauncher GetLauncherInstance(ExtensionNode node)
         {
             var obj = node.ExtensionObject;
             if (obj is IAgentLauncher)

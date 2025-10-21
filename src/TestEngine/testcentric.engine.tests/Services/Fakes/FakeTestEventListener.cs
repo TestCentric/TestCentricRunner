@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace TestCentric.Tests.Fakes
 {
-    [TestCentric.Extensibility.Extension]
+    [NUnit.Extensibility.Extension]
     public class FakeTestEventListener : NUnit.Engine.ITestEventListener
     {
         public List<string> Output { get; } = new List<string>();

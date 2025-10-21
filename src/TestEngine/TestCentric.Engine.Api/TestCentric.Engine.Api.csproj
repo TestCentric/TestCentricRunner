@@ -23,7 +23,7 @@
     <Version Condition="'$(Version)'==''">2.0.0-IDE</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TestCentric.Extensibility.Api" Version="$(ExtensibilityVersion)" />
+    <PackageReference Include="NUnit.Extensibility.Api" Version="$(NUnitApiVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
 	  <PackageReference Include="NUnit.Engine.Api" Version="$(NUnitApiVersion)" />
   </ItemGroup>
