@@ -59,12 +59,12 @@ namespace TestCentric.Engine.Services
 
             foreach (var node in _launcherNodes)
             {
-                var runtimes = node.GetValues("TargetFramework");
+                var runtimes = node.GetValues("TargetFramework").ToList();
                 if (runtimes.Count() > 0)
                     agents.Add(new NUnit.Engine.TestAgentInfo(
                         GetAgentName(node),
                         NUnit.Engine.TestAgentType.LocalProcess,
-                        RuntimeFramework.Parse(runtimes.First()).FrameworkName));
+                        RuntimeFramework.FromFrameworkName(runtimes.First()).FrameworkName));
             }
 
             return agents;
