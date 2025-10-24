@@ -42,6 +42,11 @@ namespace TestCentric.Gui.Model.Fakes
 
         public IEnumerable<IExtensionNode> Extensions { get; } = new List<IExtensionNode>();
 
+        public void InstallExtensions()
+        {
+
+        }
+
         public void EnableExtension(string typeName, bool enabled)
         {
         }

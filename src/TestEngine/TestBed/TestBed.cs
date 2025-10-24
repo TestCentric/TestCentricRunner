@@ -65,6 +65,8 @@ namespace TestCentric.Engine.TestBed
                 TestEngine.InternalTraceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), options.Trace);
             }
 
+            TestEngine.Initialize();
+
             if (options.DebugAgent)
                 package.AddSetting("DebugAgent", true);
 
@@ -78,6 +80,8 @@ namespace TestCentric.Engine.TestBed
 
             if (!string.IsNullOrEmpty(options.RequestedRuntime))
                 package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(options.RequestedRuntime));
+
+            TestEngine.Services.GetService<IExtensionService>().InstallExtensions();
 
             var runner = TestEngine.GetRunner(package);
 

@@ -6,32 +6,24 @@
 using System;
 using System.Xml;
 using TestCentric.Engine;
+using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Gui.Model.Fakes
 {
     public class MockTestEngine : ITestEngine
     {
-        #region Instance Variables
-
         private ServiceLocator _services = new ServiceLocator();
-
-        // Simulate Engine internal services, which are always present
-        private ExtensionService _extensions = new ExtensionService();
-        private ResultService _resultService = new ResultService();
         private AvailableRuntimesService _availableRuntimes = new AvailableRuntimesService();
-        private TestAgentInfoService _testAgentInfoService = new TestAgentInfoService();
-
-        #endregion
+        private TestAgentService _testAgentService = new TestAgentService();
 
         #region Constructor
 
         public MockTestEngine()
         {
-            _services.AddService<IExtensionService>(_extensions);
-            _services.AddService<IResultService>(_resultService);
-            _services.AddService<NUnit.Engine.IAvailableRuntimes>(_availableRuntimes);
-            _services.AddService<TestAgentInfoService>(_testAgentInfoService);
+            _services.AddService<IExtensionService>(new ExtensionService());
+            _services.AddService<IResultService>(new ResultService());
+            _services.AddService<ITestAgentProvider>(_testAgentService);
         }
 
         #endregion
@@ -56,7 +48,8 @@ namespace TestCentric.Gui.Model.Fakes
 
         public MockTestEngine WithRuntimes(params RuntimeFramework[] runtimes)
         {
-            _availableRuntimes.AddRuntimes(runtimes);
+            //_availableRuntimes.AddRuntimes(runtimes);
+            _testAgentService.AddRuntimes(runtimes);
             return this;
         }
 

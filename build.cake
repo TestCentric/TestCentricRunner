@@ -1,5 +1,5 @@
 // Load the recipe
-#load nuget:?package=TestCentric.Cake.Recipe&version=1.5.0-dev00008
+#load nuget:?package=TestCentric.Cake.Recipe&version=1.5.0-dev00010
 // Comment out above line and uncomment below for local tests of recipe changes
 //#load ../TestCentric.Cake.Recipe/recipe/*.cake
 
@@ -15,7 +15,7 @@ BuildSettings.Initialize(
 	title: "TestCentric.GuiRunner",
 	solutionFile: "TestCentricRunner.sln",
 	githubRepository: "testcentric-gui",
-	exemptFiles: new [] { "Resource.cs", "TextCode.cs" }
+	exemptFiles: ["Resource.cs", "TextCode.cs"]
 );
 
 //////////////////////////////////////////////////////////////////////

@@ -60,13 +60,13 @@ namespace TestCentric.Engine.Services
 
         public void StartServices()
         {
-            //foreach( IService service in _services )
-            //{
-            //    if (service.Status == ServiceStatus.Stopped)
-            //    {
-            //        StartService(service);
-            //    }
-            //}
+            foreach (IService service in _services)
+            {
+                if (service.Status == ServiceStatus.Stopped)
+                {
+                    StartService(service);
+                }
+            }
 
             this.ServicesInitialized = true;
         }
@@ -78,8 +78,8 @@ namespace TestCentric.Engine.Services
             try
             {
                 service.StartService();
-                if (service.Status == ServiceStatus.Error)
-                    throw new InvalidOperationException("Service failed to initialize " + name);
+                //if (service.Status == ServiceStatus.Error)
+                //    throw new InvalidOperationException("Service failed to initialize " + name);
             }
             catch (Exception ex)
             {

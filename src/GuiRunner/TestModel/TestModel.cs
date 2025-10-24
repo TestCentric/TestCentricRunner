@@ -17,6 +17,7 @@ namespace TestCentric.Gui.Model
     using Services;
     using Settings;
     using TestCentric.Engine;
+    using TestCentric.Engine.Internal;
     using TestCentric.Engine.Services;
     using TestCentric.Gui.Model.Filter;
 
@@ -60,8 +61,9 @@ namespace TestCentric.Gui.Model
             TestCentricTestFilter = new TestCentricTestFilter(this, () => _events.FireTestFilterChanged());
             TestResultManager = new TestResultManager(this);
 
-            AvailableAgents = new List<string>(
-                Services.TestAgentService.GetAvailableAgents().Select((a) => a.AgentName));
+            Services.GetService<IExtensionService>().InstallExtensions();
+
+            //AvailableAgents = [.. TestEngine.Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
 
             //foreach (var node in Services.ExtensionService.GetExtensionNodes(PROJECT_LOADER_EXTENSION_PATH))
             //{
@@ -117,11 +119,13 @@ namespace TestCentric.Gui.Model
         public ITestEvents Events { get { return _events; } }
 
         // Services provided either by the model itself or by the engine
-        public ITestServices Services { get; }
+        public IServiceLocator Services { get; }
 
         public UserSettings Settings { get; }
 
-        public IList<string> AvailableAgents { get; }
+        // Since we generate a new name when agents are wrapped,the available agent list must created dynamically.
+        public IList<string> AvailableAgents =>
+            [.. TestEngine.Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
 
         public RecentFiles RecentFiles { get; }
 
@@ -149,11 +153,7 @@ namespace TestCentric.Gui.Model
             get
             {
                 if (_resultFormats == null)
-                {
-                    _resultFormats = new List<string>();
-                    foreach (string format in Services.ResultService.Formats)
-                        _resultFormats.Add(format);
-                }
+                    _resultFormats = [.. Services.GetService<IResultService>().Formats];
 
                 return _resultFormats;
             }
@@ -460,7 +460,7 @@ namespace TestCentric.Gui.Model
             if (package == null) package = TestCentricProject;
 
             return new List<string>(
-                Services.TestAgentService.GetAgentsForPackage(package).Select(a => a.AgentName));
+                Services.GetService<TestAgentService>().GetAgentsForPackage(package).Select(a => a.AgentName));
         }
 
         public void UnloadTests()
@@ -580,7 +580,7 @@ namespace TestCentric.Gui.Model
 
             try
             {
-                var resultWriter = Services.ResultService.GetResultWriter(format, new object[0]);
+                var resultWriter = Services.GetService<IResultService>().GetResultWriter(format, []);
                 var results = TestResultManager.GetResultForTest(LoadedTests.Id);
                 log.Debug(results.Xml.OuterXml);
                 resultWriter.WriteResultFile(results.Xml, filePath);
@@ -593,7 +593,7 @@ namespace TestCentric.Gui.Model
 
         public void TransformResults(string targetFile, string xsltFile)
         {
-            var resultWriter = Services.ResultService.GetResultWriter("user", new[] { xsltFile });
+            var resultWriter = Services.GetService<IResultService>().GetResultWriter("user", [xsltFile]);
             var results = TestResultManager.GetResultForTest(LoadedTests.Id);
             resultWriter?.WriteResultFile(results.Xml, targetFile);
         }

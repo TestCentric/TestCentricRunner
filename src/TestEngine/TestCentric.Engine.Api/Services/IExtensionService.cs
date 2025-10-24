@@ -39,6 +39,19 @@ namespace TestCentric.Engine.Services
         /// <param name="typeName"></param>
         /// <param name="enabled"></param>
         void EnableExtension(string typeName, bool enabled);
+
+        /// <summary>
+        /// If extensions have not yet been installed, examine all candidate assemblies
+        /// and load them. Subsequent calls are ignored.
+        /// </summary>
+        /// <remarks>
+        /// We can only install extensions after all candidate assemblies are identified.
+        /// This method may be called by the user after all "Find" calls are complete.
+        /// If the user fails to call it and subsequently tries to examine extensions
+        /// using certain ExtensionManager methods, it is called automatically.
+        /// </remarks>
+        void InstallExtensions();
+
     }
 }
 

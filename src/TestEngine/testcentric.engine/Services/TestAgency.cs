@@ -5,17 +5,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.Versioning;
+using System.Threading;
+using NUnit.Engine;
+using NUnit.Extensibility;
 using TestCentric.Engine.Agents;
-using TestCentric.Engine.Extensibility;
-using TestCentric.Engine.Internal;
 using TestCentric.Engine.Communication.Transports.Remoting;
 using TestCentric.Engine.Communication.Transports.Tcp;
-using NUnit.Extensibility;
+using TestCentric.Engine.Extensibility;
+using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Services
 {
@@ -29,12 +30,11 @@ namespace TestCentric.Engine.Services
 
         private const int NORMAL_TIMEOUT = 30000;               // 30 seconds
         private const int DEBUG_TIMEOUT = NORMAL_TIMEOUT * 10;  // 5 minutes
+        private const string AGENT_LAUNCHERS_PATH = "/TestCentric/Engine/AgentLaunchers";
 
         private readonly AgentStore _agentStore = new AgentStore();
 
-        private IExtensionService _extensionService;
-
-        private readonly List<ExtensionNode> _launcherNodes = new List<ExtensionNode>();
+        private ExtensionService _extensionService;
 
         // Transports used for various target runtimes
         private TestAgencyTcpTransport _tcpTransport; // .NET Standard 2.0
@@ -48,7 +48,7 @@ namespace TestCentric.Engine.Services
             _tcpTransport = new TestAgencyTcpTransport(this, port);
         }
 
-        #region ITestAgentInfo Implementation
+        #region ITestAgentProvider Implementation
 
         /// <summary>
         /// Gets a list containing <see cref="TestAgentInfo"/> for all available agents.
@@ -57,15 +57,8 @@ namespace TestCentric.Engine.Services
         {
             var agents = new List<NUnit.Engine.TestAgentInfo>();
 
-            foreach (var node in _launcherNodes)
-            {
-                var runtimes = node.GetValues("TargetFramework");
-                if (runtimes.Count() > 0)
-                    agents.Add(new NUnit.Engine.TestAgentInfo(
-                        GetAgentName(node),
-                        NUnit.Engine.TestAgentType.LocalProcess,
-                        RuntimeFramework.Parse(runtimes.First()).FrameworkName));
-            }
+            foreach (var node in LauncherNodes)
+                agents.Add(GetAgentInfo(node));
 
             return agents;
         }
@@ -84,38 +77,37 @@ namespace TestCentric.Engine.Services
             Guard.ArgumentNotNull(targetPackage, nameof(targetPackage));
 
             // Initialize lists with ALL available agents
-            var availableAgents = new List<NUnit.Engine.TestAgentInfo>(GetAvailableAgents());
-            var validAgentNames = new List<string>(availableAgents.Select(info => info.AgentName));
+            var availableAgents = new List<ExtensionNode>(LauncherNodes);
+            //var validAgentNames = new List<string>(availableAgents.Select(info => info.AgentName));
 
-            // Look at each included assembly package to see if any names should be removed
+            // Look at each included assembly package
             foreach (var assemblyPackage in targetPackage.Select(p => p.IsAssemblyPackage))
             {
-                // Collect names of agents that work for each assembly
-                var agentsForAssembly = new List<string>();
-                foreach (var node in _launcherNodes)
+                // Remove agents that won't work for this assembly
+                for (int index = availableAgents.Count - 1; index >= 0; index--)
                 {
-                    if (CanCreateAgent(node, assemblyPackage))
-                        agentsForAssembly.Add(GetAgentName(node));
+                    if (!CanCreateAgent(availableAgents[index], assemblyPackage))
+                        availableAgents.RemoveAt(index);
                 }
 
-                // Remove agents from final result if they don't work for this assembly
-                for (int index = validAgentNames.Count - 1; index >= 0; index--)
-                {
-                    var agentName = validAgentNames[index];
-                    if (!agentsForAssembly.Contains(agentName))
-                        validAgentNames.RemoveAt(index);
-                }
+                //// Remove agents from final result if they don't work for this assembly
+                //for (int index = validAgentNames.Count - 1; index >= 0; index--)
+                //{
+                //    var agentName = validAgentNames[index];
+                //    if (!agentsForAssembly.Contains(agentName))
+                //        validAgentNames.RemoveAt(index);
+                //}
             }
 
-            // Finish up by deleting all unsuitable entries form the List of TestAgentInfo
-            for (int index = availableAgents.Count - 1; index >= 0; index--)
-            {
-                var agentName = availableAgents[index].AgentName;
-                if (!validAgentNames.Contains(agentName))
-                    availableAgents.RemoveAt(index);
-            }
+            //// Finish up by deleting all unsuitable entries form the List of TestAgentInfo
+            //for (int index = availableAgents.Count - 1; index >= 0; index--)
+            //{
+            //    var agentName = availableAgents[index].AgentName;
+            //    if (!validAgentNames.Contains(agentName))
+            //        availableAgents.RemoveAt(index);
+            //}
 
-            return availableAgents;
+            return new List<TestAgentInfo>(availableAgents.Select(x => GetAgentInfo(x)));
         }
 
         #endregion
@@ -129,7 +121,7 @@ namespace TestCentric.Engine.Services
         /// <param name="package">A TestPackage</param>
         public bool IsAgentAvailable(TestPackage package)
         {
-            foreach (var node in _launcherNodes)
+            foreach (var node in LauncherNodes)
             {
                 if (CanCreateAgent(node, package))
                     return true;
@@ -289,22 +281,10 @@ namespace TestCentric.Engine.Services
 
         public void StartService()
         {
-            _extensionService = ServiceContext.GetService<IExtensionService>();
 
             try
             {
-                // Add nodes for pluggable agent extensions
-                if (_extensionService != null)
-                    foreach (var launcherNode in _extensionService.GetExtensionNodes("/TestCentric/Engine/AgentLaunchers"))
-                        _launcherNodes.Add((ExtensionNode)launcherNode); // HACK: Remove need for cast
-
-                // TODO: Sorting is temporarily suppressed until agents can be fixed.
-                // The call to GetLogger in the static constructor causes an exception.
-
-                // Sort the list so we can use first agent found by default
-                //_launchers.Sort(delegate (IAgentLauncher launcher1, IAgentLauncher launcher2) {
-                //    return CompareLaunchers(launcher1, launcher2);
-                //});
+            _extensionService = ServiceContext.GetService<ExtensionService>();
 
                 _tcpTransport.Start();
 
@@ -317,63 +297,64 @@ namespace TestCentric.Engine.Services
             }
         }
 
-        private static int CompareLaunchers(IAgentLauncher launcher1, IAgentLauncher launcher2)
-        {
-            var runtime1 = launcher1.AgentInfo.TargetRuntime;
-            var runtime2 = launcher2.AgentInfo.TargetRuntime;
-
-            var result = runtime1.Identifier.CompareTo(runtime2.Identifier);
-            if (result == 0)
-                result = runtime1.Version.CompareTo(runtime2.Version);
-
-            return result;
-        }
         #endregion
+
+        private List<ExtensionNode> _launcherNodes;
+
+        private List<ExtensionNode> LauncherNodes
+        {
+            get
+            {
+                if (_launcherNodes is null)
+                {
+                    _launcherNodes = new List<ExtensionNode>();
+
+                    foreach (var node in _extensionService.GetExtensionNodes(AGENT_LAUNCHERS_PATH))
+                    {
+                        if (node.TypeName.StartsWith("NUnit."))
+                        {
+                            node.AddProperty("AgentName", GetAgentName(node));
+                            node.AddProperty("AgentType", "LocalProcess");
+                        }
+
+                        _launcherNodes.Add(node);
+                    }
+
+                }
+
+                return _launcherNodes;
+            }
+        }
 
         private Process CreateAgentProcess(Guid agentId, string agencyUrl, TestPackage package)
         {
+            if (_extensionService is null)
+                throw new InvalidOperationException("The field '_extensionService' must be non null when calling this method");
+
             // Check to see if a specific agent was selected
-            bool specificAgentRequested = package.Settings.HasSetting(SettingDefinitions.RequestedAgentName);
+            string requestedAgent = package.Settings.GetValueOrDefault(SettingDefinitions.RequestedAgentName);
+            bool specificAgentRequested = !string.IsNullOrEmpty(requestedAgent);
+
+            foreach (var node in LauncherNodes)
+            {
+                if (specificAgentRequested && node.TypeName != requestedAgent)
+                    continue;
+
+                if (CanCreateAgent(node, package))
+                {
+                    var launcher = GetLauncherInstance(node);
+
+                    var launcherName = launcher.GetType().Name;
+                    log.Info($"Selected launcher {launcherName}");
+                    package.Settings.Set(SettingDefinitions.SelectedAgentName.WithValue(launcherName));
+                    return launcher.CreateAgent(agentId, agencyUrl, package);
+                }
+            }
 
             if (specificAgentRequested)
-            {
-                string requestedAgent = package.Settings.GetValueOrDefault(SettingDefinitions.RequestedAgentName);
-                var launcher = GetLauncherByName(requestedAgent);
-
-                if (launcher.CanCreateProcess(package))
-                {
-                    log.Info($"Selected launcher {requestedAgent}");
-                    package.Settings.Set(SettingDefinitions.SelectedAgentName.WithValue(requestedAgent));
-                    return launcher.CreateProcess(agentId, agencyUrl, package);
-                }
-
-                throw new EngineException($"The requested launcher {requestedAgent} cannot load package {package.Name}");
-            }
+                throw new NUnitEngineException($"The requested launcher {requestedAgent} cannot load package {package.Name}");
             else
-            {
-                foreach (var node in _launcherNodes)
-                {
-                    if (CanCreateAgent(node, package))
-                    {
-                        var launcher = GetLauncherInstance(node);
-                        var launcherName = launcher.GetType().Name;
-                        log.Info($"Selected launcher {launcherName}");
-                        package.Settings.Set(SettingDefinitions.SelectedAgentName.WithValue(launcherName));
-                        return launcher.CreateProcess(agentId, agencyUrl, package);
-                    }
-                }
-
-                throw new EngineException($"No agent available for TestPackage {package.Name}");
-            }
-        }
-
-        private IAgentLauncher GetLauncherByName(string name)
-        {
-            foreach (var node in _launcherNodes)
-                if (GetAgentName(node) == name)
-                    return GetLauncherInstance(node);
-
-            return null;
+                throw new NUnitEngineException($"No agent available for TestPackage {package.Name}");
         }
 
         private bool CanCreateAgent(ExtensionNode node, TestPackage package)
@@ -386,7 +367,7 @@ namespace TestCentric.Engine.Services
             if (runtimes.Count() == 0)
             {
                 var launcher = GetLauncherInstance(node);
-                return launcher is not null && launcher.CanCreateProcess(package);
+                return launcher is not null && launcher.CanCreateAgent(package);
             }
 
             // The property is present, so no instantiation is needed.
@@ -417,8 +398,22 @@ namespace TestCentric.Engine.Services
             if (obj is IAgentLauncher)
                 return (IAgentLauncher)obj;
             if (obj is NUnit.Engine.Extensibility.IAgentLauncher)
-                return new AgentLauncherWrapper((NUnit.Engine.Extensibility.IAgentLauncher)obj);
+                return new AgentLauncherWrapper(node, (NUnit.Engine.Extensibility.IAgentLauncher)obj);
             return null;
+        }
+
+        private TestAgentInfo GetAgentInfo(ExtensionNode node)
+        {
+            string agentName = node.GetValues("AgentName").FirstOrDefault() ?? node.TypeName;
+            var agentType = TestAgentType.LocalProcess;
+            string targetFramework = node.GetValues("TargetFramework").FirstOrDefault();
+
+            return targetFramework is not null
+                ? new TestAgentInfo(
+                    agentName,
+                    agentType,
+                    new FrameworkName(targetFramework)) //RuntimeFramework.Parse(targetFramework).FrameworkName)
+                : GetLauncherInstance(node).AgentInfo;
         }
 
         private string GetAgentName(IExtensionNode node) => node.TypeName;

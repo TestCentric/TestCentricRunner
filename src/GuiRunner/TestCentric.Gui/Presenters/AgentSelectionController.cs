@@ -3,8 +3,10 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.Windows.Forms;
 using TestCentric.Engine;
+using TestCentric.Gui.Elements;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Views;
 
@@ -30,61 +32,69 @@ namespace TestCentric.Gui.Presenters
 
         public void PopulateMenu()
         {
-            var agentMenu = _view.SelectAgentMenu;
+            IPopup agentMenu = _view.SelectAgentMenu;
+            IList<string> agentsToEnable = _model.GetAgentsForPackage(_model.TestCentricProject);
+            string selectedAgentName = _model.TestCentricProject.Settings.GetValueOrDefault(SettingDefinitions.SelectedAgentName);
 
-            agentMenu.MenuItems.Clear();
-
-            var defaultMenuItem = new ToolStripMenuItem("Default")
+            agentMenu.Enabled = agentsToEnable.Count > 1;
+            if (agentMenu.Enabled)
             {
-                Name = "defaultMenuItem",
-                Tag = "DEFAULT"
-            };
+                agentMenu.MenuItems.Clear();
 
-            agentMenu.MenuItems.Add(defaultMenuItem);
-
-            var agentsToEnable = _model.GetAgentsForPackage(_model.TestCentricProject);
-            var selectedAgentName = _model.TestCentricProject.Settings.GetValueOrDefault(SettingDefinitions.SelectedAgentName);
-            
-            foreach (var agentName in _model.AvailableAgents)
-            {
-                var menuItem = new ToolStripMenuItem(agentName)
+                var defaultMenuItem = new ToolStripMenuItem("Default")
                 {
-                    Tag = agentName,
-                    Enabled = agentsToEnable.Contains(agentName)
+                    Name = "defaultMenuItem",
+                    Tag = "DEFAULT"
                 };
 
-                agentMenu.MenuItems.Add(menuItem);
-            }
+                agentMenu.MenuItems.Add(defaultMenuItem);
 
-            // Go through all menu items and check one
-            bool isItemChecked = false;
-            var packageSettings = _model.TestCentricProject.Settings;
-            foreach (ToolStripMenuItem item in agentMenu.MenuItems)
-            {
-                if ((string)item.Tag == selectedAgentName)
-                    item.Checked = isItemChecked = true;
-                else
-                    item.Click += (s, e) =>
+                foreach (var agentFullName in _model.AvailableAgents)
+                {
+                    int lastDot = agentFullName.LastIndexOf('.');
+                    string agentName = lastDot == -1
+                        ? agentFullName
+                        : agentFullName.Substring(lastDot + 1);
+
+                    var menuItem = new ToolStripMenuItem(agentName)
                     {
-                        item.Checked = true;
-                        
-                        if (item.Tag == null || item.Tag as string == "DEFAULT")
-                            packageSettings.Remove(SettingDefinitions.SelectedAgentName);
-                        else
-                            packageSettings.Set(SettingDefinitions.SelectedAgentName.WithValue(item.Tag));
-
-                        // Even though the _model has a Reload method, we cannot use it because Reload
-                        // does not re-create the Engine.  Since we just changed a setting, we must
-                        // re-create the Engine by unloading/reloading the tests. We make a copy of
-                        // __model.TestFiles because the method does an unload before it loads.
-                        _model.TestCentricProject.LoadTests();
+                        Tag = agentFullName,
+                        Enabled = agentsToEnable.Contains(agentFullName)
                     };
-            }
 
-            if (!isItemChecked)
-            {
-                defaultMenuItem.Checked = true;
-                packageSettings.Remove(SettingDefinitions.SelectedAgentName);
+                    agentMenu.MenuItems.Add(menuItem);
+                }
+
+                // Go through all menu items and check one
+                bool isItemChecked = false;
+                var packageSettings = _model.TestCentricProject.Settings;
+                foreach (ToolStripMenuItem item in agentMenu.MenuItems)
+                {
+                    if ((string)item.Text == selectedAgentName)
+                        item.Checked = isItemChecked = true;
+                    else
+                        item.Click += (s, e) =>
+                        {
+                            item.Checked = isItemChecked = true;
+
+                            if (item.Tag == null || item.Tag as string == "DEFAULT")
+                                packageSettings.Remove(SettingDefinitions.SelectedAgentName);
+                            else
+                                packageSettings.Set(SettingDefinitions.SelectedAgentName.WithValue(item.Tag));
+
+                            // Even though the _model has a Reload method, we cannot use it because Reload
+                            // does not re-create the Engine.  Since we just changed a setting, we must
+                            // re-create the Engine by unloading/reloading the tests. We make a copy of
+                            // __model.TestFiles because the method does an unload before it loads.
+                            _model.TestCentricProject.LoadTests();
+                        };
+                }
+
+                if (!isItemChecked)
+                {
+                    defaultMenuItem.Checked = true;
+                    //packageSettings.Remove(SettingDefinitions.SelectedAgentName);
+                }
             }
         }
     }

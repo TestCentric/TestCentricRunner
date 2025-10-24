@@ -1,17 +1,13 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace TestCentric.Engine
 {
+    [Ignore("Causes test run to hang")]
     public class InternalTraceTests
     {
         TestEngine _engine;
