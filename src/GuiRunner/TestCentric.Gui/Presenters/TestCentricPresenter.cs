@@ -277,7 +277,7 @@ namespace TestCentric.Gui.Presenters
             {
                 Application.DoEvents();
 
-                var agentNodes = _model.Services.GetService<TestCentric.Engine.Services.IExtensionService>().GetExtensionNodes("/TestCentric/Engine/TypeExtensions/IAgentLauncher");
+                _agentSelectionController.PopulateMenu();
 
                 // Create an unnamed TestCentricProject and load test specified on command line
                 if (_options.InputFiles.Count == 1)
@@ -337,8 +337,7 @@ namespace TestCentric.Gui.Presenters
 
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
 
-                //_view.SelectAgentMenu.Enabled = _agentSelectionController.AllowAgentSelection();
-                _agentSelectionController.PopulateMenu();
+                _agentSelectionController.UpdateMenuItems();
 
                 _view.RunAsX86.Enabled = isPackageLoaded && !isTestRunning;
 

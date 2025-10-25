@@ -6,6 +6,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Versioning;
 using NUnit.Engine;
 using NUnit.Extensibility;
 using TestCentric.Engine.Extensibility;
@@ -16,21 +17,27 @@ namespace TestCentric.Engine.Services
     public class AgentLauncherWrapper : IAgentLauncher
     {
         private NUnit.Engine.Extensibility.IAgentLauncher _agentLauncher;
+        private TestAgentInfo _agentInfo;
 
         public AgentLauncherWrapper(ExtensionNode extensionNode, NUnit.Engine.Extensibility.IAgentLauncher agentLauncher)
         {
-            _agentLauncher = agentLauncher;
+            string targetFrameworkName = agentLauncher.AgentInfo.TargetRuntime.ToString();
 
-            var agentInfo = _agentLauncher.AgentInfo;
             if (!extensionNode.PropertyNames.Contains("AgentName"))
-                extensionNode.AddProperty("AgentName", agentInfo.AgentName);
+                extensionNode.AddProperty("AgentName", extensionNode.TypeName);
             if (!extensionNode.PropertyNames.Contains("AgentType"))
                 extensionNode.AddProperty("AgentType", "LocalProcess");
             if (!extensionNode.PropertyNames.Contains("TargetFramework"))
-                extensionNode.AddProperty("TargetFramework", agentInfo.TargetRuntime.ToString());
+                extensionNode.AddProperty("TargetFramework", targetFrameworkName);
+
+            _agentLauncher = agentLauncher;
+            _agentInfo = new TestAgentInfo(
+                extensionNode.TypeName,
+                TestAgentType.LocalProcess,
+                new FrameworkName(targetFrameworkName));
         }
 
-        public NUnit.Engine.TestAgentInfo AgentInfo => _agentLauncher.AgentInfo;
+        public NUnit.Engine.TestAgentInfo AgentInfo => _agentInfo;
 
         public bool CanCreateAgent(TestPackage package)
         {

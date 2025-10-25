@@ -57,13 +57,11 @@ namespace TestCentric.Gui.Model
             Settings = new UserSettings(_settingsService);
             RecentFiles = new RecentFiles(_settingsService);
 
-            Services = new TestServices(testEngine);
+            //Services = new TestServices(testEngine);
             TestCentricTestFilter = new TestCentricTestFilter(this, () => _events.FireTestFilterChanged());
             TestResultManager = new TestResultManager(this);
 
             Services.GetService<IExtensionService>().InstallExtensions();
-
-            //AvailableAgents = [.. TestEngine.Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
 
             //foreach (var node in Services.ExtensionService.GetExtensionNodes(PROJECT_LOADER_EXTENSION_PATH))
             //{
@@ -119,13 +117,13 @@ namespace TestCentric.Gui.Model
         public ITestEvents Events { get { return _events; } }
 
         // Services provided either by the model itself or by the engine
-        public IServiceLocator Services { get; }
+        public IServiceLocator Services => TestEngine.Services;
 
         public UserSettings Settings { get; }
 
         // Since we generate a new name when agents are wrapped,the available agent list must created dynamically.
         public IList<string> AvailableAgents =>
-            [.. TestEngine.Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
+            [.. Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
 
         public RecentFiles RecentFiles { get; }
 

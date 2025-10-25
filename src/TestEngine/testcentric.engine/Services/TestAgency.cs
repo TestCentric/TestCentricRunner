@@ -311,11 +311,11 @@ namespace TestCentric.Engine.Services
 
                     foreach (var node in _extensionService.GetExtensionNodes(AGENT_LAUNCHERS_PATH))
                     {
-                        if (node.TypeName.StartsWith("NUnit."))
-                        {
-                            node.AddProperty("AgentName", GetAgentName(node));
-                            node.AddProperty("AgentType", "LocalProcess");
-                        }
+                        //if (node.TypeName.StartsWith("NUnit."))
+                        //{
+                        //    node.AddProperty("AgentName", GetAgentName(node));
+                        //    node.AddProperty("AgentType", "LocalProcess");
+                        //}
 
                         _launcherNodes.Add(node);
                     }
@@ -408,12 +408,13 @@ namespace TestCentric.Engine.Services
             var agentType = TestAgentType.LocalProcess;
             string targetFramework = node.GetValues("TargetFramework").FirstOrDefault();
 
-            return targetFramework is not null
-                ? new TestAgentInfo(
+            if (targetFramework is not null)
+                return new TestAgentInfo(
                     agentName,
                     agentType,
-                    new FrameworkName(targetFramework)) //RuntimeFramework.Parse(targetFramework).FrameworkName)
-                : GetLauncherInstance(node).AgentInfo;
+                    new FrameworkName(targetFramework));
+            else
+                return GetLauncherInstance(node).AgentInfo;
         }
 
         private string GetAgentName(IExtensionNode node) => node.TypeName;
