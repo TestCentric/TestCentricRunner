@@ -5,6 +5,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Engine;
 
 namespace TestCentric.Engine
 {
@@ -75,7 +76,10 @@ namespace TestCentric.Engine
         /// <param name="value">The corresponding value to set.</param>
         public void Add(string name, string value)
         {
-            Add(PackageSettingFactory.Create(name, value));
+            SettingDefinition definition = SettingDefinitions.Lookup(name);
+            Add(definition != null
+                ? definition.WithParsedValue(value)
+                : new PackageSetting<string>(name, value));
         }
 
         /// <summary>
