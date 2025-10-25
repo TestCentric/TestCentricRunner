@@ -174,9 +174,9 @@ namespace TestCentric.Engine
         /// </remarks>
         public void AddSetting(PackageSetting setting)
         {
-            Settings.Add(setting);
+            Settings.Set(setting);
             foreach (var subPackage in SubPackages)
-                subPackage.AddSetting(setting);
+                subPackage.Settings.Set(setting);
         }
 
         /// <summary>
@@ -229,6 +229,13 @@ namespace TestCentric.Engine
         public void AddSetting(string name, int value)
         {
             AddSetting(new PackageSetting<int>(name, value));
+        }
+
+        public void RemoveSetting(SettingDefinition setting)
+        {
+            Settings.Remove(setting);
+            foreach (var subPackage in SubPackages)
+                subPackage.RemoveSetting(setting);
         }
 
         public delegate bool SelectorDelegate(TestPackage p);

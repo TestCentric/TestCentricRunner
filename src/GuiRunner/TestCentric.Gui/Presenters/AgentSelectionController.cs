@@ -76,10 +76,17 @@ namespace TestCentric.Gui.Presenters
                             EnsureSingleItemChecked(item);
                             item.Enabled = agentsToEnable.Contains(itemTag);
 
+                            // TODO: We currently need to use both settings. Investigate.
                             if (itemTag == null || itemTag == "DEFAULT")
-                                packageSettings.Remove(SettingDefinitions.SelectedAgentName);
+                            {
+                                _model.TestCentricProject.RemoveSetting(SettingDefinitions.SelectedAgentName);
+                                _model.TestCentricProject.RemoveSetting(SettingDefinitions.RequestedAgentName);
+                            }
                             else
-                                packageSettings.Set(SettingDefinitions.SelectedAgentName.WithValue(itemTag));
+                            {
+                                _model.TestCentricProject.AddSetting(SettingDefinitions.SelectedAgentName.WithValue(itemTag));
+                                _model.TestCentricProject.AddSetting(SettingDefinitions.RequestedAgentName.WithValue(itemTag));
+                            }
 
                             // Even though the _model has a Reload method, we cannot use it because Reload
                             // does not re-create the Engine.  Since we just changed a setting, we must

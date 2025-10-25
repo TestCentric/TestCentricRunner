@@ -344,7 +344,9 @@ namespace TestCentric.Engine.Services
                 {
                     var launcher = GetLauncherInstance(node);
 
-                    var launcherName = launcher.GetType().Name;
+                    var launcherName = node.PropertyNames.Contains("AgentName")
+                        ? node.GetValues("AgentName").Single()
+                        : launcher.GetType().Name;
                     log.Info($"Selected launcher {launcherName}");
                     package.Settings.Set(SettingDefinitions.SelectedAgentName.WithValue(launcherName));
                     return launcher.CreateAgent(agentId, agencyUrl, package);
