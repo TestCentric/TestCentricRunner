@@ -39,7 +39,7 @@ namespace TestCentric.Gui.Presenters
             agentMenu.Enabled = agentsToEnable.Count > 1;
             if (agentMenu.Enabled)
             {
-                agentMenu.MenuItems.Clear();
+                //agentMenu.MenuItems.Clear();
 
                 var defaultMenuItem = new ToolStripMenuItem("Default")
                 {
