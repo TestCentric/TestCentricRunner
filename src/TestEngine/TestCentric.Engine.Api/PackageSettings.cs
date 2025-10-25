@@ -3,8 +3,10 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using NUnit.Engine;
 
 namespace TestCentric.Engine
@@ -77,9 +79,16 @@ namespace TestCentric.Engine
         public void Add(string name, string value)
         {
             SettingDefinition definition = SettingDefinitions.Lookup(name);
-            Add(definition != null
-                ? definition.WithParsedValue(value)
-                : new PackageSetting<string>(name, value));
+            if (definition is null)
+                Add(new PackageSetting<string>(name, value));
+            else if (definition.ValueType == typeof(bool) && bool.TryParse(value, out bool boolValue))
+                Add(new PackageSetting<bool>(name, boolValue));
+            else if (definition.ValueType == typeof(int) && int.TryParse(value, out int intValue))
+                Add(new PackageSetting<int>(name, intValue));
+            else if (definition.ValueType == typeof(string))
+                Add(new PackageSetting<string>(name, value));
+            else
+                throw new NotSupportedException($"Unsupported type {definition.ValueType}");
         }
 
         /// <summary>
