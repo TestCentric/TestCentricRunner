@@ -11,7 +11,7 @@ namespace TestCentric.Engine.Extensibility
     public interface IAgentLauncher
     {
         NUnit.Engine.TestAgentInfo AgentInfo { get; }
-        bool CanCreateProcess(TestPackage package);
-        Process CreateProcess(Guid agentId, string agencyUrl, TestPackage package);
+        bool CanCreateAgent(TestPackage package);
+        Process CreateAgent(Guid agentId, string agencyUrl, TestPackage package);
     }
 }

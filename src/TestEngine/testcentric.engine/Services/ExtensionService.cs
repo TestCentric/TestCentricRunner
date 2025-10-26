@@ -53,12 +53,12 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Gets an enumeration of all ExtensionPoints in the engine.
         /// </summary>
-        public IEnumerable<IExtensionPoint> ExtensionPoints => _extensionManager.ExtensionPoints;
+        IEnumerable<IExtensionPoint> IExtensionService.ExtensionPoints => _extensionManager.ExtensionPoints;
 
         /// <summary>
         /// Gets an enumeration of all installed Extensions.
         /// </summary>
-        public IEnumerable<IExtensionNode> Extensions => _extensionManager.Extensions;
+        IEnumerable<IExtensionNode> IExtensionService.Extensions => _extensionManager.Extensions;
 
         /// <summary>
         /// Get an ExtensionPoint based on its unique identifying path.
@@ -74,9 +74,57 @@ namespace TestCentric.Engine.Services
         /// Enable or disable an extension
         /// </summary>
         public void EnableExtension(string typeName, bool enabled) => _extensionManager.EnableExtension(typeName, enabled);
+        /// <summary>
+        /// If extensions have not yet been loaded, examine all candidate assemblies
+        /// and load them. Subsequent calls are ignored.
+        /// </summary>
+        public void InstallExtensions() => _extensionManager.InstallExtensions();
 
         #endregion
 
+        #region Class Properties and Methods
+
+        /// <summary>
+        /// Gets an enumeration of all extension points in the engine.
+        /// </summary>
+        /// <returns>An enumeration of ExtensionPoints. </returns>
+        /// <remarks>This class property returns actual ExtensionPoints rather than the IExtensionPoint interface.</remarks>
+        public IEnumerable<ExtensionPoint> ExtensionPoints => _extensionManager.ExtensionPoints;
+
+        /// <summary>
+        /// Gets an enumeration of all installed Extensions.
+        /// </summary>
+        /// <returns>An enumeration of ExtensionNodes</returns>
+        /// <remarks>This class property returns actual ExtensionNodes rather than the IExtensionNode interface.</remarks>
+        public IEnumerable<ExtensionNode> Extensions => _extensionManager.Extensions;
+
+        /// <summary>
+        /// Get an ExtensionPoint based on its unique identifying path.
+        /// </summary>
+        /// <remarks>This class method returns an actual ExtensionPoint rather than the IExtensionPoint interface.</remarks>
+        public ExtensionPoint GetExtensionPoint(string path)
+        {
+            return _extensionManager.GetExtensionPoint(path);
+        }
+
+        /// <summary>
+        /// Get an enumeration of ExtensionNodes based on their identifying path.
+        /// </summary>
+        /// <remarks>This class method returns actual ExtensionNodes rather than the IExtensionNode interface.</remarks>
+        public IEnumerable<ExtensionNode> GetExtensionNodes(string path)
+        {
+            foreach (var node in _extensionManager.GetExtensionNodes(path))
+                yield return node;
+        }
+
+        /// <summary>
+        /// Get all extension nodes of a given Type.
+        /// </summary>
+        /// <returns>An enumeration of ExtensionNodes for Type T.</returns>
+        /// <remarks>This class method returns actual ExtensionNodes rather than the IExtensionNode interface.</remarks>
+        public IEnumerable<ExtensionNode> GetExtensionNodes<T>() => _extensionManager.GetExtensionNodes<T>();
+
+        #endregion
         #region Other Public Properties and Methods
 
         public IList<Assembly> RootAssemblies { get; } = new List<Assembly>();

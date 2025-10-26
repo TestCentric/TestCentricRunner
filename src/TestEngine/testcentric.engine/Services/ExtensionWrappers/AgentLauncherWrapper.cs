@@ -5,68 +5,48 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.Versioning;
+using NUnit.Engine;
+using NUnit.Extensibility;
 using TestCentric.Engine.Extensibility;
-
-using NUnitPackage = NUnit.Engine.TestPackage;
+using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Services
 {
     public class AgentLauncherWrapper : IAgentLauncher
     {
         private NUnit.Engine.Extensibility.IAgentLauncher _agentLauncher;
+        private TestAgentInfo _agentInfo;
 
-        public AgentLauncherWrapper(NUnit.Engine.Extensibility.IAgentLauncher agentLauncher)
+        public AgentLauncherWrapper(ExtensionNode extensionNode, NUnit.Engine.Extensibility.IAgentLauncher agentLauncher)
         {
+            string targetFrameworkName = agentLauncher.AgentInfo.TargetRuntime.ToString();
+
+            if (!extensionNode.PropertyNames.Contains("AgentName"))
+                extensionNode.AddProperty("AgentName", extensionNode.TypeName);
+            if (!extensionNode.PropertyNames.Contains("AgentType"))
+                extensionNode.AddProperty("AgentType", "LocalProcess");
+            if (!extensionNode.PropertyNames.Contains("TargetFramework"))
+                extensionNode.AddProperty("TargetFramework", targetFrameworkName);
+
             _agentLauncher = agentLauncher;
+            _agentInfo = new TestAgentInfo(
+                extensionNode.TypeName,
+                TestAgentType.LocalProcess,
+                new FrameworkName(targetFrameworkName));
         }
 
-        public NUnit.Engine.TestAgentInfo AgentInfo
+        public NUnit.Engine.TestAgentInfo AgentInfo => _agentInfo;
+
+        public bool CanCreateAgent(TestPackage package)
         {
-            get
-            {
-                return new NUnit.Engine.TestAgentInfo(
-                    _agentLauncher.AgentInfo.AgentName,
-                    (NUnit.Engine.TestAgentType)Enum.Parse(typeof(NUnit.Engine.TestAgentType), _agentLauncher.AgentInfo.AgentType.ToString()),
-                    _agentLauncher.AgentInfo.TargetRuntime);
-            }
+            return _agentLauncher.CanCreateAgent(package.MakeNUnitPackage());
         }
 
-        public bool CanCreateProcess(TestPackage package)
+        public Process CreateAgent(Guid agentId, string agencyUrl, TestPackage package)
         {
-            return _agentLauncher.CanCreateAgent(MakeNUnitPackage(package));
-        }
-
-        public Process CreateProcess(Guid agentId, string agencyUrl, TestPackage package)
-        {
-            return _agentLauncher.CreateAgent(agentId, agencyUrl, MakeNUnitPackage(package));
-        }
-
-        private static NUnitPackage MakeNUnitPackage(TestPackage package)
-        {
-            var nunitPackage = new NUnitPackage();
-
-            foreach (var subPackage in package.SubPackages)
-                nunitPackage.AddSubPackage(MakeNUnitPackage(subPackage));
-
-            foreach (var setting in package.Settings)
-            {
-                var name = setting.Name;
-                var value = setting.Value;
-
-                if (value is int)
-                    nunitPackage.AddSetting(setting.Name, (int)value);
-                else if (value is bool)
-                    nunitPackage.AddSetting(setting.Name, (bool)value);
-                else if (value is string)
-                    nunitPackage.AddSetting(setting.Name, (string)value);
-            }
-
-            // HACK: We still use TargetRuntimeFramework, of Type RuntimeFramework.
-            // NUnit uses TargetFrameworkName. This is needed until our API is updated.
-            var targetRuntime = package.Settings.GetValueOrDefault(SettingDefinitions.TargetRuntimeFramework);
-            nunitPackage.AddSetting("TargetFrameworkName", RuntimeFramework.Parse(targetRuntime).FrameworkName.ToString());
-
-            return nunitPackage;
+            return _agentLauncher.CreateAgent(agentId, agencyUrl, package.MakeNUnitPackage());
         }
     }
 }

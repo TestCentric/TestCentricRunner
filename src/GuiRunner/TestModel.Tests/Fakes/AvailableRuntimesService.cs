@@ -9,7 +9,7 @@ using TestCentric.Engine.Services;
 
 namespace TestCentric.Gui.Model.Fakes
 {
-    public class AvailableRuntimesService : NUnit.Engine.IAvailableRuntimes
+    public class AvailableRuntimesService : IAvailableRuntimes
     {
         private List<NUnit.Engine.IRuntimeFramework> _availableRuntimes = new List<NUnit.Engine.IRuntimeFramework>();
 

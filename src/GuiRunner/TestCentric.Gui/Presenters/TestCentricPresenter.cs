@@ -277,7 +277,7 @@ namespace TestCentric.Gui.Presenters
             {
                 Application.DoEvents();
 
-                var agentNodes = _model.Services.ExtensionService.GetExtensionNodes("/TestCentric/Engine/TypeExtensions/IAgentLauncher");
+                _agentSelectionController.PopulateMenu();
 
                 // Create an unnamed TestCentricProject and load test specified on command line
                 if (_options.InputFiles.Count == 1)
@@ -337,7 +337,7 @@ namespace TestCentric.Gui.Presenters
 
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
 
-                _view.SelectAgentMenu.Enabled = _agentSelectionController.AllowAgentSelection();
+                _agentSelectionController.UpdateMenuItems();
 
                 _view.RunAsX86.Enabled = isPackageLoaded && !isTestRunning;
 
@@ -353,10 +353,10 @@ namespace TestCentric.Gui.Presenters
             _view.AddTestFilesCommand.Execute += AddTestFiles;
             _view.ReloadTestsCommand.Execute += ReloadTests;
 
-            _view.SelectAgentMenu.Popup += () =>
-            {
-                _agentSelectionController.PopulateMenu();
-            };
+            //_view.SelectAgentMenu.Popup += () =>
+            //{
+            //    _agentSelectionController.PopulateMenu();
+            //};
 
             _view.RunAsX86.CheckedChanged += () =>
             {
@@ -499,7 +499,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.ExtensionsCommand.Execute += () =>
             {
-                using (var extensionsDialog = new ExtensionDialog(_model.Services.ExtensionService))
+                using (var extensionsDialog = new ExtensionDialog(_model.Services.GetService<Engine.Services.IExtensionService>()))
                 {
                     extensionsDialog.Font = _settings.Gui.Font;
                     extensionsDialog.ShowDialog();

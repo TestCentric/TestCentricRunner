@@ -25,7 +25,7 @@ namespace TestCentric.Gui.Model
         // Event Dispatcher
         ITestEvents Events { get; }
 
-        ITestServices Services { get; }
+        IServiceLocator Services { get; }
 
         UserSettings Settings { get; }
 

@@ -26,6 +26,11 @@ namespace TestCentric.Engine.Services.Fakes
             }
         }
 
+        public void InstallExtensions()
+        {
+
+        }
+
         public void EnableExtension(string typeName, bool enabled)
         {
             

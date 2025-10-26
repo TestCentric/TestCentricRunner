@@ -53,7 +53,7 @@
 	<PropertyGroup>
 		<NUnitVersion Condition="'$(NUnitVersion)'==''">4.1.0</NUnitVersion>
 		<NSubstituteVersion Condition="'$(NSubstituteVersion)'==''">5.3.0</NSubstituteVersion>
-		<NUnitApiVersion Condition="'$(NUnitApiVersion)'==''">4.0.0-beta.1.8</NUnitApiVersion>
+		<NUnitApiVersion Condition="'$(NUnitApiVersion)'==''">4.0.0-beta.1.15</NUnitApiVersion>
 	</PropertyGroup>
 
 	<!-- Common package metadata, may be overridden in individual projects -->

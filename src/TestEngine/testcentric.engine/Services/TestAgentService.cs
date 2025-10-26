@@ -8,13 +8,13 @@ using System.Collections.Generic;
 
 namespace TestCentric.Engine.Services
 {
-    public class TestAgentService : Service
+    public class TestAgentService : Service, ITestAgentProvider
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(TestAgentService));
 
         private IList<ITestAgentProvider> _providers = new List<ITestAgentProvider>();
 
-        #region ITestAgentInfo Implementation
+        #region ITestAgentProvider Implementation
 
         /// <summary>
         /// Gets a list containing <see cref="TestAgentInfo"/> for all available agents.
@@ -47,10 +47,6 @@ namespace TestCentric.Engine.Services
 
             return agents;
         }
-
-        #endregion
-
-        #region ITestAgentProvider Implementation
 
         /// <summary>
         /// Returns true if an agent can be found, which is suitable
