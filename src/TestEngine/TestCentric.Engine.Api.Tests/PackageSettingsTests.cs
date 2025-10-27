@@ -4,7 +4,7 @@
 // ***********************************************************************
 
 using NUnit.Framework;
-using NUnit.Engine;
+using NUnit.Common;
 
 namespace TestCentric.Engine
 {

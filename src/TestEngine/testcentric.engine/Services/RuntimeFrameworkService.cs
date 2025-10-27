@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
+using NUnit.Common;
 using TestCentric.Engine.Services.RuntimeLocators;
 
 namespace TestCentric.Engine.Services
@@ -248,7 +249,7 @@ namespace TestCentric.Engine.Services
                 if (!IsAvailable(requestedFramework))
                     throw new EngineException("Requested framework is not available: " + requestedFrameworkSetting);
 
-                package.Settings.Set(SettingDefinitions.TargetRuntimeFramework.WithValue(requestedFrameworkSetting));
+                package.Settings.Set(SettingDefinitions.TargetFrameworkName.WithValue(requestedFramework.FrameworkName.ToString()));
                 return requestedFramework;
             }
 
@@ -284,7 +285,7 @@ namespace TestCentric.Engine.Services
                 }
             }
 
-            package.Settings.Set(SettingDefinitions.TargetRuntimeFramework.WithValue(targetFramework.ToString()));
+            package.Settings.Set(SettingDefinitions.TargetFrameworkName.WithValue(targetFramework.FrameworkName.ToString()));
 
             log.Debug($"Test will use {targetFramework} for {package.Name}");
             return targetFramework;

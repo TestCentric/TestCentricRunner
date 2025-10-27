@@ -2,7 +2,7 @@
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
-
+#if false
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +17,7 @@ namespace TestCentric.Engine
     /// starting "Image...", the runner creates the settings. Some settings are
     /// used by the engine, some by the framework and some by both.
     /// </summary>
-    public static class SettingDefinitions
+    public static class SettingDefinitions : NUnit.Engine.SettingDefinitions
     {
         private static IList<PropertyInfo> _propertyInfos;
 
@@ -362,3 +362,4 @@ namespace TestCentric.Engine
 
     }
 }
+#endif

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.Versioning;
 using System.Threading;
+using NUnit.Common;
 using NUnit.Engine;
 using NUnit.Extensibility;
 using TestCentric.Engine.Agents;
@@ -17,6 +18,9 @@ using TestCentric.Engine.Communication.Transports.Remoting;
 using TestCentric.Engine.Communication.Transports.Tcp;
 using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
+
+// TODO: We need this until NUnit adds Cancelled by user code
+using AgentExitCodes = TestCentric.Engine.Agents.AgentExitCodes;
 
 namespace TestCentric.Engine.Services
 {
@@ -140,10 +144,10 @@ namespace TestCentric.Engine.Services
         public ITestAgent GetAgent(TestPackage package)
         {
             // Target Runtime must be specified by this point
-            string runtimeSetting = package.Settings.GetValueOrDefault(SettingDefinitions.TargetRuntimeFramework);
-            Guard.OperationValid(runtimeSetting.Length > 0, "LaunchAgentProcess called with no runtime specified");
+            string targetFrameworkName = package.Settings.GetValueOrDefault(SettingDefinitions.TargetFrameworkName);
+            Guard.OperationValid(targetFrameworkName.Length > 0, "LaunchAgentProcess called with no runtime specified");
 
-            var targetRuntime = RuntimeFramework.Parse(runtimeSetting);
+            var targetRuntime = RuntimeFramework.FromFrameworkName(targetFrameworkName);
             var agentId = Guid.NewGuid();
             string agencyUrl = TcpEndPoint;
             var agentProcess = CreateAgentProcess(agentId, agencyUrl, package);

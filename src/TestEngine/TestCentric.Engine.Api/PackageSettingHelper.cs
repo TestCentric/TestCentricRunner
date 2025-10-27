@@ -3,7 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-#if false
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -23,7 +22,7 @@ namespace TestCentric.Engine
         public static SettingDefinition LookupSetting(string name)
         {
             // Get a list of all public properties
-            var properties = typeof(SettingDefinitions).GetProperties(BindingFlags.Public | BindingFlags.Static);
+            var properties = typeof(NUnit.Common.SettingDefinitions).GetProperties(BindingFlags.Public | BindingFlags.Static);
 
             foreach (PropertyInfo propertyInfo in properties)
                 if (propertyInfo.Name == name)
@@ -66,4 +65,3 @@ namespace TestCentric.Engine
         }
     }
 }
-#endif

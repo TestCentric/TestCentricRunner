@@ -5,6 +5,7 @@
 
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
+using NUnit.Common;
 using TestCentric.Engine;
 
 namespace TestCentric.Gui.Model

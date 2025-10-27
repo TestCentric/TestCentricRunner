@@ -41,7 +41,7 @@ namespace TestCentric.Engine
         /// <param name="value">The corresponding value to set.</param>
         public new void Add(string name, string value) // Different from NUnit
         {
-            SettingDefinition definition = SettingDefinitions.Lookup(name);
+            SettingDefinition definition = PackageSettingHelper.LookupSetting(name);
             if (definition is null)
                 Add(new PackageSetting<string>(name, value));
             else if (definition.ValueType == typeof(bool) && bool.TryParse(value, out bool boolValue))
