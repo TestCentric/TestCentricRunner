@@ -20,6 +20,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\TestCentric.Engine\TestCentric.Engine.csproj" />
+		<PackageReference Include="NUnit.Engine.Api" Version="$(NUnitApiVersion)" />
     </ItemGroup>
 
 </Project>

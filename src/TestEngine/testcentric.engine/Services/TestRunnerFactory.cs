@@ -40,8 +40,9 @@ namespace TestCentric.Engine.Services
             if (ext != ".dll" && ext != ".exe")
                 return new InvalidAssemblyRunner(package, "File type is not supported");
 
-            if (package.Settings.GetValueOrDefault(SettingDefinitions.ImageNonTestAssemblyAttribute))
-                return new SkippedAssemblyRunner(package);
+            // TODO: Restore this if/when NUnit adds this setting or create workaround
+            //if (package.Settings.GetValueOrDefault(NUnit.Common.SettingDefinitions.ImageNonTestAssemblyAttribute))
+            //    return new SkippedAssemblyRunner(package);
 
             return new AssemblyRunner(ServiceContext, package);
         }

@@ -519,7 +519,7 @@ namespace TestCentric.Gui.Model
         {
             //var originalSubPackages = new List<TestPackage>(package.SubPackages);
             //package.SubPackages.Clear();
-            package.AddSetting(SettingDefinitions.DebugTests.WithValue(config));
+            package.AddSetting(NUnit.Common.SettingDefinitions.DebugTests.WithValue(config));
 
             //foreach (var subPackage in package.SubPackages)
             //    foreach (var original in originalSubPackages)
@@ -753,7 +753,7 @@ namespace TestCentric.Gui.Model
             {
                 foreach (var subPackage in TestCentricProject.SubPackages)
                 {
-                    subPackage.AddSetting(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
+                    subPackage.AddSetting(NUnit.Common.SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
                 }
 
                 Runner = TestEngine.GetRunner(TestCentricProject);

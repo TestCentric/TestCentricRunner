@@ -360,7 +360,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.RunAsX86.CheckedChanged += () =>
             {
-                var key = SettingDefinitions.RunAsX86.Name;
+                var key = NUnit.Common.SettingDefinitions.RunAsX86.Name;
                 if (_view.RunAsX86.Checked)
                     ChangePackageSettingAndReload(key, true);
                 else
