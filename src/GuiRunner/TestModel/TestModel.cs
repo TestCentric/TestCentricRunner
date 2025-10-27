@@ -610,7 +610,7 @@ namespace TestCentric.Gui.Model
             return _lastTestRun.ContainTest(testNode);
         }
 
-        public PackageSettings GetPackageSettingsForTest(string id)
+        public NUnit.Engine.PackageSettings GetPackageSettingsForTest(string id)
         {
             return GetPackageForTest(id)?.Settings;
         }

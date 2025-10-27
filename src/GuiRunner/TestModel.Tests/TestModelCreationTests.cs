@@ -54,9 +54,9 @@ namespace TestCentric.Gui.Model
 
         private class PackageSettingsChecker
         {
-           PackageSettings _settings;
+           NUnit.Engine.PackageSettings _settings;
 
-            public PackageSettingsChecker(PackageSettings settings)
+            public PackageSettingsChecker(NUnit.Engine.PackageSettings settings)
             {
                 _settings = settings;
             }
