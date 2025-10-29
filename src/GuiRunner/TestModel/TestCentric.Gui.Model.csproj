@@ -14,4 +14,7 @@
     <PackageReference Include="NUnit.Extensibility" Version="$(NUnitApiVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
 </Project>

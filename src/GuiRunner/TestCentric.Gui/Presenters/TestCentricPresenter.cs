@@ -337,7 +337,7 @@ namespace TestCentric.Gui.Presenters
 
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
 
-                _agentSelectionController.UpdateMenuItems();
+                // _agentSelectionController.UpdateMenuItems();
 
                 _view.RunAsX86.Enabled = isPackageLoaded && !isTestRunning;
 
