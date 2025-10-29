@@ -455,7 +455,11 @@ namespace TestCentric.Gui.Model
 
         public IList<string> GetAgentsForPackage(TestPackage package = null)
         {
-            if (package == null) package = TestCentricProject;
+            if (package == null)
+                package = TestCentricProject;
+
+            if (package == null)                // no project is loaded
+                return new List<string>();
 
             return new List<string>(
                 Services.GetService<TestAgentService>().GetAgentsForPackage(package).Select(a => a.AgentName));
