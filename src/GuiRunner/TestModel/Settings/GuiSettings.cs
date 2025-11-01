@@ -7,93 +7,110 @@ using System.Drawing;
 
 namespace TestCentric.Gui.Model.Settings
 {
+    using System.Configuration;
+    using TestCentric.Gui.Model.Services;
+
     /// <summary>
     /// Settings specific to TestCentric. Because we store settings in the
     /// NUnit 3 settings file, we use our own unique prefix to avoid conflicts.
     /// </summary>
     public class GuiSettings : SettingsGroup
     {
-        public GuiSettings(ISettings settings, string prefix)
-             : base(settings, prefix + "Gui") { }
-
-        public TestTreeSettings TestTree
+        public GuiSettings(ISettings settings, string prefix) : base(settings, prefix + "Gui")
         {
-            get { return new TestTreeSettings(_settingsService, GroupPrefix); }
+            TestTree = new TestTreeSettings(_settingsService, GroupPrefix);
+            RecentProjects = new RecentProjectsSettings(_settingsService, GroupPrefix);
+            RecentFiles = new RecentFiles(settings);
+            MainForm = new MainFormSettings(_settingsService, GroupPrefix);
+            MiniForm = new MiniFormSettings(_settingsService, GroupPrefix);
+            ErrorDisplay = new ErrorDisplaySettings(_settingsService, GroupPrefix);
+            TextOutput = new TextOutputSettings(_settingsService, GroupPrefix);
+
+            settings.Add(TestTree);
+            settings.Add(RecentProjects);
+            settings.Add(RecentFiles);
+            settings.Add(MainForm);
+            settings.Add(MiniForm);
+            settings.Add(ErrorDisplay);
+            settings.Add(TextOutput);
         }
 
-        public RecentProjectsSettings RecentProjects
-        {
-            get { return new RecentProjectsSettings(_settingsService, GroupPrefix); }
-        }
+        public TestTreeSettings TestTree { get; }
 
-        public MiniFormSettings MiniForm
-        {
-            get { return new MiniFormSettings(_settingsService, GroupPrefix); }
-        }
+        public RecentProjectsSettings RecentProjects { get; }
 
-        public MainFormSettings MainForm
-        {
-            get { return new MainFormSettings(_settingsService, GroupPrefix); }
-        }
+        public RecentFiles RecentFiles { get; }
 
-        public ErrorDisplaySettings ErrorDisplay
-        {
-            get { return new ErrorDisplaySettings(_settingsService, GroupPrefix); }
-        }
+        public MiniFormSettings MiniForm { get; }
 
-        public TextOutputSettings TextOutput
-        {
-            get { return new TextOutputSettings(_settingsService, GroupPrefix); }
-        }
+        public MainFormSettings MainForm { get; }
 
+        public ErrorDisplaySettings ErrorDisplay { get; }
+
+        public TextOutputSettings TextOutput { get; }
+
+        [UserScopedSetting]
+        [DefaultSettingValue("Full")]
         public string GuiLayout
         {
-            get { return GetSetting(nameof(GuiLayout), "Full"); }
-            set { SaveSetting(nameof(GuiLayout), value); }
+            get { return (string)this[nameof(GuiLayout)]; }
+            set { this[nameof(GuiLayout)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool LoadLastProject
         {
-            get { return GetSetting(nameof(LoadLastProject), true); }
-            set { SaveSetting(nameof(LoadLastProject), value); }
+            get { return (bool)this[nameof(LoadLastProject)]; }
+            set { this[nameof(LoadLastProject)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("")]
         public string InitialSettingsPage
         {
-            get { return (string)GetSetting(nameof(InitialSettingsPage)); }
-            set { SaveSetting(nameof(InitialSettingsPage), value); }
+            get { return (string)this[nameof(InitialSettingsPage)]; }
+            set { this[nameof(InitialSettingsPage)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("false")]
         public bool ClearResultsOnReload
         {
-            get { return GetSetting(nameof(ClearResultsOnReload), false); }
-            set { SaveSetting(nameof(ClearResultsOnReload), value); }
+            get { return (bool)this[nameof(ClearResultsOnReload)]; }
+            set { this[nameof(ClearResultsOnReload)] = value; }
         }
 
-        private static readonly Font DefaultFont = new Font(FontFamily.GenericSansSerif, 8.25f);
+        [UserScopedSetting]
+        [DefaultSettingValue("Microsoft Sans Serif, 8.25pt")]
         public Font Font
         {
-            get { return GetSetting(nameof(Font), DefaultFont); }
-            set { SaveSetting(nameof(Font), value); }
+            get { return (Font)this[nameof(Font)]; }
+            set { this[nameof(Font)] = value; }
         }
 
-        private static readonly Font DefaultFixedFont = new Font(FontFamily.GenericMonospace, 8.0F);
+        [UserScopedSetting]
+        [DefaultSettingValue("Courier New, 8.0pt")]
         public Font FixedFont
         {
-            get { return GetSetting(nameof(FixedFont), DefaultFixedFont); }
-            set { SaveSetting(nameof(FixedFont), value); }
+            get { return (Font)this[nameof(FixedFont)]; }
+            set { this[nameof(FixedFont)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("Off")]
         public InternalTraceLevel InternalTraceLevel
         {
-            get { return GetSetting(nameof(InternalTraceLevel), InternalTraceLevel.Off); }
-            set { SaveSetting(nameof(InternalTraceLevel), value); }
+            get { return (InternalTraceLevel)this[nameof(InternalTraceLevel)]; }
+            set { this[nameof(InternalTraceLevel)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("")]
         public string ProjectEditorPath
         {
-            get { return (string)GetSetting(nameof(ProjectEditorPath)); }
-            set { SaveSetting(nameof(ProjectEditorPath), value); }
+            get { return (string)this[nameof(ProjectEditorPath)]; }
+            set { this[nameof(ProjectEditorPath)] = value; }
         }
     }
 }

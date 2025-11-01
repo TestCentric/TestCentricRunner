@@ -5,21 +5,27 @@
 
 namespace TestCentric.Gui.Model.Settings
 {
+    using System.Configuration;
+
     public class RecentProjectsSettings : SettingsGroup
     {
         public RecentProjectsSettings(ISettings settings, string prefix)
             : base(settings, prefix + "RecentProjects") { }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("24")]
         public int MaxFiles
         {
-            get { return GetSetting(nameof(MaxFiles), 24); }
-            set { SaveSetting(nameof(MaxFiles), value); }
+            get { return (int)this[nameof(MaxFiles)]; }
+            set { this[nameof(MaxFiles)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool CheckFilesExist
         {
-            get { return GetSetting(nameof(CheckFilesExist), true); }
-            set { SaveSetting(nameof(CheckFilesExist), value); }
+            get { return (bool)this[nameof(CheckFilesExist)]; }
+            set { this[nameof(CheckFilesExist)] = value; }
         }
     }
 }

@@ -7,51 +7,67 @@ using System.Windows.Forms;
 
 namespace TestCentric.Gui.Model.Settings
 {
+    using System.Configuration;
+
     public class ErrorDisplaySettings : SettingsGroup
     {
         public ErrorDisplaySettings(ISettings settings, string prefix)
              : base(settings, prefix + "ErrorDisplay") { }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("0")]
         public int SplitterPosition
         {
-            get { return GetSetting(nameof(SplitterPosition), 0); }
-            set { SaveSetting(nameof(SplitterPosition), value); }
+            get { return (int)this[nameof(SplitterPosition)]; }
+            set { this[nameof(SplitterPosition)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool WordWrapEnabled
         {
-            get { return GetSetting(nameof(WordWrapEnabled), true); }
-            set { SaveSetting(nameof(WordWrapEnabled), value); }
+            get { return (bool)this[nameof(WordWrapEnabled)]; }
+            set { this[nameof(WordWrapEnabled)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool ToolTipsEnabled
         {
-            get { return GetSetting(nameof(ToolTipsEnabled), true); }
-            set { SaveSetting(nameof(ToolTipsEnabled), value); }
+            get { return (bool)this[nameof(ToolTipsEnabled)]; }
+            set { this[nameof(ToolTipsEnabled)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool SourceCodeDisplay
         {
-            get { return GetSetting(nameof(SourceCodeDisplay), true); }
-            set { SaveSetting(nameof(SourceCodeDisplay), value); }
+            get { return (bool)this[nameof(SourceCodeDisplay)]; }
+            set { this[nameof(SourceCodeDisplay)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("Vertical")]
         public Orientation SourceCodeSplitterOrientation
         {
-            get { return GetSetting(nameof(SourceCodeSplitterOrientation), Orientation.Vertical); }
-            set { SaveSetting(nameof(SourceCodeSplitterOrientation), value); }
+            get { return (Orientation)this[nameof(SourceCodeSplitterOrientation)]; }
+            set { this[nameof(SourceCodeSplitterOrientation)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("0.3")]
         public float SourceCodeVerticalSplitterPosition
         {
-            get { return GetSetting(nameof(SourceCodeVerticalSplitterPosition), 0.3f); }
-            set { SaveSetting(nameof(SourceCodeVerticalSplitterPosition), value); }
+            get { return (float)this[nameof(SourceCodeVerticalSplitterPosition)]; }
+            set { this[nameof(SourceCodeVerticalSplitterPosition)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("0.3")]
         public float SourceCodeHorizontalSplitterPosition
         {
-            get { return GetSetting(nameof(SourceCodeHorizontalSplitterPosition), 0.3f); }
-            set { SaveSetting(nameof(SourceCodeHorizontalSplitterPosition), value); }
+            get { return (float)this[nameof(SourceCodeHorizontalSplitterPosition)]; }
+            set { this[nameof(SourceCodeHorizontalSplitterPosition)] = value; }
         }
     }
 }

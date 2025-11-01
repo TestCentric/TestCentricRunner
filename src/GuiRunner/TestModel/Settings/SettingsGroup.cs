@@ -5,7 +5,9 @@
 
 namespace TestCentric.Gui.Model.Settings
 {
-    public class SettingsGroup : ISettings
+    using System.Configuration;
+
+    public class SettingsGroup : ApplicationSettingsBase
     {
         protected ISettings _settingsService;
 
@@ -30,34 +32,6 @@ namespace TestCentric.Gui.Model.Settings
         #region ISettings Implementation
 
         public event SettingsEventHandler Changed;
-
-        public object GetSetting(string settingName)
-        {
-            return _settingsService.GetSetting(GroupPrefix + settingName);
-        }
-
-        public T GetSetting<T>(string settingName, T defaultValue)
-        {
-            return _settingsService.GetSetting<T>(GroupPrefix + settingName, defaultValue);
-        }
-
-        public void RemoveGroup(string groupName)
-        {
-            _settingsService.RemoveGroup(GroupPrefix + groupName);
-        }
-
-        public void RemoveSetting(string settingName)
-        {
-            _settingsService.RemoveSetting(GroupPrefix + settingName);
-        }
-
-        public void SaveSetting(string settingName, object settingValue)
-        {
-            if (settingValue != null)
-                _settingsService.SaveSetting(GroupPrefix + settingName, settingValue);
-            else
-                RemoveSetting(settingName);
-        }
 
         #endregion
     }
