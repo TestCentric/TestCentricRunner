@@ -9,81 +9,54 @@ using TestCentric.Gui.Model.Settings;
 
 namespace TestCentric.Gui.Model.Services
 {
-    public class RecentFiles
+    using System.Collections.Specialized;
+    using System.Configuration;
+    using System.Linq;
+
+    public class RecentFiles : SettingsGroup
     {
-        private IList<string> _fileEntries = new List<string>();
-        private ISettings _userSettings;
         private const string PREFIX = "TestCentric.Gui.RecentProjects";
 
         private const int MAX_FILES = 24;
 
-        public RecentFiles(ISettings userSettings)
+        public RecentFiles(ISettings userSettings) : base(userSettings, PREFIX)
         {
-            _userSettings = userSettings;
-            LoadEntries();
         }
 
         public int MaxFiles { get; } = MAX_FILES;
 
         public string Latest
         {
-            get { return _fileEntries.Count == 0 ? null : _fileEntries[0]; }
+            get { return Entries.Count == 0 ? null : Entries[0]; }
             set
             {
                 if (Latest != value)
                 {
-                    _fileEntries.Remove(value);
+                    var col = Entries.Cast<string>().ToList();
+                    col.Remove(value);
 
-                    _fileEntries.Insert(0, value);
-                    if (_fileEntries.Count > MaxFiles)
-                        _fileEntries.RemoveAt(MaxFiles);
+                    col.Insert(0, value);
+                    if (col.Count > MaxFiles)
+                        col.RemoveAt(MaxFiles);
 
-                    SaveEntries();
+                    StringCollection strCol = new StringCollection();
+                    strCol.AddRange(col.ToArray());
+                    Entries = strCol;
                 }
             }
         }
 
-        public IList<string> Entries
+        [UserScopedSetting]
+        [DefaultSettingValue("<?xml version = \"1.0\" encoding=\"utf-16\"?><ArrayOfString xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"></ArrayOfString>")]
+        public StringCollection Entries
         {
-            get { return _fileEntries; }
+            get { return (StringCollection)this[nameof(Entries)]; }
+            set { this[nameof(Entries)] = value; }
         }
 
         public void Remove(string fileName)
         {
-            _fileEntries.Remove(fileName);
-        }
-
-        private void LoadEntries()
-        {
-            _fileEntries.Clear();
-
-            for (int index = 1; index < MaxFiles; index++)
-            {
-                if (_fileEntries.Count >= MaxFiles) break;
-
-                string fileSpec = _userSettings.GetSetting(GetRecentFileKey(index)) as string;
-                if (fileSpec != null) _fileEntries.Add(fileSpec);
-            }
-        }
-
-        private void SaveEntries()
-        {
-            while (_fileEntries.Count > MaxFiles)
-                _fileEntries.RemoveAt(_fileEntries.Count - 1);
-
-            for (int index = 0; index < MaxFiles; index++)
-            {
-                string keyName = GetRecentFileKey(index + 1);
-                if (index < _fileEntries.Count)
-                    _userSettings.SaveSetting(keyName, _fileEntries[index]);
-                else
-                    _userSettings.RemoveSetting(keyName);
-            }
-        }
-
-        private string GetRecentFileKey(int index)
-        {
-            return $"{PREFIX}.File{index}";
+            Entries.Remove(fileName);
         }
     }
 }

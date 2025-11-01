@@ -7,17 +7,17 @@ namespace TestCentric.Gui.Model.Settings
 {
     public class UserSettings : SettingsGroup
     {
-        public UserSettings(ISettings settings)
-            : base(settings, "TestCentric") { }
-
-        public GuiSettings Gui
+        public UserSettings(ISettings settings) : base(settings, "TestCentric")
         {
-            get { return new GuiSettings(_settingsService, GroupPrefix); }
+            Gui = new GuiSettings(settings, GroupPrefix);
+            Engine = new EngineSettings(settings, GroupPrefix);
+
+            settings.Add(Gui);
+            settings.Add(Engine);
         }
 
-        public EngineSettings Engine
-        {
-            get { return new EngineSettings(_settingsService, GroupPrefix); }
-        }
+        public GuiSettings Gui { get; }
+
+        public EngineSettings Engine { get; }
     }
 }

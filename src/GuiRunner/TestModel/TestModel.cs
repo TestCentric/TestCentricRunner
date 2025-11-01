@@ -53,9 +53,7 @@ namespace TestCentric.Gui.Model
             _events = new TestEventDispatcher(this);
             _assemblyWatcher = new AssemblyWatcher();
 
-            _settingsService.LoadSettings();
             Settings = new UserSettings(_settingsService);
-            RecentFiles = new RecentFiles(_settingsService);
 
             //Services = new TestServices(testEngine);
             TestCentricTestFilter = new TestCentricTestFilter(this, () => _events.FireTestFilterChanged());
@@ -125,7 +123,7 @@ namespace TestCentric.Gui.Model
         public IList<string> AvailableAgents =>
             [.. Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
 
-        public RecentFiles RecentFiles { get; }
+        public RecentFiles RecentFiles => Settings.Gui.RecentFiles;
 
         // Project Support
         public bool NUnitProjectSupport { get; }
