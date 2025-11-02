@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using NUnit.Common;
 using TestCentric.Engine;
 
 namespace TestCentric.Gui.Model
@@ -59,10 +60,11 @@ namespace TestCentric.Gui.Model
                     AddSetting(SettingDefinitions.RunAsX86.WithValue(true));
                 if (options.DebugAgent)
                     AddSetting(SettingDefinitions.DebugAgent.WithValue(true));
-                if (options.SimulateUnloadError)
-                    AddSetting(SettingDefinitions.SimulateUnloadError.WithValue(true));
-                if (options.SimulateUnloadTimeout)
-                    AddSetting(SettingDefinitions.SimulateUnloadTimeout.WithValue(true));
+                // TODO: Decide how to make this work
+                //if (options.SimulateUnloadError)
+                //    AddSetting(SettingDefinitions.SimulateUnloadError.WithValue(true));
+                //if (options.SimulateUnloadTimeout)
+                //    AddSetting(SettingDefinitions.SimulateUnloadTimeout.WithValue(true));
                 if (options.TestParameters.Count > 0)
                 {
                     string[] parms = new string[options.TestParameters.Count];

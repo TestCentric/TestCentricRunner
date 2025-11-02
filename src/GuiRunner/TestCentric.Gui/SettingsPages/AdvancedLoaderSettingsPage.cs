@@ -6,7 +6,7 @@
 using System;
 using System.Security.Principal;
 using System.Windows.Forms;
-using TestCentric.Engine;
+using NUnit.Common;
 
 namespace TestCentric.Gui.SettingsPages
 {
