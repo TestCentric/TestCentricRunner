@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestCentric.Gui.Model.Settings" GeneratedClassName="TextOutputSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="WordWrapEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Labels" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ON</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

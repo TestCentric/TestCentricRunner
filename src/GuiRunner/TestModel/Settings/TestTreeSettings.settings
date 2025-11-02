@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestCentric.Gui.Model.Settings" GeneratedClassName="TestTreeSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="InitialTreeDisplay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="AlternateImageSet" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Classic</Value>
+    </Setting>
+    <Setting Name="ShowCheckBoxes" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ShowTestDuration" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DisplayFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NUNIT_TREE</Value>
+    </Setting>
+    <Setting Name="ShowNamespace" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="NUnitGroupBy" Type="System.String" Scope="User">
+      <Value Profile="(Default)">UNGROUPED</Value>
+    </Setting>
+    <Setting Name="ShowFilter" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

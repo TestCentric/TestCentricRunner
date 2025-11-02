@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestCentric.Gui.Model.Settings" GeneratedClassName="GuiSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="GuiLayout" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Full</Value>
+    </Setting>
+    <Setting Name="LoadLastProject" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InitialSettingsPage" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ClearResultsOnReload" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Font" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
+    </Setting>
+    <Setting Name="FixedFont" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">Courier New, 8.25pt</Value>
+    </Setting>
+    <Setting Name="InternalTraceLevel" Type="TestCentric.InternalTraceLevel" Scope="User">
+      <Value Profile="(Default)">Off</Value>
+    </Setting>
+    <Setting Name="ProjectEditorPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

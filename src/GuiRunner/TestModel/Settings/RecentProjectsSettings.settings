@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestCentric.Gui.Model.Settings" GeneratedClassName="RecentProjectsSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MaxFiles" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
+    <Setting Name="CheckFilesExist" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

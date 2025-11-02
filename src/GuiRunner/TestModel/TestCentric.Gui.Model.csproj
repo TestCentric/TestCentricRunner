@@ -14,4 +14,107 @@
     <PackageReference Include="NUnit.Extensibility" Version="$(NUnitApiVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Settings\EngineSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EngineSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\ErrorDisplaySettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ErrorDisplaySettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\FixtureListSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FixtureListSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\GuiSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GuiSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\MainFormSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MainFormSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\MiniFormSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MiniFormSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\RecentFiles.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecentFiles.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\RecentProjectsSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RecentProjectsSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\TestListSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TestListSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\TestTreeSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TestTreeSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\TextOutputSettings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TextOutputSettings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Settings\EngineSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>EngineSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\ErrorDisplaySettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ErrorDisplaySettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\FixtureListSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>FixtureListSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\GuiSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>GuiSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\MainFormSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MainFormSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\MiniFormSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MiniFormSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\RecentFiles.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>RecentFiles.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\RecentProjectsSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>RecentProjectsSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\TestListSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TestListSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\TestTreeSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TestTreeSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings\TextOutputSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TextOutputSettings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
 </Project>

@@ -36,8 +36,6 @@ namespace TestCentric.Gui.Model
         // Check if the loaded Assemblies has been changed
         private AssemblyWatcher _assemblyWatcher;
 
-        private SettingsService _settingsService;
-
         private TestRunSpecification _lastTestRun = TestRunSpecification.Empty;
 
         private bool _lastRunWasDebugRun;
@@ -49,13 +47,10 @@ namespace TestCentric.Gui.Model
             TestEngine = testEngine;
             Options = options ?? new GuiOptions();
 
-            _settingsService = new SettingsService(true);
             _events = new TestEventDispatcher(this);
             _assemblyWatcher = new AssemblyWatcher();
 
-            _settingsService.LoadSettings();
-            Settings = new UserSettings(_settingsService);
-            RecentFiles = new RecentFiles(_settingsService);
+            Settings = new UserSettings();
 
             //Services = new TestServices(testEngine);
             TestCentricTestFilter = new TestCentricTestFilter(this, () => _events.FireTestFilterChanged());
@@ -125,7 +120,7 @@ namespace TestCentric.Gui.Model
         public IList<string> AvailableAgents =>
             [.. Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
 
-        public RecentFiles RecentFiles { get; }
+        public RecentFiles RecentFiles => Settings.Gui.RecentFiles;
 
         // Project Support
         public bool NUnitProjectSupport { get; }
@@ -680,8 +675,8 @@ namespace TestCentric.Gui.Model
                 if (_assemblyWatcher != null)
                     _assemblyWatcher.Dispose();
 
-                if (_settingsService != null)
-                    _settingsService.SaveSettings();
+                if (Settings != null)
+                    Settings.SaveSettings();
             }
             catch (EngineUnloadException)
             {

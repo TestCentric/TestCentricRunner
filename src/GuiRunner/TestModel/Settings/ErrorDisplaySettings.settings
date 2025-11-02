@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestCentric.Gui.Model.Settings" GeneratedClassName="ErrorDisplaySettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SplitterPosition" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WordWrapEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ToolTipsEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SourceCodeDisplay" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SourceCodeSplitterOrientation" Type="System.Windows.Forms.Orientation" Scope="User">
+      <Value Profile="(Default)">Vertical</Value>
+    </Setting>
+    <Setting Name="SourceCodeVerticalSplitterPosition" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0.3</Value>
+    </Setting>
+    <Setting Name="SourceCodeHorizontalSplitterPosition" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">0.3</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
