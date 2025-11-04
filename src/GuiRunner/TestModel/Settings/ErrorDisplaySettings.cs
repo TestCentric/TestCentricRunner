@@ -9,11 +9,25 @@ namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
 
-    public class ErrorDisplaySettings : SettingsGroup
+    public interface IErrorDisplaySettings
     {
-        public ErrorDisplaySettings(ISettings settings, string prefix)
-             : base(settings, prefix + "ErrorDisplay") { }
+        int SplitterPosition { get; set; }
 
+        bool WordWrapEnabled { get; set; }
+
+        bool ToolTipsEnabled { get; set; }
+
+        bool SourceCodeDisplay { get; set; }
+
+        Orientation SourceCodeSplitterOrientation { get; set; }
+
+        float SourceCodeVerticalSplitterPosition { get; set; }
+
+        float SourceCodeHorizontalSplitterPosition { get; set; }
+    }
+
+    public class ErrorDisplaySettings : ApplicationSettingsBase, IErrorDisplaySettings
+    {
         [UserScopedSetting]
         [DefaultSettingValue("0")]
         public int SplitterPosition

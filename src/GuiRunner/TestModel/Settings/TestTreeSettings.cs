@@ -7,22 +7,34 @@ namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
 
-    public class TestTreeSettings : SettingsGroup
+    public interface ITestTreeSettings
     {
-        public TestTreeSettings(
-            ISettings settings,
-            string prefix) : base(settings, prefix + "TestTree")
-        {
-            FixtureList = new FixtureListSettings(_settingsService, GroupPrefix);
-            TestList = new TestListSettings(_settingsService, GroupPrefix);
+        int InitialTreeDisplay { get; set; }
 
-            settings.Add(FixtureList);
-            settings.Add(TestList);
-        }
+        string AlternateImageSet { get; set; }
 
-        public FixtureListSettings FixtureList { get; }
+        bool ShowCheckBoxes { get; set; }
 
-        public TestListSettings TestList { get; }
+        bool ShowTestDuration { get; set; }
+
+        string DisplayFormat { get; set; }
+
+        bool ShowNamespace { get; set; }
+
+        string NUnitGroupBy { get; set; }
+
+        bool ShowFilter { get; set; }
+
+        IFixtureListSettings FixtureList { get; }
+
+        ITestListSettings TestList { get; }
+    }
+
+    public class TestTreeSettings : ApplicationSettingsBase, ITestTreeSettings
+    {
+        public IFixtureListSettings FixtureList { get; } = new FixtureListSettings();
+
+        public ITestListSettings TestList { get; } = new TestListSettings();
 
         [UserScopedSetting]
         [DefaultSettingValue("0")]
@@ -98,32 +110,6 @@ namespace TestCentric.Gui.Model.Settings
         {
             get { return (bool)this[nameof(ShowFilter)]; }
             set { this[nameof(ShowFilter)] = value; }
-        }
-
-        public class FixtureListSettings : SettingsGroup
-        {
-            public FixtureListSettings(ISettings settings, string prefix) : base(settings, prefix + "FixtureList") { }
-
-            [UserScopedSetting]
-            [DefaultSettingValue("OUTCOME")]
-            public string GroupBy
-            {
-                get { return (string) this[nameof(GroupBy)]; }
-                set { this[nameof(GroupBy)] = value; }
-            }
-}
-
-        public class TestListSettings : SettingsGroup
-        {
-            public TestListSettings(ISettings settings, string prefix) : base(settings, prefix + "TestList") { }
-
-            [UserScopedSetting]
-            [DefaultSettingValue("OUTCOME")]
-            public string GroupBy
-            {
-                get { return (string)this[nameof(GroupBy)]; }
-                set { this[nameof(GroupBy)] = value; }
-            }
         }
     }
 }

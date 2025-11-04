@@ -9,11 +9,21 @@ namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
 
-    public class MainFormSettings : SettingsGroup
+    public interface IMainFormSettings
     {
-        public MainFormSettings(ISettings settings, string prefix)
-            : base(settings, prefix + "MainForm") { }
+        Point Location { get; set; }
 
+        Size Size { get; set; }
+
+        bool Maximized { get; set; }
+
+        int SplitPosition { get; set; }
+
+        bool ShowStatusBar { get; set; }
+    }
+
+    public class MainFormSettings : ApplicationSettingsBase, IMainFormSettings
+    {
         [UserScopedSetting]
         [DefaultSettingValue("10, 10")]
         public Point Location

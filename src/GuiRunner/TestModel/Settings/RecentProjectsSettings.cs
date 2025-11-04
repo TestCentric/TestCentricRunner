@@ -7,11 +7,15 @@ namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
 
-    public class RecentProjectsSettings : SettingsGroup
+    public interface IRecentProjectsSettings
     {
-        public RecentProjectsSettings(ISettings settings, string prefix)
-            : base(settings, prefix + "RecentProjects") { }
+        int MaxFiles { get; set; }
 
+        bool CheckFilesExist { get; set; }
+    }
+
+    public class RecentProjectsSettings : ApplicationSettingsBase, IRecentProjectsSettings
+    {
         [UserScopedSetting]
         [DefaultSettingValue("24")]
         public int MaxFiles

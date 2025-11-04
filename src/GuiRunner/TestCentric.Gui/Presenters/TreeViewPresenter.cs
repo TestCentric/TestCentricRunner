@@ -22,7 +22,7 @@ namespace TestCentric.Gui.Presenters
     {
         private ITestTreeView _view;
         private ITestModel _model;
-        private Model.Settings.TestTreeSettings _treeSettings;
+        private Model.Settings.ITestTreeSettings _treeSettings;
         private ITreeDisplayStrategyFactory _treeDisplayStrategyFactory;
 
         // Accessed by tests

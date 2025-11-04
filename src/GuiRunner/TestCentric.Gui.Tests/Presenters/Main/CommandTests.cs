@@ -6,18 +6,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 
 namespace TestCentric.Gui.Presenters.Main
 {
-    using System;
-    using System.Runtime.InteropServices;
-    using System.Windows.Forms;
     using Elements;
     using Model;
-    using NSubstitute.Core.Arguments;
     using Views;
 
     public class CommandTests : MainPresenterTestBase
@@ -319,10 +314,8 @@ namespace TestCentric.Gui.Presenters.Main
             _view.DisplayFormat.SelectedItem.Returns("TEST_LIST");
             _view.DisplayFormat.SelectionChanged += Raise.Event<CommandHandler>();
 
-            // FakeSettings saves the setting so we can check if it was set
-            // TBD:
-            //var setting = (string)_model.Settings.GetSetting("Gui.TestTree.DisplayFormat");
-            //Assert.That(setting, Is.EqualTo("TEST_LIST"));
+            // Assert
+            _settings.Gui.TestTree.Received().DisplayFormat = "TEST_LIST";
         }
 
         [Test]
@@ -332,10 +325,8 @@ namespace TestCentric.Gui.Presenters.Main
             _view.TestListGroupBy.SelectedItem.Returns("OUTCOME");
             _view.TestListGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
 
-            // FakeSettings saves the setting so we can check if it was set
-            // TBD:
-            //var setting = (string)_model.Settings.GetSetting("Gui.TestTree.TestList.GroupBy");
-            //Assert.That(setting, Is.EqualTo("OUTCOME"));
+            // Assert
+            _settings.Gui.TestTree.TestList.Received().GroupBy = "OUTCOME";
         }
 
         [Test]
@@ -345,10 +336,8 @@ namespace TestCentric.Gui.Presenters.Main
             _view.FixtureListGroupBy.SelectedItem.Returns("CATEGORY");
             _view.FixtureListGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
 
-            // FakeSettings saves the setting so we can check if it was set
-            // TBD:
-            //var setting = (string)_model.Settings.GetSetting("Gui.TestTree.FixtureList.GroupBy");
-            //Assert.That(setting, Is.EqualTo("CATEGORY"));
+            // Assert
+            _settings.Gui.TestTree.FixtureList.Received().GroupBy = "CATEGORY";
         }
 
         [Test]
@@ -358,11 +347,8 @@ namespace TestCentric.Gui.Presenters.Main
             _view.NUnitGroupBy.SelectedItem.Returns("CATEGORY");
             _view.NUnitGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
 
-            // FakeSettings saves the setting so we can check if it was set
-
-            // TBD:
-            // var setting = (string)_model.Settings.GetSetting("Gui.TestTree.NUnitGroupBy");
-            //Assert.That(setting, Is.EqualTo("CATEGORY"));
+            // Assert
+            _settings.Gui.TestTree.Received().NUnitGroupBy = "CATEGORY";
         }
 
         [Test]

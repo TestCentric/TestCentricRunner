@@ -7,11 +7,15 @@ namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
 
-    public class TextOutputSettings : SettingsGroup
+    public interface ITextOutputSettings
     {
-        public TextOutputSettings(ISettings settings, string prefix)
-             : base(settings, prefix + "TextOutput") { }
+        string Labels { get; set; }
 
+        bool WordWrapEnabled { get; set; }
+    }
+
+    public class TextOutputSettings : ApplicationSettingsBase, ITextOutputSettings
+    {
         [UserScopedSetting]
         [DefaultSettingValue("true")]
         public bool WordWrapEnabled

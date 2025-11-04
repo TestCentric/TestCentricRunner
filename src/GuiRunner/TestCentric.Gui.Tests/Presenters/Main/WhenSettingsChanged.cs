@@ -9,6 +9,8 @@ using TestCentric.Gui.Elements;
 
 namespace TestCentric.Gui.Presenters.Main
 {
+    using TestCentric.Gui.Model.Settings;
+
     internal class WhenSettingsChanged : MainPresenterTestBase
     {
         [TestCase("NUNIT_TREE")]
@@ -17,7 +19,8 @@ namespace TestCentric.Gui.Presenters.Main
         public void DisplayFormat_SettingChanged_MenuItemIsUpdated(string displayFormat)
         {
             // 1. Act
-            _settings.Gui.TestTree.DisplayFormat = displayFormat;
+            _settings.Gui.TestTree.DisplayFormat.Returns(displayFormat);
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
 
             // 2. Assert
             Assert.That(_view.DisplayFormat.SelectedItem, Is.EqualTo(displayFormat));
@@ -30,7 +33,8 @@ namespace TestCentric.Gui.Presenters.Main
         public void NUnitTreeGroupBy_SettingChanged_MenuItemIsUpdated(string groupBy)
         {
             // 1. Act
-            _settings.Gui.TestTree.NUnitGroupBy = groupBy;
+            _settings.Gui.TestTree.NUnitGroupBy.Returns(groupBy);
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.NUnitGroupBy"));
 
             // 2. Assert
             Assert.That(_view.NUnitGroupBy.SelectedItem, Is.EqualTo(groupBy));
@@ -42,7 +46,8 @@ namespace TestCentric.Gui.Presenters.Main
         public void FixtureListGroupBy_SettingChanged_MenuItemIsUpdated(string groupBy)
         {
             // 1. Act
-            _settings.Gui.TestTree.FixtureList.GroupBy = groupBy;
+            _settings.Gui.TestTree.FixtureList.GroupBy.Returns(groupBy);
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.FixtureList.GroupBy"));
 
             // 2. Assert
             Assert.That(_view.FixtureListGroupBy.SelectedItem, Is.EqualTo(groupBy));
@@ -54,7 +59,8 @@ namespace TestCentric.Gui.Presenters.Main
         public void TestListGroupBy_SettingChanged_MenuItemIsUpdated(string groupBy)
         {
             // 1. Act
-            _settings.Gui.TestTree.TestList.GroupBy = groupBy;
+            _settings.Gui.TestTree.TestList.GroupBy.Returns(groupBy);
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.TestList.GroupBy"));
 
             // 2. Assert
             Assert.That(_view.TestListGroupBy.SelectedItem, Is.EqualTo(groupBy));
@@ -65,7 +71,8 @@ namespace TestCentric.Gui.Presenters.Main
         public void ShowNamespace_SettingChanged_MenuItemIsUpdated(bool showNamespace)
         {
             // 1. Act
-            _settings.Gui.TestTree.ShowNamespace = showNamespace;
+            _settings.Gui.TestTree.ShowNamespace.Returns(showNamespace);
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.ShowNamespace"));
 
             // 2. Assert
             Assert.That(_view.ShowNamespace.Checked, Is.EqualTo(showNamespace));
@@ -80,7 +87,8 @@ namespace TestCentric.Gui.Presenters.Main
             _model.HasTests.Returns(true);
 
             // 2. Act
-            _settings.Gui.TestTree.DisplayFormat = displayFormat;
+            _settings.Gui.TestTree.DisplayFormat.Returns(displayFormat);
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
 
             // 3. Assert
             Assert.That(_view.ShowHideFilterButton.Visible, Is.EqualTo(expectedState));

@@ -5,8 +5,21 @@
 
 namespace TestCentric.Gui.Fakes
 {
-    public class UserSettings : TestCentric.Gui.Model.Settings.UserSettings
+    using NSubstitute;
+    using TestCentric.Gui.Model.Settings;
+
+    public class UserSettings
     {
-        public UserSettings() : base(new TestCentric.Gui.Model.Settings.SettingsStore()) { }
+        /// <summary>
+        /// Create a IUserSetting substitute which is initialized with some default values
+        /// </summary>
+        public static IUserSettings Create()
+        {
+            IUserSettings userSettings = Substitute.For<IUserSettings>();
+            userSettings.Gui.TestTree.AlternateImageSet.Returns("Classic");
+            userSettings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
+            userSettings.Gui.TestTree.ShowNamespace.Returns(true);
+            return userSettings;
+        }
     }
 }

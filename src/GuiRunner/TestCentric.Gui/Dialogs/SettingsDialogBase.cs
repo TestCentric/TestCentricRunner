@@ -141,7 +141,7 @@ namespace TestCentric.Gui.Dialogs
 
         public ITestModel Model { get; }
 
-        public UserSettings Settings { get; }
+        public IUserSettings Settings { get; }
 
         public IDictionary<string, object> PackageSettingChanges { get; }
 

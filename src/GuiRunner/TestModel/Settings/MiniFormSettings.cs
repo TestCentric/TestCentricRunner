@@ -9,11 +9,17 @@ namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
 
-    public class MiniFormSettings : SettingsGroup
+    public interface IMiniFormSettings
     {
-        public MiniFormSettings(ISettings settings, string prefix)
-            : base(settings, prefix + "MiniForm") { }
+        Point Location { get; set; }
 
+        Size Size { get; set; }
+
+        bool Maximized { get; set; }
+    }
+
+    public class MiniFormSettings : ApplicationSettingsBase, IMiniFormSettings
+    {
         [UserScopedSetting]
         [DefaultSettingValue("10, 10")]
         public Point Location

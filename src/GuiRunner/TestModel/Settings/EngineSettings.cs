@@ -7,16 +7,27 @@ namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
 
+    public interface IEngineSettings
+    {
+        bool ShadowCopyFiles { get; set; }
+
+        int Agents { get; set; }
+
+        bool RerunOnChange { get; set; }
+
+        bool SetPrincipalPolicy { get; set; }
+
+        string PrincipalPolicy { get; set; }
+    }
+
+
     /// <summary>
     /// We store settings used by the engine using the same
     /// settings path that the console runner uses. We may
     /// want to change this in the future.
     /// </summary>
-    public class EngineSettings : SettingsGroup
+    public class EngineSettings : ApplicationSettingsBase, IEngineSettings
     {
-        public EngineSettings(ISettings settings, string prefix)
-            : base(settings, prefix + "MainForm") { }
-
         [UserScopedSetting]
         [DefaultSettingValue("true")]
         public bool ShadowCopyFiles

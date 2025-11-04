@@ -3,25 +3,22 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using TestCentric.Gui.Model.Settings;
-
-namespace TestCentric.Gui.Model.Services
+namespace TestCentric.Gui.Model.Settings
 {
     using System.Collections.Specialized;
     using System.Configuration;
     using System.Linq;
 
-    public class RecentFiles : SettingsGroup
+    public interface IRecentFiles
     {
-        private const string PREFIX = "TestCentric.Gui.RecentProjects";
+        string Latest { get; set; }
 
+        StringCollection Entries { get; set; }
+    }
+
+    public class RecentFiles : ApplicationSettingsBase, IRecentFiles
+    {
         private const int MAX_FILES = 24;
-
-        public RecentFiles(ISettings userSettings) : base(userSettings, PREFIX)
-        {
-        }
 
         public int MaxFiles { get; } = MAX_FILES;
 

@@ -87,7 +87,7 @@ namespace TestCentric.Gui
         }
 
         protected ITestModel Model { get; private set; }
-        protected UserSettings Settings { get; private set; }
+        protected IUserSettings Settings { get; private set; }
 
         protected IDictionary<string, object> PackageSettingChanges { get; private set; }
 

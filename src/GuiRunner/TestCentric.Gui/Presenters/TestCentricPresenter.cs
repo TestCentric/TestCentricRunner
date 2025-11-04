@@ -49,7 +49,7 @@ namespace TestCentric.Gui.Presenters
 
         private readonly GuiOptions _options;
 
-        private readonly UserSettings _settings;
+        private readonly IUserSettings _settings;
 
         private string _guiLayout;
 
@@ -376,7 +376,7 @@ namespace TestCentric.Gui.Presenters
 
                 menuItems.Clear();
                 int num = 0;
-                foreach (string entry in _model.RecentFiles.Entries)
+                foreach (string entry in _model.Settings.Gui.RecentFiles.Entries)
                 {
                     var menuText = string.Format("{0} {1}", ++num, entry);
                     var menuItem = new ToolStripMenuItem(menuText);

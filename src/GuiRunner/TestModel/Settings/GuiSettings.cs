@@ -8,46 +8,59 @@ using System.Drawing;
 namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
-    using TestCentric.Gui.Model.Services;
+
+    public interface IGuiSettings
+    {
+        ITestTreeSettings TestTree { get; }
+
+        IRecentProjectsSettings RecentProjects { get; }
+
+        IRecentFiles RecentFiles { get; }
+
+        IMiniFormSettings MiniForm { get; }
+
+        IMainFormSettings MainForm { get; }
+
+        IErrorDisplaySettings ErrorDisplay { get; }
+
+        ITextOutputSettings TextOutput { get; }
+
+        string GuiLayout { get; set; }
+
+        bool LoadLastProject { get; set; }
+
+        string InitialSettingsPage { get; set; }
+
+        bool ClearResultsOnReload { get; set; }
+
+        Font Font { get; set; }
+
+        Font FixedFont { get; set; }
+
+        InternalTraceLevel InternalTraceLevel { get; set; }
+
+        string ProjectEditorPath { get; set; }
+    }
 
     /// <summary>
     /// Settings specific to TestCentric. Because we store settings in the
     /// NUnit 3 settings file, we use our own unique prefix to avoid conflicts.
     /// </summary>
-    public class GuiSettings : SettingsGroup
+    public class GuiSettings : ApplicationSettingsBase, IGuiSettings
     {
-        public GuiSettings(ISettings settings, string prefix) : base(settings, prefix + "Gui")
-        {
-            TestTree = new TestTreeSettings(_settingsService, GroupPrefix);
-            RecentProjects = new RecentProjectsSettings(_settingsService, GroupPrefix);
-            RecentFiles = new RecentFiles(settings);
-            MainForm = new MainFormSettings(_settingsService, GroupPrefix);
-            MiniForm = new MiniFormSettings(_settingsService, GroupPrefix);
-            ErrorDisplay = new ErrorDisplaySettings(_settingsService, GroupPrefix);
-            TextOutput = new TextOutputSettings(_settingsService, GroupPrefix);
+        public ITestTreeSettings TestTree { get; } = new TestTreeSettings();
 
-            settings.Add(TestTree);
-            settings.Add(RecentProjects);
-            settings.Add(RecentFiles);
-            settings.Add(MainForm);
-            settings.Add(MiniForm);
-            settings.Add(ErrorDisplay);
-            settings.Add(TextOutput);
-        }
+        public IRecentProjectsSettings RecentProjects { get; } = new RecentProjectsSettings();
 
-        public TestTreeSettings TestTree { get; }
+        public IRecentFiles RecentFiles { get; } = new RecentFiles();
 
-        public RecentProjectsSettings RecentProjects { get; }
+        public IMiniFormSettings MiniForm { get; } = new MiniFormSettings();
 
-        public RecentFiles RecentFiles { get; }
+        public IMainFormSettings MainForm { get; } = new MainFormSettings();
 
-        public MiniFormSettings MiniForm { get; }
+        public IErrorDisplaySettings ErrorDisplay { get; } = new ErrorDisplaySettings();
 
-        public MainFormSettings MainForm { get; }
-
-        public ErrorDisplaySettings ErrorDisplay { get; }
-
-        public TextOutputSettings TextOutput { get; }
+        public ITextOutputSettings TextOutput { get; } = new TextOutputSettings();
 
         [UserScopedSetting]
         [DefaultSettingValue("Full")]
