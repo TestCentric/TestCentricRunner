@@ -21,8 +21,6 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestResultSubView view = Substitute.For<ITestResultSubView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
-            model.Settings.Returns(settings);
 
             // 2. Act
             TestResultSubViewPresenter presenter = new TestResultSubViewPresenter(view, model);
@@ -38,8 +36,6 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestResultSubView view = Substitute.For<ITestResultSubView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
-            model.Settings.Returns(settings);
 
             TestNode testNode = new TestNode("<test-case id='1' />");
             ResultNode resultNode = new ResultNode($"<test-case id='1' result='Passed' />");
@@ -61,8 +57,6 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestResultSubView view = Substitute.For<ITestResultSubView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
-            model.Settings.Returns(settings);
 
             TestNode testNode = new TestNode("<test-suite id='1' />");
 

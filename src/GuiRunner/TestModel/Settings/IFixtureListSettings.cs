@@ -3,19 +3,10 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using NUnit.Framework;
-
-namespace TestCentric.Gui.Model.Services
+namespace TestCentric.Gui.Model.Settings
 {
-    public class SettingsServiceTests
+    public interface IFixtureListSettings
     {
-        private SettingsService _settingsService;
-
-        [SetUp]
-        public void CreateService()
-        {
-            _settingsService = new SettingsService(false);
-        }
-
+        string GroupBy { get; set; }
     }
 }

@@ -3,12 +3,14 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-namespace TestCentric.Gui.Model.Settings {
+using System.Collections.Specialized;
 
-    public sealed partial class TestTreeSettings : ITestTreeSettings
+namespace TestCentric.Gui.Model.Settings
+{
+    public interface IRecentFiles
     {
-        public IFixtureListSettings FixtureList => FixtureListSettings.Default;
+        string Latest { get; set; }
 
-        public ITestListSettings TestList => TestListSettings.Default;
+        StringCollection Entries { get; set; }
     }
 }

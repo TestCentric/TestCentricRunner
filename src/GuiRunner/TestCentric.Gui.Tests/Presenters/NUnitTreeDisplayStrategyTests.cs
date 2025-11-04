@@ -4,12 +4,13 @@
 // ***********************************************************************
 
 using System.Windows.Forms;
-using NUnit.Framework;
 using NSubstitute;
+using NUnit.Framework;
 
 namespace TestCentric.Gui.Presenters.TestTree
 {
     using System.Collections.Generic;
+    using System.Runtime;
     using Model;
     using Views;
 
@@ -17,7 +18,6 @@ namespace TestCentric.Gui.Presenters.TestTree
     {
         protected ITestTreeView _view;
         protected ITestModel _model;
-        protected Model.Settings.UserSettings _settings;
         protected DisplayStrategy _strategy;
 
         [SetUp]
@@ -25,8 +25,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         {
             _view = Substitute.For<ITestTreeView>();
             _model = Substitute.For<ITestModel>();
-            _settings = new Fakes.UserSettings();
-            _model.Settings.Returns(_settings);
+            _model.Settings.Gui.TestTree.ShowNamespace.Returns(true);
 
             // We can't construct a TreeNodeCollection, so we fake it
             var nodes = new TreeNode().Nodes;
@@ -76,9 +75,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             // Arrange
             var view = Substitute.For<ITestTreeView>();
             var model = Substitute.For<ITestModel>();
-            var settings = new Fakes.UserSettings();
-            model.Settings.Returns(settings);
-            model.Settings.Gui.TestTree.ShowFilter = isVisible;
+            model.Settings.Gui.TestTree.ShowFilter.Returns(isVisible);
 
             // Act
             var strategy = new NUnitTreeDisplayStrategy(view, model);
@@ -188,7 +185,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestFinished_ShowDurationIsActive_TreeNodeName_IsUpdated()
         {
             // Arrange
-            _settings.Gui.TestTree.ShowTestDuration = true;
+            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             var treeNode = _strategy.MakeTreeNode(testNode, false);
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
@@ -211,7 +208,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestFinished_SortByDurationIsActive_Tree_IsSorted()
         {
             // Arrange
-            _settings.Gui.TestTree.ShowTestDuration = true;
+            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             var treeNode = _strategy.MakeTreeNode(testNode, false);
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
@@ -235,7 +232,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void MakeTreeNode_ShowDurationIsActive_TreeNodeName_ContainsDuration()
         {
             // Arrange
-            _settings.Gui.TestTree.ShowTestDuration = true;
+            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
             _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
@@ -251,7 +248,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void MakeTreeNode_ShowDurationIsInactive_TreeNodeName_ContainsTestName()
         {
             // Arrange
-            _settings.Gui.TestTree.ShowTestDuration = false;
+            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(false);
             TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
             ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
             _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
@@ -267,7 +264,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Namespaces_AreShown_NamespaceNodes_AreCreated()
         {
             // Arrange
-            _settings.Gui.TestTree.ShowNamespace = true;
+            _model.Settings.Gui.TestTree.ShowNamespace.Returns(true);
             string xml = 
                 "<test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
@@ -285,7 +282,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Namespaces_AreNotShown_NamespaceNodes_AreNotCreated()
         {
             // Arrange
-            _settings.Gui.TestTree.ShowNamespace = false;
+            _model.Settings.Gui.TestTree.ShowNamespace.Returns(false);
             string xml =
                 "<test-run> <test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +

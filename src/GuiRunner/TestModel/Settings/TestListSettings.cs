@@ -3,12 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-namespace TestCentric.Gui.Model.Settings {
-
-    public sealed partial class TestTreeSettings : ITestTreeSettings
+namespace TestCentric.Gui.Model.Settings 
+{
+    public sealed partial class TestListSettings : ITestListSettings
     {
-        public IFixtureListSettings FixtureList => FixtureListSettings.Default;
-
-        public ITestListSettings TestList => TestListSettings.Default;
     }
 }

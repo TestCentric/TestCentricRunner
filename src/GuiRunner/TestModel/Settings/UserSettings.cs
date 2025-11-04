@@ -10,7 +10,7 @@ namespace TestCentric.Gui.Model.Settings
     using System.ComponentModel;
     using System.Configuration;
 
-    public class UserSettings
+    public class UserSettings : IUserSettings
     {
         private IDictionary<ApplicationSettingsBase, string> _settingGroups;
 
@@ -21,17 +21,17 @@ namespace TestCentric.Gui.Model.Settings
             // Add all sub settings objects with their prefix
             _settingGroups = new Dictionary<ApplicationSettingsBase, string>()
             {
-                { Engine, "TestCentric.Engine" },
-                { Gui, "TestCentric.Gui" },
-                { Gui.MainForm, "TestCentric.Gui.MainForm" },
-                { Gui.MiniForm, "TestCentric.Gui.MiniForm" },
-                { Gui.ErrorDisplay, "TestCentric.Gui.ErrorDisplay" },
-                { Gui.RecentProjects, "TestCentric.Gui.RecentProjects" },
-                { Gui.RecentFiles, "TestCentric.Gui.RecentFiles" },
-                { Gui.TextOutput, "TestCentric.Gui.TextOutput" },
-                { Gui.TestTree, "TestCentric.Gui.TestTree" },
-                { Gui.TestTree.FixtureList, "TestCentric.Gui.TestTree.FixtureList" },
-                { Gui.TestTree.TestList, "TestCentric.Gui.TestTree.TestList" },
+                { (ApplicationSettingsBase)Engine, "TestCentric.Engine" },
+                { (ApplicationSettingsBase)Gui, "TestCentric.Gui" },
+                { (ApplicationSettingsBase)Gui.MainForm, "TestCentric.Gui.MainForm" },
+                { (ApplicationSettingsBase)Gui.MiniForm, "TestCentric.Gui.MiniForm" },
+                { (ApplicationSettingsBase)Gui.ErrorDisplay, "TestCentric.Gui.ErrorDisplay" },
+                { (ApplicationSettingsBase)Gui.RecentProjects, "TestCentric.Gui.RecentProjects" },
+                { (ApplicationSettingsBase)Gui.RecentFiles, "TestCentric.Gui.RecentFiles" },
+                { (ApplicationSettingsBase)Gui.TextOutput, "TestCentric.Gui.TextOutput" },
+                { (ApplicationSettingsBase)Gui.TestTree, "TestCentric.Gui.TestTree" },
+                { (ApplicationSettingsBase)Gui.TestTree.FixtureList, "TestCentric.Gui.TestTree.FixtureList" },
+                { (ApplicationSettingsBase)Gui.TestTree.TestList, "TestCentric.Gui.TestTree.TestList" },
             };
 
             foreach (ApplicationSettingsBase settingsBase in _settingGroups.Keys)
@@ -40,9 +40,9 @@ namespace TestCentric.Gui.Model.Settings
             }
         }
 
-        public GuiSettings Gui => GuiSettings.Default;
+        public IGuiSettings Gui => GuiSettings.Default;
 
-        public EngineSettings Engine => EngineSettings.Default;
+        public IEngineSettings Engine => EngineSettings.Default;
 
         private void OnSettingChanged(object sender, PropertyChangedEventArgs args)
         {

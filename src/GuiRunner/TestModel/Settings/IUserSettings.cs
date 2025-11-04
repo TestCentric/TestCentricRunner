@@ -34,15 +34,14 @@ namespace TestCentric.Gui.Model.Settings
         public string SettingName { get; private set; }
     }
 
-    /// <summary>
-    /// The ISettings interface is used to access all user
-    /// settings and options.
-    /// </summary>
-    public interface ISettings
+    public interface IUserSettings
     {
-        /// <summary>
-        /// Occurs when the settings are changed.
-        /// </summary>
         event SettingsEventHandler Changed;
+
+        IGuiSettings Gui { get; }
+
+        IEngineSettings Engine { get; }
+
+        void SaveSettings();
     }
 }

@@ -8,7 +8,7 @@ namespace TestCentric.Gui.Model.Settings
     using System.Collections.Specialized;
     using System.Linq;
 
-    public sealed partial class RecentFiles 
+    public sealed partial class RecentFiles : IRecentFiles
     {
         private const int MAX_FILES = 24;
 

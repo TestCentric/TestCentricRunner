@@ -3,12 +3,20 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-namespace TestCentric.Gui.Model.Settings {
+using System.Drawing;
 
-    public sealed partial class TestTreeSettings : ITestTreeSettings
+namespace TestCentric.Gui.Model.Settings
+{
+    public interface IMainFormSettings
     {
-        public IFixtureListSettings FixtureList => FixtureListSettings.Default;
+        Point Location { get; set; }
 
-        public ITestListSettings TestList => TestListSettings.Default;
+        Size Size { get; set; }
+
+        bool Maximized { get; set; }
+
+        int SplitPosition { get; set; }
+
+        bool ShowStatusBar { get; set; }
     }
 }

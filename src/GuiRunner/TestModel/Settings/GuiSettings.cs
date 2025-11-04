@@ -6,20 +6,20 @@
 
 namespace TestCentric.Gui.Model.Settings {
     
-    public sealed partial class GuiSettings 
+    public sealed partial class GuiSettings : IGuiSettings
     {
-        public TestTreeSettings TestTree => TestTreeSettings.Default;
+        public ITestTreeSettings TestTree => TestTreeSettings.Default;
 
-        public RecentProjectsSettings RecentProjects => RecentProjectsSettings.Default;
+        public IRecentProjectsSettings RecentProjects => RecentProjectsSettings.Default;
 
-        public RecentFiles RecentFiles => RecentFiles.Default;
+        public IRecentFiles RecentFiles => Settings.RecentFiles.Default;
 
-        public MiniFormSettings MiniForm => MiniFormSettings.Default;
+        public IMiniFormSettings MiniForm => MiniFormSettings.Default;
 
-        public MainFormSettings MainForm => MainFormSettings.Default;
+        public IMainFormSettings MainForm => MainFormSettings.Default;
 
-        public ErrorDisplaySettings ErrorDisplay => ErrorDisplaySettings.Default;
+        public IErrorDisplaySettings ErrorDisplay => ErrorDisplaySettings.Default;
 
-        public TextOutputSettings TextOutput => TextOutputSettings.Default;
+        public ITextOutputSettings TextOutput => TextOutputSettings.Default;
     }
 }

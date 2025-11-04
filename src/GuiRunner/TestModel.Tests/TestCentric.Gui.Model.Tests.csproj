@@ -8,6 +8,12 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Settings\SettingsTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Settings\SettingsTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\TestData\mock-assembly\mock-assembly.csproj" />
     <ProjectReference Include="..\TestModel\TestCentric.Gui.Model.csproj" />
     <ProjectReference Include="..\..\TestEngine\TestCentric.Engine.Api\TestCentric.Engine.Api.csproj" />

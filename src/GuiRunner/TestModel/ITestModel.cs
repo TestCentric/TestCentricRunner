@@ -27,9 +27,7 @@ namespace TestCentric.Gui.Model
 
         IServiceLocator Services { get; }
 
-        UserSettings Settings { get; }
-
-        RecentFiles RecentFiles { get; }
+        IUserSettings Settings { get; }
 
         // Project Support
         bool NUnitProjectSupport { get; }

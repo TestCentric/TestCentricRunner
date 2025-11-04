@@ -3,12 +3,12 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-namespace TestCentric.Gui.Model.Settings {
-
-    public sealed partial class TestTreeSettings : ITestTreeSettings
+namespace TestCentric.Gui.Model.Settings
+{
+    public interface ITextOutputSettings
     {
-        public IFixtureListSettings FixtureList => FixtureListSettings.Default;
+        string Labels { get; set; }
 
-        public ITestListSettings TestList => TestListSettings.Default;
+        bool WordWrapEnabled { get; set; }
     }
 }

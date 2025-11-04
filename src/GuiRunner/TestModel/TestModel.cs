@@ -114,13 +114,13 @@ namespace TestCentric.Gui.Model
         // Services provided either by the model itself or by the engine
         public IServiceLocator Services => TestEngine.Services;
 
-        public UserSettings Settings { get; }
+        public IUserSettings Settings { get; }
 
         // Since we generate a new name when agents are wrapped,the available agent list must created dynamically.
         public IList<string> AvailableAgents =>
             [.. Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
 
-        public RecentFiles RecentFiles => Settings.Gui.RecentFiles;
+        private IRecentFiles RecentFiles => Settings.Gui.RecentFiles;
 
         // Project Support
         public bool NUnitProjectSupport { get; }

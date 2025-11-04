@@ -3,9 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-namespace TestCentric.Gui.Model.Settings
+namespace TestCentric.Gui.Model.Settings 
 {
-    public class FakeSettingsService : SettingsStore
+    public sealed partial class MiniFormSettings : IMiniFormSettings
     {
     }
 }

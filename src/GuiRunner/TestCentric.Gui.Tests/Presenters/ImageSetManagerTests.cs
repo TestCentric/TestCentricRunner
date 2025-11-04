@@ -4,13 +4,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using NSubstitute;
-using NUnit.Engine;
 using NUnit.Framework;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Model.Settings;
@@ -23,15 +17,13 @@ namespace TestCentric.Gui.Presenters
         private ImageSetManager _manager;
         private ITestModel _model;
         private IMainView _mainView;
-        private Fakes.UserSettings _settings;
 
         [SetUp]
         public void CreateManager()
         {
             _model = Substitute.For<ITestModel>();
+            _model.Settings.Gui.TestTree.AlternateImageSet.Returns("Classic");
             _mainView = Substitute.For<IMainView>();
-            _settings = new Fakes.UserSettings();
-            _model.Settings.Returns(_settings);
 
             Assert.That(_mainView.TreeView, Is.Not.Null);
             Assert.That(_mainView.TestResultSubView, Is.Not.Null);
@@ -91,9 +83,9 @@ namespace TestCentric.Gui.Presenters
         {
             _mainView.TreeView.ClearReceivedCalls();
             string newImageSet = "Visual Studio";
-            _settings.Gui.TestTree.AlternateImageSet = newImageSet;
+            _model.Settings.Gui.TestTree.AlternateImageSet.Returns(newImageSet);
 
-            Raise.Event<Model.Settings.SettingsEventHandler>(this, "Gui.TestTree.AlternateImageSet");
+            _model.Settings.Changed += Raise.Event<Model.Settings.SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.AlternateImageSet"));
             Assert.That(_manager.CurrentImageSet.Name, Is.EqualTo(newImageSet));
 
             _mainView.TreeView.Received().OutcomeImages = Arg.Is<OutcomeImageSet>((set) => set.Name == newImageSet);
@@ -104,9 +96,9 @@ namespace TestCentric.Gui.Presenters
         {
             _mainView.TestResultSubView.ClearReceivedCalls();
             string newImageSet = "Visual Studio";
-            _settings.Gui.TestTree.AlternateImageSet = newImageSet;
+            _model.Settings.Gui.TestTree.AlternateImageSet.Returns(newImageSet);
 
-            Raise.Event<Model.Settings.SettingsEventHandler>(this, "Gui.TestTree.AlternateImageSet");
+            _model.Settings.Changed += Raise.Event<Model.Settings.SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.AlternateImageSet"));
             Assert.That(_manager.CurrentImageSet.Name, Is.EqualTo(newImageSet));
 
             _mainView.TestResultSubView.Received().LoadImages(Arg.Is<OutcomeImageSet>((set) => set.Name == newImageSet));
@@ -117,9 +109,9 @@ namespace TestCentric.Gui.Presenters
         {
             _mainView.StatusBarView.ClearReceivedCalls();
             string newImageSet = "Visual Studio";
-            _settings.Gui.TestTree.AlternateImageSet = newImageSet;
+            _model.Settings.Gui.TestTree.AlternateImageSet.Returns(newImageSet);
 
-            Raise.Event<Model.Settings.SettingsEventHandler>(this, "Gui.TestTree.AlternateImageSet");
+            _model.Settings.Changed += Raise.Event<Model.Settings.SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.AlternateImageSet"));
             Assert.That(_manager.CurrentImageSet.Name, Is.EqualTo(newImageSet));
 
             _mainView.StatusBarView.Received().LoadImages(Arg.Is<OutcomeImageSet>((set) => set.Name == newImageSet));
