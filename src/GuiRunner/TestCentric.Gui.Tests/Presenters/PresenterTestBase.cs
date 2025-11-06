@@ -9,8 +9,6 @@ using System.Xml;
 using NSubstitute;
 using NUnit.Framework;
 
-using FakeUserSettings = TestCentric.Gui.Fakes.UserSettings;
-
 namespace TestCentric.Gui.Presenters
 {
     using Elements;
@@ -31,7 +29,9 @@ namespace TestCentric.Gui.Presenters
         {
             _view = Substitute.For<TView>();
             _model = Substitute.For<ITestModel>();
-            _settings = FakeUserSettings.Create();
+            _settings = Substitute.For<IUserSettings>();
+            _settings.Gui.TestTree.AlternateImageSet.Returns("Classic");
+            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
             _model.Settings.Returns(_settings);
             //_model.TestProject.Returns(new TestCentricProject(_model, "Dummy.dll"));
         }

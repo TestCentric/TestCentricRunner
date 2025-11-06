@@ -12,7 +12,6 @@ namespace TestCentric.Gui.Presenters
     using NUnit.Framework;
     using TestCentric.Gui.Model;
     using TestCentric.Gui.Views;
-    using FakeUserSettings = Fakes.UserSettings;
 
     [TestFixture]
     internal class TestListDisplayStrategyTests

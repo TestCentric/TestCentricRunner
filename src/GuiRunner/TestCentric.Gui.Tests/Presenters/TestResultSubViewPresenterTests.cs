@@ -5,10 +5,8 @@
 
 using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Views;
-using FakeUserSettings = TestCentric.Gui.Fakes.UserSettings;
 
 namespace TestCentric.Gui.Presenters
 {

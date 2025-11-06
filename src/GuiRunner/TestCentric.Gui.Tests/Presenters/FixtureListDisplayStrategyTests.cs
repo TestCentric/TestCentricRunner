@@ -7,14 +7,12 @@ namespace TestCentric.Gui.Presenters
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Windows.Forms;
     using NSubstitute;
     using NUnit.Framework;
     using NUnit.Framework.Internal;
     using TestCentric.Gui.Model;
     using TestCentric.Gui.Views;
-    using FakeUserSettings = Fakes.UserSettings;
 
     [TestFixture]
     internal class FixtureListDisplayStrategyTests

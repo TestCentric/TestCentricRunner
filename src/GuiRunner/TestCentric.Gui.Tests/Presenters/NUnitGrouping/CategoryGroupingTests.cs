@@ -3,12 +3,13 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using NSubstitute;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using NSubstitute;
+using NUnit.Framework;
 using TestCentric.Gui.Model;
+using TestCentric.Gui.Model.Settings;
 using TestCentric.Gui.Views;
 
 namespace TestCentric.Gui.Presenters.NUnitGrouping
@@ -25,8 +26,10 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void Setup()
         {
             _model = Substitute.For<ITestModel>();
-            var settings = Fakes.UserSettings.Create();
-            _model.Settings.Returns(settings);
+            IUserSettings userSettings = Substitute.For<IUserSettings>();
+            userSettings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
+            userSettings.Gui.TestTree.ShowNamespace.Returns(true);
+            _model.Settings.Returns(userSettings);
             _strategy = Substitute.For<INUnitTreeDisplayStrategy>();
             _view = Substitute.For<ITestTreeView>();
 
