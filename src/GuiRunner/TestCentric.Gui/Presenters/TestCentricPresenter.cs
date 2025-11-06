@@ -277,7 +277,7 @@ namespace TestCentric.Gui.Presenters
             {
                 Application.DoEvents();
 
-                // _agentSelectionController.PopulateMenu();
+                _agentSelectionController.PopulateMenu();
 
                 // Create an unnamed TestCentricProject and load test specified on command line
                 if (_options.InputFiles.Count == 1)
@@ -337,7 +337,7 @@ namespace TestCentric.Gui.Presenters
 
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
 
-                // _agentSelectionController.UpdateMenuItems();
+                _agentSelectionController.UpdateMenuItems();
 
                 _view.RunAsX86.Enabled = isPackageLoaded && !isTestRunning;
 

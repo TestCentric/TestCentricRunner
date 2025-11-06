@@ -42,10 +42,6 @@ namespace TestCentric.Gui.Model.Settings
         string ProjectEditorPath { get; set; }
     }
 
-    /// <summary>
-    /// Settings specific to TestCentric. Because we store settings in the
-    /// NUnit 3 settings file, we use our own unique prefix to avoid conflicts.
-    /// </summary>
     public class GuiSettings : ApplicationSettingsBase, IGuiSettings
     {
         public ITestTreeSettings TestTree { get; } = new TestTreeSettings();
