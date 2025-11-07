@@ -32,7 +32,7 @@ namespace TestCentric.Gui.Presenters
 
         protected ITestTreeView _view;
         protected ITestModel _model;
-        protected UserSettings _settings;
+        protected IUserSettings _settings;
 
         protected Dictionary<string, List<TreeNode>> _nodeIndex = new Dictionary<string, List<TreeNode>>();
 

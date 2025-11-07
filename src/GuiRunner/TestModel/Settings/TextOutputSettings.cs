@@ -5,21 +5,31 @@
 
 namespace TestCentric.Gui.Model.Settings
 {
-    public class TextOutputSettings : SettingsGroup
-    {
-        public TextOutputSettings(ISettings settings, string prefix)
-             : base(settings, prefix + "TextOutput") { }
+    using System.Configuration;
 
+    public interface ITextOutputSettings
+    {
+        string Labels { get; set; }
+
+        bool WordWrapEnabled { get; set; }
+    }
+
+    public class TextOutputSettings : ApplicationSettingsBase, ITextOutputSettings
+    {
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool WordWrapEnabled
         {
-            get { return GetSetting(nameof(WordWrapEnabled), true); }
-            set { SaveSetting(nameof(WordWrapEnabled), value); }
+            get { return (bool)this[nameof(WordWrapEnabled)]; }
+            set { this[nameof(WordWrapEnabled)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("ON")]
         public string Labels
         {
-            get { return GetSetting(nameof(Labels), "ON").ToUpper(); }
-            set { SaveSetting(nameof(Labels), value); }
+            get { return (string)this[nameof(Labels)]; }
+            set { this[nameof(Labels)] = value; }
         }
     }
 }

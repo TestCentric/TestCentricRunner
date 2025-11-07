@@ -8,13 +8,10 @@ namespace TestCentric.Gui.Presenters
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows.Forms;
-    using System.Xml;
     using NSubstitute;
     using NUnit.Framework;
-    using NUnit.Framework.Internal;
     using TestCentric.Gui.Model;
     using TestCentric.Gui.Views;
-    using FakeUserSettings = Fakes.UserSettings;
 
     [TestFixture]
     internal class TestListDisplayStrategyTests
@@ -25,8 +22,6 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestTreeView view = Substitute.For<ITestTreeView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
-            model.Settings.Returns(settings);
 
             // 2. Act           
             TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
@@ -50,13 +45,11 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestTreeView view = Substitute.For<ITestTreeView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
 
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Returns(settings);
-            settings.Gui.TestTree.TestList.GroupBy = "CATEGORY";
+            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +
@@ -90,13 +83,11 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestTreeView view = Substitute.For<ITestTreeView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
 
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Returns(settings);
-            settings.Gui.TestTree.TestList.GroupBy = "CATEGORY";
+            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
 
             string xmlText = "<test-suite type='TestSuite'> " + $"<properties> <property name='Category' value='{categoryTestFixture}' /> </properties> " +
                                 "<test-suite type='TestFixture'>" +
@@ -125,13 +116,11 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestTreeView view = Substitute.For<ITestTreeView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
 
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Returns(settings);
-            settings.Gui.TestTree.TestList.GroupBy = "CATEGORY";
+            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
 
             TestNode testNode = new TestNode(
                         "<test-suite type='TestFixture' id='3-1000'> " +
@@ -161,13 +150,11 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestTreeView view = Substitute.For<ITestTreeView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
 
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Returns(settings);
-            settings.Gui.TestTree.TestList.GroupBy = "CATEGORY";
+            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestFixture'> " +
@@ -203,13 +190,11 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestTreeView view = Substitute.For<ITestTreeView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
 
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Returns(settings);
-            settings.Gui.TestTree.TestList.GroupBy = "DURATION";
+            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("DURATION");
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +
@@ -252,13 +237,11 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             ITestTreeView view = Substitute.For<ITestTreeView>();
             ITestModel model = Substitute.For<ITestModel>();
-            var settings = new FakeUserSettings();
 
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Returns(settings);
-            settings.Gui.TestTree.TestList.GroupBy = "OUTCOME";
+            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("OUTCOME");
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +

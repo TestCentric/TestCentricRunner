@@ -99,7 +99,7 @@ namespace TestCentric.Gui.Model
             model.SaveProject("TestCentric.tcproj");
 
             // Assert
-            Assert.That(model.RecentFiles.Latest, Is.EqualTo("TestCentric.tcproj"));
+            Assert.That(model.Settings.Gui.RecentFiles.Latest, Is.EqualTo("TestCentric.tcproj"));
         }
 
         [Test]

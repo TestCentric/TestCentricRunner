@@ -9,13 +9,11 @@ using System.Xml;
 using NSubstitute;
 using NUnit.Framework;
 
-using FakeUserSettings = TestCentric.Gui.Fakes.UserSettings;
-
 namespace TestCentric.Gui.Presenters
 {
-    using System.Security.Policy;
     using Elements;
     using Model;
+    using TestCentric.Gui.Model.Settings;
 
     /// <summary>
     /// Base class for presenter tests, providing utiity methods
@@ -24,14 +22,16 @@ namespace TestCentric.Gui.Presenters
     {
         protected TView _view;
         protected ITestModel _model;
-        protected FakeUserSettings _settings;
+        protected IUserSettings _settings;
 
         [SetUp]
         public void Initialize()
         {
             _view = Substitute.For<TView>();
             _model = Substitute.For<ITestModel>();
-            _settings = new FakeUserSettings();
+            _settings = Substitute.For<IUserSettings>();
+            _settings.Gui.TestTree.AlternateImageSet.Returns("Classic");
+            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
             _model.Settings.Returns(_settings);
             //_model.TestProject.Returns(new TestCentricProject(_model, "Dummy.dll"));
         }

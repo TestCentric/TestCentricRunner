@@ -5,16 +5,18 @@
 
 using NUnit.Framework;
 using NSubstitute;
-using TestCentric.Gui.Model;
 
 namespace TestCentric.Gui.Presenters.TestTree
 {
+    using TestCentric.Gui.Model.Settings;
+
     public class WhenTestsAreUnloaded : TreeViewPresenterTestBase
     {
         [SetUp]
         public void SimulateTestUnload()
         {
-            _settings.Gui.TestTree.DisplayFormat = "NUNIT_TREE";
+            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
 
             ClearAllReceivedCalls();
 

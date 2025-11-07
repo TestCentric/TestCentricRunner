@@ -21,6 +21,7 @@ namespace TestCentric.Gui.Model.Filter
         public void Setup()
         {
             _model = Substitute.For<ITestModel>();
+            _model.Settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
         }
 
         [Test]

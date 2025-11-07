@@ -16,7 +16,7 @@ namespace TestCentric.Gui.Presenters
     {
         private IErrorsAndFailuresView _view;
         private ITestModel _model;
-        private UserSettings _settings;
+        private IUserSettings _settings;
 
         private ITestItem _selectedItem;
         private ResultNode _selectedResult;

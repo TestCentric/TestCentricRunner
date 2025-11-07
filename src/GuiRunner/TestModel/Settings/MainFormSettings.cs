@@ -7,39 +7,61 @@ using System.Drawing;
 
 namespace TestCentric.Gui.Model.Settings
 {
-    public class MainFormSettings : SettingsGroup
-    {
-        public MainFormSettings(ISettings settings, string prefix)
-            : base(settings, prefix + "MainForm") { }
+    using System.Configuration;
 
+    public interface IMainFormSettings
+    {
+        Point Location { get; set; }
+
+        Size Size { get; set; }
+
+        bool Maximized { get; set; }
+
+        int SplitPosition { get; set; }
+
+        bool ShowStatusBar { get; set; }
+    }
+
+    public class MainFormSettings : ApplicationSettingsBase, IMainFormSettings
+    {
+        [UserScopedSetting]
+        [DefaultSettingValue("10, 10")]
         public Point Location
         {
-            get { return GetSetting(nameof(Location), new Point(10, 10)); }
-            set { SaveSetting(nameof(Location), value); }
+            get { return (Point)this[nameof(Location)]; }
+            set { this[nameof(Location)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("700, 400")]
         public Size Size
         {
-            get { return GetSetting(nameof(Size), new Size(700, 400)); }
-            set { SaveSetting(nameof(Size), value); }
+            get { return (Size)this[nameof(Size)]; }
+            set { this[nameof(Size)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("false")]
         public bool Maximized
         {
-            get { return GetSetting(nameof(Maximized), false); }
-            set { SaveSetting(nameof(Maximized), value); }
+            get { return (bool)this[nameof(Maximized)]; }
+            set { this[nameof(Maximized)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("290")]
         public int SplitPosition
         {
-            get { return GetSetting(nameof(SplitPosition), 290); }
-            set { SaveSetting(nameof(SplitPosition), value); }
+            get { return (int)this[nameof(SplitPosition)]; }
+            set { this[nameof(SplitPosition)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool ShowStatusBar
         {
-            get { return GetSetting(nameof(ShowStatusBar), true); }
-            set { SaveSetting(nameof(ShowStatusBar), value); }
+            get { return (bool)this[nameof(ShowStatusBar)]; }
+            set { this[nameof(ShowStatusBar)] = value; }
         }
     }
 }

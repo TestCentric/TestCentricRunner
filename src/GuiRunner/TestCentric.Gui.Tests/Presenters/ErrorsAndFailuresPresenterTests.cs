@@ -11,6 +11,7 @@ using NUnit.Framework;
 namespace TestCentric.Gui.Presenters
 {
     using Model;
+    using TestCentric.Gui.Model.Settings;
     using Views;
 
     public class ErrorsAndFailuresPresenterTests : PresenterTestBase<IErrorsAndFailuresView>
@@ -174,7 +175,9 @@ namespace TestCentric.Gui.Presenters
         {
             _view.ClearReceivedCalls();
             var newFont = new Font(FontFamily.GenericMonospace, 12.0f);
-            _settings.Gui.FixedFont = newFont;
+            _settings.Gui.FixedFont.Returns(newFont);
+            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.FixedFont"));
+
             _view.Received().SetFixedFont(newFont);
         }
 

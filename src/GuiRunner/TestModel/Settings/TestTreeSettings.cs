@@ -5,34 +5,54 @@
 
 namespace TestCentric.Gui.Model.Settings
 {
-    public class TestTreeSettings : SettingsGroup
+    using System.Configuration;
+
+    public interface ITestTreeSettings
     {
-        public TestTreeSettings(ISettings settings, string prefix)
-             : base(settings, prefix + "TestTree") { }
+        int InitialTreeDisplay { get; set; }
 
-        public FixtureListSettings FixtureList
-        {
-            get { return new FixtureListSettings(_settingsService, GroupPrefix); }
-        }
+        string AlternateImageSet { get; set; }
 
-        public TestListSettings TestList
-        {
-            get { return new TestListSettings(_settingsService, GroupPrefix); }
-        }
+        bool ShowCheckBoxes { get; set; }
 
+        bool ShowTestDuration { get; set; }
+
+        string DisplayFormat { get; set; }
+
+        bool ShowNamespace { get; set; }
+
+        string NUnitGroupBy { get; set; }
+
+        bool ShowFilter { get; set; }
+
+        IFixtureListSettings FixtureList { get; }
+
+        ITestListSettings TestList { get; }
+    }
+
+    public class TestTreeSettings : ApplicationSettingsBase, ITestTreeSettings
+    {
+        public IFixtureListSettings FixtureList { get; } = new FixtureListSettings();
+
+        public ITestListSettings TestList { get; } = new TestListSettings();
+
+        [UserScopedSetting]
+        [DefaultSettingValue("0")]
         public int InitialTreeDisplay
         {
-            get { return GetSetting(nameof(InitialTreeDisplay), 0); }
-            set { SaveSetting(nameof(InitialTreeDisplay), value); }
+            get { return (int)this[nameof(InitialTreeDisplay)]; }
+            set { this[nameof(InitialTreeDisplay)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("Classic")]
         public string AlternateImageSet
         {
             get 
             {
                 // Image set 'Default' is removed:
                 // If Image set 'Default' is still present in settings, use the new default image set 'Classic' instead
-                string imageSet = GetSetting(nameof(AlternateImageSet), "Classic");
+                string imageSet = (string)this[nameof(AlternateImageSet)];
                 if (imageSet == "Default")
                 {
                     imageSet = "Classic";
@@ -41,67 +61,55 @@ namespace TestCentric.Gui.Model.Settings
 
                 return imageSet;
             }
-            set { SaveSetting(nameof(AlternateImageSet), value); }
+            set { this[nameof(AlternateImageSet)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("false")]
         public bool ShowCheckBoxes
         {
-            get { return GetSetting(nameof(ShowCheckBoxes), false); }
-            set { SaveSetting(nameof(ShowCheckBoxes), value); }
+            get { return (bool)this[nameof(ShowCheckBoxes)]; }
+            set { this[nameof(ShowCheckBoxes)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("false")]
         public bool ShowTestDuration
         {
-            get { return GetSetting(nameof(ShowTestDuration), false); }
-            set { SaveSetting(nameof(ShowTestDuration), value); }
+            get { return (bool)this[nameof(ShowTestDuration)]; }
+            set { this[nameof(ShowTestDuration)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("NUNIT_TREE")]
         public string DisplayFormat
         {
-            get { return GetSetting(nameof(DisplayFormat), "NUNIT_TREE"); }
-            set { SaveSetting(nameof(DisplayFormat), value); }
+            get { return (string)this[nameof(DisplayFormat)]; }
+            set { this[nameof(DisplayFormat)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool ShowNamespace
         {
-            get { return GetSetting(nameof(ShowNamespace), true); }
-            set { SaveSetting(nameof(ShowNamespace), value); }
+            get { return (bool)this[nameof(ShowNamespace)]; }
+            set { this[nameof(ShowNamespace)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("UNGROUPED")]
         public string NUnitGroupBy
         {
-            get { return GetSetting(nameof(NUnitGroupBy), "UNGROUPED"); }
-            set { SaveSetting(nameof(NUnitGroupBy), value); }
+            get { return (string)this[nameof(NUnitGroupBy)]; }
+            set { this[nameof(NUnitGroupBy)] = value; }
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("true")]
         public bool ShowFilter
         {
-            get { return GetSetting(nameof(ShowFilter), true); }
-            set { SaveSetting(nameof(ShowFilter), value); }
-        }
-
-        public class FixtureListSettings : SettingsGroup
-        {
-            public FixtureListSettings(ISettings settings, string prefix) : base(settings, prefix + "FixtureList") { }
-
-            private string groupByKey = "GroupBy";
-            public string GroupBy
-            {
-                get { return GetSetting(groupByKey, "OUTCOME"); }
-                set { SaveSetting(groupByKey, value); }
-            }
-        }
-
-        public class TestListSettings : SettingsGroup
-        {
-            public TestListSettings(ISettings settings, string prefix) : base(settings, prefix + "TestList") { }
-
-            private string groupByKey = "GroupBy";
-            public string GroupBy
-            {
-                get { return GetSetting(groupByKey, "OUTCOME"); }
-                set { SaveSetting(groupByKey, value); }
-            }
+            get { return (bool)this[nameof(ShowFilter)]; }
+            set { this[nameof(ShowFilter)] = value; }
         }
     }
 }
