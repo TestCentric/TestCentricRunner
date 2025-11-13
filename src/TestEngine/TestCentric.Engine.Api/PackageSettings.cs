@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Xml.Linq;
+using NUnit.Common;
 using NUnit.Engine;
 
 namespace TestCentric.Engine
@@ -24,9 +25,22 @@ namespace TestCentric.Engine
     /// </remarks>
     public class PackageSettings : NUnit.Engine.PackageSettings
     {
+        // Use Reflection to access private SettingsDictionary used by nunit engine
         private static readonly FieldInfo _settingsField = typeof(NUnit.Engine.PackageSettings)
             .GetField("_settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
         private readonly Dictionary<string, PackageSetting> _settingsDictionary;
+
+        // Use Reflection to build a dictionary of all known setting definitions
+        private static readonly PropertyInfo[] _settingDefinitionProperties = typeof(SettingDefinitions).GetProperties(BindingFlags.Public | BindingFlags.Static);
+        private static readonly Dictionary<string, SettingDefinition> _knownSettings;
+
+        static PackageSettings()
+        {
+            _knownSettings = new Dictionary<string, SettingDefinition>();
+
+            foreach (var property in _settingDefinitionProperties)
+                _knownSettings.Add(property.Name, property.GetValue(null, null) as SettingDefinition);
+        }
 
         public PackageSettings()
         {
@@ -41,17 +55,20 @@ namespace TestCentric.Engine
         /// <param name="value">The corresponding value to set.</param>
         public new void Add(string name, string value) // Different from NUnit
         {
-            SettingDefinition definition = PackageSettingHelper.LookupSetting(name);
-            if (definition is null)
-                Add(new PackageSetting<string>(name, value));
-            else if (definition.ValueType == typeof(bool) && bool.TryParse(value, out bool boolValue))
-                Add(new PackageSetting<bool>(name, boolValue));
-            else if (definition.ValueType == typeof(int) && int.TryParse(value, out int intValue))
-                Add(new PackageSetting<int>(name, intValue));
-            else if (definition.ValueType == typeof(string))
-                Add(new PackageSetting<string>(name, value));
+            if (_knownSettings.TryGetValue(name, out var definition))
+            {
+                if (definition.ValueType == typeof(bool) && bool.TryParse(value, out bool boolValue))
+                    Add(new PackageSetting<bool>(name, boolValue));
+                else if (definition.ValueType == typeof(int) && int.TryParse(value, out int intValue))
+                    Add(new PackageSetting<int>(name, intValue));
+                else if (definition.ValueType == typeof(string))
+                    Add(new PackageSetting<string>(name, value));
+                else
+                    throw new NotSupportedException($"Unsupported type {definition.ValueType}");
+
+            }
             else
-                throw new NotSupportedException($"Unsupported type {definition.ValueType}");
+                Add(new PackageSetting<string>(name, value));
         }
 
         public void Remove (SettingDefinition setting) // Not in NUnit
