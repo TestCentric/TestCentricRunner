@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using NUnit.Common;
+using NUnit.Engine;
 using NUnit.Framework;
 
 namespace TestCentric.Engine.Api

@@ -6,6 +6,7 @@
 using System;
 using System.IO;
 using System.Text;
+using NUnit.Common;
 using TestCentric.Metadata;
 using TestCentric.Engine.Internal;
 
@@ -134,16 +135,18 @@ namespace TestCentric.Engine.Services
                 if (nonTestAssembly)
                 {
                     log.Debug($"Assembly {package.FullName} has NonTestAssemblyAttribute");
-                    package.Settings.Set(SettingDefinitions.ImageNonTestAssemblyAttribute.WithValue(true));
+                    //package.Settings.Set(SettingDefinitions.ImageNonTestAssemblyAttribute.WithValue(true));
+                    package.Settings.Set<bool>("ImageNonTestAssemblyAttribute", true);
                 }
 
-                var testFrameworkReference = _testFrameworkService.GetFrameworkReference(package.FullName);
-                if (testFrameworkReference != null)
-                {
-                    package.Settings.Set(SettingDefinitions.ImageTestFrameworkReference.WithValue(testFrameworkReference.FrameworkReference.FullName));
-                    if (testFrameworkReference.FrameworkDriver != null)
-                        package.Settings.Set(SettingDefinitions.ImageFrameworkDriverReference.WithValue(testFrameworkReference.FrameworkDriver));
-                }
+                // TODO: Make driver extensions work in NUnit
+                //var testFrameworkReference = _testFrameworkService.GetFrameworkReference(package.FullName);
+                //if (testFrameworkReference != null)
+                //{
+                //    package.Settings.Set(SettingDefinitions.ImageTestFrameworkReference.WithValue(testFrameworkReference.FrameworkReference.FullName));
+                //    if (testFrameworkReference.FrameworkDriver != null)
+                //        package.Settings.Set(SettingDefinitions.ImageFrameworkDriverReference.WithValue(testFrameworkReference.FrameworkDriver));
+                //}
             }
         }
     }

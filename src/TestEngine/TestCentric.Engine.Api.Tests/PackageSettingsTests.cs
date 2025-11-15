@@ -4,11 +4,12 @@
 // ***********************************************************************
 
 using NUnit.Framework;
+using NUnit.Common;
 
 namespace TestCentric.Engine
 {
     [TestFixture]
-    internal class PackageSettingFactoryTests
+    internal class PackageSettingsTests
     {
         [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "True", true)]
         [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), "False", false)]
@@ -21,11 +22,14 @@ namespace TestCentric.Engine
         [TestCase(nameof(SettingDefinitions.SelectedAgentName), "", "")]
         public void Create_KnownSetting_StringIsConvertedIntoTargetType(string settingName, string stringValue, object expectedValue)
         {
+            // Arrange
+            PackageSettings settings = new PackageSettings();
+
             // Act
-            PackageSetting setting = PackageSettingFactory.Create(settingName, stringValue);
+            settings.Add(settingName, stringValue);
 
             // Assert
-            Assert.That(setting.Value, Is.EqualTo(expectedValue));
+            Assert.That(settings.GetSetting(settingName), Is.EqualTo(expectedValue));
         }
 
         [TestCase("UnknownSetting", "Value", "Value")]
@@ -33,11 +37,14 @@ namespace TestCentric.Engine
         [TestCase("UnknownSetting", "true", "true")]
         public void Create_UnknownSetting_StringIsStored(string settingName, string stringValue, object expectedValue)
         {
+            // Arrange
+            PackageSettings settings = new PackageSettings();
+
             // Act
-            PackageSetting setting = PackageSettingFactory.Create(settingName, stringValue);
+            settings.Add(settingName, stringValue);
 
             // Assert
-            Assert.That(setting.Value, Is.EqualTo(expectedValue));
+            Assert.That(settings.GetSetting(settingName), Is.EqualTo(expectedValue));
         }
     }
 }

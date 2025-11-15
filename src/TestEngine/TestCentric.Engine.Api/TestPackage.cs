@@ -9,6 +9,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using NUnit.Engine;
 
 namespace TestCentric.Engine
 {
@@ -194,7 +195,9 @@ namespace TestCentric.Engine
         /// </remarks>
         public void AddSetting(string name, string value)
         {
-            AddSetting(PackageSettingFactory.Create(name, value));
+            Settings.Add(name, value);
+            foreach (var subPackage in SubPackages)
+                subPackage.Settings.Add(name, value);
         }
 
         /// <summary>

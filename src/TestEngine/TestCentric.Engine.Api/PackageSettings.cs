@@ -3,8 +3,13 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Xml.Linq;
+using NUnit.Common;
+using NUnit.Engine;
 
 namespace TestCentric.Engine
 {
@@ -13,59 +18,34 @@ namespace TestCentric.Engine
     /// It supports enumeration of the settings and various operations on
     /// individual settings in the list.
     /// </summary>
-    public class PackageSettings : IEnumerable<PackageSetting>
+    /// <remarks>
+    /// This implementation extends the NUnit's PackageSettings class to
+    /// replace one method and add two new ones. This is hopefully only 
+    /// a temporary workaround until the NUnit class is modified.
+    /// </remarks>
+    public class PackageSettings : NUnit.Engine.PackageSettings
     {
-        private readonly Dictionary<string, PackageSetting> _settings = new();
+        // Use Reflection to access private SettingsDictionary used by nunit engine
+        private static readonly FieldInfo _settingsField = typeof(NUnit.Engine.PackageSettings)
+            .GetField("_settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
+        private readonly Dictionary<string, PackageSetting> _settingsDictionary;
 
-        /// <summary>
-        /// Gets the number of settings in the list
-        /// </summary>
-        public int Count => _settings.Count;
+        // Use Reflection to build a dictionary of all known setting definitions
+        private static readonly PropertyInfo[] _settingDefinitionProperties = typeof(SettingDefinitions).GetProperties(BindingFlags.Public | BindingFlags.Static);
+        private static readonly Dictionary<string, SettingDefinition> _knownSettings;
 
-        /// <summary>
-        /// Returns true if a setting with the specified name is present
-        /// </summary>
-        public bool HasSetting(string name) => _settings.ContainsKey(name);
-
-        /// <summary>
-        /// Returns true if a setting with the specified definition is present
-        /// </summary>
-        public bool HasSetting(SettingDefinition setting) => _settings.ContainsKey(setting.Name);
-
-        /// <summary>
-        /// Return the value of a setting if present, otherwise null.
-        /// </summary>
-        /// <param name="name">The name of the setting</param>
-        public object GetSetting(string name)
+        static PackageSettings()
         {
-            return _settings[name].Value;
+            _knownSettings = new Dictionary<string, SettingDefinition>();
+
+            foreach (var property in _settingDefinitionProperties)
+                _knownSettings.Add(property.Name, property.GetValue(null, null) as SettingDefinition);
         }
 
-        /// <summary>
-        /// Return the value of a setting or its defined default value.
-        /// </summary>
-        /// <param name="definition">The name and type of the setting</param>
-        public T GetValueOrDefault<T>(SettingDefinition<T> definition)
-            where T : notnull
+        public PackageSettings()
         {
-            if (_settings.TryGetValue(definition.Name, out PackageSetting unTypedSetting))
-                if (unTypedSetting is PackageSetting<T> typedSetting && typedSetting is not null)
-                    return typedSetting.Value;
-
-            return definition.DefaultValue;
+            _settingsDictionary = (Dictionary<string, PackageSetting>)_settingsField.GetValue(this);
         }
-
-        /// <inheritdoc />
-        public IEnumerator<PackageSetting> GetEnumerator() => _settings.Values.GetEnumerator();
-
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() => _settings.Values.GetEnumerator();
-
-        /// <summary>
-        /// Adds a setting to the list directly.
-        /// </summary>
-        /// <param name="setting">A PackageSetting instance</param>
-        public void Add(PackageSetting setting) => _settings.Add(setting.Name, setting);
 
         /// <summary>
         /// Creates and adds a setting to the list, specified by the name and a string value.
@@ -73,55 +53,32 @@ namespace TestCentric.Engine
         /// </summary>
         /// <param name="name">The name of the setting.</param>
         /// <param name="value">The corresponding value to set.</param>
-        public void Add(string name, string value)
+        public new void Add(string name, string value) // Different from NUnit
         {
-            Add(PackageSettingFactory.Create(name, value));
+            if (_knownSettings.TryGetValue(name, out var definition))
+            {
+                if (definition.ValueType == typeof(bool) && bool.TryParse(value, out bool boolValue))
+                    Add(new PackageSetting<bool>(name, boolValue));
+                else if (definition.ValueType == typeof(int) && int.TryParse(value, out int intValue))
+                    Add(new PackageSetting<int>(name, intValue));
+                else if (definition.ValueType == typeof(string))
+                    Add(new PackageSetting<string>(name, value));
+                else
+                    throw new NotSupportedException($"Unsupported type {definition.ValueType}");
+
+            }
+            else
+                Add(new PackageSetting<string>(name, value));
         }
 
-        /// <summary>
-        /// Creates and adds a custom boolean setting to the list, specifying the name and value.
-        /// </summary>
-        /// <param name="name">The name of the setting.</param>
-        /// <param name="value">The corresponding value to set.</param>
-        public void Add(string name, bool value)
+        public void Remove (SettingDefinition setting) // Not in NUnit
         {
-            Add(new PackageSetting<bool>(name, value));
+            _settingsDictionary.Remove(setting.Name);
         }
 
-        /// <summary>
-        /// Creates and adds a custom int setting to the list, specifying the name and value.
-        /// </summary>
-        /// <param name="name">The name of the setting.</param>
-        /// <param name="value">The corresponding value to set.</param>
-        public void Add(string name, int value)
+        public void Remove (string settingName) // Not in NUnit
         {
-            Add(new PackageSetting<int>(name, value));
-        }
-
-        /// <summary>
-        /// Adds or replaces a setting to the list.
-        /// </summary>
-        public void Set(PackageSetting setting) => _settings[setting.Name] = setting;
-
-        /// <summary>
-        /// Adds or replaces a setting to the list.
-        /// </summary>
-        /// <param name="name">The name of the setting.</param>
-        /// <param name="value">The corresponding value to set.</param>
-        public void Set<T>(string name, T value)
-            where T : notnull
-        {
-            Set(new PackageSetting<T>(name, value));
-        }
-
-        public void Remove (SettingDefinition setting)
-        {
-            _settings.Remove(setting.Name);
-        }
-
-        public void Remove (string settingName)
-        {
-            _settings.Remove(settingName);
+            _settingsDictionary.Remove(settingName);
         }
     }
 }
