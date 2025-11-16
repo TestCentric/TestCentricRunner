@@ -7,11 +7,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using TestCentric.Engine.Internal;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine.Communication.Transports.Tcp

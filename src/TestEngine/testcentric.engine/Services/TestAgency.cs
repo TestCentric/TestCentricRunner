@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+#if NETFRAMEWORK
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -477,3 +478,4 @@ namespace TestCentric.Engine.Services
         }
     }
 }
+#endif
