@@ -14,8 +14,6 @@ using System.Threading;
 using NUnit.Common;
 using NUnit.Engine;
 using NUnit.Extensibility;
-using TestCentric.Engine.Agents;
-using TestCentric.Engine.Communication.Transports.Remoting;
 using TestCentric.Engine.Communication.Transports.Tcp;
 using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
@@ -181,21 +179,11 @@ namespace TestCentric.Engine.Services
                 {
                     log.Debug($"Returning new agent {agentId:B}");
 
-                    switch (targetRuntime.Runtime.FrameworkIdentifier)
-                    {
-                        case FrameworkIdentifiers.NetFramework:
-                            return new TestAgentRemotingProxy(agent, agentId);
-
-                        case FrameworkIdentifiers.NetCoreApp:
-                            return agent;
-
-                        default:
-                            throw new InvalidOperationException($"Invalid runtime: {targetRuntime.Runtime.FrameworkIdentifier}");
-                    }
+                    return agent;
                 }
             }
 
-            return null;
+            throw new NUnitEngineException("Unable to acquire remote process agent");
         }
 
         /// <summary>
