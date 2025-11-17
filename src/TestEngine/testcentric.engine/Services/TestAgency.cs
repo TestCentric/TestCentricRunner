@@ -18,9 +18,6 @@ using TestCentric.Engine.Communication.Transports.Tcp;
 using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
 
-// TODO: We need this until NUnit adds Cancelled by user code
-using AgentExitCodes = TestCentric.Engine.Agents.AgentExitCodes;
-
 namespace TestCentric.Engine.Services
 {
     /// <summary>
@@ -142,11 +139,10 @@ namespace TestCentric.Engine.Services
         /// <exception cref="ArgumentException">If no agent is available.</exception>
         public ITestAgent GetAgent(TestPackage package)
         {
-            // Target Runtime must be specified by this point
-            string targetFrameworkName = package.Settings.GetValueOrDefault(SettingDefinitions.TargetFrameworkName);
-            Guard.OperationValid(targetFrameworkName.Length > 0, "LaunchAgentProcess called with no runtime specified");
+            // Target FrameworkName must be specified by this point
+            string frameworkName = package.Settings.GetValueOrDefault(SettingDefinitions.TargetFrameworkName);
+            Guard.OperationValid(frameworkName.Length > 0, "LaunchAgentProcess called with no runtime specified");
 
-            var targetRuntime = RuntimeFramework.FromFrameworkName(targetFrameworkName);
             var agentId = Guid.NewGuid();
             string agencyUrl = TcpEndPoint;
             var agentProcess = CreateAgentProcess(agentId, agencyUrl, package);
@@ -436,7 +432,7 @@ namespace TestCentric.Engine.Services
             switch (process.ExitCode)
             {
                 case AgentExitCodes.OK:
-                case AgentExitCodes.CANCELLED_BY_USER:
+                case 1: // TODO: Add CANCELLED_BY_USER=1 to NUnit exit codes?
                     return;
                 case AgentExitCodes.PARENT_PROCESS_TERMINATED:
                     errorMsg = "Remote test agent believes agency process has exited.";

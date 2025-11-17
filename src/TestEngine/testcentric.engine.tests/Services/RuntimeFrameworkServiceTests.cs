@@ -66,19 +66,17 @@ namespace TestCentric.Engine.Services
             Assert.That(names, Is.Unique);
         }
 
-        // TODO: Make this work
         //[TestCase("mono", 2, 0, "net-4.0")]
         //[TestCase("net", 4, 0, "net-4.0")]
         //[TestCase("net", 3, 5, "net-4.0")]
         //public void EngineOptionPreferredOverImageTarget(string framework, int majorVersion, int minorVersion, string requested)
         //{
         //    var package = new TestPackage("test");
-        //    package.AddSetting(SettingDefinitions.ImageTargetFrameworkName.WithValue(framework));
-        //    package.AddSetting(SettingDefinitions.ImageRuntimeVersion.WithValue(new Version(majorVersion, minorVersion)));
+        //    package.AddSetting(SettingDefinitions.ImageRuntimeVersion.WithValue(new Version(majorVersion, minorVersion).ToString()));
         //    package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(requested));
 
         //    _runtimeService.SelectRuntimeFramework(package);
-        //    Assert.That(package.Settings.GetValueOrDefault(SettingDefinitions.TargetRuntimeFramework), Is.EqualTo(requested));
+        //    Assert.That(package.Settings.GetSetting("TargetRuntimeFramework"), Is.EqualTo(requested));
         //}
 
         //[Test, Platform(Exclude ="Linux")]

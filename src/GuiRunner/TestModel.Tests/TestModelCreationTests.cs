@@ -3,10 +3,12 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
-using NUnit.Common;
 using TestCentric.Engine;
+
+using PackageSettings = NUnit.Engine.PackageSettings;
 
 namespace TestCentric.Gui.Model
 {
@@ -55,9 +57,9 @@ namespace TestCentric.Gui.Model
 
         private class PackageSettingsChecker
         {
-           NUnit.Engine.PackageSettings _settings;
+           PackageSettings _settings;
 
-            public PackageSettingsChecker(NUnit.Engine.PackageSettings settings)
+            public PackageSettingsChecker(PackageSettings settings)
             {
                 _settings = settings;
             }

@@ -5,14 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using TestCentric.Engine;
+using TestCentric.Gui.Model.Filter;
+using TestCentric.Gui.Model.Settings;
 
 namespace TestCentric.Gui.Model
 {
-    using TestCentric.Engine;
-    using Services;
-    using Settings;
-    using TestCentric.Gui.Model.Filter;
-
     public interface ITestModel : IDisposable
     {
         #region General Properties

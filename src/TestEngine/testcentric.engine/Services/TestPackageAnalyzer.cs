@@ -4,11 +4,9 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
 using System.Text;
 using NUnit.Common;
 using TestCentric.Metadata;
-using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Services
 {
@@ -101,7 +99,7 @@ namespace TestCentric.Engine.Services
                 if (targetVersion.Major > 0)
                 {
                     log.Debug($"Assembly {package.FullName} uses version {targetVersion}");
-                    package.Settings.Set(SettingDefinitions.ImageRuntimeVersion.WithValue(targetVersion));
+                    package.Settings.Set(SettingDefinitions.ImageRuntimeVersion.WithValue(targetVersion.ToString()));
                 }
 
                 string frameworkName;
@@ -135,11 +133,9 @@ namespace TestCentric.Engine.Services
                 if (nonTestAssembly)
                 {
                     log.Debug($"Assembly {package.FullName} has NonTestAssemblyAttribute");
-                    //package.Settings.Set(SettingDefinitions.ImageNonTestAssemblyAttribute.WithValue(true));
-                    package.Settings.Set<bool>("ImageNonTestAssemblyAttribute", true);
+                    package.Settings.Set(SettingDefinitions.SkipNonTestAssemblies.WithValue(true));
                 }
 
-                // TODO: Make driver extensions work in NUnit
                 //var testFrameworkReference = _testFrameworkService.GetFrameworkReference(package.FullName);
                 //if (testFrameworkReference != null)
                 //{

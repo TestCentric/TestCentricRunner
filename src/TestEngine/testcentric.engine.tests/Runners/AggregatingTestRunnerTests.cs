@@ -4,6 +4,7 @@
 // ***********************************************************************
 
 #if !NETCOREAPP2_1
+using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Engine.Services;
 using TestCentric.Engine.Services.Fakes;
@@ -44,7 +45,7 @@ namespace TestCentric.Engine.Runners
         public void CheckLevelOfParallelism_MaxAgentsSpecified(int assemblyCount, int maxAgents, int expected)
         {
             var package = CreatePackage(assemblyCount);
-            package.Settings.Add(NUnit.Common.SettingDefinitions.MaxAgents.WithValue(maxAgents));
+            package.Settings.Add(SettingDefinitions.MaxAgents.WithValue(maxAgents));
 
             var runner = new AggregatingTestRunner(_context, package);
             Assert.That(runner.LevelOfParallelism, Is.EqualTo(expected));

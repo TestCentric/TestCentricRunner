@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using NUnit.Common;
 using NUnit.Framework;
 using NSubstitute;
 
@@ -57,7 +58,7 @@ namespace TestCentric.Engine.Services
         [Test]
         public void RequestedFrameworkInvalid()
         {
-            _package.AddSetting(NUnit.Common.SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
+            _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
 
             var exception = Assert.Throws<EngineException>(() => Validate());
 
@@ -67,7 +68,7 @@ namespace TestCentric.Engine.Services
         [Test]
         public void AllPossibleErrors()
         {
-            _package.AddSetting(NUnit.Common.SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
+            _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
 
             var exception = Assert.Throws<EngineException>(() => Validate());
 
@@ -78,7 +79,7 @@ namespace TestCentric.Engine.Services
         [Test]
         public void RequestedFrameworkValid()
         {
-            _package.AddSetting(NUnit.Common.SettingDefinitions.RequestedRuntimeFramework.WithValue(VALID_RUNTIME));
+            _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(VALID_RUNTIME));
             Assert.That(() => Validate(), Throws.Nothing);
         }
 

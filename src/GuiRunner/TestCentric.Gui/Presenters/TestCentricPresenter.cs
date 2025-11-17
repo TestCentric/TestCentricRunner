@@ -10,16 +10,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using NUnit.Common;
 
 namespace TestCentric.Gui.Presenters
 {
-    using System.Reflection;
     using Dialogs;
     using Model;
-    using Model.Services;
     using Model.Settings;
-    using TestCentric.Engine;
-    using TestCentric.Gui.Controls;
     using TestCentric.Gui.Elements;
     using Views;
 
@@ -360,7 +357,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.RunAsX86.CheckedChanged += () =>
             {
-                var key = NUnit.Common.SettingDefinitions.RunAsX86.Name;
+                var key = SettingDefinitions.RunAsX86.Name;
                 if (_view.RunAsX86.Checked)
                     ChangePackageSettingAndReload(key, true);
                 else

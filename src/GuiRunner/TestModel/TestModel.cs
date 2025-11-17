@@ -4,16 +4,15 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using NUnit.Common;
 
 namespace TestCentric.Gui.Model
 {
     using System.Threading.Tasks;
-    //using NUnit.Engine;
     using Services;
     using Settings;
     using TestCentric.Engine;
@@ -519,7 +518,7 @@ namespace TestCentric.Gui.Model
         {
             //var originalSubPackages = new List<TestPackage>(package.SubPackages);
             //package.SubPackages.Clear();
-            package.AddSetting(NUnit.Common.SettingDefinitions.DebugTests.WithValue(config));
+            package.AddSetting(SettingDefinitions.DebugTests.WithValue(config));
 
             //foreach (var subPackage in package.SubPackages)
             //    foreach (var original in originalSubPackages)
@@ -753,7 +752,7 @@ namespace TestCentric.Gui.Model
             {
                 foreach (var subPackage in TestCentricProject.SubPackages)
                 {
-                    subPackage.AddSetting(NUnit.Common.SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
+                    subPackage.AddSetting(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
                 }
 
                 Runner = TestEngine.GetRunner(TestCentricProject);

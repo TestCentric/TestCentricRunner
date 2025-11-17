@@ -195,9 +195,7 @@ namespace TestCentric.Engine
         /// </remarks>
         public void AddSetting(string name, string value)
         {
-            Settings.Add(name, value);
-            foreach (var subPackage in SubPackages)
-                subPackage.Settings.Add(name, value);
+            AddSetting(new PackageSetting<string>(name, value));
         }
 
         /// <summary>

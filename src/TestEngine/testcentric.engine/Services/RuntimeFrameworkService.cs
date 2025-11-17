@@ -249,7 +249,7 @@ namespace TestCentric.Engine.Services
                 if (!IsAvailable(requestedFramework))
                     throw new EngineException("Requested framework is not available: " + requestedFrameworkSetting);
 
-                package.Settings.Set(SettingDefinitions.TargetFrameworkName.WithValue(requestedFramework.FrameworkName.ToString()));
+                package.Settings.Set(SettingDefinitions.TargetFrameworkName.WithValue(requestedFramework.FrameworkName));
                 return requestedFramework;
             }
 
