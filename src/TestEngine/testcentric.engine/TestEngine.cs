@@ -94,7 +94,7 @@ namespace TestCentric.Engine
         /// services are initialized first.
         /// </summary>
         /// <returns>An ITestRunner.</returns>
-        public ITestRunner GetRunner(TestPackage package)
+        public ITestRunner GetRunner(NUnit.Engine.TestPackage package)
         {
             if(!_services.ServiceManager.ServicesInitialized)
                 Initialize();

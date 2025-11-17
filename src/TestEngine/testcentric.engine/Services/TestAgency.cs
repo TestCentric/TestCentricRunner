@@ -13,9 +13,9 @@ using System.Runtime.Versioning;
 using System.Threading;
 using NUnit.Common;
 using NUnit.Engine;
+using NUnit.Engine.Communication.Transports.Tcp;
+using NUnit.Engine.Extensibility;
 using NUnit.Extensibility;
-using TestCentric.Engine.Communication.Transports.Tcp;
-using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Services
@@ -53,9 +53,9 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Gets a list containing <see cref="TestAgentInfo"/> for all available agents.
         /// </summary>
-        public IList<NUnit.Engine.TestAgentInfo> GetAvailableAgents()
+        public IList<TestAgentInfo> GetAvailableAgents()
         {
-            var agents = new List<NUnit.Engine.TestAgentInfo>();
+            var agents = new List<TestAgentInfo>();
 
             foreach (var node in LauncherNodes)
                 agents.Add(GetAgentInfo(node));
@@ -72,7 +72,7 @@ namespace TestCentric.Engine.Services
         /// A list of suitable agents for running the package or an empty
         /// list if no agent is available for the package.
         /// </returns>
-        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(TestPackage targetPackage)
+        public IList<TestAgentInfo> GetAgentsForPackage(NUnit.Engine.TestPackage targetPackage)
         {
             Guard.ArgumentNotNull(targetPackage, nameof(targetPackage));
 
@@ -246,6 +246,7 @@ namespace TestCentric.Engine.Services
             _agentStore.Register(agent);
         }
 
+
         #endregion
 
         #region IService Implementation
@@ -383,15 +384,7 @@ namespace TestCentric.Engine.Services
             return false;
         }
 
-        private IAgentLauncher GetLauncherInstance(ExtensionNode node)
-        {
-            var obj = node.ExtensionObject;
-            if (obj is IAgentLauncher)
-                return (IAgentLauncher)obj;
-            if (obj is NUnit.Engine.Extensibility.IAgentLauncher)
-                return new AgentLauncherWrapper(node, (NUnit.Engine.Extensibility.IAgentLauncher)obj);
-            return null;
-        }
+        private IAgentLauncher GetLauncherInstance(ExtensionNode node) => node.ExtensionObject as IAgentLauncher;
 
         private TestAgentInfo GetAgentInfo(ExtensionNode node)
         {
@@ -409,14 +402,6 @@ namespace TestCentric.Engine.Services
         }
 
         private string GetAgentName(IExtensionNode node) => node.TypeName;
-
-        //private IAgentLauncher GetBestLauncher(TestPackage package)
-        //{
-        //    foreach (var launcher in _launchers.Where(l => l.CanCreateProcess(package)))
-        //    {
-
-        //    }
-        //}
 
         internal bool IsAgentProcessActive(Guid agentId, out Process process)
         {

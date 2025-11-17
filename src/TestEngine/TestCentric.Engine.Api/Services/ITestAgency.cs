@@ -9,12 +9,7 @@ namespace TestCentric.Engine.Services
     /// The ITestAgency interface is implemented by a TestAgency in 
     /// order to allow TestAgents to register with it.
     /// </summary>
-    public interface ITestAgency
+    public interface ITestAgency : NUnit.Engine.ITestAgency
     {
-        /// <summary>
-        /// Registers an agent with an agency
-        /// </summary>
-        /// <param name="agent"></param>
-        void Register(ITestAgent agent);
     }
 }

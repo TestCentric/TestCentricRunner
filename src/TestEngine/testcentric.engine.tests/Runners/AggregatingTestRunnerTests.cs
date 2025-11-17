@@ -4,10 +4,12 @@
 // ***********************************************************************
 
 #if !NETCOREAPP2_1
-using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Engine.Services;
 using TestCentric.Engine.Services.Fakes;
+
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
+using TestPackage = NUnit.Engine.TestPackage;
 
 namespace TestCentric.Engine.Runners
 {

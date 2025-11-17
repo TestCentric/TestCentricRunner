@@ -11,6 +11,8 @@ using System.Xml;
 using NUnit.Common;
 using TestCentric.Engine.Services;
 
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
+
 namespace TestCentric.Engine.TestBed
 {
     /// <summary>
@@ -58,7 +60,7 @@ namespace TestCentric.Engine.TestBed
                     Console.WriteLine("  " + file);
             Console.WriteLine();
 
-            var package = new TestPackage(options.Files);
+            var package = new NUnit.Engine.TestPackage(options.Files);
 
             if (options.Trace != null)
             {

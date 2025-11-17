@@ -9,7 +9,8 @@ using System.IO;
 using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
-using TestCentric.Engine;
+
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Model
 {

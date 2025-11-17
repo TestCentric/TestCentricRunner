@@ -12,6 +12,8 @@ using System.Text;
 using System.Windows.Forms;
 using NUnit.Common;
 
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
+
 namespace TestCentric.Gui.Presenters
 {
     using Dialogs;

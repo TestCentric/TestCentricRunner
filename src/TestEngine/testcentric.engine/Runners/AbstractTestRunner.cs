@@ -16,7 +16,7 @@ namespace TestCentric.Engine.Runners
     /// </summary>
     public abstract class AbstractTestRunner : NUnit.Engine.ITestEngineRunner
     {
-        public AbstractTestRunner(TestPackage package)
+        public AbstractTestRunner(NUnit.Engine.TestPackage package)
         {
             Guard.ArgumentNotNull(package, nameof(package));
             TestPackage = package;
@@ -25,7 +25,7 @@ namespace TestCentric.Engine.Runners
         /// <summary>
         /// The TestPackage, which this runner is handling
         /// </summary>
-        protected TestPackage TestPackage { get; set; }
+        protected NUnit.Engine.TestPackage TestPackage { get; set; }
 
         /// <summary>
         /// The result of the last call to LoadPackage

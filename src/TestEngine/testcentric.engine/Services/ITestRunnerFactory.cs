@@ -3,6 +3,8 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using NUnit.Engine;
+
 namespace TestCentric.Engine.Services
 {
     /// <summary>
@@ -25,6 +27,6 @@ namespace TestCentric.Engine.Services
         /// <param name="runner">An ITestRunner to possibly be used.</param>
         /// <param name="package">The TestPackage to be loaded.</param>
         /// <returns>True if the runner may be reused for the provided package.</returns>
-        bool CanReuse(NUnit.Engine.ITestEngineRunner runner, TestPackage package);
+        bool CanReuse(ITestEngineRunner runner, TestPackage package);
     }
 }

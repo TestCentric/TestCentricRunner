@@ -3,11 +3,12 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using NUnit.Common;
+#if !NETCOREAPP2_1
 using NUnit.Framework;
 using NSubstitute;
 
-#if !NETCOREAPP2_1
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
+
 namespace TestCentric.Engine.Services
 {
     public class TestPackageAnalyzerTests
@@ -19,7 +20,7 @@ namespace TestCentric.Engine.Services
         private const string INVALID_RUNTIME = "invalid-5.0";
         //private static readonly string CURRENT_RUNTIME = RuntimeFramework.CurrentFramework.Id;
 
-        private TestPackage _package;
+        private NUnit.Engine.TestPackage _package;
         private TestPackageAnalyzer _analyzer;
 
         public interface ITestRuntimeService : IRuntimeFrameworkService, IService { }
@@ -28,7 +29,7 @@ namespace TestCentric.Engine.Services
         public void Initialize()
         {
             // Validation doesn't look at the files specified, only settings
-            _package = new TestPackage("any.dll");
+            _package = new NUnit.Engine.TestPackage("any.dll");
 
             var runtimeService = Substitute.For<ITestRuntimeService>();
             runtimeService.IsAvailable("net-2.0").Returns(true);

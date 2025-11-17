@@ -13,6 +13,8 @@ using System.Xml;
 using TestCentric.Engine.Internal;
 using TestCentric.Engine.Services;
 
+using TestPackage = NUnit.Engine.TestPackage;
+
 namespace TestCentric.Engine.Runners
 {
     /// <summary>

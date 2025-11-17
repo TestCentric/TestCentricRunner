@@ -48,7 +48,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
             _server.Stop();
         }
 
-        public void Register(ITestAgent agent)
+        public void Register(NUnit.Engine.ITestAgent agent)
         {
             _agency.Register(agent);
         }

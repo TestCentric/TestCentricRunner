@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Xml;
 using System.Xml.Serialization;
+using NUnit.Engine;
 using NUnit.Engine.Communication.Messages;
 using NUnit.Engine.Communication.Protocols;
 using NUnit.Engine.Communication.Transports.Tcp;
@@ -34,7 +35,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
 
         public Guid Id { get; }
 
-        public NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package)
+        public NUnit.Engine.ITestEngineRunner CreateRunner(NUnit.Engine.TestPackage package)
         {
             var writer = new StringWriter();
             var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings() { OmitXmlDeclaration = true });

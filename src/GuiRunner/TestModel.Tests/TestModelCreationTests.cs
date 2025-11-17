@@ -3,12 +3,12 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
 using TestCentric.Engine;
 
 using PackageSettings = NUnit.Engine.PackageSettings;
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Model
 {

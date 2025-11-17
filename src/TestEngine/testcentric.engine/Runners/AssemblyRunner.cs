@@ -4,6 +4,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Engine;
 using TestCentric.Engine.Internal;
 using TestCentric.Engine.Services;
 
@@ -26,7 +27,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="services">A ServiceLocator interface for use by the runner</param>
         /// <param name="package">A TestPackage containing a single assembly</param>
-        public AssemblyRunner(IServiceLocator services, TestPackage package) : base(package)
+        public AssemblyRunner(IServiceLocator services, NUnit.Engine.TestPackage package) : base(package)
         {
             _agentService = services.GetService<TestAgentService>();
         }

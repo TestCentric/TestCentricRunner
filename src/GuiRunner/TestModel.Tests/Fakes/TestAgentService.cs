@@ -4,7 +4,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using TestCentric.Engine;
+using NUnit.Engine;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Gui.Model.Fakes
@@ -25,17 +25,17 @@ namespace TestCentric.Gui.Model.Fakes
             return new NUnit.Engine.TestAgentInfo[0];
         }
 
-        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(TestPackage package)
+        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(NUnit.Engine.TestPackage package)
         {
             return new NUnit.Engine.TestAgentInfo[0];
         }
 
-        public bool IsAgentAvailable(TestPackage package)
+        public bool IsAgentAvailable(NUnit.Engine.TestPackage package)
         {
             throw new System.NotImplementedException();
         }
 
-        public ITestAgent GetAgent(TestPackage package)
+        public ITestAgent GetAgent(NUnit.Engine.TestPackage package)
         {
             throw new System.NotImplementedException();
         }

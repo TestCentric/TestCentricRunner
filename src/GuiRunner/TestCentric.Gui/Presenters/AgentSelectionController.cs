@@ -6,10 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using NUnit.Common;
 using TestCentric.Gui.Elements;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Views;
+
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Presenters
 {

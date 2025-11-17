@@ -38,7 +38,7 @@ namespace TestCentric.Engine.Services
         /// are found.
         /// </summary>
         /// <param name="package">The package whose settings are to be validated</param>
-        public void ValidatePackageSettings(TestPackage package)
+        public void ValidatePackageSettings(NUnit.Engine.TestPackage package)
         {
             var sb = new StringBuilder();
 
@@ -62,7 +62,7 @@ namespace TestCentric.Engine.Services
         /// is used to expand the projects.
         /// </summary>
         /// <param name="package"></param>
-        public void ExpandProjectPackages(TestPackage package)
+        public void ExpandProjectPackages(NUnit.Engine.TestPackage package)
         {
             if (package == null) throw new ArgumentNullException("package");
 
@@ -88,7 +88,7 @@ namespace TestCentric.Engine.Services
         /// may be reloading an existing package.
         /// </remarks>
         /// <param name="package"></param>
-        public void ApplyImageSettings(TestPackage package)
+        public void ApplyImageSettings(NUnit.Engine.TestPackage package)
         {
             Guard.ArgumentNotNull(package, nameof(package));
             Guard.ArgumentValid(package.IsAssemblyPackage, "ApplyImageSettings called for non-assembly", nameof(package));

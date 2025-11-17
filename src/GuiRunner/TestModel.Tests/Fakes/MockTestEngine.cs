@@ -63,7 +63,7 @@ namespace TestCentric.Gui.Model.Fakes
 
         string ITestEngine.WorkDirectory { get; set; }
 
-        ITestRunner ITestEngine.GetRunner(TestPackage package)
+        ITestRunner ITestEngine.GetRunner(NUnit.Engine.TestPackage package)
         {
             return new MasterTestRunner();
         }
