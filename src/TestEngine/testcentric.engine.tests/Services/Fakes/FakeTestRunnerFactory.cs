@@ -4,6 +4,7 @@
 // ***********************************************************************
 
 using TestCentric.Engine.Runners;
+using NUnit.Engine;
 
 namespace TestCentric.Engine.Services.Fakes
 {

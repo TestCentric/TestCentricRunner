@@ -9,7 +9,7 @@ namespace TestCentric.Engine.Runners
 {
     public abstract class NonRunnableAssemblyRunner : AbstractTestRunner
     {
-        public NonRunnableAssemblyRunner(TestPackage package) : base(package) { }
+        public NonRunnableAssemblyRunner(NUnit.Engine.TestPackage package) : base(package) { }
 
         protected abstract NotRunnableAssemblyResult Result { get; }
 
@@ -47,7 +47,7 @@ namespace TestCentric.Engine.Runners
         private string _assemblyPath;
         private string _message;
 
-        public InvalidAssemblyRunner(TestPackage package, string message)
+        public InvalidAssemblyRunner(NUnit.Engine.TestPackage package, string message)
             : base(package)
         {
             _assemblyPath = package.FullName;
@@ -65,7 +65,7 @@ namespace TestCentric.Engine.Runners
     {
         private string _assemblyPath;
 
-        public SkippedAssemblyRunner(TestPackage package)
+        public SkippedAssemblyRunner(NUnit.Engine.TestPackage package)
             :base(package)
         {
             _assemblyPath = package.FullName;

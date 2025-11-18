@@ -4,11 +4,9 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
 using System.Text;
 using NUnit.Common;
 using TestCentric.Metadata;
-using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Services
 {
@@ -40,7 +38,7 @@ namespace TestCentric.Engine.Services
         /// are found.
         /// </summary>
         /// <param name="package">The package whose settings are to be validated</param>
-        public void ValidatePackageSettings(TestPackage package)
+        public void ValidatePackageSettings(NUnit.Engine.TestPackage package)
         {
             var sb = new StringBuilder();
 
@@ -64,7 +62,7 @@ namespace TestCentric.Engine.Services
         /// is used to expand the projects.
         /// </summary>
         /// <param name="package"></param>
-        public void ExpandProjectPackages(TestPackage package)
+        public void ExpandProjectPackages(NUnit.Engine.TestPackage package)
         {
             if (package == null) throw new ArgumentNullException("package");
 
@@ -90,7 +88,7 @@ namespace TestCentric.Engine.Services
         /// may be reloading an existing package.
         /// </remarks>
         /// <param name="package"></param>
-        public void ApplyImageSettings(TestPackage package)
+        public void ApplyImageSettings(NUnit.Engine.TestPackage package)
         {
             Guard.ArgumentNotNull(package, nameof(package));
             Guard.ArgumentValid(package.IsAssemblyPackage, "ApplyImageSettings called for non-assembly", nameof(package));
@@ -101,7 +99,7 @@ namespace TestCentric.Engine.Services
                 if (targetVersion.Major > 0)
                 {
                     log.Debug($"Assembly {package.FullName} uses version {targetVersion}");
-                    package.Settings.Set(SettingDefinitions.ImageRuntimeVersion.WithValue(targetVersion));
+                    package.Settings.Set(SettingDefinitions.ImageRuntimeVersion.WithValue(targetVersion.ToString()));
                 }
 
                 string frameworkName;
@@ -135,11 +133,9 @@ namespace TestCentric.Engine.Services
                 if (nonTestAssembly)
                 {
                     log.Debug($"Assembly {package.FullName} has NonTestAssemblyAttribute");
-                    //package.Settings.Set(SettingDefinitions.ImageNonTestAssemblyAttribute.WithValue(true));
-                    package.Settings.Set<bool>("ImageNonTestAssemblyAttribute", true);
+                    package.Settings.Set(SettingDefinitions.SkipNonTestAssemblies.WithValue(true));
                 }
 
-                // TODO: Make driver extensions work in NUnit
                 //var testFrameworkReference = _testFrameworkService.GetFrameworkReference(package.FullName);
                 //if (testFrameworkReference != null)
                 //{

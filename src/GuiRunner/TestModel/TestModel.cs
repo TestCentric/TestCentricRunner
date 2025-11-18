@@ -4,16 +4,18 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using NUnit.Common;
+
+using PackageSettings = NUnit.Engine.PackageSettings;
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Model
 {
     using System.Threading.Tasks;
-    //using NUnit.Engine;
     using Services;
     using Settings;
     using TestCentric.Engine;
@@ -309,7 +311,7 @@ namespace TestCentric.Gui.Model
             _events.FireTestCentricProjectLoaded();
         }
 
-        public void RemoveTestPackage(TestPackage subPackage)
+        public void RemoveTestPackage(NUnit.Engine.TestPackage subPackage)
         {
             if (!IsProjectLoaded || IsTestRunning || subPackage == null || TestCentricProject.SubPackages.Count <= 1)
                 return;
@@ -432,7 +434,7 @@ namespace TestCentric.Gui.Model
                 BuildTestIndex(child);
         }
 
-        private Dictionary<string, TestPackage> _packageMap = new Dictionary<string, TestPackage>();
+        private Dictionary<string, NUnit.Engine.TestPackage> _packageMap = new Dictionary<string, NUnit.Engine.TestPackage>();
 
         private void MapTestsToPackages()
         {
@@ -440,7 +442,7 @@ namespace TestCentric.Gui.Model
             MapTestToPackage(LoadedTests, TestCentricProject);
         }
 
-        private void MapTestToPackage(TestNode test, TestPackage package)
+        private void MapTestToPackage(TestNode test, NUnit.Engine.TestPackage package)
         {
             _packageMap[test.Id] = package;
             
@@ -448,7 +450,7 @@ namespace TestCentric.Gui.Model
                 MapTestToPackage(test.Children[index], package.SubPackages[index]);
         }
 
-        public IList<string> GetAgentsForPackage(TestPackage package = null)
+        public IList<string> GetAgentsForPackage(NUnit.Engine.TestPackage package = null)
         {
             if (package == null)
                 package = TestCentricProject;
@@ -515,11 +517,11 @@ namespace TestCentric.Gui.Model
             _events.FireTestReloaded(LoadedTests);
         }
 
-        public void ReloadPackage(TestPackage package, string config)
+        public void ReloadPackage(NUnit.Engine.TestPackage package, string config)
         {
             //var originalSubPackages = new List<TestPackage>(package.SubPackages);
             //package.SubPackages.Clear();
-            package.AddSetting(NUnit.Common.SettingDefinitions.DebugTests.WithValue(config));
+            package.AddSetting(SettingDefinitions.DebugTests.WithValue(config));
 
             //foreach (var subPackage in package.SubPackages)
             //    foreach (var original in originalSubPackages)
@@ -615,7 +617,7 @@ namespace TestCentric.Gui.Model
             return GetPackageForTest(id)?.Settings;
         }
 
-        public TestPackage GetPackageForTest(string id)
+        public NUnit.Engine.TestPackage GetPackageForTest(string id)
         {
             return _packageMap.ContainsKey(id) 
                 ? _packageMap[id] 
@@ -753,7 +755,7 @@ namespace TestCentric.Gui.Model
             {
                 foreach (var subPackage in TestCentricProject.SubPackages)
                 {
-                    subPackage.AddSetting(NUnit.Common.SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
+                    subPackage.AddSetting(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
                 }
 
                 Runner = TestEngine.GetRunner(TestCentricProject);

@@ -5,14 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using TestCentric.Engine;
+using TestCentric.Gui.Model.Filter;
+using TestCentric.Gui.Model.Settings;
 
 namespace TestCentric.Gui.Model
 {
-    using TestCentric.Engine;
-    using Services;
-    using Settings;
-    using TestCentric.Gui.Model.Filter;
-
     public interface ITestModel : IDisposable
     {
         #region General Properties
@@ -117,7 +115,7 @@ namespace TestCentric.Gui.Model
         /// <summary>
         /// Remove a test package from the current test project
         /// </summary>
-        void RemoveTestPackage(TestPackage subPackage);
+        void RemoveTestPackage(NUnit.Engine.TestPackage subPackage);
 
 
         void OpenExistingProject(string filename);
@@ -135,7 +133,7 @@ namespace TestCentric.Gui.Model
         void LoadTests(IList<string> files);
         void UnloadTests();
         void ReloadTests();
-        void ReloadPackage(TestPackage package, string config);
+        void ReloadPackage(NUnit.Engine.TestPackage package, string config);
 
         #endregion
 
@@ -159,11 +157,11 @@ namespace TestCentric.Gui.Model
         TestNode GetTestById(string id);
 
         // Get the TestPackage represented by a test,if available
-        TestPackage GetPackageForTest(string id);
+        NUnit.Engine.TestPackage GetPackageForTest(string id);
         NUnit.Engine.PackageSettings GetPackageSettingsForTest(string id);
 
         // Get Agents available for a package
-        IList<string> GetAgentsForPackage(TestPackage package);
+        IList<string> GetAgentsForPackage(NUnit.Engine.TestPackage package);
 
         // Clear the results for all tests
         void ClearResults();

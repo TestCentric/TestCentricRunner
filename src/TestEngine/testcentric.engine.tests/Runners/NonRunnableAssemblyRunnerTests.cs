@@ -3,9 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using NUnit.Engine;
 using NUnit.Framework;
 using TestCentric.Engine.Internal;
 

@@ -3,10 +3,12 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+#if !NETCOREAPP2_1
 using NUnit.Framework;
 using NSubstitute;
 
-#if !NETCOREAPP2_1
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
+
 namespace TestCentric.Engine.Services
 {
     public class TestPackageAnalyzerTests
@@ -18,7 +20,7 @@ namespace TestCentric.Engine.Services
         private const string INVALID_RUNTIME = "invalid-5.0";
         //private static readonly string CURRENT_RUNTIME = RuntimeFramework.CurrentFramework.Id;
 
-        private TestPackage _package;
+        private NUnit.Engine.TestPackage _package;
         private TestPackageAnalyzer _analyzer;
 
         public interface ITestRuntimeService : IRuntimeFrameworkService, IService { }
@@ -27,7 +29,7 @@ namespace TestCentric.Engine.Services
         public void Initialize()
         {
             // Validation doesn't look at the files specified, only settings
-            _package = new TestPackage("any.dll");
+            _package = new NUnit.Engine.TestPackage("any.dll");
 
             var runtimeService = Substitute.For<ITestRuntimeService>();
             runtimeService.IsAvailable("net-2.0").Returns(true);
@@ -57,7 +59,7 @@ namespace TestCentric.Engine.Services
         [Test]
         public void RequestedFrameworkInvalid()
         {
-            _package.AddSetting(NUnit.Common.SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
+            _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
 
             var exception = Assert.Throws<EngineException>(() => Validate());
 
@@ -67,7 +69,7 @@ namespace TestCentric.Engine.Services
         [Test]
         public void AllPossibleErrors()
         {
-            _package.AddSetting(NUnit.Common.SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
+            _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
 
             var exception = Assert.Throws<EngineException>(() => Validate());
 
@@ -78,7 +80,7 @@ namespace TestCentric.Engine.Services
         [Test]
         public void RequestedFrameworkValid()
         {
-            _package.AddSetting(NUnit.Common.SettingDefinitions.RequestedRuntimeFramework.WithValue(VALID_RUNTIME));
+            _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(VALID_RUNTIME));
             Assert.That(() => Validate(), Throws.Nothing);
         }
 

@@ -8,10 +8,10 @@ using System.IO;
 using System.Net.Sockets;
 using System.Xml;
 using System.Xml.Serialization;
-using TestCentric.Engine.Communication.Messages;
-using TestCentric.Engine.Communication.Protocols;
-using TestCentric.Engine.Extensibility;
-using TestCentric.Engine.Internal;
+using NUnit.Engine;
+using NUnit.Engine.Communication.Messages;
+using NUnit.Engine.Communication.Protocols;
+using NUnit.Engine.Communication.Transports.Tcp;
 
 namespace TestCentric.Engine.Communication.Transports.Tcp
 {
@@ -35,7 +35,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
 
         public Guid Id { get; }
 
-        public NUnit.Engine.ITestEngineRunner CreateRunner(TestPackage package)
+        public NUnit.Engine.ITestEngineRunner CreateRunner(NUnit.Engine.TestPackage package)
         {
             var writer = new StringWriter();
             var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings() { OmitXmlDeclaration = true });
@@ -49,7 +49,7 @@ namespace TestCentric.Engine.Communication.Transports.Tcp
         public bool Start()
         {
             // Not used for TCP since agent must already be started
-            // in order to receive any messges at all.
+            // in order to receive any messages at all.
             throw new NotImplementedException("Not used for TCP Transport");
         }
 

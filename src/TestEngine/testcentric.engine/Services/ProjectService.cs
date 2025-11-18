@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Common;
+using NUnit.Engine;
 using NUnit.Extensibility;
 using TestCentric.Engine.Extensibility;
 
@@ -41,7 +42,7 @@ namespace TestCentric.Engine.Services
         /// a known project format before calling this method.
         /// </summary>
         /// <param name="package">The TestPackage to be expanded</param>
-        public void ExpandProjectPackage(TestPackage package)
+        public void ExpandProjectPackage(NUnit.Engine.TestPackage package)
         {
             Guard.ArgumentNotNull(package, "package");
             Guard.ArgumentValid(package.SubPackages.Count == 0, "Package is already expanded", "package");

@@ -10,6 +10,8 @@ using NUnit.Common;
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
 
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
+
 namespace TestCentric.Gui.Model
 {
     public class CreateNewProjectTests

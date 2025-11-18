@@ -9,6 +9,8 @@ using NUnit.Common;
 using TestCentric.Engine.Internal;
 using TestCentric.Engine.Services;
 
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
+
 namespace TestCentric.Engine.Runners
 {
     /// <summary>
@@ -19,7 +21,7 @@ namespace TestCentric.Engine.Runners
     {
         // AggregatingTestRunner combines the results from tests run by different
         // runners. Each file passed to it is handled by a single runner.
-        private List<TestPackage> _packageList;
+        private List<NUnit.Engine.TestPackage> _packageList;
 
         // Exceptions from unloading individual runners are caught and rethrown
         // on AggregatingTestRunner disposal, to allow TestResults to be
@@ -32,11 +34,11 @@ namespace TestCentric.Engine.Runners
 
         public int LevelOfParallelism { get; }
 
-        public AggregatingTestRunner(IServiceLocator services, TestPackage package) : base(package)
+        public AggregatingTestRunner(IServiceLocator services, NUnit.Engine.TestPackage package) : base(package)
         {
             _testRunnerFactory = services.GetService<ITestRunnerFactory>();
 
-            _packageList = new List<TestPackage>(package.Select(p => !p.HasSubPackages));
+            _packageList = new List<NUnit.Engine.TestPackage>(package.Select(p => !p.HasSubPackages));
             Runners = new List<NUnit.Engine.ITestEngineRunner>();
             foreach (var subPackage in _packageList)
                 Runners.Add(_testRunnerFactory.MakeTestRunner(subPackage));

@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
 using NUnit.Common;
+using NUnit.Engine;
 using TestCentric.Engine.Services.RuntimeLocators;
 
 namespace TestCentric.Engine.Services
@@ -180,7 +181,7 @@ namespace TestCentric.Engine.Services
         /// </summary>
         /// <param name="package">A TestPackage</param>
         /// <returns>A string representing the selected RuntimeFramework</returns>
-        public string SelectRuntimeFramework(TestPackage package)
+        public string SelectRuntimeFramework(NUnit.Engine.TestPackage package)
         {
             var targetFramework = SelectRuntimeFrameworkInner(package);
 

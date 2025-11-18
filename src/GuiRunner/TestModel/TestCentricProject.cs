@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using NUnit.Common;
-using TestCentric.Engine;
+using NUnit.Engine;
 
 namespace TestCentric.Gui.Model
 {
-    public class TestCentricProject : TestPackage
+    public class TestCentricProject : NUnit.Engine.TestPackage
     {
         private ITestModel _model;
 
@@ -60,11 +60,10 @@ namespace TestCentric.Gui.Model
                     AddSetting(SettingDefinitions.RunAsX86.WithValue(true));
                 if (options.DebugAgent)
                     AddSetting(SettingDefinitions.DebugAgent.WithValue(true));
-                // TODO: Decide how to make this work
-                //if (options.SimulateUnloadError)
-                //    AddSetting(SettingDefinitions.SimulateUnloadError.WithValue(true));
-                //if (options.SimulateUnloadTimeout)
-                //    AddSetting(SettingDefinitions.SimulateUnloadTimeout.WithValue(true));
+                if (options.SimulateUnloadError)
+                    AddSetting("SimulateUnloadError", true);
+                if (options.SimulateUnloadTimeout)
+                    AddSetting("SimulateUnloadError", true);
                 if (options.TestParameters.Count > 0)
                 {
                     string[] parms = new string[options.TestParameters.Count];
@@ -90,17 +89,22 @@ namespace TestCentric.Gui.Model
             IsDirty = false;
         }
 
+        public TestCentricProject()
+        {
+
+        }
+
         public void Load(string path)
         {
             ProjectPath = path;
 
             using (StreamReader reader = new StreamReader(ProjectPath))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
+                XmlSerializer serializer = new XmlSerializer(typeof(NUnit.Engine.TestPackage));
 
                 try
                 {
-                    var newPackage = (TestPackage)serializer.Deserialize(reader);
+                    var newPackage = (NUnit.Engine.TestPackage)serializer.Deserialize(reader);
 
                     foreach (var subPackage in newPackage.SubPackages)
                     {
@@ -127,24 +131,24 @@ namespace TestCentric.Gui.Model
         public void Save()
         {
             using (StreamWriter writer = new StreamWriter(ProjectPath))
-                Save(writer);
+                writer.Write(this.ToXml());
         }
 
-        public void Save(TextWriter writer)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(TestPackage));
+        //public void Save(TextWriter writer)
+        //{
+        //    XmlSerializer serializer = new XmlSerializer(typeof(NUnit.Engine.TestPackage));
 
-            try
-            {
-                serializer.Serialize(writer, this);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Unable to serialize TestProject.", ex);
-            }
+        //    try
+        //    {
+        //        serializer.Serialize(writer, this);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Unable to serialize TestProject.", ex);
+        //    }
 
-            IsDirty = false;
-        }
+        //    IsDirty = false;
+        //}
 
         public void LoadTests()
         {
@@ -162,13 +166,13 @@ namespace TestCentric.Gui.Model
             TestFiles.Add(fullName);
             IsDirty = true;
         }
-        public new void AddSubPackage(TestPackage subPackage)
+        public new void AddSubPackage(NUnit.Engine.TestPackage subPackage)
         {
             base.AddSubPackage(subPackage);
             IsDirty = true;
         }
 
-        public void RemoveSubPackage(TestPackage subPackage)
+        public void RemoveSubPackage(NUnit.Engine.TestPackage subPackage)
         {
             if (subPackage != null)
             {
@@ -183,5 +187,14 @@ namespace TestCentric.Gui.Model
             Settings.Set(key, value);
             IsDirty = true;
         }
+
+        public void RemoveSetting(string key)
+        {
+            Settings.Remove(key);
+            foreach (var subPackage in SubPackages)
+                subPackage.Settings.Remove(key);
+        }
+
+        public void RemoveSetting(NUnit.Engine.SettingDefinition setting) => RemoveSetting(setting.Name);
     }
 }

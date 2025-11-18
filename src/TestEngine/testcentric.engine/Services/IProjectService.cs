@@ -36,6 +36,6 @@ namespace TestCentric.Engine.Services
         /// a known project format before calling this method.
         /// </summary>
         /// <param name="package">The TestPackage to be expanded</param>
-        void ExpandProjectPackage(TestPackage package);
+        void ExpandProjectPackage(NUnit.Engine.TestPackage package);
     }
 }

@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+#if NETFRAMEWORK
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,15 +13,10 @@ using System.Runtime.Versioning;
 using System.Threading;
 using NUnit.Common;
 using NUnit.Engine;
+using NUnit.Engine.Communication.Transports.Tcp;
+using NUnit.Engine.Extensibility;
 using NUnit.Extensibility;
-using TestCentric.Engine.Agents;
-using TestCentric.Engine.Communication.Transports.Remoting;
-using TestCentric.Engine.Communication.Transports.Tcp;
-using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Internal;
-
-// TODO: We need this until NUnit adds Cancelled by user code
-using AgentExitCodes = TestCentric.Engine.Agents.AgentExitCodes;
 
 namespace TestCentric.Engine.Services
 {
@@ -57,9 +53,9 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// Gets a list containing <see cref="TestAgentInfo"/> for all available agents.
         /// </summary>
-        public IList<NUnit.Engine.TestAgentInfo> GetAvailableAgents()
+        public IList<TestAgentInfo> GetAvailableAgents()
         {
-            var agents = new List<NUnit.Engine.TestAgentInfo>();
+            var agents = new List<TestAgentInfo>();
 
             foreach (var node in LauncherNodes)
                 agents.Add(GetAgentInfo(node));
@@ -76,7 +72,7 @@ namespace TestCentric.Engine.Services
         /// A list of suitable agents for running the package or an empty
         /// list if no agent is available for the package.
         /// </returns>
-        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(TestPackage targetPackage)
+        public IList<TestAgentInfo> GetAgentsForPackage(NUnit.Engine.TestPackage targetPackage)
         {
             Guard.ArgumentNotNull(targetPackage, nameof(targetPackage));
 
@@ -143,11 +139,10 @@ namespace TestCentric.Engine.Services
         /// <exception cref="ArgumentException">If no agent is available.</exception>
         public ITestAgent GetAgent(TestPackage package)
         {
-            // Target Runtime must be specified by this point
-            string targetFrameworkName = package.Settings.GetValueOrDefault(SettingDefinitions.TargetFrameworkName);
-            Guard.OperationValid(targetFrameworkName.Length > 0, "LaunchAgentProcess called with no runtime specified");
+            // Target FrameworkName must be specified by this point
+            string frameworkName = package.Settings.GetValueOrDefault(SettingDefinitions.TargetFrameworkName);
+            Guard.OperationValid(frameworkName.Length > 0, "LaunchAgentProcess called with no runtime specified");
 
-            var targetRuntime = RuntimeFramework.FromFrameworkName(targetFrameworkName);
             var agentId = Guid.NewGuid();
             string agencyUrl = TcpEndPoint;
             var agentProcess = CreateAgentProcess(agentId, agencyUrl, package);
@@ -180,21 +175,11 @@ namespace TestCentric.Engine.Services
                 {
                     log.Debug($"Returning new agent {agentId:B}");
 
-                    switch (targetRuntime.Runtime.FrameworkIdentifier)
-                    {
-                        case FrameworkIdentifiers.NetFramework:
-                            return new TestAgentRemotingProxy(agent, agentId);
-
-                        case FrameworkIdentifiers.NetCoreApp:
-                            return agent;
-
-                        default:
-                            throw new InvalidOperationException($"Invalid runtime: {targetRuntime.Runtime.FrameworkIdentifier}");
-                    }
+                    return agent;
                 }
             }
 
-            return null;
+            throw new NUnitEngineException("Unable to acquire remote process agent");
         }
 
         /// <summary>
@@ -260,6 +245,7 @@ namespace TestCentric.Engine.Services
             log.Debug($"Registered agent {agent.Id:B}");
             _agentStore.Register(agent);
         }
+
 
         #endregion
 
@@ -398,15 +384,7 @@ namespace TestCentric.Engine.Services
             return false;
         }
 
-        private IAgentLauncher GetLauncherInstance(ExtensionNode node)
-        {
-            var obj = node.ExtensionObject;
-            if (obj is IAgentLauncher)
-                return (IAgentLauncher)obj;
-            if (obj is NUnit.Engine.Extensibility.IAgentLauncher)
-                return new AgentLauncherWrapper(node, (NUnit.Engine.Extensibility.IAgentLauncher)obj);
-            return null;
-        }
+        private IAgentLauncher GetLauncherInstance(ExtensionNode node) => node.ExtensionObject as IAgentLauncher;
 
         private TestAgentInfo GetAgentInfo(ExtensionNode node)
         {
@@ -425,14 +403,6 @@ namespace TestCentric.Engine.Services
 
         private string GetAgentName(IExtensionNode node) => node.TypeName;
 
-        //private IAgentLauncher GetBestLauncher(TestPackage package)
-        //{
-        //    foreach (var launcher in _launchers.Where(l => l.CanCreateProcess(package)))
-        //    {
-
-        //    }
-        //}
-
         internal bool IsAgentProcessActive(Guid agentId, out Process process)
         {
             return _agentStore.IsAgentActive(agentId, out process);
@@ -447,7 +417,7 @@ namespace TestCentric.Engine.Services
             switch (process.ExitCode)
             {
                 case AgentExitCodes.OK:
-                case AgentExitCodes.CANCELLED_BY_USER:
+                case 1: // TODO: Add CANCELLED_BY_USER=1 to NUnit exit codes?
                     return;
                 case AgentExitCodes.PARENT_PROCESS_TERMINATED:
                     errorMsg = "Remote test agent believes agency process has exited.";
@@ -477,3 +447,4 @@ namespace TestCentric.Engine.Services
         }
     }
 }
+#endif

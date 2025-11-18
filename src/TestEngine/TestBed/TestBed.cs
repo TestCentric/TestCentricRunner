@@ -8,7 +8,10 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
+using NUnit.Common;
 using TestCentric.Engine.Services;
+
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Engine.TestBed
 {
@@ -57,7 +60,7 @@ namespace TestCentric.Engine.TestBed
                     Console.WriteLine("  " + file);
             Console.WriteLine();
 
-            var package = new TestPackage(options.Files);
+            var package = new NUnit.Engine.TestPackage(options.Files);
 
             if (options.Trace != null)
             {
@@ -79,7 +82,7 @@ namespace TestCentric.Engine.TestBed
             }
 
             if (!string.IsNullOrEmpty(options.RequestedRuntime))
-                package.AddSetting(NUnit.Common.SettingDefinitions.RequestedRuntimeFramework.WithValue(options.RequestedRuntime));
+                package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(options.RequestedRuntime));
 
             TestEngine.Services.GetService<IExtensionService>().InstallExtensions();
 

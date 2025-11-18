@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Engine;
 
 namespace TestCentric.Engine.Services
 {
@@ -38,7 +39,7 @@ namespace TestCentric.Engine.Services
         /// A list of suitable agents for running the package or an empty
         /// list if no agent is available for the package.
         /// </returns>
-        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(TestPackage package)
+        public IList<NUnit.Engine.TestAgentInfo> GetAgentsForPackage(NUnit.Engine.TestPackage package)
         {
             var agents = new List<NUnit.Engine.TestAgentInfo>();
 
@@ -53,7 +54,7 @@ namespace TestCentric.Engine.Services
         /// for running the provided test package.
         /// </summary>
         /// <param name="package">A TestPackage</param>
-        public bool IsAgentAvailable(TestPackage package)
+        public bool IsAgentAvailable(NUnit.Engine.TestPackage package)
         {
             foreach (var agentSource in _providers)
                 if (agentSource.IsAgentAvailable(package))
@@ -69,7 +70,7 @@ namespace TestCentric.Engine.Services
         /// <param name="package">The test package to be run</param>
         /// <returns>An ITestAgent</returns>
         /// <exception cref="ArgumentException">If no agent is available.</exception>
-        public ITestAgent GetAgent(TestPackage package)
+        public ITestAgent GetAgent(NUnit.Engine.TestPackage package)
         {
             foreach (var agentSource in _providers)
                 if (agentSource.IsAgentAvailable(package))

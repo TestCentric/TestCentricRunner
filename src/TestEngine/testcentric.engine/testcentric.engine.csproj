@@ -23,9 +23,11 @@
     <ProjectReference Include="..\TestCentric.Engine.Api\TestCentric.Engine.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="NUnit.Engine.Api" Version="$(NUnitApiVersion)" />
-	  <PackageReference Include="NUnit.Extensibility.Api" Version="$(NUnitApiVersion)" />
-	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitApiVersion)" />
+	  <PackageReference Include="NUnit.Common" Version ="$(NUnitEngineVersion)" />
+	  <PackageReference Include="NUnit.Engine" Version="$(NUnitEngineVersion)" />
+	  <PackageReference Include="NUnit.Engine.Api" Version="$(NUnitEngineVersion)" />
+	  <PackageReference Include="NUnit.Extensibility.Api" Version="$(NUnitEngineVersion)" />
+	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
     <PackageReference Include="TestCentric.Metadata" Version="$(MetadataVersion)" />
     <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>

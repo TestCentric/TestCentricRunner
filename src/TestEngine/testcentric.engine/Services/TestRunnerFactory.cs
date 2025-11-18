@@ -4,8 +4,9 @@
 // ***********************************************************************
 
 using System.IO;
-using TestCentric.Engine.Internal;
 using TestCentric.Engine.Runners;
+
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Engine.Services
 {
@@ -21,7 +22,7 @@ namespace TestCentric.Engine.Services
         /// </summary>
         /// <param name="package">The TestPackage to be loaded and run</param>
         /// <returns>A TestRunner</returns>
-        public NUnit.Engine.ITestEngineRunner MakeTestRunner(TestPackage package)
+        public NUnit.Engine.ITestEngineRunner MakeTestRunner(NUnit.Engine.TestPackage package)
         {
             var packageList = package.Select(p => !p.HasSubPackages);
 
@@ -31,7 +32,7 @@ namespace TestCentric.Engine.Services
             return MakeRunnerForSingleTestFile(packageList[0]);
         }
 
-        private NUnit.Engine.ITestEngineRunner MakeRunnerForSingleTestFile(TestPackage package)
+        private NUnit.Engine.ITestEngineRunner MakeRunnerForSingleTestFile(NUnit.Engine.TestPackage package)
         {
             if (!File.Exists(package.FullName))
                 return new InvalidAssemblyRunner(package, "File not found: " + package.FullName);
@@ -40,16 +41,15 @@ namespace TestCentric.Engine.Services
             if (ext != ".dll" && ext != ".exe")
                 return new InvalidAssemblyRunner(package, "File type is not supported");
 
-            // TODO: Restore this if/when NUnit adds this setting or create workaround
-            //if (package.Settings.GetValueOrDefault(NUnit.Common.SettingDefinitions.ImageNonTestAssemblyAttribute))
-            //    return new SkippedAssemblyRunner(package);
+            if (package.Settings.GetValueOrDefault(SettingDefinitions.SkipNonTestAssemblies))
+                return new SkippedAssemblyRunner(package);
 
             return new AssemblyRunner(ServiceContext, package);
         }
 
         // TODO: Review this method once used by a gui - currently unused.
         // The current implementation doesn't allow any runners to be reused.
-        public bool CanReuse(NUnit.Engine.ITestEngineRunner runner, TestPackage package)
+        public bool CanReuse(NUnit.Engine.ITestEngineRunner runner, NUnit.Engine.TestPackage package)
         {
             return false;
         }
