@@ -38,6 +38,8 @@ namespace TestCentric.Gui.Model
         // Check if the loaded Assemblies has been changed
         private AssemblyWatcher _assemblyWatcher;
 
+        private IExtensionService _extensionService;
+
         private TestRunSpecification _lastTestRun = TestRunSpecification.Empty;
 
         private bool _lastRunWasDebugRun;
@@ -54,19 +56,21 @@ namespace TestCentric.Gui.Model
 
             Settings = new UserSettings();
 
-            //Services = new TestServices(testEngine);
             TestCentricTestFilter = new TestCentricTestFilter(this, () => _events.FireTestFilterChanged());
             TestResultManager = new TestResultManager(this);
 
-            Services.GetService<IExtensionService>().InstallExtensions();
+            _extensionService = Services.GetService<IExtensionService>();
+            _extensionService.InstallExtensions();          
+            AvailableAgents =
+                [.. _extensionService.GetExtensionNodes("/TestCentric/Engine/AgentLaunchers").Select((n) => n.TypeName)];
 
-            //foreach (var node in Services.ExtensionService.GetExtensionNodes(PROJECT_LOADER_EXTENSION_PATH))
-            //{
-            //    if (node.TypeName == NUNIT_PROJECT_LOADER)
-            //        NUnitProjectSupport = true;
-            //    else if (node.TypeName == VISUAL_STUDIO_PROJECT_LOADER)
-            //        VisualStudioSupport = true;
-            //}
+            foreach (var node in _extensionService.GetExtensionNodes(PROJECT_LOADER_EXTENSION_PATH))
+            {
+                if (node.TypeName == NUNIT_PROJECT_LOADER)
+                    NUnitProjectSupport = true;
+                else if (node.TypeName == VISUAL_STUDIO_PROJECT_LOADER)
+                    VisualStudioSupport = true;
+            }
         }
 
         public static ITestModel CreateTestModel(GuiOptions options)
@@ -118,9 +122,7 @@ namespace TestCentric.Gui.Model
 
         public IUserSettings Settings { get; }
 
-        // Since we generate a new name when agents are wrapped,the available agent list must created dynamically.
-        public IList<string> AvailableAgents =>
-            [.. Services.GetService<ITestAgentProvider>().GetAvailableAgents().Select((a) => a.AgentName)];
+        public IList<string> AvailableAgents { get; }
 
         public IRecentFiles RecentFiles => Settings.Gui.RecentFiles;
 

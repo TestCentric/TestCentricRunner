@@ -84,13 +84,11 @@ namespace TestCentric.Gui.Presenters
                 EnsureSingleItemChecked(item);
 
                 // TODO: We currently need to use both settings. Investigate.
+                _model.TestCentricProject.RemoveSetting(SettingDefinitions.SelectedAgentName);
+                _model.TestCentricProject.RemoveSetting(SettingDefinitions.RequestedAgentName);
+
                 string itemTag = item.Tag as string;
-                if (itemTag == null || itemTag == "DEFAULT")
-                {
-                    _model.TestCentricProject.RemoveSetting(SettingDefinitions.SelectedAgentName);
-                    _model.TestCentricProject.RemoveSetting(SettingDefinitions.RequestedAgentName);
-                }
-                else
+                if (itemTag is not null && itemTag != "DEFAULT")
                 {
                     _model.TestCentricProject.AddSetting(SettingDefinitions.SelectedAgentName.WithValue(itemTag));
                     _model.TestCentricProject.AddSetting(SettingDefinitions.RequestedAgentName.WithValue(itemTag));
