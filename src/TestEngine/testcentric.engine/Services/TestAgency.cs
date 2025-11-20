@@ -338,7 +338,7 @@ namespace TestCentric.Engine.Services
                         ? node.GetValues("AgentName").Single()
                         : launcher.GetType().Name;
                     log.Info($"Selected launcher {launcherName}");
-                    package.Settings.Set(SettingDefinitions.SelectedAgentName.WithValue(launcherName));
+                    package.Settings.Set(SettingDefinitions.SelectedAgentName.WithValue(node.TypeName));
                     return launcher.CreateAgent(agentId, agencyUrl, package);
                 }
             }
@@ -388,17 +388,21 @@ namespace TestCentric.Engine.Services
 
         private TestAgentInfo GetAgentInfo(ExtensionNode node)
         {
-            string agentName = node.GetValues("AgentName").FirstOrDefault() ?? node.TypeName;
+            // TODO: We are currently forcing the agent name to be the full name of the Type
+            // in order to ensure that the SelectAgent menu item functions properly. This
+            // is not ideal, since we want the agent itself to be able to specify a display
+            // name. We may need another field in TestAgentInfo or a separate method to return
+            // a list of type names.
+            string agentName = /*node.GetValues("AgentName").FirstOrDefault() ??*/ node.TypeName;
             var agentType = TestAgentType.LocalProcess;
             string targetFramework = node.GetValues("TargetFramework").FirstOrDefault();
 
-            if (targetFramework is not null)
-                return new TestAgentInfo(
-                    agentName,
-                    agentType,
-                    new FrameworkName(targetFramework));
-            else
-                return GetLauncherInstance(node).AgentInfo;
+            return new TestAgentInfo(
+                agentName,
+                agentType,
+                targetFramework is not null
+                    ? new FrameworkName(targetFramework)
+                    : GetLauncherInstance(node).AgentInfo.TargetRuntime);
         }
 
         private string GetAgentName(IExtensionNode node) => node.TypeName;
