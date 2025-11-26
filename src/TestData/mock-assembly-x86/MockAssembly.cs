@@ -55,18 +55,6 @@ namespace TestCentric.Tests
             public static int Failures = MockTestFixture.Failures;
 
             public static int Categories = MockTestFixture.Categories;
-
-            public static string AssemblyPath;
-
-            static MockAssembly()
-            {
-                var assembly = typeof(MockAssembly).Assembly;
-                string codeBase = assembly.EscapedCodeBase;
-
-                AssemblyPath = codeBase.ToLower().StartsWith(Uri.UriSchemeFile)
-                    ? new Uri(codeBase).LocalPath
-                    : assembly.Location;
-            }
         }
 
         [TestFixture(Description = "Fake Test Fixture")]
