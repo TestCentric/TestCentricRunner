@@ -62,6 +62,22 @@ public static class PackageTests
             "net9.0/mock-assembly.dll",
             MockAssemblyExpectedResult("Net90AgentLauncher")));
 
+        GuiAndEngineTests.Add(new PackageTest(1, "Net60X86Test", "Run mock-assembly-x86.dll under .NET 6.0",
+            "net6.0/mock-assembly-x86.dll",
+            MockAssemblyX86ExpectedResult("Net60AgentLauncher")));
+
+        GuiAndEngineTests.Add(new PackageTest(1, "Net70X86Test", "Run mock-assembly-x86.dll under .NET 7.0",
+            "net7.0/mock-assembly-x86.dll",
+            MockAssemblyX86ExpectedResult("Net70AgentLauncher")));
+
+        GuiAndEngineTests.Add(new PackageTest(1, "Net80X86Test", "Run mock-assembly-x86.dll under .NET 8.0",
+            "net8.0/mock-assembly-x86.dll",
+            MockAssemblyX86ExpectedResult("Net80AgentLauncher")));
+
+        GuiAndEngineTests.Add(new PackageTest(1, "Net90X86Test", "Run mock-assembly-x86.dll under .NET 9.0",
+            "net9.0/mock-assembly-x86.dll",
+            MockAssemblyX86ExpectedResult("Net90AgentLauncher")));
+
         // AspNetCore tests
 
         if (BuildSettings.IsLocalBuild)
