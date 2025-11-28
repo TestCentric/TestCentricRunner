@@ -52,6 +52,12 @@ namespace TestCentric.Gui
                 return 2;
             }
 
+            if (!ValidateLoggingOption(options))
+            {
+                MessageDisplay.Error($"Failed to enable logging. Might be due to missing access rights in folder {Environment.CurrentDirectory}. Please consider to start with admin rights.");
+                return 2;
+            }
+
             log.Info("Instantiating TestModel");
             ITestModel model = null;
             try
@@ -111,6 +117,17 @@ namespace TestCentric.Gui
             }
 
             return 0;
+        }
+
+        private static bool ValidateLoggingOption(GuiOptions options)
+        {
+            if (string.IsNullOrEmpty(options.InternalTraceLevel))
+                return true;
+
+            if (options.InternalTraceLevel.Equals("off", StringComparison.CurrentCultureIgnoreCase))
+                return true;
+
+            return InternalTraceWriter.CanCreateLogFile();
         }
 
         private static string GetHelpText(GuiOptions options)
