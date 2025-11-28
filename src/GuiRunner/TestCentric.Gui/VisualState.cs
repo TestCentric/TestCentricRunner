@@ -210,9 +210,16 @@ namespace TestCentric.Gui
             if (!string.IsNullOrEmpty(path) && !Directory.Exists(path))
                 return;
 
-            using (StreamWriter writer = new StreamWriter(fileName))
+            try
             {
+                using StreamWriter writer = new StreamWriter(fileName);
                 Save(writer);
+            }
+            catch (Exception e)
+            {
+                // Catch all kind of exceptions while writing file (Security, IO-Exception, ...)
+                Logger log = InternalTrace.GetLogger(nameof(VisualState));
+                log.Error($"Failed to write VisualState file: {fileName}; {e.Message}");
             }
         }
 
@@ -226,8 +233,7 @@ namespace TestCentric.Gui
             }
             catch(InvalidOperationException ex)
             {
-                throw new Exception(
-                    "Unable to serialize VisualState. This may be due to duplicate node names in the tree.", ex);
+                throw new Exception("Unable to serialize VisualState. This may be due to duplicate node names in the tree.", ex);
             }
         }
 
