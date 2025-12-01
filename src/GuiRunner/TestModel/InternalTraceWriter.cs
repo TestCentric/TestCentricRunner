@@ -35,6 +35,26 @@ namespace TestCentric.Gui
             this.writer.AutoFlush = true;
         }
 
+        /// <summary>
+        /// Check if a log file can be created in general
+        /// (Access rights or readonly access...)
+        /// </summary>
+        public static bool CanCreateLogFile()
+        {
+            try
+            {
+                string logDirectory = Path.Combine(Environment.CurrentDirectory, Path.GetRandomFileName());
+                using (FileStream fs = File.Create(logDirectory, 1, FileOptions.DeleteOnClose))
+                {
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public override System.Text.Encoding Encoding
         {
             get { return writer.Encoding; }

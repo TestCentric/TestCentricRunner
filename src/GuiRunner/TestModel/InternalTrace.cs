@@ -30,8 +30,7 @@ namespace TestCentric.Gui
             set { logName = value; }
         }
 
-        public static 
-            InternalTraceLevel Level
+        public static InternalTraceLevel Level
         {
             get { return level; }
             set
