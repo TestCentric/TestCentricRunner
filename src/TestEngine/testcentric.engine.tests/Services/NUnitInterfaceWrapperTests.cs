@@ -1,17 +1,12 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using TestCentric.Engine.Internal;
+using NUnit;
+using NUnit.Framework;
 using TestCentric.Engine.Services.Fakes;
 
 namespace TestCentric.Engine.Services

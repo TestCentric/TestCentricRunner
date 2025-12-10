@@ -5,8 +5,7 @@
 
 using System;
 using System.Xml;
-using TestCentric.Engine.Internal;
-using TestCentric.Engine.Extensibility;
+using NUnit;
 
 namespace TestCentric.Engine.TestBed
 {

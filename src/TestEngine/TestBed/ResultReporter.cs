@@ -1,16 +1,15 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.Xml;
+using NUnit;
 
 namespace TestCentric.Engine.TestBed
 {
-    using System.Globalization;
-    using Internal;
-
     static class ResultReporter
     {
         private static ResultSummary Summary;

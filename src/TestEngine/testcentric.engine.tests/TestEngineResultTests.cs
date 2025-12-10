@@ -4,7 +4,7 @@
 // ***********************************************************************
 
 using System.Xml;
-using TestCentric.Engine.Internal;
+using NUnit;
 using NUnit.Framework;
 
 namespace TestCentric.Engine

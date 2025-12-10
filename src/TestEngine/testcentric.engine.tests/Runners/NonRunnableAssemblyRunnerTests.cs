@@ -5,9 +5,9 @@
 
 using System.IO;
 using System.Xml;
+using NUnit;
 using NUnit.Engine;
 using NUnit.Framework;
-using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Runners
 {
