@@ -2,7 +2,6 @@
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
-using TestCentric.Engine.Extensibility;
 using NUnit.Extensibility;
 
 // ExtensionPoints supported by the engine

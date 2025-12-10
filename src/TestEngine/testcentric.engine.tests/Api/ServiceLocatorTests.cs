@@ -19,7 +19,7 @@ namespace TestCentric.Engine.Api
         {
             // TODO: We should really be using the actual engine for this test
             _testEngine = new TestEngine();
-            _testEngine.InternalTraceLevel = InternalTraceLevel.Off;
+            _testEngine.InternalTraceLevel = NUnit.Engine.InternalTraceLevel.Off;
         }
 
         [OneTimeTearDown]

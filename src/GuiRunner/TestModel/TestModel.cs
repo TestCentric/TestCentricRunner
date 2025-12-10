@@ -16,6 +16,7 @@ using TestCentric.Gui.Model.Services;
 using TestCentric.Gui.Model.Settings;
 
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
+using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
 
 namespace TestCentric.Gui.Model
 {

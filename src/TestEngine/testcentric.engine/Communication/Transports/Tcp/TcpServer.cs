@@ -7,6 +7,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using NUnit;
 
 namespace TestCentric.Engine.Communication.Transports.Tcp
 {
