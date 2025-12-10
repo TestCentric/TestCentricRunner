@@ -5,8 +5,8 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit;
 using TestCentric.Metadata;
-using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Services
 {

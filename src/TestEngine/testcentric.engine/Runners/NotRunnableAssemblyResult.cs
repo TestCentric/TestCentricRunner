@@ -6,7 +6,7 @@
 using System.IO;
 using System.Collections.Generic;
 
-namespace TestCentric.Engine.Internal
+namespace TestCentric.Engine.Runners
 {
     public class NotRunnableAssemblyResult
     {

@@ -8,6 +8,7 @@ using System.Drawing;
 namespace TestCentric.Gui.Model.Settings
 {
     using System.Configuration;
+    using NUnit.Engine;
 
     public interface IGuiSettings
     {

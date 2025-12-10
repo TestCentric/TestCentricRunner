@@ -8,7 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
-using NUnit.Common;
+using NUnit.Engine;
 using TestCentric.Engine.Services;
 
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
@@ -84,7 +84,7 @@ namespace TestCentric.Engine.TestBed
             if (!string.IsNullOrEmpty(options.RequestedRuntime))
                 package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(options.RequestedRuntime));
 
-            TestEngine.Services.GetService<IExtensionService>().InstallExtensions();
+            TestEngine.Services.GetService<Services.IExtensionService>().InstallExtensions();
 
             var runner = TestEngine.GetRunner(package);
 
@@ -153,7 +153,7 @@ namespace TestCentric.Engine.TestBed
 
         private static void ListExtensions()
         {
-            var extensionService = TestEngine.Services.GetService<IExtensionService>();
+            var extensionService = TestEngine.Services.GetService<TestCentric.Engine.Services.IExtensionService>();
 
             Console.WriteLine("Extension Points and Installed Extensions");
             Console.WriteLine();

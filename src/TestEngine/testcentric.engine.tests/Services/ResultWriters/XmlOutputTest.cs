@@ -4,10 +4,9 @@
 // ***********************************************************************
 
 #if !NETCOREAPP // TODO: Can't instantiate engine under .NET CORE since it's not in the agent directory
-using System;
 using System.Collections.Generic;
 using System.IO;
-using TestCentric.Engine.Internal;
+using NUnit.Engine;
 using NUnit.Framework;
 
 namespace TestCentric.Engine.Services.ResultWriters

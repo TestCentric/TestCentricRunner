@@ -4,8 +4,8 @@
 // ***********************************************************************
 
 using System;
+using NUnit;
 using NUnit.Engine;
-using TestCentric.Engine.Internal;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine.Runners

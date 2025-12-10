@@ -6,6 +6,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using NUnit;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine
@@ -36,21 +37,7 @@ namespace TestCentric.Engine
 
         public string WorkDirectory { get; set; } = Environment.CurrentDirectory;
 
-        private InternalTraceLevel _internalTraceLevel;
-        public InternalTraceLevel InternalTraceLevel 
-        {
-            get {  return _internalTraceLevel; }
-            set
-            {
-                _internalTraceLevel = value;
-
-                if (InternalTrace.Initialized) // ensure log file is not changed
-                    InternalTrace.Initialize(InternalTrace.TraceWriter.LogPath, value);
-                else
-                    InternalTrace.Initialize(value);
-            }
-        }
-        
+        public NUnit.Engine.InternalTraceLevel InternalTraceLevel { get; set; }       
 
         /// <summary>
         /// Initialize the engine. This includes initializing mono addins,

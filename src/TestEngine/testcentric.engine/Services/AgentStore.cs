@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using NUnit;
 using NUnit.Engine;
 
 namespace TestCentric.Engine.Services

@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Xml;
 using System.Xml.Serialization;
+using NUnit;
 using NUnit.Engine;
 using NUnit.Engine.Communication.Messages;
 using NUnit.Engine.Communication.Protocols;

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.Win32;
+using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
 using TestCentric.Engine.Services.RuntimeLocators;

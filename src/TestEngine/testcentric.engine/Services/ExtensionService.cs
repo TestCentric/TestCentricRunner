@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using TestCentric.Engine.Internal;
+using NUnit;
 using NUnit.Extensibility;
 
 namespace TestCentric.Engine.Services

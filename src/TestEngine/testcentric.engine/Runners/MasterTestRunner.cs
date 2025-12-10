@@ -10,8 +10,12 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using TestCentric.Engine.Internal;
+using NUnit;
+using NUnit.Engine;
 using TestCentric.Engine.Services;
+
+using IRuntimeFrameworkService = TestCentric.Engine.Services.IRuntimeFrameworkService;
+using ITestRunnerFactory = TestCentric.Engine.Services.ITestRunnerFactory;
 
 using TestPackage = NUnit.Engine.TestPackage;
 
@@ -104,8 +108,7 @@ namespace TestCentric.Engine.Runners
         /// <returns>An XmlNode representing the loaded assembly.</returns>
         public XmlNode Load()
         {
-            LoadResult = GetEngineRunner().Load()
-                .MakeTestRunResult(TestPackage);
+            LoadResult = GetEngineRunner().Load().MakeTestRunResult(TestPackage);
 
             return LoadResult.Xml;
         }
@@ -233,7 +236,7 @@ namespace TestCentric.Engine.Runners
         }
 
         //Exposed for testing
-        internal NUnit.Engine.ITestEngineRunner GetEngineRunner()
+        internal ITestEngineRunner GetEngineRunner()
         {
             if (_engineRunner == null)
             {
@@ -275,7 +278,7 @@ namespace TestCentric.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        private int CountTests(NUnit.Engine.TestFilter filter)
+        private int CountTests(TestFilter filter)
         {
             if (!IsPackageLoaded) return 0;
 
@@ -289,7 +292,7 @@ namespace TestCentric.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        private NUnit.Engine.TestEngineResult RunTests(NUnit.Engine.ITestEventListener listener, NUnit.Engine.TestFilter filter)
+        private TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
             _eventDispatcher.InitializeForRun();
 
@@ -308,21 +311,19 @@ namespace TestCentric.Engine.Runners
 
             try
             {
-                var startRunNode = XmlHelper.CreateTopLevelElement("start-run")
-                    .AddAttribute("count", CountTests(filter).ToString())
-                    .AddAttribute("start-time", XmlConvert.ToString(startTime, "u"))
-                    .AddAttribute("engine-version", engineVersion)
-                    .AddAttribute("clr-version", clrVersion);
+                var startRunNode = XmlHelper.CreateTopLevelElement("start-run");
+                
+                startRunNode.AddAttribute("count", CountTests(filter).ToString());
+                startRunNode.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
+                startRunNode.AddAttribute("engine-version", engineVersion);
+                startRunNode.AddAttribute("clr-version", clrVersion);
 
                 startRunNode.AddElementWithCDataSection("command-line", Environment.CommandLine);
 
                 _eventDispatcher.OnTestEvent(startRunNode.OuterXml);
 
                 // Insertions are done in reverse order, since each is added as the first child.
-                NUnit.Engine.TestEngineResult result = GetEngineRunner().Run(_eventDispatcher, filter)
-                    .MakeTestRunResult(TestPackage)
-                    .InsertFilterElement(filter)
-                    .InsertCommandLineElement(Environment.CommandLine);
+                TestEngineResult result = GetEngineRunner().Run(_eventDispatcher, filter).MakeTestRunResult(TestPackage);
 
                 result.Xml.AddAttribute("engine-version", engineVersion);
                 result.Xml.AddAttribute("clr-version", clrVersion);
@@ -330,6 +331,9 @@ namespace TestCentric.Engine.Runners
                 result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
                 result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
                 result.Xml.AddAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
+
+                InsertFilterElement(result.Xml, filter);
+                InsertCommandLineElement(result.Xml);
 
                 IsTestRunning = false;
 
@@ -378,6 +382,43 @@ namespace TestCentric.Engine.Runners
             }
 
             return testRun;
+        }
+
+        private static void InsertCommandLineElement(XmlNode resultNode)
+        {
+            var doc = resultNode.OwnerDocument;
+
+            if (doc is null)
+            {
+                return;
+            }
+
+            XmlNode cmd = doc.CreateElement("command-line");
+            resultNode.InsertAfter(cmd, null);
+
+            var cdata = doc.CreateCDataSection(Environment.CommandLine);
+            cmd.AppendChild(cdata);
+        }
+
+        private static void InsertFilterElement(XmlNode resultNode, TestFilter filter)
+        {
+            // Convert the filter to an XmlNode
+            var tempNode = XmlHelper.CreateXmlNode(filter.Text);
+
+            // Don't include it if it's an empty filter
+            if (tempNode.ChildNodes.Count <= 0)
+            {
+                return;
+            }
+
+            var doc = resultNode.OwnerDocument;
+            if (doc is null)
+            {
+                return;
+            }
+
+            var filterElement = doc.ImportNode(tempNode, true);
+            resultNode.InsertAfter(filterElement, null);
         }
     }
 }

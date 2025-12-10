@@ -8,21 +8,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using NUnit.Common;
+using System.Threading.Tasks;
+using TestCentric.Engine;
+using TestCentric.Engine.Services;
+using TestCentric.Gui.Model.Filter;
+using TestCentric.Gui.Model.Services;
+using TestCentric.Gui.Model.Settings;
 
-using PackageSettings = NUnit.Engine.PackageSettings;
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
+using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
 
 namespace TestCentric.Gui.Model
 {
-    using System.Threading.Tasks;
-    using Services;
-    using Settings;
-    using TestCentric.Engine;
-    using TestCentric.Engine.Internal;
-    using TestCentric.Engine.Services;
-    using TestCentric.Gui.Model.Filter;
-
     public class TestModel : ITestModel
     {
         static Logger log = InternalTrace.GetLogger(typeof(TestModel));

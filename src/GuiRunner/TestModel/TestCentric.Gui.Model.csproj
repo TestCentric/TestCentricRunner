@@ -13,6 +13,5 @@
   <ItemGroup>
 	  <PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />
 	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
-	  <PackageReference Include="TestCentric.InternalTrace" Version="$(InternalTraceVersion)" />
   </ItemGroup>
 </Project>

@@ -11,12 +11,12 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.Versioning;
 using System.Threading;
+using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
 using NUnit.Engine.Communication.Transports.Tcp;
 using NUnit.Engine.Extensibility;
 using NUnit.Extensibility;
-using TestCentric.Engine.Internal;
 
 namespace TestCentric.Engine.Services
 {

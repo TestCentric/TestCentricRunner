@@ -57,7 +57,7 @@ namespace TestCentric.Gui.Model.Fakes
 
         #region ITestEngine Explicit Implementation
 
-        InternalTraceLevel ITestEngine.InternalTraceLevel { get; set; }
+        NUnit.Engine.InternalTraceLevel ITestEngine.InternalTraceLevel { get; set; }
 
         IServiceLocator ITestEngine.Services { get { return _services; } }
 

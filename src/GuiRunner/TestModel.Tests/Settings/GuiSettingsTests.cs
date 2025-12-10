@@ -35,7 +35,7 @@ namespace TestCentric.Gui.Model.Settings
             new TestCaseData(nameof(GuiSettings.LoadLastProject), true),
             new TestCaseData(nameof(GuiSettings.InitialSettingsPage), "Results"),
             new TestCaseData(nameof(GuiSettings.ClearResultsOnReload), true),
-            new TestCaseData(nameof(GuiSettings.InternalTraceLevel), InternalTraceLevel.Error),
+            new TestCaseData(nameof(GuiSettings.InternalTraceLevel), NUnit.Engine.InternalTraceLevel.Error),
             new TestCaseData(nameof(GuiSettings.ProjectEditorPath), "d:/temp"),
         };
     }

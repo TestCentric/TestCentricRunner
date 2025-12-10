@@ -4,9 +4,8 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Net;
+using NUnit;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine.Communication.Transports.Tcp

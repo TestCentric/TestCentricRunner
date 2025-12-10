@@ -3,8 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using TestCentric.Engine.Internal;
-
 namespace TestCentric.Engine.Runners
 {
     public abstract class NonRunnableAssemblyRunner : AbstractTestRunner

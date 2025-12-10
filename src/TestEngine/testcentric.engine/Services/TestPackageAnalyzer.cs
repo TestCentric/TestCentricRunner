@@ -5,6 +5,7 @@
 
 using System;
 using System.Text;
+using NUnit;
 using NUnit.Common;
 using TestCentric.Metadata;
 

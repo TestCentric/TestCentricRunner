@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 using System.Xml;
-using TestCentric.Engine.Internal;
+using NUnit;
 
 namespace TestCentric.Engine.Services
 {
