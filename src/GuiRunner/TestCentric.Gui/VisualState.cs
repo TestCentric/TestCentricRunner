@@ -267,7 +267,7 @@ namespace TestCentric.Gui
             // was saved using version 1 of the GUI. In that case, we rely on
             // the default constructor having set the strategy to "NUNIT_TREE".
             var strategy = reader.GetAttribute("DisplayStrategy");
-            if (strategy != null) DisplayStrategy = strategy;
+            if (strategy != null && strategy != "FIXTURE_LIST") DisplayStrategy = strategy;
             GroupBy = reader.GetAttribute("GroupBy");
             // GroupBy is null for NUnitTree strategy, otherwise required
             if (GroupBy == null && strategy != "NUNIT_TREE") GroupBy = "ASSEMBLY";

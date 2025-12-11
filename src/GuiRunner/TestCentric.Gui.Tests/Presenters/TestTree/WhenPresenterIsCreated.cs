@@ -43,9 +43,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         //            Assert.That(_presenter.Strategy, Is.TypeOf<NUnitTreeDisplayStrategy>());
         //            break;
         //        case "TEST_LIST":
-        //            Assert.That(_presenter.Strategy, Is.TypeOf<FixtureListDisplayStrategy>());
-        //            break;
-        //        case "FIXTURE_LIST":
         //            Assert.That(_presenter.Strategy, Is.TypeOf<TestListDisplayStrategy>());
         //            break;
         //        default:

@@ -330,17 +330,6 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [Test]
-        public void FixtureListGroupByChange_ChangesModelSetting()
-        {
-            _view.DisplayFormat.SelectedItem.Returns("FIXTURE_LIST");
-            _view.FixtureListGroupBy.SelectedItem.Returns("CATEGORY");
-            _view.FixtureListGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
-
-            // Assert
-            _settings.Gui.TestTree.FixtureList.Received().GroupBy = "CATEGORY";
-        }
-
-        [Test]
         public void NUnitTreeGroupByChange_ChangesModelSetting()
         {
             _view.DisplayFormat.SelectedItem.Returns("NUNIT_TREE");
@@ -435,7 +424,7 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [TestCase("NUNIT_TREE", true)]
-        [TestCase("FIXTURE_List", false)]
+        [TestCase("TEST_List", false)]
         public void ShowFilterIsEnabled_ForDisplayFormat(string displayFormat, bool expectedIsEnabled)
         {
             // Arrange
@@ -450,7 +439,7 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [TestCase("NUNIT_TREE", true)]
-        [TestCase("FIXTURE_List", false)]
+        [TestCase("TEST_List", false)]
         public void ShowFilterIsVisible_ForDisplayFormat(string displayFormat, bool expectedIsVisible)
         {
             // Arrange

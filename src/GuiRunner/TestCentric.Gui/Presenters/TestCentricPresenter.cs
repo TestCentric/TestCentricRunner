@@ -245,9 +245,6 @@ namespace TestCentric.Gui.Presenters
                     case "TestCentric.Gui.TestTree.TestList.GroupBy":
                         _view.TestListGroupBy.SelectedItem = _settings.Gui.TestTree.TestList.GroupBy;
                         break;
-                    case "TestCentric.Gui.TestTree.FixtureList.GroupBy":
-                        _view.FixtureListGroupBy.SelectedItem = _settings.Gui.TestTree.FixtureList.GroupBy;
-                        break;
                     case "TestCentric.Gui.TestTree.ShowNamespace":
                         _view.ShowNamespace.Checked = _settings.Gui.TestTree.ShowNamespace;
                         break;
@@ -478,11 +475,6 @@ namespace TestCentric.Gui.Presenters
             _view.TestListGroupBy.SelectionChanged += () =>
             {
                 _settings.Gui.TestTree.TestList.GroupBy = _view.TestListGroupBy.SelectedItem;
-            };
-
-            _view.FixtureListGroupBy.SelectionChanged += () =>
-            {
-                _settings.Gui.TestTree.FixtureList.GroupBy = _view.FixtureListGroupBy.SelectedItem;
             };
 
             _view.StopRunButton.Execute += ExecuteNormalStop;
@@ -968,9 +960,6 @@ namespace TestCentric.Gui.Presenters
                     break;
                 case "TEST_LIST":
                     _view.TestListGroupBy.SelectedItem = _settings.Gui.TestTree.TestList.GroupBy;
-                    break;
-                case "FIXTURE_LIST":
-                    _view.FixtureListGroupBy.SelectedItem = _settings.Gui.TestTree.FixtureList.GroupBy;
                     break;
             }
 

@@ -41,7 +41,6 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [TestCase("NUNIT_TREE")]
-        [TestCase("FIXTURE_LIST")]
         [TestCase("TEST_LIST")]
         public void CheckMenu_DisplayFormat_SelectedItem_IsInitialzedFromSettings(string displayFormat)
         {
@@ -70,22 +69,6 @@ namespace TestCentric.Gui.Presenters.Main
 
             // 3. Assert
             _view.NUnitGroupBy.Received().SelectedItem = groupBy;
-        }
-
-        [TestCase("ASSEMBLY")]
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
-        public void CheckMenu_FixtureListGroupBy_SelectedItem_FixtureList_IsInitialzedFromSettings(string groupBy)
-        {
-            // 1. Arrange
-            _settings.Gui.TestTree.DisplayFormat = "FIXTURE_LIST";
-            _settings.Gui.TestTree.FixtureList.GroupBy = groupBy;
-
-            // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
-
-            // 3. Assert
-            _view.FixtureListGroupBy.Received().SelectedItem = groupBy;
         }
 
         [TestCase("ASSEMBLY")]
