@@ -17,8 +17,6 @@ namespace TestCentric.Gui.Presenters
         {
             switch (displayStrategy)
             {
-                case "FIXTURE_LIST":
-                    return new FixtureListDisplayStrategy(treeView, testModel);
                 case "TEST_LIST":
                     return new TestListDisplayStrategy(treeView, testModel);
                 case "NUNIT_TREE":

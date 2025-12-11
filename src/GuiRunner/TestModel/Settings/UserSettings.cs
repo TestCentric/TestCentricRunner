@@ -45,7 +45,6 @@ namespace TestCentric.Gui.Model.Settings
                 { (ApplicationSettingsBase)Gui.RecentFiles, "TestCentric.Gui.RecentFiles" },
                 { (ApplicationSettingsBase)Gui.TextOutput, "TestCentric.Gui.TextOutput" },
                 { (ApplicationSettingsBase)Gui.TestTree, "TestCentric.Gui.TestTree" },
-                { (ApplicationSettingsBase)Gui.TestTree.FixtureList, "TestCentric.Gui.TestTree.FixtureList" },
                 { (ApplicationSettingsBase)Gui.TestTree.TestList, "TestCentric.Gui.TestTree.TestList" },
             };
 

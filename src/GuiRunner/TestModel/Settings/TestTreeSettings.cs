@@ -25,15 +25,11 @@ namespace TestCentric.Gui.Model.Settings
 
         bool ShowFilter { get; set; }
 
-        IFixtureListSettings FixtureList { get; }
-
         ITestListSettings TestList { get; }
     }
 
     public class TestTreeSettings : ApplicationSettingsBase, ITestTreeSettings
     {
-        public IFixtureListSettings FixtureList { get; } = new FixtureListSettings();
-
         public ITestListSettings TestList { get; } = new TestListSettings();
 
         [UserScopedSetting]

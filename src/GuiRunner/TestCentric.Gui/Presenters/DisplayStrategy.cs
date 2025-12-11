@@ -22,8 +22,8 @@ namespace TestCentric.Gui.Presenters
     /// as a presenter in it's own right, since it is created 
     /// with references to the view and mode.
     /// 
-    /// We currently support three different strategies:
-    /// NunitTreeDisplay, TestListDisplay and FixtureListDisplay.
+    /// We currently support two different strategies:
+    /// NunitTreeDisplay and TestListDisplay
     /// </summary>
     public abstract class DisplayStrategy : ITreeDisplayStrategy
     {

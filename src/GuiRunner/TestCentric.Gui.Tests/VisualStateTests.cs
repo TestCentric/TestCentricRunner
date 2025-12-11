@@ -195,29 +195,6 @@ namespace TestCentric.Gui
                         }
                         break;
 
-                    case "FIXTURE_LIST":
-                        switch (_data.Grouping)
-                        {
-                            case "ASSEMBLY":
-                                Assert.That(treeView.Search("Assembly1").IsExpanded, "Assembly1 not expanded");
-                                Assert.That(treeView.Search("Assembly2").IsExpanded, "Assembly2 not expanded");
-                                break;
-                            case "CATEGORY":
-                                Assert.That(treeView.Search("None").IsExpanded, "Category 'None' not expanded");
-                                break;
-                            case "OUTCOME":
-                            case "DURATION":
-                                Assert.That(treeView.Search("Not Run").IsExpanded, "'Not Run' not expanded");
-                                break;
-                        }
-                        Assert.That(treeView.Search("MyFixture").IsExpanded, "MyFixture not expanded");
-                        if (fixtureA != null) // In case it was deleted
-                        {
-                            Assert.That(fixtureA.IsExpanded, "MyFixture not expanded");
-                            Assert.That(fixtureA.Checked, "FixtureA not checked");
-                        }
-                        break;
-
                     case "TEST_LIST":
                         switch (_data.Grouping)
                         {
@@ -259,10 +236,6 @@ namespace TestCentric.Gui
         private static VisualStateTestData[] TestData = new VisualStateTestData[]
         {
             new VisualStateTestData("NUNIT_TREE"),
-            new VisualStateTestData("FIXTURE_LIST", "ASSEMBLY"),
-            new VisualStateTestData("FIXTURE_LIST", "CATEGORY"),
-            new VisualStateTestData("FIXTURE_LIST", "OUTCOME"),
-            new VisualStateTestData("FIXTURE_LIST", "DURATION"),
             new VisualStateTestData("TEST_LIST", "ASSEMBLY"),
             new VisualStateTestData("TEST_LIST", "FIXTURE"),
             new VisualStateTestData("TEST_LIST", "CATEGORY"),

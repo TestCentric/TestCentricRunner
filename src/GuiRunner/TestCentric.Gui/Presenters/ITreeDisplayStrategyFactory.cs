@@ -17,7 +17,6 @@ namespace TestCentric.Gui.Presenters
         /// Creates a concrete class implementing interface ITreeDisplayStrategy
         /// Supported displayStrategy:
         /// - "NUNIT_TREE" (also default case) 
-        /// - "FIXTURE_LIST"
         /// - "TEST_LIST"
         /// </summary>
         ITreeDisplayStrategy Create(string displayStrategy, ITestTreeView treeView, ITestModel testModel);

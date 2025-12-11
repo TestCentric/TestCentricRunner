@@ -14,7 +14,6 @@ namespace TestCentric.Gui.Presenters.Main
     internal class WhenSettingsChanged : MainPresenterTestBase
     {
         [TestCase("NUNIT_TREE")]
-        [TestCase("FIXTURE_LIST")]
         [TestCase("TEST_LIST")]
         public void DisplayFormat_SettingChanged_MenuItemIsUpdated(string displayFormat)
         {
@@ -43,19 +42,6 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
-        public void FixtureListGroupBy_SettingChanged_MenuItemIsUpdated(string groupBy)
-        {
-            // 1. Act
-            _settings.Gui.TestTree.FixtureList.GroupBy.Returns(groupBy);
-            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.FixtureList.GroupBy"));
-
-            // 2. Assert
-            Assert.That(_view.FixtureListGroupBy.SelectedItem, Is.EqualTo(groupBy));
-        }
-
-        [TestCase("ASSEMBLY")]
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
         public void TestListGroupBy_SettingChanged_MenuItemIsUpdated(string groupBy)
         {
             // 1. Act
@@ -79,7 +65,6 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [TestCase("NUNIT_TREE", true)]
-        [TestCase("FIXTURE_LIST", false)]
         [TestCase("TEST_LIST", false)]
         public void DisplayFormat_SettingChanged_ShowHideFilterButton_IsUpdated(string displayFormat, bool expectedState)
         {

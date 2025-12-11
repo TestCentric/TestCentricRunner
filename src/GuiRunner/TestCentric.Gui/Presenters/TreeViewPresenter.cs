@@ -138,7 +138,6 @@ namespace TestCentric.Gui.Presenters
 
                     case "TestCentric.Gui.TestTree.NUnitGroupBy":
                     case "TestCentric.Gui.TestTree.TestList.GroupBy":
-                    case "TestCentric.Gui.TestTree.FixtureList.GroupBy":
                     case "TestCentric.Gui.TestTree.ShowNamespace":
                         Strategy?.Reload();
                         break;
@@ -356,10 +355,6 @@ namespace TestCentric.Gui.Presenters
             else if (visualState.DisplayStrategy == "TEST_LIST")
             {
                 _treeSettings.TestList.GroupBy = visualState.GroupBy;
-            }
-            else if (visualState.DisplayStrategy == "FIXTURE_LIST")
-            {
-                _treeSettings.FixtureList.GroupBy = visualState.GroupBy;
             }
 
             _treeSettings.ShowNamespace = visualState.ShowNamespace;

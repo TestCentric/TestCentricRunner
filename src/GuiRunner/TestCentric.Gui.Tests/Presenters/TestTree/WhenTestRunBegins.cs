@@ -128,7 +128,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         }
 
         [TestCase("NUNIT_TREE")]
-        [TestCase("FIXTURE_LIST")]
         [TestCase("TEST_LIST")]
         public void WhenTestRunStarts_CurrentDisplayFormat_IsSaved_InVisualFile(string displayFormat)
         {
@@ -163,8 +162,8 @@ namespace TestCentric.Gui.Presenters.TestTree
         {
             // Arrange
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-            _settings.Gui.TestTree.DisplayFormat = "FIXTURE_LIST";
-            _settings.Gui.TestTree.FixtureList.GroupBy = groupBy;
+            _settings.Gui.TestTree.DisplayFormat = "TEST_LIST";
+            _settings.Gui.TestTree.TestList.GroupBy = groupBy;
 
             var tv = new TreeView();
             _view.TreeView.Returns(tv);

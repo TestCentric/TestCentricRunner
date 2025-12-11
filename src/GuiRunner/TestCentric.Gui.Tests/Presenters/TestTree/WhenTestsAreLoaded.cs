@@ -125,7 +125,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         }
 
         [TestCase("NUNIT_TREE", typeof(NUnitTreeDisplayStrategy))]
-        [TestCase("FIXTURE_LIST", typeof(FixtureListDisplayStrategy))]
         [TestCase("TEST_LIST", typeof(TestListDisplayStrategy))]
         public void TestLoaded_WithVisualState_TreeStrategy_IsCreatedFromVisualState(string displayFormat, Type expectedStrategy)
         {
@@ -148,7 +147,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         }
 
         [TestCase("NUNIT_TREE", typeof(NUnitTreeDisplayStrategy))]
-        [TestCase("FIXTURE_LIST", typeof(FixtureListDisplayStrategy))]
         [TestCase("TEST_LIST", typeof(TestListDisplayStrategy))]
         public void TestLoaded_NoVisualState_TreeStrategy_IsCreatedFromSettings(string displayFormat, Type expectedStrategy)
         {
@@ -168,7 +166,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         }
 
         [TestCase("NUNIT_TREE")]
-        [TestCase("FIXTURE_LIST")]
         [TestCase("TEST_LIST")]
         public void TestLoaded_WithVisualState_DisplayFormatSetting_IsUpdatedFromVisualState(string displayFormat)
         {
@@ -221,33 +218,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
-        public void TestLoaded_WithVisualState_FixtureListGroupBySetting_IsUpdatedFromVisualState(string groupBy)
-        {
-            // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState();
-            visualState.DisplayStrategy = "FIXTURE_LIST";
-            visualState.GroupBy = groupBy;
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            visualState.Save(fileName);
-
-            _model.Settings.Gui.TestTree.TestList.GroupBy = "DURATION";
-
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
-
-            // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
-
-            // Assert
-            Assert.That(_model.Settings.Gui.TestTree.FixtureList.GroupBy, Is.EqualTo(groupBy));
-            Assert.That(_model.Settings.Gui.TestTree.TestList.GroupBy, Is.EqualTo("DURATION"));     // Assert that testList groupBy was not changed accidently
-        }
-
-        [TestCase("ASSEMBLY")]
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
         public void TestLoaded_WithVisualState_TestListGroupBySetting_IsUpdatedFromVisualState(string groupBy)
         {
             // Arrange: Create and save VisualState file
@@ -257,7 +227,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             string fileName = VisualState.GetVisualStateFileName(TestFileName);
             visualState.Save(fileName);
 
-            _model.Settings.Gui.TestTree.FixtureList.GroupBy = "DURATION";
+            _model.Settings.Gui.TestTree.NUnitGroupBy = "DURATION";
 
             var tv = new TreeView();
             _view.TreeView.Returns(tv);
@@ -269,7 +239,7 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             // Assert
             Assert.That(_model.Settings.Gui.TestTree.TestList.GroupBy, Is.EqualTo(groupBy));
-            Assert.That(_model.Settings.Gui.TestTree.FixtureList.GroupBy, Is.EqualTo("DURATION"));     // Assert that fixtureList groupBy was not changed accidently
+            Assert.That(_model.Settings.Gui.TestTree.NUnitGroupBy, Is.EqualTo("DURATION"));     // Assert that NUnit groupBy was not changed accidently
         }
 
         [Test]

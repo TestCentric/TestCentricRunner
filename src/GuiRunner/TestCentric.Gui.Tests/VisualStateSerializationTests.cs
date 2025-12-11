@@ -233,62 +233,6 @@ namespace TestCentric.Gui
                                         VTN("name3_3", EXP)))))))
                     .SetName("NUnitTree_Issue946");
 
-                // FixtureListDisplayStrategy, Group by Assembly
-
-                yield return new TestCaseData(
-                    VisualStateTestData.CreateVisualState(
-                        "FIXTURE_LIST", "ASSEMBLY",
-                        checkBoxes: false,
-                        VTN("Assembly1", 0,
-                            VTN("FixtureA", 0),
-                            VTN("FixtureB", 0)),
-                        VTN("Assembly2", 0,
-                            VTN("FixtureC"))))
-                    .SetName("FixtureListByAssembly_TwoAssembliesWithEmptyFixtures");
-
-                yield return new TestCaseData(
-                    VisualStateTestData.CreateVisualState(
-                        "FIXTURE_LIST", "ASSEMBLY",
-                        true,
-                        VTN("Assembly1", EXP + TOP,
-                            VTN("MyFixture", EXP,
-                                VTN("Test1", CHK),
-                                VTN("Test2", SEL),
-                                VTN("Test3", CHK))),
-                        VTN("Assembly2", EXP,
-                            VTN("FixtureA", EXP + CHK,
-                                VTN("Test1", CHK),
-                                VTN("Test2", CHK)))))
-                    .SetName("FixtureListByAssembly_ComplexVisualState");
-
-                // FixtureListDisplayStrategy, Group by Category
-
-                yield return new TestCaseData(
-                    VisualStateTestData.CreateVisualState(
-                        "FIXTURE_LIST", "CATEGORY",
-                        checkBoxes: false,
-                        VTN("Category1", 0,
-                            VTN("FixtureA", 0),
-                            VTN("FixtureB", 0)),
-                        VTN("Category2", 0,
-                            VTN("FixtureC"))))
-                    .SetName("FixtureListByCategory_TwoAssembliesWithEmptyFixtures");
-
-                yield return new TestCaseData(
-                    VisualStateTestData.CreateVisualState(
-                        "FIXTURE_LIST", "CATEGORY",
-                        true,
-                        VTN("Category1", EXP + TOP,
-                            VTN("MyFixture", EXP,
-                                VTN("Test1", CHK),
-                                VTN("Test2", SEL),
-                                VTN("Test3", CHK))),
-                        VTN("Category2", EXP,
-                            VTN("FixtureA", EXP + CHK,
-                                VTN("Test1", CHK),
-                                VTN("Test2", CHK)))))
-                    .SetName("FixtureListByCategory_ComplexVisualState");
-
                 // TestListDisplayStrategy, Group by Assembly
 
                 yield return new TestCaseData(
@@ -317,7 +261,7 @@ namespace TestCentric.Gui
                         VTN("Category2", EXP,
                             VTN("Test1", CHK),
                             VTN("Test2", CHK))))
-                    .SetName("FixtureListByCategory_ComplexVisualState");
+                    .SetName("TestListByCategory_ComplexVisualState");
 
                 // TestListDisplayStrategy, Group by Fixture
 
@@ -332,7 +276,7 @@ namespace TestCentric.Gui
                         VTN("FixtureA", EXP,
                             VTN("Test1", CHK),
                             VTN("Test2", CHK))))
-                    .SetName("FixtureListByCategory_ComplexVisualState");
+                    .SetName("TestListByFxiture_ComplexVisualState");
             }
 
             IEnumerator IEnumerable.GetEnumerator()
