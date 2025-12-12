@@ -68,7 +68,7 @@ namespace TestCentric.Gui.Views
             // 
             this.testCaseCountLabel.Location = new System.Drawing.Point(5, 89);
             this.testCaseCountLabel.Name = "testCaseCountLabel";
-            this.testCaseCountLabel.Size = new System.Drawing.Size(62, 13);
+            this.testCaseCountLabel.Size = new System.Drawing.Size(65, 13);
             this.testCaseCountLabel.TabIndex = 24;
             this.testCaseCountLabel.Text = "Test Count:";
             // 
@@ -89,10 +89,7 @@ namespace TestCentric.Gui.Views
             // 
             // runState
             // 
-            this.runState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.runState.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.runState.Location = new System.Drawing.Point(236, 87);
+            this.runState.Location = new System.Drawing.Point(236, 89);
             this.runState.Name = "runState";
             this.runState.Size = new System.Drawing.Size(239, 17);
             this.runState.TabIndex = 12;
@@ -101,7 +98,7 @@ namespace TestCentric.Gui.Views
             // 
             this.fullNameLabel.Location = new System.Drawing.Point(5, 23);
             this.fullNameLabel.Name = "fullNameLabel";
-            this.fullNameLabel.Size = new System.Drawing.Size(57, 13);
+            this.fullNameLabel.Size = new System.Drawing.Size(65, 13);
             this.fullNameLabel.TabIndex = 18;
             this.fullNameLabel.Text = "Full Name:";
             // 
@@ -110,7 +107,7 @@ namespace TestCentric.Gui.Views
             this.propertiesLabel.Location = new System.Drawing.Point(5, 133);
             this.propertiesLabel.Name = "propertiesLabel";
             this.propertiesLabel.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.propertiesLabel.Size = new System.Drawing.Size(57, 14);
+            this.propertiesLabel.Size = new System.Drawing.Size(65, 14);
             this.propertiesLabel.TabIndex = 29;
             this.propertiesLabel.Text = "Properties:";
             // 
@@ -142,7 +139,7 @@ namespace TestCentric.Gui.Views
             // 
             this.descriptionLabel.Location = new System.Drawing.Point(5, 45);
             this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(63, 13);
+            this.descriptionLabel.Size = new System.Drawing.Size(65, 13);
             this.descriptionLabel.TabIndex = 20;
             this.descriptionLabel.Text = "Description:";
             // 
@@ -181,7 +178,7 @@ namespace TestCentric.Gui.Views
             // 
             this.categoriesLabel.Location = new System.Drawing.Point(5, 67);
             this.categoriesLabel.Name = "categoriesLabel";
-            this.categoriesLabel.Size = new System.Drawing.Size(60, 13);
+            this.categoriesLabel.Size = new System.Drawing.Size(65, 13);
             this.categoriesLabel.TabIndex = 22;
             this.categoriesLabel.Text = "Categories:";
             // 
@@ -216,6 +213,7 @@ namespace TestCentric.Gui.Views
             this.Controls.Add(this.testCaseCountLabel);
             this.Controls.Add(this.testCaseCount);
             this.Controls.Add(this.runStateLabel);
+            this.Controls.Add(this.runState);
             this.Controls.Add(this.fullNameLabel);
             this.Controls.Add(this.propertiesLabel);
             this.Controls.Add(this.fullName);
