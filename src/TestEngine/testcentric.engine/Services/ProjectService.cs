@@ -117,7 +117,7 @@ namespace TestCentric.Engine.Services
                                 if (ext != null)
                                 {
                                     if (_extensionIndex.ContainsKey(ext))
-                                        throw new EngineException(string.Format("ProjectLoader extension {0} is already handled by another extension.", ext));
+                                        throw new NUnitEngineException(string.Format("ProjectLoader extension {0} is already handled by another extension.", ext));
 
                                     // HACK
                                     _extensionIndex.Add(ext, (ExtensionNode)node);

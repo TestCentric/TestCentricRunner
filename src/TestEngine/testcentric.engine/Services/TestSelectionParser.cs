@@ -46,7 +46,7 @@ namespace TestCentric.Engine
             _tokenizer = new Tokenizer(input);
 
             if (_tokenizer.LookAhead == EOF)
-                throw new TestSelectionParserException("No input provided for test selection.");
+                throw new NUnit.Engine.TestSelectionParserException("No input provided for test selection.");
 
             var result = ParseFilterExpression();
 
@@ -227,7 +227,7 @@ namespace TestCentric.Engine
 
         private Exception InvalidTokenError(Token token)
         {
-            return new TestSelectionParserException(string.Format(
+            return new NUnit.Engine.TestSelectionParserException(string.Format(
                 "Unexpected token '{0}' at position {1} in selection expression.", token.Text, token.Pos));
         }
 

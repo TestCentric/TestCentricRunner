@@ -20,10 +20,7 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TestCentric.Engine.Api\TestCentric.Engine.Api.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-	  <PackageReference Include="NUnit.Common" Version ="$(NUnitEngineVersion)" />
+	  <PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />
 	  <PackageReference Include="NUnit.Engine" Version="$(NUnitEngineVersion)" />
 	  <PackageReference Include="NUnit.Engine.Api" Version="$(NUnitEngineVersion)" />
 	  <PackageReference Include="NUnit.Extensibility.Api" Version="$(NUnitEngineVersion)" />

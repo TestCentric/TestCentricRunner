@@ -249,12 +249,12 @@ namespace TestCentric.Engine.Services
             {
                 RuntimeFramework requestedFramework;
                 if (!RuntimeFramework.TryParse(requestedFrameworkSetting, out requestedFramework))
-                    throw new EngineException("Invalid or unknown framework requested: " + requestedFrameworkSetting);
+                    throw new NUnitEngineException("Invalid or unknown framework requested: " + requestedFrameworkSetting);
 
                 log.Debug($"Requested framework for {package.Name} is {requestedFramework}");
 
                 if (!IsAvailable(requestedFramework))
-                    throw new EngineException("Requested framework is not available: " + requestedFrameworkSetting);
+                    throw new NUnitEngineException("Requested framework is not available: " + requestedFrameworkSetting);
 
                 package.Settings.Set(SettingDefinitions.TargetFrameworkName.WithValue(requestedFramework.FrameworkName.ToString()));
                 return requestedFramework;

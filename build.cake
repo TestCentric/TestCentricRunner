@@ -23,7 +23,7 @@ BuildSettings.Initialize(
 //////////////////////////////////////////////////////////////////////
 
 static readonly FilePath[] ENGINE_FILES = {
-        "testcentric.engine.dll", "testcentric.engine.api.dll", "testcentric.metadata.dll"};
+        "testcentric.engine.dll", "testcentric.metadata.dll"};
 static readonly FilePath[] GUI_FILES = {
         "testcentric.exe", "testcentric.exe.config", "nunit.uiexception.dll",
         "TestCentric.Gui.Runner.dll", "TestCentric.Gui.Model.dll" };
@@ -53,8 +53,7 @@ var NuGetGuiPackage = new NuGetPackage(
 		.WithDirectories(
 			new DirectoryContent("tools").WithFiles(
 				"testcentric.exe", "testcentric.exe.config", "TestCentric.Gui.Runner.dll",
-				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll",
-				"TestCentric.Engine.dll", "TestCentric.Engine.Api.dll",
+				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll", "TestCentric.Engine.dll",
 				"TestCentric.Metadata.dll", "NUnit.Extensibility.dll", "NUnit.Extensibility.Api.dll",
 				"nunit.common.dll", "nunit.engine.api.dll", "nunit.engine.dll"),
 			new DirectoryContent("tools/Images/Tree/Circles").WithFiles(
@@ -91,8 +90,7 @@ var ChocolateyGuiPackage = new ChocolateyPackage(
 				"../../choco/VERIFICATION.txt",
 				"../../choco/testcentric-agent.exe.ignore",	"../../choco/testcentric-agent-x86.exe.ignore",
 				"testcentric.exe", "testcentric.exe.config", "TestCentric.Gui.Runner.dll",
-				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll", "nunit.engine.api.dll", "nunit.engine.dll",
-				"TestCentric.Engine.dll", "TestCentric.Engine.Api.dll",
+				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll", "nunit.engine.api.dll", "nunit.engine.dll", "TestCentric.Engine.dll",
 				"TestCentric.Metadata.dll", "NUnit.Extensibility.dll", "NUnit.Extensibility.Api.dll", "NUnit.Common.dll"),
             new DirectoryContent("tools/Images/Tree/Circles").WithFiles(
                 "Images/Tree/Circles/Success.png", "Images/Tree/Circles/Failure.png", "Images/Tree/Circles/Warning.png", "Images/Tree/Circles/Ignored.png", "Images/Tree/Circles/Inconclusive.png", 
@@ -119,19 +117,18 @@ var ChocolateyGuiPackage = new ChocolateyPackage(
 
 var EnginePackage = new NuGetPackage(
     id: "TestCentric.Engine",
-    //source: "src/TestEngine/testcentric.engine/testcentric.engine.csproj",
     description: "This package provides the TestCentric Engine, used by runner applications to load and excute NUnit tests.",
     packageContent: new PackageContent(
         new FilePath[] { "../../LICENSE.txt", "../../testcentric.png" },
         new DirectoryContent("lib").WithFiles(
-            "testcentric.engine.dll", "testcentric.engine.api.dll", "nunit.engine.api.dll", "nunit.engine.dll",
+            "testcentric.engine.dll", "nunit.engine.api.dll", "nunit.engine.dll",
             "testcentric.metadata.dll", "NUnit.extensibility.dll", "NUnit.extensibility.api.dll", "NUnit.Common.dll",
 			"testcentric.engine.pdb", "test-bed.exe", "test-bed.exe.config")),
     testRunner: new TestCentricEngineTestBed(),
     checks: new PackageCheck[] {
         HasFiles("LICENSE.txt", "testcentric.png"),
         HasDirectory("lib").WithFiles(
-            "testcentric.engine.dll", "testcentric.engine.api.dll", "nunit.engine.api.dll", "nunit.extensibility.api.dll",
+            "testcentric.engine.dll", "nunit.engine.api.dll", "nunit.extensibility.api.dll",
             "testcentric.metadata.dll", "NUnit.extensibility.dll", "NUnit.extensibility.api.dll",
             "testcentric.engine.pdb", "test-bed.exe", "test-bed.exe.config")
     },
@@ -139,22 +136,9 @@ var EnginePackage = new NuGetPackage(
     preloadedExtensions: KnownExtensions.BundledNuGetAgents.ToArray()
 );
 
-var EngineApiPackage = new NuGetPackage(
-    id: "TestCentric.Engine.Api",
-    title: "TestCentric Engine Api Assembly",
-    description: "This package includes the testcentric.engine.api assembly, containing the interfaces used in creating pluggable agents.",
-    basePath: "bin/" + BuildSettings.Configuration,
-    source: "nuget/TestCentric.Engine.Api.nuspec",
-    checks: new PackageCheck[] {
-        HasFiles("LICENSE.txt", "testcentric.png"),
-        HasDirectory("lib/net462").WithFiles("TestCentric.Engine.Api.dll"),
-        HasDirectory("lib/netstandard2.0").WithFiles("Testcentric.Engine.Api.dll")
-    });
-
 BuildSettings.Packages.Add(NuGetGuiPackage);
 BuildSettings.Packages.Add(ChocolateyGuiPackage);
 BuildSettings.Packages.Add(EnginePackage);
-BuildSettings.Packages.Add(EngineApiPackage);
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE TEST RUNNER

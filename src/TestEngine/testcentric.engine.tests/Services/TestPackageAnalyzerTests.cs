@@ -62,7 +62,7 @@ namespace TestCentric.Engine.Services
         {
             _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
 
-            var exception = Assert.Throws<EngineException>(() => Validate());
+            var exception = Assert.Throws<NUnitEngineException>(() => Validate());
 
             CheckMessageContent(exception.Message, $"The requested framework {INVALID_RUNTIME} is unknown or not available.");
         }
@@ -72,7 +72,7 @@ namespace TestCentric.Engine.Services
         {
             _package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(INVALID_RUNTIME));
 
-            var exception = Assert.Throws<EngineException>(() => Validate());
+            var exception = Assert.Throws<NUnitEngineException>(() => Validate());
 
             CheckMessageContent(exception.Message,
                 $"The requested framework {INVALID_RUNTIME} is unknown or not available.");
