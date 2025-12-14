@@ -17,6 +17,7 @@ using TestCentric.Gui.Model.Settings;
 
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
 using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
+using IResultService = NUnit.Engine.IResultService;
 
 namespace TestCentric.Gui.Model
 {
