@@ -99,7 +99,7 @@ namespace TestCentric.Engine.Services
 
         #region IService Implementation
 
-        public IServiceLocator ServiceContext { get; set; }
+        public NUnit.Engine.IServiceLocator ServiceContext { get; set; }
 
         public ServiceStatus Status { get; private set; }
 

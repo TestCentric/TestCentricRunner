@@ -5,7 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using TestCentric.Engine;
+using NUnit.Engine;
 
 namespace TestCentric.Gui.Model.Fakes
 {
@@ -28,6 +28,11 @@ namespace TestCentric.Gui.Model.Fakes
         public T GetService<T>() where T : class
         {
             return (T)GetService(typeof(T));
+        }
+
+        public bool TryGetService<T>(out T service) where T : class
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace TestCentric.Engine.Services
         /// <summary>
         /// The ServiceContext
         /// </summary>
-        IServiceLocator ServiceContext { get; set; }
+        NUnit.Engine.IServiceLocator ServiceContext { get; set; }
 
         /// <summary>
         /// Gets the ServiceStatus of this service

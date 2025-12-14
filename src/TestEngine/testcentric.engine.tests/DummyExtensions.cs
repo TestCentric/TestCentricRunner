@@ -57,7 +57,7 @@ namespace TestCentric.Engine
     [Extension]
     public class DummyServiceExtension : IService
     {
-        public IServiceLocator ServiceContext
+        public NUnit.Engine.IServiceLocator ServiceContext
         {
             get
             {

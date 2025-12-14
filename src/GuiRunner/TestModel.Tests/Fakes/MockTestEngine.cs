@@ -58,7 +58,7 @@ namespace TestCentric.Gui.Model.Fakes
 
         NUnit.Engine.InternalTraceLevel ITestEngine.InternalTraceLevel { get; set; }
 
-        IServiceLocator ITestEngine.Services { get { return _services; } }
+        NUnit.Engine.IServiceLocator ITestEngine.Services { get { return _services; } }
 
         string ITestEngine.WorkDirectory { get; set; }
 

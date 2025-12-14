@@ -7,7 +7,10 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using NUnit;
+using NUnit.Engine;
 using TestCentric.Engine.Services;
+
+using ServiceContext = TestCentric.Engine.Services.ServiceContext;
 
 namespace TestCentric.Engine
 {
