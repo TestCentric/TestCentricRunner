@@ -25,6 +25,7 @@ namespace TestCentric.Engine.Services
         static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkService));
 
         private List<RuntimeFramework> _availableRuntimes = new List<RuntimeFramework>();
+        private List<RuntimeFramework> _availableX86Runtimes = new List<RuntimeFramework>();
 
         /// <summary>
         /// Gets a RuntimeFramework instance representing the runtime under
@@ -146,12 +147,14 @@ namespace TestCentric.Engine.Services
         #region IAvailableRuntimes Implementation
 
         /// <summary>
-        /// Gets a list of available runtimes.
+        /// Gets a list of available X64 runtimes.
         /// </summary>
-        public IList<NUnit.Engine.IRuntimeFramework> AvailableRuntimes
-        {
-            get { return _availableRuntimes.ToArray(); }
-        }
+        public IList<IRuntimeFramework> AvailableRuntimes => _availableRuntimes.ToArray();
+
+        /// <summary>
+        /// Gets a list of available X86 runtimes.
+        /// </summary>
+        public IList<IRuntimeFramework> AvailableX86Runtimes => _availableX86Runtimes.ToArray();
 
         #endregion
 
@@ -162,16 +165,21 @@ namespace TestCentric.Engine.Services
         /// the string passed as an argument is available.
         /// </summary>
         /// <param name="name">A string representing a framework, like 'net-4.0'</param>
+        /// <param name="needX86">A flag indicating whether X86 support is needed.</param>
         /// <returns>True if the framework is available, false if unavailable or nonexistent</returns>
-        public bool IsAvailable(string name)
+        public bool IsAvailable(string name, bool needX86)
         {
             Guard.ArgumentNotNullOrEmpty(name, nameof(name));
 
-            RuntimeFramework requestedFramework;
-            if (!RuntimeFramework.TryParse(name, out requestedFramework))
-                throw new EngineException("Invalid or unknown framework requested: " + name);
+            if (!RuntimeFramework.TryParse(name, out RuntimeFramework requestedFramework))
+                throw new NUnitEngineException("Invalid or unknown framework requested: " + name);
 
-            return IsAvailable(requestedFramework);
+            var runtimes = needX86 ? _availableX86Runtimes : _availableRuntimes;
+            foreach (var framework in runtimes)
+                if (FrameworksMatch(requestedFramework, framework))
+                    return true;
+
+            return false;
         }
 
         /// <summary>
@@ -181,12 +189,9 @@ namespace TestCentric.Engine.Services
         /// and a string representing the selected runtime is returned.
         /// </summary>
         /// <param name="package">A TestPackage</param>
-        /// <returns>A string representing the selected RuntimeFramework</returns>
-        public string SelectRuntimeFramework(NUnit.Engine.TestPackage package)
+        public void SelectRuntimeFramework(NUnit.Engine.TestPackage package)
         {
-            var targetFramework = SelectRuntimeFrameworkInner(package);
-
-            return targetFramework.ToString();
+            SelectRuntimeFrameworkInner(package);
         }
 
         #endregion

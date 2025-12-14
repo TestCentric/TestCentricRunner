@@ -4,6 +4,7 @@
 // ***********************************************************************
 
 #if !NETCOREAPP2_1
+using NUnit.Engine;
 using NUnit.Framework;
 using NSubstitute;
 
@@ -32,11 +33,11 @@ namespace TestCentric.Engine.Services
             _package = new NUnit.Engine.TestPackage("any.dll");
 
             var runtimeService = Substitute.For<ITestRuntimeService>();
-            runtimeService.IsAvailable("net-2.0").Returns(true);
-            runtimeService.IsAvailable("net-4.0").Returns(true);
-            runtimeService.IsAvailable("net-4.5").Returns(true);
+            runtimeService.IsAvailable("net-2.0", false).Returns(true);
+            runtimeService.IsAvailable("net-4.0", false).Returns(true);
+            runtimeService.IsAvailable("net-4.5", false).Returns(true);
             //runtimeService.IsAvailable(CURRENT_RUNTIME).Returns(true);
-            runtimeService.IsAvailable("netcore-3.0").Returns(true); // Not actually available yet, but used to test
+            runtimeService.IsAvailable("netcore-3.0", false).Returns(true); // Not actually available yet, but used to test
 
             var context = new ServiceContext();
             context.Add(runtimeService);
