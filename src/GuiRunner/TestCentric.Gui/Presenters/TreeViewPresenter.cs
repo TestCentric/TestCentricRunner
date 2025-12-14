@@ -206,9 +206,10 @@ namespace TestCentric.Gui.Presenters
             {
                 if (_view.ContextNode != null)
                 {
-                    var testNode = _view.ContextNode.Tag as TestNode;
-                    if (testNode != null)
+                    if (_view.ContextNode.Tag is TestNode testNode)
                         _model.DebugTests(testNode);
+                    else if (_view.ContextNode.Tag is TestGroup groupNode)
+                        _model.DebugTests(groupNode);
                 }
             };
 

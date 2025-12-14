@@ -571,6 +571,15 @@ namespace TestCentric.Gui.Model
             RunTests(new TestRunSpecification(testNode, CategoryFilter, true));
         }
 
+        public void DebugTests(TestSelection tests)
+        {
+            if (tests == null)
+                throw new ArgumentNullException(nameof(tests));
+
+            log.Info($"Debugging test: {string.Join(", ", tests.Select(node => node.GetAttribute("name").ToArray()))}");
+            RunTests(new TestRunSpecification(tests, CategoryFilter, true));
+        }
+
         public void StopTestRun(bool force)
         {
             // Async to avoid blocking the main thread for incoming test events in between
