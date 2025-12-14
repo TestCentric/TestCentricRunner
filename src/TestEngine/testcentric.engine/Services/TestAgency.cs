@@ -447,7 +447,7 @@ namespace TestCentric.Engine.Services
                     break;
             }
 
-            throw new EngineException(errorMsg);
+            throw new NUnitEngineException(errorMsg);
         }
     }
 }

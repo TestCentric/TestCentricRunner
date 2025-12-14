@@ -22,6 +22,7 @@ using IExtensionService = NUnit.Engine.IExtensionService;
 using IServiceLocator = NUnit.Engine.IServiceLocator;
 using ITestRunner = NUnit.Engine.ITestRunner;
 using ITestEngine = NUnit.Engine.ITestEngine;
+using EngineUnloadException = NUnit.Engine.NUnitEngineUnloadException;
 
 namespace TestCentric.Gui.Model
 {

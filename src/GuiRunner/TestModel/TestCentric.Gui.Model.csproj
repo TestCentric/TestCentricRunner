@@ -8,7 +8,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\TestEngine\TestCentric.Engine\TestCentric.Engine.csproj" />
-    <ProjectReference Include="..\..\TestEngine\TestCentric.Engine.Api\TestCentric.Engine.Api.csproj" />
   </ItemGroup>
   <ItemGroup>
 	  <PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />

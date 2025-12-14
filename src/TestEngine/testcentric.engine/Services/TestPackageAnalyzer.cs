@@ -55,7 +55,7 @@ namespace TestCentric.Engine.Services
             }
 
             if (sb.Length > 0)
-                throw new EngineException($"The following errors were detected in the TestPackage:\n{sb}");
+                throw new NUnitEngineException($"The following errors were detected in the TestPackage:\n{sb}");
         }
 
         /// <summary>
