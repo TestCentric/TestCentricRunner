@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NUnit;
+using NUnit.Engine;
 using NUnit.Extensibility;
 
 namespace TestCentric.Engine.Services
@@ -59,6 +60,16 @@ namespace TestCentric.Engine.Services
         /// Gets an enumeration of all installed Extensions.
         /// </summary>
         IEnumerable<IExtensionNode> IExtensionService.Extensions => _extensionManager.Extensions;
+
+        /// <summary>
+        /// Find candidate extension assemblies starting from a given base directory,
+        /// and using the contained '.addins' files to direct the search.
+        /// </summary>
+        /// <param name="initialDirectory">Path to the initial directory.</param>
+        public void FindExtensionAssemblies(string initialDirectory)
+        {
+            _extensionManager.FindExtensionAssemblies(initialDirectory);
+        }
 
         /// <summary>
         /// Get an ExtensionPoint based on its unique identifying path.
@@ -122,9 +133,10 @@ namespace TestCentric.Engine.Services
         /// </summary>
         /// <returns>An enumeration of ExtensionNodes for Type T.</returns>
         /// <remarks>This class method returns actual ExtensionNodes rather than the IExtensionNode interface.</remarks>
-        public IEnumerable<ExtensionNode> GetExtensionNodes<T>() => _extensionManager.GetExtensionNodes<T>();
+        public IEnumerable<IExtensionNode> GetExtensionNodes<T>() => _extensionManager.GetExtensionNodes<T>();
 
         #endregion
+
         #region Other Public Properties and Methods
 
         public IList<Assembly> RootAssemblies { get; } = new List<Assembly>();
@@ -137,7 +149,6 @@ namespace TestCentric.Engine.Services
         }
 
         public IEnumerable<T> GetExtensions<T>()
-            where T : class
         {
             var exceptions = new List<Exception>();
 

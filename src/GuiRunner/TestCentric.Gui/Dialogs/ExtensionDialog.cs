@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using NUnit.Engine;
 using NUnit.Extensibility;
-using TestCentric.Engine.Services;
 
 namespace TestCentric.Gui.Dialogs
 {

@@ -20,7 +20,7 @@ namespace TestCentric.Gui.Model.Fakes
 
         public MockTestEngine()
         {
-            _services.AddService<IExtensionService>(new ExtensionService());
+            _services.AddService<NUnit.Engine.IExtensionService>(new ExtensionService());
             _services.AddService<NUnit.Engine.IResultService>(new ResultService());
             _services.AddService<ITestAgentProvider>(_testAgentService);
         }

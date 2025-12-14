@@ -84,7 +84,7 @@ namespace TestCentric.Engine.TestBed
             if (!string.IsNullOrEmpty(options.RequestedRuntime))
                 package.AddSetting(SettingDefinitions.RequestedRuntimeFramework.WithValue(options.RequestedRuntime));
 
-            TestEngine.Services.GetService<Services.IExtensionService>().InstallExtensions();
+            TestEngine.Services.GetService<IExtensionService>().InstallExtensions();
 
             var runner = TestEngine.GetRunner(package);
 
@@ -153,7 +153,7 @@ namespace TestCentric.Engine.TestBed
 
         private static void ListExtensions()
         {
-            var extensionService = TestEngine.Services.GetService<TestCentric.Engine.Services.IExtensionService>();
+            var extensionService = TestEngine.Services.GetService<IExtensionService>();
 
             Console.WriteLine("Extension Points and Installed Extensions");
             Console.WriteLine();
