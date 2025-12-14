@@ -6,9 +6,9 @@
 using System;
 using System.IO;
 using System.Xml;
+using NUnit.Engine;
 using NUnit.Extensibility;
 using TestCentric.Engine.Extensibility;
-using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine
 {

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Xml;
 using NUnit;
+using NUnit.Engine;
 namespace TestCentric.Engine.Services
 {
     /// <summary>
