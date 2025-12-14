@@ -4,6 +4,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using NUnit.Engine;
 using NUnit.Extensibility;
 
 namespace TestCentric.Engine.Services.Fakes
@@ -44,6 +45,21 @@ namespace TestCentric.Engine.Services.Fakes
         public IExtensionPoint GetExtensionPoint(string path)
         {
             return null;
+        }
+
+        public void FindExtensionAssemblies(string initialDirectory)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<T> GetExtensions<T>()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<IExtensionNode> GetExtensionNodes<T>()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

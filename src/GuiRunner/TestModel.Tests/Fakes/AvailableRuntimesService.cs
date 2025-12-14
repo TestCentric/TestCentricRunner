@@ -4,8 +4,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using TestCentric.Engine;
-using TestCentric.Engine.Services;
+using NUnit.Engine;
 
 namespace TestCentric.Gui.Model.Fakes
 {

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using NUnit.Engine;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Presenters;
 using TestCentric.Gui.Views;
@@ -70,7 +71,7 @@ namespace TestCentric.Gui
                 return 3;
             }
 
-            var installedAgents = model.Services.GetService<TestCentric.Engine.Services.IExtensionService>().GetExtensionNodes("/TestCentric/Engine/AgentLaunchers");
+            var installedAgents = model.Services.GetService<IExtensionService>().GetExtensionNodes("/TestCentric/Engine/AgentLaunchers");
                 
             if (installedAgents.Count() == 0)
             {

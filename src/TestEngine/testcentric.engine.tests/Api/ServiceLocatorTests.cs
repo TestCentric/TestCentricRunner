@@ -3,7 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using System;
+using NUnit.Engine;
 using NUnit.Framework;
 using TestCentric.Engine.Services;
 
@@ -28,12 +28,12 @@ namespace TestCentric.Engine.Api
             _testEngine.Dispose();
         }
 
-        [TestCase(typeof(IProjectService))]
-        public void CanAccessService(Type serviceType)
+        [TestCase(TypeArgs=[typeof(IProjectService)])]
+        public void CanAccessService<TSERVICE>() where TSERVICE : class
         {
-            IService service = _testEngine.Services.GetService(serviceType) as IService;
+            IService service = _testEngine.Services.GetService<TSERVICE>() as IService;
             Assert.That(service, Is.Not.Null, "GetService(Type) returned null");
-            Assert.That(service, Is.InstanceOf(serviceType));
+            Assert.That(service, Is.InstanceOf<TSERVICE>());
             Assert.That(service.Status, Is.EqualTo(ServiceStatus.Started));
         }
     }

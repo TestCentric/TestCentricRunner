@@ -10,18 +10,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using NUnit.Common;
+using NUnit.Engine;
+using TestCentric.Gui.Dialogs;
+using TestCentric.Gui.Elements;
+using TestCentric.Gui.Model;
+using TestCentric.Gui.Model.Settings;
+using TestCentric.Gui.Views;
 
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Presenters
 {
-    using Dialogs;
-    using Model;
-    using Model.Settings;
-    using TestCentric.Gui.Elements;
-    using Views;
-
     /// <summary>
     /// TestCentricPresenter does all file opening and closing that
     /// involves interacting with the user.
@@ -251,7 +250,7 @@ namespace TestCentric.Gui.Presenters
                 }
             };
 
-            _model.Events.UnhandledException += (UnhandledExceptionEventArgs e) =>
+            _model.Events.UnhandledException += (TestCentric.Gui.Model.UnhandledExceptionEventArgs e) =>
             {
                 MessageBoxDisplay.Error($"{e.Message}\n\n{e.StackTrace}", "TestCentric - Internal Error");
             };
@@ -490,7 +489,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.ExtensionsCommand.Execute += () =>
             {
-                using (var extensionsDialog = new ExtensionDialog(_model.Services.GetService<Engine.Services.IExtensionService>()))
+                using (var extensionsDialog = new ExtensionDialog(_model.Services.GetService<IExtensionService>()))
                 {
                     extensionsDialog.Font = _settings.Gui.Font;
                     extensionsDialog.ShowDialog();

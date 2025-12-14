@@ -39,5 +39,10 @@ namespace TestCentric.Engine.Services
         {
             return ServiceManager.GetService(serviceType);
         }
+
+        public bool TryGetService<T>(out T service) where T : class
+        {
+            throw new NotImplementedException();
+        }
     }
 }

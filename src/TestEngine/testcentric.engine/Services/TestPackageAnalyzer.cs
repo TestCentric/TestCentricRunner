@@ -7,6 +7,7 @@ using System;
 using System.Text;
 using NUnit;
 using NUnit.Common;
+using NUnit.Engine;
 using TestCentric.Metadata;
 
 namespace TestCentric.Engine.Services
@@ -49,7 +50,7 @@ namespace TestCentric.Engine.Services
             if (frameworkSetting.Length > 0)
             {
                 // Check requested framework is actually available
-                if (!_runtimeService.IsAvailable(frameworkSetting))
+                if (!_runtimeService.IsAvailable(frameworkSetting, runAsX86))
                     sb.Append($"\n* The requested framework {frameworkSetting} is unknown or not available.\n");
             }
 

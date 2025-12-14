@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Xml;
 using NUnit;
+using NUnit.Engine;
 namespace TestCentric.Engine.Services
 {
     /// <summary>
@@ -99,7 +100,7 @@ namespace TestCentric.Engine.Services
 
         #region IService Implementation
 
-        public IServiceLocator ServiceContext { get; set; }
+        public NUnit.Engine.IServiceLocator ServiceContext { get; set; }
 
         public ServiceStatus Status { get; private set; }
 

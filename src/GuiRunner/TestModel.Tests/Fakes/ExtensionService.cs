@@ -5,8 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using TestCentric.Engine;
-using TestCentric.Engine.Services;
+using NUnit.Engine;
 using NUnit.Extensibility;
 
 namespace TestCentric.Gui.Model.Fakes
@@ -59,6 +58,21 @@ namespace TestCentric.Gui.Model.Fakes
         public IExtensionPoint GetExtensionPoint(string path)
         {
             return null;
+        }
+
+        public void FindExtensionAssemblies(string initialDirectory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<T> GetExtensions<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IExtensionNode> GetExtensionNodes<T>()
+        {
+            throw new NotImplementedException();
         }
 
         // ExtensionPoint class is nested since the list of extension points is fixed

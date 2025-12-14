@@ -6,9 +6,9 @@
 using System;
 using System.IO;
 using System.Xml;
+using NUnit.Engine;
 using NUnit.Extensibility;
 using TestCentric.Engine.Extensibility;
-using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine
 {
@@ -57,7 +57,7 @@ namespace TestCentric.Engine
     [Extension]
     public class DummyServiceExtension : IService
     {
-        public IServiceLocator ServiceContext
+        public NUnit.Engine.IServiceLocator ServiceContext
         {
             get
             {

@@ -3,11 +3,13 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using NUnit.Engine;
+
 namespace TestCentric.Engine.Services.Fakes
 {
     public class FakeService : IService
     {
-        public IServiceLocator ServiceContext { get; set; }
+        public NUnit.Engine.IServiceLocator ServiceContext { get; set; }
 
         private ServiceStatus _status;
         public ServiceStatus Status

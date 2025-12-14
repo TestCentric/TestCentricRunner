@@ -5,7 +5,7 @@
 
 using System;
 using System.Collections.Generic;
-using TestCentric.Engine;
+using NUnit.Engine;
 using TestCentric.Gui.Model.Filter;
 using TestCentric.Gui.Model.Settings;
 

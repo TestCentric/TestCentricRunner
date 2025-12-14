@@ -11,14 +11,13 @@ namespace TestCentric.Engine.Services.Fakes
 {
     public class FakeRuntimeService : FakeService, IRuntimeFrameworkService
     {
-        bool IRuntimeFrameworkService.IsAvailable(string framework)
+        bool IRuntimeFrameworkService.IsAvailable(string framework, bool needX86)
         {
             return AvailableRuntimes.Contains(framework);
         }
 
-        string IRuntimeFrameworkService.SelectRuntimeFramework(TestPackage package)
+        void IRuntimeFrameworkService.SelectRuntimeFramework(TestPackage package)
         {
-            return SelectedRuntime;
         }
 
         public List<string> AvailableRuntimes { get; set; } = new List<string>(new [] { "NONE" });

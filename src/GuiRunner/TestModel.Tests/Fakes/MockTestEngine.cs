@@ -6,7 +6,6 @@
 using System;
 using System.Xml;
 using TestCentric.Engine;
-using TestCentric.Engine.Extensibility;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Gui.Model.Fakes
@@ -21,8 +20,8 @@ namespace TestCentric.Gui.Model.Fakes
 
         public MockTestEngine()
         {
-            _services.AddService<IExtensionService>(new ExtensionService());
-            _services.AddService<IResultService>(new ResultService());
+            _services.AddService<NUnit.Engine.IExtensionService>(new ExtensionService());
+            _services.AddService<NUnit.Engine.IResultService>(new ResultService());
             _services.AddService<ITestAgentProvider>(_testAgentService);
         }
 
@@ -59,7 +58,7 @@ namespace TestCentric.Gui.Model.Fakes
 
         NUnit.Engine.InternalTraceLevel ITestEngine.InternalTraceLevel { get; set; }
 
-        IServiceLocator ITestEngine.Services { get { return _services; } }
+        NUnit.Engine.IServiceLocator ITestEngine.Services { get { return _services; } }
 
         string ITestEngine.WorkDirectory { get; set; }
 
