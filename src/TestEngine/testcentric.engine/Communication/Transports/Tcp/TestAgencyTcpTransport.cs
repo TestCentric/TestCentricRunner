@@ -6,8 +6,7 @@
 using System;
 using System.Net;
 using NUnit;
-using TestCentric.Engine.Services;
-
+using NUnit.Engine;
 namespace TestCentric.Engine.Communication.Transports.Tcp
 {
     /// <summary>
