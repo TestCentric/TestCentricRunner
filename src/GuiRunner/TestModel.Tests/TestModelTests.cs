@@ -4,15 +4,12 @@
 // ***********************************************************************
 
 using NSubstitute;
+using NUnit.Engine;
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
 
 namespace TestCentric.Gui.Model
 {
-    using System.Xml;
-    using NUnit.Common;
-    using TestCentric.Engine;
-
     [TestFixture]
     public class TestModelTests
     {
@@ -70,7 +67,7 @@ namespace TestCentric.Gui.Model
         public void RemoveTestPackage_TestCentricProjectLoadedEvent_IsTriggered()
         {
             // Arrange
-            var engine = Substitute.For<TestCentric.Engine.ITestEngine>();
+            var engine = Substitute.For<ITestEngine>();
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
 
@@ -109,9 +106,9 @@ namespace TestCentric.Gui.Model
             var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' />");
             var testNode = new TestNode(xmlNode);
 
-            var runner = Substitute.For<TestCentric.Engine.ITestRunner>();
+            var runner = Substitute.For<ITestRunner>();
             runner.Explore(null).ReturnsForAnyArgs(xmlNode);
-            var engine = Substitute.For<TestCentric.Engine.ITestEngine>();
+            var engine = Substitute.For<ITestEngine>();
             engine.GetRunner(null).ReturnsForAnyArgs(runner);
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
@@ -134,9 +131,9 @@ namespace TestCentric.Gui.Model
             var xmlNode = XmlHelper.CreateXmlNode($"<test-suite type='TestFixture' id='1' name='FixtureA'> <test-case id='2' name='TestA'/> <test-case id='3' name='TestB'/> </test-suite>");
             var testNode = new TestNode(xmlNode);
 
-            var runner = Substitute.For<TestCentric.Engine.ITestRunner>();
+            var runner = Substitute.For<ITestRunner>();
             runner.Explore(null).ReturnsForAnyArgs(xmlNode);
-            var engine = Substitute.For<TestCentric.Engine.ITestEngine>();
+            var engine = Substitute.For<ITestEngine>();
             engine.GetRunner(null).ReturnsForAnyArgs(runner);
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
@@ -165,9 +162,9 @@ namespace TestCentric.Gui.Model
             var testNode2 = new TestNode(xmlNode);
             TestSelection tests = new TestSelection(new[] { testNode1, testNode2 });
 
-            var runner = Substitute.For<TestCentric.Engine.ITestRunner>();
+            var runner = Substitute.For<ITestRunner>();
             runner.Explore(null).ReturnsForAnyArgs(xmlNode);
-            var engine = Substitute.For<TestCentric.Engine.ITestEngine>();
+            var engine = Substitute.For<ITestEngine>();
             engine.GetRunner(null).ReturnsForAnyArgs(runner);
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
@@ -192,9 +189,9 @@ namespace TestCentric.Gui.Model
             var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' name='TestA' />");
             var testNode = new TestNode(xmlNode);
 
-            var runner = Substitute.For<TestCentric.Engine.ITestRunner>();
+            var runner = Substitute.For<ITestRunner>();
             runner.Explore(null).ReturnsForAnyArgs(xmlNode);
-            var engine = Substitute.For<TestCentric.Engine.ITestEngine>();
+            var engine = Substitute.For<ITestEngine>();
             engine.GetRunner(null).ReturnsForAnyArgs(runner);
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);

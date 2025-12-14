@@ -5,7 +5,7 @@
 
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
-using TestCentric.Engine;
+using NUnit.Engine;
 
 using PackageSettings = NUnit.Engine.PackageSettings;
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
