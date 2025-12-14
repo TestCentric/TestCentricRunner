@@ -143,6 +143,8 @@ namespace TestCentric.Gui.Model
         void RunTests(TestSelection testSelection);
         void RepeatLastRun();
         void DebugTests(TestNode testNode);
+        void DebugTests(TestSelection testSelection);
+
         void StopTestRun(bool force);
 
         #endregion

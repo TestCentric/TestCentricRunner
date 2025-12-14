@@ -56,6 +56,22 @@ namespace TestCentric.Gui.Presenters.TestTree
         }
 
         [Test]
+        public void DebugContextCommand_TestGroup_DebugsTest()
+        {
+            // Arrange
+            TestGroup testGroup = new TestGroup("TestGroup");
+            var treeNode = new TreeNode() { Tag = testGroup };
+
+            _view.ContextNode.Returns(treeNode);
+
+            // Act
+            _view.DebugContextCommand.Execute += Raise.Event<CommandHandler>();
+
+            // Assert
+            _model.Received().DebugTests(Arg.Is(testGroup));
+        }
+
+        [Test]
         public void DoubleClickOnTestCaseRunsTest()
         {
             _view.TreeNodeDoubleClick += Raise.Event<TreeNodeActionHandler>(TEST_CASE_TREE_NODE);
