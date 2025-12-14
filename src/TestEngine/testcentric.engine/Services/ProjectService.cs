@@ -8,7 +8,7 @@ using System.IO;
 using NUnit.Common;
 using NUnit.Engine;
 using NUnit.Extensibility;
-using TestCentric.Engine.Extensibility;
+using NUnit.Engine.Extensibility;
 
 namespace TestCentric.Engine.Services
 {
