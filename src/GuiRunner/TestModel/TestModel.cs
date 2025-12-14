@@ -20,6 +20,8 @@ using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
 using IResultService = NUnit.Engine.IResultService;
 using IExtensionService = NUnit.Engine.IExtensionService;
 using IServiceLocator = NUnit.Engine.IServiceLocator;
+using ITestRunner = NUnit.Engine.ITestRunner;
+using ITestEngine = NUnit.Engine.ITestEngine;
 
 namespace TestCentric.Gui.Model
 {

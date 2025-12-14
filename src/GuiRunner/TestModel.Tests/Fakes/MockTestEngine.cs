@@ -5,8 +5,10 @@
 
 using System;
 using System.Xml;
-using TestCentric.Engine;
+using NUnit.Engine;
 using TestCentric.Engine.Services;
+
+using ITestRunner = NUnit.Engine.ITestRunner;
 
 namespace TestCentric.Gui.Model.Fakes
 {
