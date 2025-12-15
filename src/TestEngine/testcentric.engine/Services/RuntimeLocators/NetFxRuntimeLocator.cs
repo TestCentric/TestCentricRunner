@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Win32;
+using NUnit.Engine;
 
 namespace TestCentric.Engine.Services.RuntimeLocators
 {

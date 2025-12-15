@@ -5,12 +5,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestCentric.Engine;
+using NUnit;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Views;
 
