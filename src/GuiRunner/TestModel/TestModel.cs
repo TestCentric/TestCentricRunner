@@ -65,7 +65,7 @@ namespace TestCentric.Gui.Model
             _extensionService = Services.GetService<IExtensionService>();
             _extensionService.InstallExtensions();          
             AvailableAgents =
-                [.. _extensionService.GetExtensionNodes("/TestCentric/Engine/AgentLaunchers").Select((n) => n.TypeName)];
+                [.. _extensionService.GetExtensionNodes("/NUnit/Engine/AgentLaunchers").Select((n) => n.TypeName)];
 
             foreach (var node in _extensionService.GetExtensionNodes(PROJECT_LOADER_EXTENSION_PATH))
             {

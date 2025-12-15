@@ -11,6 +11,7 @@ using NUnit.Engine;
 using TestCentric.Engine.Services;
 
 using ServiceContext = TestCentric.Engine.Services.ServiceContext;
+using ExtensionService = NUnit.Engine.Services.ExtensionService;
 
 namespace TestCentric.Engine
 {
