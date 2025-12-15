@@ -18,6 +18,7 @@ using IRuntimeFrameworkService = NUnit.Engine.IRuntimeFrameworkService;
 using ITestRunnerFactory = TestCentric.Engine.Services.ITestRunnerFactory;
 
 using TestPackage = NUnit.Engine.TestPackage;
+using IProjectService = NUnit.Engine.Services.IProjectService;
 
 namespace TestCentric.Engine.Runners
 {

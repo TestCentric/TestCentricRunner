@@ -9,6 +9,8 @@ using System.IO;
 using NUnit.Engine;
 using NUnit.Engine.Extensibility;
 
+using IProjectService = NUnit.Engine.Services.IProjectService;
+
 namespace TestCentric.Engine.Services.Fakes
 {
     public class FakeProjectService : FakeService, IProjectService
@@ -40,7 +42,7 @@ namespace TestCentric.Engine.Services.Fakes
             return Path.GetExtension(path) == _supportedExtension;
         }
 
-        IProject IProjectService.LoadFrom(string path)
+        IProject LoadFrom(string path)
         {
             throw new NotImplementedException();
         }

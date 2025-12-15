@@ -10,6 +10,8 @@ using NUnit.Common;
 using NUnit.Engine;
 using TestCentric.Metadata;
 
+using IProjectService = NUnit.Engine.Services.IProjectService;
+
 namespace TestCentric.Engine.Services
 {
     /// <summary>

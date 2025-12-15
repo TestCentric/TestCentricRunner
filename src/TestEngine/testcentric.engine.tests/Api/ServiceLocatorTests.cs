@@ -5,7 +5,7 @@
 
 using NUnit.Engine;
 using NUnit.Framework;
-using TestCentric.Engine.Services;
+using  NUnit.Engine.Services;
 
 namespace TestCentric.Engine.Api
 
