@@ -41,7 +41,7 @@ namespace TestCentric.Engine.Services
 
             var context = new ServiceContext();
             context.Add(runtimeService);
-            context.Add(Substitute.For<ProjectService>());
+            context.Add(Substitute.For<NUnit.Engine.Services.ProjectService>());
             context.Add(Substitute.For<TestFrameworkService>());
 
             context.Add(new TestPackageAnalyzer());
