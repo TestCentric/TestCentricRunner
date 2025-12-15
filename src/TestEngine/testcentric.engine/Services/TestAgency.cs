@@ -14,6 +14,7 @@ using System.Threading;
 using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
+using NUnit.Engine.Services;
 using NUnit.Engine.Communication.Transports.Tcp;
 using NUnit.Engine.Extensibility;
 using NUnit.Extensibility;
@@ -30,7 +31,8 @@ namespace TestCentric.Engine.Services
 
         private const int NORMAL_TIMEOUT = 30000;               // 30 seconds
         private const int DEBUG_TIMEOUT = NORMAL_TIMEOUT * 10;  // 5 minutes
-        private const string AGENT_LAUNCHERS_PATH = "/TestCentric/Engine/AgentLaunchers";
+        //private const string AGENT_LAUNCHERS_PATH = "/TestCentric/Engine/AgentLaunchers";
+        private const string AGENT_LAUNCHERS_PATH = "/NUnit/Engine/AgentLaunchers";
 
         private readonly AgentStore _agentStore = new AgentStore();
 

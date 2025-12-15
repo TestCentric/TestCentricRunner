@@ -9,6 +9,8 @@ using System.Threading;
 using System.Xml;
 using NUnit;
 using NUnit.Engine;
+using NUnit.Engine.Services;
+
 namespace TestCentric.Engine.Services
 {
     /// <summary>
