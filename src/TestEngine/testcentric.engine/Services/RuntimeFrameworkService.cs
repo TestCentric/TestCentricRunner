@@ -100,28 +100,29 @@ namespace TestCentric.Engine.Services
 
             _currentFramework = new RuntimeFramework(runtime, new Version(major, minor));
 
-            if (isMono)
-            {
-                _currentFramework.MonoPrefix = GetMonoPrefixFromAssembly(monoRuntimeType.Assembly);
+            // TODO: Reinstate mono support in NUnit?
+            //if (isMono)
+            //{
+            //    _currentFramework.MonoPrefix = GetMonoPrefixFromAssembly(monoRuntimeType.Assembly);
 
-                MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
-                    "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
-                if (getDisplayNameMethod != null)
-                {
-                    string displayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
-                    Version monoVersion = new Version(0, 0);
+            //    MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
+            //        "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
+            //    if (getDisplayNameMethod != null)
+            //    {
+            //        string displayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
+            //        Version monoVersion = new Version(0, 0);
 
-                    int space = displayName.IndexOf(' ');
-                    if (space >= 3) // Minimum length of a version
-                    {
-                        displayName = displayName.Substring(0, space);
-                        monoVersion = new Version(displayName);
-                    }
+            //        int space = displayName.IndexOf(' ');
+            //        if (space >= 3) // Minimum length of a version
+            //        {
+            //            displayName = displayName.Substring(0, space);
+            //            monoVersion = new Version(displayName);
+            //        }
 
-                    _currentFramework.DisplayName = "Mono " + displayName;
-                    _currentFramework.MonoVersion = monoVersion;
-                }
-            }
+            //        _currentFramework.DisplayName = "Mono " + displayName;
+            //        _currentFramework.MonoVersion = monoVersion;
+            //    }
+            //}
         }
 
         private static string GetMonoPrefixFromAssembly(Assembly assembly)
