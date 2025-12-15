@@ -62,7 +62,7 @@ namespace TestCentric.Engine
             if (_services.ServiceCount == 0)
             {
                 // Services that depend on other services must be added after their dependencies
-                _services.Add(new TestFilterService());
+                _services.Add(new NUnit.Engine.Services.TestFilterService());
                 _services.Add(new ExtensionService());
                 _services.Add(new TestEventDispatcher());
                 _services.Add(new ProjectService());
