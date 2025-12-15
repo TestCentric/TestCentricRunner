@@ -24,15 +24,13 @@ namespace TestCentric.Engine.Services
         static Logger log = InternalTrace.GetLogger(typeof(TestPackageAnalyzer));
 
         private IProjectService _projectService;
-        private ITestFrameworkService _testFrameworkService;
         private IRuntimeFrameworkService _runtimeService;
 
         public override void StartService()
         {
             _projectService = ServiceContext.GetService<IProjectService>();
-            _testFrameworkService = ServiceContext.GetService<ITestFrameworkService>();
             _runtimeService = ServiceContext.GetService<IRuntimeFrameworkService>();
-            if (_projectService == null || _testFrameworkService == null || _runtimeService == null)
+            if (_projectService == null || _runtimeService == null)
                 Status = ServiceStatus.Error;
         }
 
