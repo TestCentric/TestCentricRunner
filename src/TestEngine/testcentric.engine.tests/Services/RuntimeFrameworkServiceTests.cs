@@ -21,7 +21,6 @@ namespace TestCentric.Engine.Services
             var services = new ServiceContext();
             services.Add(new Fakes.FakeProjectService());
             services.Add(new RuntimeFrameworkService());
-            services.Add(new TestFrameworkService());
             services.Add(new TestPackageAnalyzer());
             services.ServiceManager.StartServices();
             _runtimeService = services.GetService<RuntimeFrameworkService>();
