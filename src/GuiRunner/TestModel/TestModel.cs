@@ -768,9 +768,10 @@ namespace TestCentric.Gui.Model
             {
                 foreach (var subPackage in TestCentricProject.SubPackages)
                 {
-                    subPackage.AddSetting(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
+                    subPackage.Settings.Set(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
                 }
 
+                Runner?.Dispose();
                 Runner = TestEngine.GetRunner(TestCentricProject);
 
                 // It is not strictly necessary to load the tests
