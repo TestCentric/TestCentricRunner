@@ -3,7 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using System.Linq;
 using NSubstitute;
+using NUnit.Common;
 using NUnit.Engine;
 using NUnit.Framework;
 using TestCentric.Gui.Model.Fakes;
@@ -210,6 +212,57 @@ namespace TestCentric.Gui.Model
             // Assert
             Assert.That(resultNode1.IsLatestRun, Is.False);
             Assert.That(resultNode2.IsLatestRun, Is.False);
+        }
+
+        [Test]
+        public void DebugRun_SubPackageDebugSetting_IsTrue()
+        {
+            // Arrange
+            var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' name='TestA' />");
+            var testNode = new TestNode(xmlNode);
+
+            var runner = Substitute.For<ITestRunner>();
+            runner.Explore(null).ReturnsForAnyArgs(xmlNode);
+            var engine = Substitute.For<ITestEngine>();
+            engine.GetRunner(null).ReturnsForAnyArgs(runner);
+            var options = new GuiOptions("dummy.dll");
+            var model = TestModel.CreateTestModel(engine, options);
+
+            var project = model.CreateNewProject(new[] { "dummy.dll" });
+            model.LoadTests(new[] { "dummy.dll" });
+
+            // Act
+            model.DebugTests(testNode);
+
+            // Assert
+            runner.Received().Dispose();
+            Assert.That(project.SubPackages[0].Settings.GetValueOrDefault(SettingDefinitions.DebugTests), Is.True);
+        }
+
+        [Test]
+        public void RunTest_AfterDebugRun_SubPackageDebugSetting_IsFalse()
+        {
+            // Arrange
+            var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' name='TestA' />");
+            var testNode = new TestNode(xmlNode);
+
+            var runner = Substitute.For<ITestRunner>();
+            runner.Explore(null).ReturnsForAnyArgs(xmlNode);
+            var engine = Substitute.For<ITestEngine>();
+            engine.GetRunner(null).ReturnsForAnyArgs(runner);
+            var options = new GuiOptions("dummy.dll");
+            var model = TestModel.CreateTestModel(engine, options);
+
+            var project = model.CreateNewProject(new[] { "dummy.dll" });
+            model.LoadTests(new[] { "dummy.dll" });
+
+            // Act
+            model.DebugTests(testNode);
+            model.RunTests(testNode);
+
+            // Assert
+            runner.Received().Dispose();
+            Assert.That(project.SubPackages[0].Settings.GetValueOrDefault(SettingDefinitions.DebugTests), Is.False);
         }
     }
 }
