@@ -27,4 +27,7 @@
 	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
     <PackageReference Include="TestCentric.Metadata" Version="$(MetadataVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 </Project>
