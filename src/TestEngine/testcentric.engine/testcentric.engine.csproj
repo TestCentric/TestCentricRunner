@@ -13,6 +13,11 @@
     <PackageOutputPath>..\..\package</PackageOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net462'">
@@ -26,8 +31,5 @@
 	  <PackageReference Include="NUnit.Extensibility.Api" Version="$(NUnitEngineVersion)" />
 	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
     <PackageReference Include="TestCentric.Metadata" Version="$(MetadataVersion)" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 </Project>

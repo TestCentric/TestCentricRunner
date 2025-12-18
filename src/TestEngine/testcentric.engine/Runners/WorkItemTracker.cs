@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Xml;
 using NUnit;
 
-namespace TestCentric.Engine.Services
+namespace TestCentric.Engine.Runners
 {
     /// <summary>
     /// Test Frameworks, don't always handle cancellation. Those that do may

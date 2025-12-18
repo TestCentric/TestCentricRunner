@@ -12,7 +12,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using NUnit.Engine.Services;
 using TestCentric.Engine;
-using TestCentric.Engine.Services;
 using TestCentric.Gui.Model.Filter;
 using TestCentric.Gui.Model.Services;
 using TestCentric.Gui.Model.Settings;
