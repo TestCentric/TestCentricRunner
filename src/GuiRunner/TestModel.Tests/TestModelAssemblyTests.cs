@@ -5,7 +5,7 @@
 
 using System.IO;
 using NUnit.Framework;
-using TestCentric.Engine;
+using NUnit.Engine;
 using TestCentric.Tests.Assemblies;
 
 namespace TestCentric.Gui.Model

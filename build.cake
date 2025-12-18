@@ -22,8 +22,6 @@ BuildSettings.Initialize(
 // COMMON DEFINITIONS USED IN BOTH PACKAGES
 //////////////////////////////////////////////////////////////////////
 
-static readonly FilePath[] ENGINE_FILES = {
-        "testcentric.engine.dll", "testcentric.metadata.dll"};
 static readonly FilePath[] GUI_FILES = {
         "testcentric.exe", "testcentric.exe.config", "nunit.uiexception.dll",
         "TestCentric.Gui.Runner.dll", "TestCentric.Gui.Model.dll" };
@@ -53,7 +51,7 @@ var NuGetGuiPackage = new NuGetPackage(
 		.WithDirectories(
 			new DirectoryContent("tools").WithFiles(
 				"testcentric.exe", "testcentric.exe.config", "TestCentric.Gui.Runner.dll",
-				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll", "TestCentric.Engine.dll",
+				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll",
 				"TestCentric.Metadata.dll", "NUnit.Extensibility.dll", "NUnit.Extensibility.Api.dll",
 				"nunit.common.dll", "nunit.engine.api.dll", "nunit.engine.dll"),
 			new DirectoryContent("tools/Images/Tree/Circles").WithFiles(
@@ -72,8 +70,8 @@ var NuGetGuiPackage = new NuGetPackage(
     testRunner: new GuiSelfTester(BuildSettings.PackageTestDirectory + "TestCentric.GuiRunner/TestCentric.GuiRunner." + BuildSettings.PackageVersion + "/tools/testcentric.exe"),
 	checks: new PackageCheck[] {
 		HasFiles("CHANGES.txt", "LICENSE.txt", "NOTICES.txt", "testcentric.png"),
-		HasDirectory("tools").WithFiles(GUI_FILES).AndFiles(ENGINE_FILES),
-		HasDirectory("tools/Images/Tree/Circles").WithFiles(TREE_ICONS_PNG),
+        HasDirectory("tools").WithFiles(GUI_FILES).AndFile("TestCentric.Metadata.dll"),
+        HasDirectory("tools/Images/Tree/Circles").WithFiles(TREE_ICONS_PNG),
 		HasDirectory("tools/Images/Tree/Classic").WithFiles(TREE_ICONS_PNG),
 		HasDirectory("tools/Images/Tree/Visual Studio").WithFiles(TREE_ICONS_PNG)
 	},
@@ -90,7 +88,7 @@ var ChocolateyGuiPackage = new ChocolateyPackage(
 				"../../choco/VERIFICATION.txt",
 				"../../choco/testcentric-agent.exe.ignore",	"../../choco/testcentric-agent-x86.exe.ignore",
 				"testcentric.exe", "testcentric.exe.config", "TestCentric.Gui.Runner.dll",
-				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll", "nunit.engine.api.dll", "nunit.engine.dll", "TestCentric.Engine.dll",
+				"nunit.uiexception.dll", "TestCentric.Gui.Model.dll", "nunit.engine.api.dll", "nunit.engine.dll",
 				"TestCentric.Metadata.dll", "NUnit.Extensibility.dll", "NUnit.Extensibility.Api.dll", "NUnit.Common.dll"),
             new DirectoryContent("tools/Images/Tree/Circles").WithFiles(
                 "Images/Tree/Circles/Success.png", "Images/Tree/Circles/Failure.png", "Images/Tree/Circles/Warning.png", "Images/Tree/Circles/Ignored.png", "Images/Tree/Circles/Inconclusive.png", 
@@ -107,38 +105,16 @@ var ChocolateyGuiPackage = new ChocolateyPackage(
         .WithDependencies( KnownExtensions.BundledChocolateyAgents ),
     testRunner: new GuiSelfTester(BuildSettings.PackageTestDirectory + "testcentric-gui/testcentric-gui." + BuildSettings.PackageVersion + "/tools/testcentric.exe"),
 	checks: new PackageCheck[] {
-		HasDirectory("tools").WithFiles("CHANGES.txt", "LICENSE.txt", "NOTICES.txt", "VERIFICATION.txt").AndFiles(GUI_FILES).AndFiles(ENGINE_FILES),
-		HasDirectory("tools/Images/Tree/Circles").WithFiles(TREE_ICONS_PNG),
+		HasDirectory("tools").WithFiles("CHANGES.txt", "LICENSE.txt", "NOTICES.txt", "VERIFICATION.txt").AndFiles(GUI_FILES).AndFile("TestCentric.Metadata.dll"),
+        HasDirectory("tools/Images/Tree/Circles").WithFiles(TREE_ICONS_PNG),
 		HasDirectory("tools/Images/Tree/Classic").WithFiles(TREE_ICONS_PNG),
 		HasDirectory("tools/Images/Tree/Visual Studio").WithFiles(TREE_ICONS_PNG),
 	},
 	tests: PackageTests.GuiTests
 );
 
-var EnginePackage = new NuGetPackage(
-    id: "TestCentric.Engine",
-    description: "This package provides the TestCentric Engine, used by runner applications to load and excute NUnit tests.",
-    packageContent: new PackageContent(
-        new FilePath[] { "../../LICENSE.txt", "../../testcentric.png" },
-        new DirectoryContent("lib").WithFiles(
-            "testcentric.engine.dll", "nunit.engine.api.dll", "nunit.engine.dll",
-            "testcentric.metadata.dll", "NUnit.extensibility.dll", "NUnit.extensibility.api.dll", "NUnit.Common.dll",
-			"testcentric.engine.pdb", "test-bed.exe", "test-bed.exe.config")),
-    testRunner: new TestCentricEngineTestBed(),
-    checks: new PackageCheck[] {
-        HasFiles("LICENSE.txt", "testcentric.png"),
-        HasDirectory("lib").WithFiles(
-            "testcentric.engine.dll", "nunit.engine.api.dll", "nunit.extensibility.api.dll",
-            "testcentric.metadata.dll", "NUnit.extensibility.dll", "NUnit.extensibility.api.dll",
-            "testcentric.engine.pdb", "test-bed.exe", "test-bed.exe.config")
-    },
-    tests: PackageTests.EngineTests,
-    preloadedExtensions: KnownExtensions.BundledNuGetAgents.ToArray()
-);
-
 BuildSettings.Packages.Add(NuGetGuiPackage);
 BuildSettings.Packages.Add(ChocolateyGuiPackage);
-BuildSettings.Packages.Add(EnginePackage);
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE TEST RUNNER
@@ -170,29 +146,6 @@ public class GuiSelfTester : TestRunner, IPackageTestRunner
         Console.WriteLine($"Running {_executablePath} with arguments {arguments}");
         return base.RunTest(_executablePath, arguments);
     }
-}
-
-//////////////////////////////////////////////////////////////////////
-// TEST BED RUNNER
-//////////////////////////////////////////////////////////////////////
-
-public class TestCentricEngineTestBed : TestRunner, IPackageTestRunner
-{
-	private FilePath _executablePath;
-
-	public TestCentricEngineTestBed()
-	{
-		_executablePath = BuildSettings.PackageTestDirectory + "TestCentric.Engine/TestCentric.Engine." + BuildSettings.PackageVersion + "/lib/test-bed.exe";
-	}
-
-	public int RunPackageTest(string arguments)
-	{
-		return BuildSettings.Context.StartProcess(_executablePath, new ProcessSettings()
-		{
-			Arguments = arguments,
-			WorkingDirectory = BuildSettings.OutputDirectory
-		});
-	}
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -7,10 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TestEngine\TestCentric.Engine\TestCentric.Engine.csproj" />
-  </ItemGroup>
-  <ItemGroup>
 	  <PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />
+	  <PackageReference Include="NUnit.Engine" Version="$(NUnitEngineVersion)" />
 	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
   </ItemGroup>
 </Project>

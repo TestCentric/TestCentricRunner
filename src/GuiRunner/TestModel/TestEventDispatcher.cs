@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
-using TestCentric.Engine;
 
 namespace TestCentric.Gui.Model
 {
