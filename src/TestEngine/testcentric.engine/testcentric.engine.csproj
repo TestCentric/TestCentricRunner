@@ -13,11 +13,7 @@
     <PackageOutputPath>..\..\package</PackageOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Services\ITestAgentProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
-    <None Include="Services\ITestAgentProvider.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net462'">
     <Reference Include="System.Runtime.Remoting" />
