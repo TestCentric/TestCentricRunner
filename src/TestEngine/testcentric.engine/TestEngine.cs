@@ -67,8 +67,7 @@ namespace TestCentric.Engine
                 _services.Add(new ExtensionService());
                 _services.Add(new TestEventDispatcher());
                 _services.Add(new NUnit.Engine.Services.ProjectService());
-                _services.Add(new TestPackageAnalyzer());
-                _services.Add(new RuntimeFrameworkService());
+                _services.Add(new NUnit.Engine.Services.RuntimeFrameworkService());
                 _services.Add(new NUnit.Engine.Services.TestAgency());
                 //_services.Add(new TestAgentService());
                 _services.Add(new NUnit.Engine.Services.ResultService());
