@@ -71,7 +71,7 @@ namespace TestCentric.Engine
                 _services.Add(new NUnit.Engine.Services.TestAgency());
                 //_services.Add(new TestAgentService());
                 _services.Add(new NUnit.Engine.Services.ResultService());
-                _services.Add(new TestRunnerFactory());
+                _services.Add(new NUnit.Engine.Services.TestRunnerFactory());
             }
 
             _services.ServiceManager.StartServices();

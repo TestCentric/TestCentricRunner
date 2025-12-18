@@ -9,7 +9,7 @@ using NUnit.Engine;
 using TestCentric.Engine.Services;
 
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
-using ITestRunnerFactory = TestCentric.Engine.Services.ITestRunnerFactory;
+using ITestRunnerFactory = NUnit.Engine.ITestRunnerFactory;
 
 namespace TestCentric.Engine.Runners
 {
