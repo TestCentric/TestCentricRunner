@@ -6,6 +6,7 @@
 using System;
 using NUnit;
 using NUnit.Engine;
+using NUnit.Engine.Services;
 using TestCentric.Engine.Services;
 
 namespace TestCentric.Engine.Runners
@@ -20,7 +21,8 @@ namespace TestCentric.Engine.Runners
 
         private ITestAgent _agent;
         private NUnit.Engine.ITestEngineRunner _remoteRunner;
-        private TestAgentService _agentService;
+        //private TestAgentService _agentService;
+        private TestAgency _agentService;
 
         /// <summary>
         /// Construct a new AssemblyRunnerRunner
@@ -29,7 +31,8 @@ namespace TestCentric.Engine.Runners
         /// <param name="package">A TestPackage containing a single assembly</param>
         public AssemblyRunner(IServiceLocator services, NUnit.Engine.TestPackage package) : base(package)
         {
-            _agentService = services.GetService<TestAgentService>();
+            //_agentService = services.GetService<TestAgentService>();
+            _agentService = services.GetService<TestAgency>();
         }
 
         /// <summary>
@@ -236,10 +239,10 @@ namespace TestCentric.Engine.Runners
             {
                 log.Debug($"Trying to get an agent");
 
-                if (_agentService.IsAgentAvailable(TestPackage))
+                //if (_agentService.IsAgentAvailable(TestPackage))
                     _agent = _agentService.GetAgent(TestPackage);
-                else
-                    throw new NUnitEngineException($"No agent can be found for package {TestPackage.Name}.");
+                //else
+                //    throw new NUnitEngineException($"No agent can be found for package {TestPackage.Name}.");
 
                 log.Debug($"Got agent {_agent.Id:B}");
             }

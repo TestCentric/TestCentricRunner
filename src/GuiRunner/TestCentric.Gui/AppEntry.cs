@@ -72,7 +72,7 @@ namespace TestCentric.Gui
             }
 
             var installedAgents = model.Services.GetService<IExtensionService>().GetExtensionNodes("/NUnit/Engine/AgentLaunchers");
-                
+
             if (installedAgents.Count() == 0)
             {
                 if (!MessageDisplay.OkCancel(

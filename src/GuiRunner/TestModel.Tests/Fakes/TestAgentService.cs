@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+#if false
 using System.Collections.Generic;
 using NUnit.Engine;
 using TestCentric.Engine.Services;
@@ -46,3 +47,4 @@ namespace TestCentric.Gui.Model.Fakes
         }
     }
 }
+#endif

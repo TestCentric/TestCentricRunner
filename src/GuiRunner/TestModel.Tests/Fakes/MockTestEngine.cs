@@ -16,7 +16,7 @@ namespace TestCentric.Gui.Model.Fakes
     {
         private ServiceLocator _services = new ServiceLocator();
         private AvailableRuntimesService _availableRuntimes = new AvailableRuntimesService();
-        private TestAgentService _testAgentService = new TestAgentService();
+        //private TestAgentService _testAgentService = new TestAgentService();
 
         #region Constructor
 
@@ -24,7 +24,7 @@ namespace TestCentric.Gui.Model.Fakes
         {
             _services.AddService<NUnit.Engine.IExtensionService>(new ExtensionService());
             _services.AddService<NUnit.Engine.IResultService>(new ResultService());
-            _services.AddService<ITestAgentProvider>(_testAgentService);
+            //_services.AddService<ITestAgentProvider>(_testAgentService);
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace TestCentric.Gui.Model.Fakes
         public MockTestEngine WithRuntimes(params RuntimeFramework[] runtimes)
         {
             //_availableRuntimes.AddRuntimes(runtimes);
-            _testAgentService.AddRuntimes(runtimes);
+            //_testAgentService.AddRuntimes(runtimes);
             return this;
         }
 
