@@ -9,16 +9,16 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Xml;
 using NUnit;
+using NUnit.Common;
 using NUnit.Engine;
 using TestCentric.Engine.Services;
-
+using IProjectService = NUnit.Engine.Services.IProjectService;
 using IRuntimeFrameworkService = NUnit.Engine.IRuntimeFrameworkService;
 using ITestRunnerFactory = TestCentric.Engine.Services.ITestRunnerFactory;
-
 using TestPackage = NUnit.Engine.TestPackage;
-using IProjectService = NUnit.Engine.Services.IProjectService;
 
 namespace TestCentric.Engine.Runners
 {
@@ -42,9 +42,8 @@ namespace TestCentric.Engine.Runners
         // element, which wraps all the individual assembly and project
         // results.
 
-        private NUnit.Engine.ITestEngineRunner _engineRunner;
+        private ITestEngineRunner _engineRunner;
         private readonly IServiceLocator _services;
-        private readonly TestPackageAnalyzer _packageAnalyzer;
         private readonly IRuntimeFrameworkService _runtimeService;
         private readonly IProjectService _projectService;
         private ITestRunnerFactory _testRunnerFactory;
@@ -62,20 +61,21 @@ namespace TestCentric.Engine.Runners
             if (package == null) throw new ArgumentNullException("package");
 
             _services = services;
-            TestPackage = package;
 
             // Get references to the services we use
             _projectService = _services.GetService<IProjectService>();
             _testRunnerFactory = _services.GetService<ITestRunnerFactory>();
-
-            _packageAnalyzer = _services.GetService<TestPackageAnalyzer>();
             _runtimeService = _services.GetService<IRuntimeFrameworkService>();
 
             _eventDispatcher = _services.GetService<TestEventDispatcher>();
 
+            EnsurePackagesAreExpanded(package);
+
             // Last chance to catch invalid settings in package,
             // in case the client runner missed them.
-            _packageAnalyzer.ValidatePackageSettings(package);
+            ValidatePackageSettings(package);
+
+            TestPackage = package;
         }
 
         /// <summary>
@@ -241,20 +241,12 @@ namespace TestCentric.Engine.Runners
         {
             if (_engineRunner == null)
             {
-                // Expand any project subpackages
-                _packageAnalyzer.ExpandProjectPackages(TestPackage);
+                var leafPackages = TestPackage.Select(p => !p.HasSubPackages);
 
-                // Add package settings to reflect the target runtime
-                // and test framework usage of each assembly.
-                foreach (var package in TestPackage.Select(p => p.IsAssemblyPackage))
-                    if (File.Exists(package.FullName))
-                        _packageAnalyzer.ApplyImageSettings(package);
-
-                // Use SelectRuntimeFramework for its side effects.
-                // Info will be left behind in the package about
-                // each contained assembly, which will subsequently
-                // be used to determine how to run the assembly.
-                _runtimeService.SelectRuntimeFramework(TestPackage);
+                // Analyze each TestPackage, adding settings that describe
+                // each contained assembly, including it's target runtime.
+                foreach (var assemblyPackage in leafPackages)
+                    _runtimeService.SelectRuntimeFramework(assemblyPackage);
 
                 _engineRunner = _testRunnerFactory.MakeTestRunner(TestPackage);
             }
@@ -420,6 +412,49 @@ namespace TestCentric.Engine.Runners
 
             var filterElement = doc.ImportNode(tempNode, true);
             resultNode.InsertAfter(filterElement, null);
+        }
+
+        private void EnsurePackagesAreExpanded(TestPackage package)
+        {
+            foreach (var subPackage in package.SubPackages)
+            {
+                EnsurePackagesAreExpanded(subPackage);
+            }
+
+            if (package.SubPackages.Count == 0 && IsProjectPackage(package))
+            {
+                _projectService.ExpandProjectPackage(package);
+            }
+        }
+
+        private bool IsProjectPackage(TestPackage package)
+        {
+            Guard.ArgumentNotNull(package);
+
+            return
+                _projectService is not null
+                && !string.IsNullOrEmpty(package.FullName)
+                && _projectService.CanLoadFrom(package.FullName);
+        }
+
+        // Any Errors thrown from this method indicate that the client
+        // runner is putting invalid values into the package.
+        private void ValidatePackageSettings(TestPackage package)
+        {
+            var sb = new StringBuilder();
+
+            var frameworkSetting = package.Settings.GetValueOrDefault(SettingDefinitions.RequestedRuntimeFramework);
+            var runAsX86 = package.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86);
+
+            if (frameworkSetting.Length > 0)
+            {
+                // Check requested framework is actually available
+                if (!_runtimeService.IsAvailable(frameworkSetting, runAsX86))
+                    sb.Append($"\n* The requested framework {frameworkSetting} is unknown or not available.\n");
+            }
+
+            if (sb.Length > 0)
+                throw new NUnitEngineException($"The following errors were detected in the TestPackage:\n{sb}");
         }
     }
 }
