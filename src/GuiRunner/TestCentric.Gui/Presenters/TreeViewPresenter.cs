@@ -14,6 +14,7 @@ namespace TestCentric.Gui.Presenters
     using System.IO;
     using TestCentric.Gui.Controls;
     using System.Collections;
+    using TestCentric.Gui.Model.Settings;
 
     /// <summary>
     /// TreeViewPresenter is the presenter for the TestTreeView
@@ -127,34 +128,7 @@ namespace TestCentric.Gui.Presenters
             _model.Events.TestFinished += OnTestFinished;
             _model.Events.SuiteFinished += OnTestFinished;
 
-            _model.Settings.Changed += (s, e) =>
-            {
-                switch (e.SettingName)
-                {
-                    case "TestCentric.Gui.TestTree.DisplayFormat":
-                        Strategy = _treeDisplayStrategyFactory.Create(_treeSettings.DisplayFormat, _view, _model);
-                        Strategy.Reload();
-                        break;
-
-                    case "TestCentric.Gui.TestTree.NUnitGroupBy":
-                    case "TestCentric.Gui.TestTree.TestList.GroupBy":
-                    case "TestCentric.Gui.TestTree.ShowNamespace":
-                        Strategy?.Reload();
-                        break;
-                    case "TestCentric.Gui.TestTree.ShowCheckBoxes":
-                        _view.ShowCheckBoxes.Checked = _treeSettings.ShowCheckBoxes;
-                        break;
-
-                    case "TestCentric.Gui.GuiLayout":
-                        if (_model.Settings.Gui.GuiLayout == "Full")
-                            ClosePropertiesDisplay();
-                        break;
-
-                    case "TestCentric.Gui.TestTree.ShowFilter":
-                        _view.SetTestFilterVisibility(_model.Settings.Gui.TestTree.ShowFilter);
-                        break;
-                }
-            };
+            _model.Settings.Changed += OnSettingsChanged;
 
             // View context commands
 
@@ -322,6 +296,35 @@ namespace TestCentric.Gui.Presenters
             //};
         }
 
+        private void OnSettingsChanged(object sender, SettingsEventArgs e)
+        {
+            switch (e.SettingName)
+            {
+                case "TestCentric.Gui.TestTree.DisplayFormat":
+                    Strategy = _treeDisplayStrategyFactory.Create(_treeSettings.DisplayFormat, _view, _model);
+                    Strategy.Reload();
+                    break;
+
+                case "TestCentric.Gui.TestTree.NUnitGroupBy":
+                case "TestCentric.Gui.TestTree.TestList.GroupBy":
+                case "TestCentric.Gui.TestTree.ShowNamespace":
+                    Strategy?.Reload();
+                    break;
+                case "TestCentric.Gui.TestTree.ShowCheckBoxes":
+                    _view.ShowCheckBoxes.Checked = _treeSettings.ShowCheckBoxes;
+                    break;
+
+                case "TestCentric.Gui.GuiLayout":
+                    if (_model.Settings.Gui.GuiLayout == "Full")
+                        ClosePropertiesDisplay();
+                    break;
+
+                case "TestCentric.Gui.TestTree.ShowFilter":
+                    _view.SetTestFilterVisibility(_model.Settings.Gui.TestTree.ShowFilter);
+                    break;
+            }
+        }
+
         private void ResetTestFilter()
         {
             _model.TestCentricTestFilter.ResetAll();
@@ -348,6 +351,11 @@ namespace TestCentric.Gui.Presenters
 
         private void UpdateTreeSettingsFromVisualState(VisualState visualState)
         {
+            // 1. Unsubscribe from setting changed events
+            // (Avoid triggering reload while loading the tree)
+            _model.Settings.Changed -= OnSettingsChanged;
+
+            // 2. Update settings
             _treeSettings.DisplayFormat = visualState.DisplayStrategy;
             if (visualState.DisplayStrategy == "NUNIT_TREE")
             {
@@ -359,6 +367,9 @@ namespace TestCentric.Gui.Presenters
             }
 
             _treeSettings.ShowNamespace = visualState.ShowNamespace;
+
+            // 3. Subscribe again to setting changed events
+            _model.Settings.Changed += OnSettingsChanged;
         }
 
         private void EnsureNonRunnableFilesAreVisible(TestNode testNode)
