@@ -14,11 +14,8 @@ using System.Xml;
 using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
-using TestCentric.Engine.Services;
-using IProjectService = NUnit.Engine.Services.IProjectService;
-using IRuntimeFrameworkService = NUnit.Engine.IRuntimeFrameworkService;
-using ITestRunnerFactory = NUnit.Engine.ITestRunnerFactory;
-using TestPackage = NUnit.Engine.TestPackage;
+using NUnit.Engine.Runners;
+using NUnit.Engine.Services;
 
 namespace TestCentric.Engine.Runners
 {

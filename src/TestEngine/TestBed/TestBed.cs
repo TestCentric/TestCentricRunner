@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using NUnit.Engine;
-using TestCentric.Engine.Services;
 
 using SettingDefinitions = NUnit.Common.SettingDefinitions;
 

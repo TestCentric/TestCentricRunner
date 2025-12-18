@@ -6,7 +6,6 @@
 using System;
 using System.Xml;
 using NUnit.Engine;
-using TestCentric.Engine.Services;
 
 using ITestRunner = NUnit.Engine.ITestRunner;
 

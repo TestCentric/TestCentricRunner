@@ -11,7 +11,7 @@ using NUnit;
 using NUnit.Engine;
 using NUnit.Engine.Services;
 
-namespace TestCentric.Engine.Services
+namespace TestCentric.Engine.Runners
 {
     /// <summary>
     /// TestEventDispatcher is used to send test events to a number of listeners
