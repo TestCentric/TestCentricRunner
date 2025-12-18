@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using NUnit;
 using NUnit.Engine;
+using NUnit.Engine.Runners;
 using NUnit.Engine.Services;
 
 namespace TestCentric.Engine
@@ -83,7 +84,7 @@ namespace TestCentric.Engine
             if(!_services.ServiceManager.ServicesInitialized)
                 Initialize();
 
-            return new Runners.MasterTestRunner(Services, package);
+            return new MasterTestRunner(Services, package);
         }
 
         #region IDisposable Members
