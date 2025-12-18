@@ -8,10 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using NUnit;
 using NUnit.Engine;
-using TestCentric.Engine.Services;
-
-using ServiceContext = TestCentric.Engine.Services.ServiceContext;
-using ExtensionService = NUnit.Engine.Services.ExtensionService;
+using NUnit.Engine.Services;
 
 namespace TestCentric.Engine
 {
@@ -63,15 +60,13 @@ namespace TestCentric.Engine
             if (_services.ServiceCount == 0)
             {
                 // Services that depend on other services must be added after their dependencies
-                _services.Add(new NUnit.Engine.Services.TestFilterService());
+                _services.Add(new TestFilterService());
                 _services.Add(new ExtensionService());
-                _services.Add(new TestEventDispatcher());
-                _services.Add(new NUnit.Engine.Services.ProjectService());
-                _services.Add(new NUnit.Engine.Services.RuntimeFrameworkService());
-                _services.Add(new NUnit.Engine.Services.TestAgency());
-                //_services.Add(new TestAgentService());
-                _services.Add(new NUnit.Engine.Services.ResultService());
-                _services.Add(new NUnit.Engine.Services.TestRunnerFactory());
+                _services.Add(new ProjectService());
+                _services.Add(new RuntimeFrameworkService());
+                _services.Add(new TestAgency());
+                _services.Add(new ResultService());
+                _services.Add(new TestRunnerFactory());
             }
 
             _services.ServiceManager.StartServices();

@@ -10,9 +10,10 @@ using System.Linq;
 using System.Net.Configuration;
 using System.Text;
 using System.Threading.Tasks;
+using TestCentric.Engine.Services;
 using TestCentric.Tests.Fakes;
 
-namespace TestCentric.Engine.Services
+namespace TestCentric.Engine.Runners
 {
     public class TestEventDispatcherTests
     {

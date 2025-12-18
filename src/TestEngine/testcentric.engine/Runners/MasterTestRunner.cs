@@ -61,13 +61,12 @@ namespace TestCentric.Engine.Runners
             if (package == null) throw new ArgumentNullException("package");
 
             _services = services;
+            _eventDispatcher = new TestEventDispatcher();
 
             // Get references to the services we use
             _projectService = _services.GetService<IProjectService>();
             _testRunnerFactory = _services.GetService<ITestRunnerFactory>();
             _runtimeService = _services.GetService<IRuntimeFrameworkService>();
-
-            _eventDispatcher = _services.GetService<TestEventDispatcher>();
 
             EnsurePackagesAreExpanded(package);
 
