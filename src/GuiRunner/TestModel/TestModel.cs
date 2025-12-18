@@ -8,21 +8,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using NUnit.Engine.Services;
 using TestCentric.Engine;
 using TestCentric.Engine.Services;
 using TestCentric.Gui.Model.Filter;
 using TestCentric.Gui.Model.Services;
 using TestCentric.Gui.Model.Settings;
-
-using SettingDefinitions = NUnit.Common.SettingDefinitions;
+using EngineUnloadException = NUnit.Engine.NUnitEngineUnloadException;
+using IExtensionService = NUnit.Engine.IExtensionService;
 using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
 using IResultService = NUnit.Engine.IResultService;
-using IExtensionService = NUnit.Engine.IExtensionService;
 using IServiceLocator = NUnit.Engine.IServiceLocator;
-using ITestRunner = NUnit.Engine.ITestRunner;
 using ITestEngine = NUnit.Engine.ITestEngine;
-using EngineUnloadException = NUnit.Engine.NUnitEngineUnloadException;
+using ITestRunner = NUnit.Engine.ITestRunner;
+using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Model
 {
@@ -463,7 +464,8 @@ namespace TestCentric.Gui.Model
                 return new List<string>();
 
             return new List<string>(
-                Services.GetService<TestAgentService>().GetAgentsForPackage(package).Select(a => a.AgentName));
+                //Services.GetService<TestAgentService>().GetAgentsForPackage(package).Select(a => a.AgentName));
+                Services.GetService<TestAgency>().GetAgentsForPackage(package).Select(a => a.AgentName));
         }
 
         public void UnloadTests()
