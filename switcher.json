@@ -1,9 +1,0 @@
-{
-  "solution": "TestCentricRunner.sln",
-  "solutionFolder": null,
-  "mappings": {
-    "TestCentric.Extensibility": "../TestCentric.Extensibility/src/Testcentric.Extensibility/TestCentric.Extensibility.csproj",
-    "TestCentric.Extensibility.Api": "../TestCentric.Extensibility/src/TestCentric.Extensibility.api/TestCentric.Extensibility.Api.csproj"
-  },
-  "removeProjects": true
-}

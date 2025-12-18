@@ -10,19 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using NUnit.Common;
+using NUnit.Engine;
 using NUnit.Engine.Services;
-using TestCentric.Engine;
 using TestCentric.Gui.Model.Filter;
 using TestCentric.Gui.Model.Services;
 using TestCentric.Gui.Model.Settings;
-using EngineUnloadException = NUnit.Engine.NUnitEngineUnloadException;
-using IExtensionService = NUnit.Engine.IExtensionService;
-using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
-using IResultService = NUnit.Engine.IResultService;
-using IServiceLocator = NUnit.Engine.IServiceLocator;
-using ITestEngine = NUnit.Engine.ITestEngine;
-using ITestRunner = NUnit.Engine.ITestRunner;
-using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Model
 {
@@ -489,7 +482,7 @@ namespace TestCentric.Gui.Model
             {
                 Runner.Unload();
             }
-            catch (EngineUnloadException)
+            catch (NUnitEngineUnloadException)
             {
 
             }
@@ -693,7 +686,7 @@ namespace TestCentric.Gui.Model
 
                 Settings?.SaveSettings();
             }
-            catch (EngineUnloadException)
+            catch (NUnitEngineUnloadException)
             {
                 // TODO: Figure out what to do about this
             }
