@@ -83,7 +83,7 @@ namespace TestCentric.Gui.Model
             _nodes.Clear();
         }
 
-        public IEnumerator<TestNode> GetEnumerator()
+        public virtual IEnumerator<TestNode> GetEnumerator()
         {
             return _nodes.GetEnumerator();
         }

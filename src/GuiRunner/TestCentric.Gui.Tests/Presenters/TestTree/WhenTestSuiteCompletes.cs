@@ -9,6 +9,7 @@ using NSubstitute;
 
 namespace TestCentric.Gui.Presenters.TestTree
 {
+    using System.Linq;
     using Model;
     using Views;
 
@@ -37,11 +38,18 @@ namespace TestCentric.Gui.Presenters.TestTree
             var result = resultState.Status.ToString();
             var label = resultState.Label;
 
-            var testNode = new TestNode("<test-run id='1'><test-suite id='123'/></test-run>");
+            var testNode = new TestNode("<test-run id='1'><test-suite id='100'><test-case id='200'/></test-suite></test-run>");
             var resultNode = new ResultNode(string.IsNullOrEmpty(label)
-                ? string.Format("<test-suite id='123' result='{0}'/>", result)
-                : string.Format("<test-suite id='123' result='{0}' label='{1}'/>", result, label));
+                ? string.Format("<test-suite id='100' result='{0}'/>", result)
+                : string.Format("<test-suite id='100' result='{0}' label='{1}'/>", result, label));
+            var testCaseResultNode = new ResultNode(string.IsNullOrEmpty(label)
+                                                ? string.Format("<test-suite id='200' result='{0}'/>", result)
+                                                : string.Format("<test-suite id='200' result='{0}' label='{1}'/>", result, label));
+
             _model.LoadedTests.Returns(testNode);
+            _model.GetTestById("100").Returns(testNode.Children.First());
+            _model.TestResultManager.GetResultForTest("100").Returns(resultNode);
+            _model.TestResultManager.GetResultForTest("200").Returns(testCaseResultNode);
 
             var project = new TestCentricProject(_model, "dummy.dll");
             _model.TestCentricProject.Returns(project);

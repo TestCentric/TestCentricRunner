@@ -5,34 +5,36 @@
 
 using System.Collections.Generic;
 using TestCentric.Gui.Model;
-using TestCentric.Gui.Views;
 
 namespace TestCentric.Gui.Presenters.NUnitGrouping
 {
-    public class OutcomeGrouping : GroupingBase
+    public class TreeViewModelDurationGrouping : TreeViewModelGroupingBase
     {
-        public OutcomeGrouping(INUnitTreeDisplayStrategy support, ITestModel model, ITestTreeView view) :
-            base(support, model, view)
+        public TreeViewModelDurationGrouping(ITestModel model) : base(model)
         {
             SupportsRegrouping = true;
         }
 
         public override IList<string> GetGroupNames(TestNode testNode)
         {
-            string outcome = GetOutcome(testNode);
+            string outcome = GetDuration(testNode);
             return new List<string> { outcome };
         }
 
-        private string GetOutcome(TestNode child)
+        private string GetDuration(TestNode child)
         {
             var result = Model.TestResultManager.GetResultForTest(child.Id);
             if (result == null)
                 return "Not run";
 
-            if (result.Outcome.Equals(ResultState.Ignored))
-                return "Ignored";
+            if (result.Duration < 0.1)
+            {
+                return "Fast";
+            }
+            else if (result.Duration < 0.5)
+                return "Medium";
 
-            return result.Outcome.ToString();
+            return "Slow";
         }
     }
 }

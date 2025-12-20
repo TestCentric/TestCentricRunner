@@ -10,6 +10,7 @@ using NSubstitute;
 namespace TestCentric.Gui.Presenters.TestTree
 {
     using Model;
+    using TestCentric.Gui.Presenters.NUnitGrouping;
     using Views;
 
     public abstract class DisplayStrategyTests
@@ -29,6 +30,9 @@ namespace TestCentric.Gui.Presenters.TestTree
             var nodes = new TreeNode().Nodes;
             nodes.Add(new TreeNode("test.dll"));
             _view.Nodes.Returns(nodes);
+
+            var treeView = new TreeView();
+            _view.TreeView.Returns(treeView);
 
             var project = new TestCentricProject(_model, "dummy.dll");
             _model.TestCentricProject.Returns(project);
@@ -61,9 +65,12 @@ namespace TestCentric.Gui.Presenters.TestTree
 
     public class NUnitTreeDisplayStrategyTests : DisplayStrategyTests
     {
+        private ITreeViewModel _grouping;
+
         protected override DisplayStrategy GetDisplayStrategy()
         {
-            return new NUnitTreeDisplayStrategy(_view, _model);
+            _grouping = Substitute.For<ITreeViewModel>();
+            return new NUnitTreeDisplayStrategy(_view, _model, _grouping);
         }
 
         [TestCase(true)]
@@ -83,179 +90,37 @@ namespace TestCentric.Gui.Presenters.TestTree
         }
 
         [Test]
-        public void OnTestRunStarting_UpdateTreeNodeNames_IsInvoked()
+        public void OnTestRunStarting_Grouping_IsInvoked()
         {
-            // Assert
-            TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
-            var treeNode = _strategy.MakeTreeNode(testNode, false);
-            _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-            _view.Nodes.Add(treeNode);
-
             // Act
             _strategy.OnTestRunStarting();
 
             // Assert
-            Assert.That(treeNode.Text, Does.Match("Test1"));
+            _grouping.Received().OnTestRunStarting();
         }
 
-        [TestCase("Skipped", 0)]
-        [TestCase("Inconclusive", TestTreeView.InconclusiveIndex)]
-        [TestCase("Passed", TestTreeView.SuccessIndex)]
-        [TestCase("Skipped:Ignored", TestTreeView.IgnoredIndex)]
-        [TestCase("Warning", TestTreeView.WarningIndex)]
-        [TestCase("Failed", TestTreeView.FailureIndex)]
-        public void OnTestFinished_TreeNodeImage_IsUpdated(string testResult, int expectedImageIndex)
-        {
-            int colon = testResult.IndexOf(':');
-            string label = null;
-            if (colon != -1) 
-            {
-                label = testResult.Substring(colon + 1);
-                testResult = testResult.Substring(0, colon); 
-            }
 
-            // Arrange
-            TestNode testNode = new TestNode("<test-case id='1' />");
-            var treeNode = _strategy.MakeTreeNode(testNode, false);
-            ResultNode result = label != null
-                ? new ResultNode($"<test-case id='1' result='{testResult}' label='{label}' />")
-                : new ResultNode($"<test-case id='1' result='{testResult}'/>");
+        [Test]
+        public void OnTestFinished_Grouping_IsInvoked()
+        {
+            ResultNode result = new ResultNode($"<test-case id='1' result='Passed' />");
 
             // Act
             _strategy.OnTestFinished(result);
 
             // Assert
-            _view.Received().SetImageIndex(treeNode, expectedImageIndex);
+            _grouping.Received().OnTestFinished(result);
+
         }
 
         [Test]
-        public void OnTestRunFinished_AllRunningIcons_AreReset()
+        public void OnTestRunFinished_Grouping_IsInvoked()
         {
-            // Arrange
-            var testNode = new TestNode($"<test-suite type='TestFixture' id='1' name='FixtureA'> <test-case id='2' name='TestA'/> <test-case id='3' name='TestB'/> </test-suite>");
-            var treeNodeRoot = _strategy.MakeTreeNode(testNode, true);
-            var treeNodeTest1 = treeNodeRoot.Nodes[0];
-            var treeNodeTest2 = treeNodeRoot.Nodes[1];
-
-            treeNodeRoot.ImageIndex = TestTreeView.RunningIndex;
-            treeNodeTest1.ImageIndex = TestTreeView.RunningIndex;
-            treeNodeTest2.ImageIndex = TestTreeView.RunningIndex;
-
-            _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-
-            var nodes = new TreeNode().Nodes;
-            nodes.Add(treeNodeRoot);
-            _view.Nodes.Returns(nodes);
-            _view.TreeView.Returns(new TreeView());
-
             // Act
             _strategy.OnTestRunFinished();
 
             // Assert
-            _view.Received().SetImageIndex(treeNodeRoot, TestTreeView.InitIndex);
-            _view.Received().SetImageIndex(treeNodeTest1, TestTreeView.InitIndex);
-            _view.Received().SetImageIndex(treeNodeTest2, TestTreeView.InitIndex);
-        }
-
-        [Test]
-        public void OnTestRunFinished_ShowDurationIsInactive_TreeNodeName_IsUpdated()
-        {
-            // Arrange
-            TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
-            var treeNode = _strategy.MakeTreeNode(testNode, false);
-            ResultNode result = new ResultNode($"<test-case id='1' result='Passed'/>");
-            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
-            _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-
-            var nodes = new TreeNode().Nodes;
-            nodes.Add(treeNode);
-            _view.Nodes.Returns(nodes);
-            _view.TreeView.Returns(new TreeView());
-
-            // Act
-            _strategy.OnTestRunFinished();
-
-            // Assert
-            Assert.That(treeNode.Text, Is.EqualTo("Test1"));
-        }
-
-        [Test]
-        public void OnTestFinished_ShowDurationIsActive_TreeNodeName_IsUpdated()
-        {
-            // Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
-            TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
-            var treeNode = _strategy.MakeTreeNode(testNode, false);
-            ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
-            _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-
-            var nodes = new TreeNode().Nodes;
-            nodes.Add(treeNode);
-            _view.Nodes.Returns(nodes);
-            _view.TreeView.Returns(new TreeView());
-
-            // Act
-            _strategy.OnTestRunFinished();
-
-            // Assert
-            Assert.That(treeNode.Text, Does.Match(@"Test1 \[1[,.]500s\]"));
-        }
-
-        [Test]
-        public void OnTestFinished_SortByDurationIsActive_Tree_IsSorted()
-        {
-            // Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
-            TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
-            var treeNode = _strategy.MakeTreeNode(testNode, false);
-            ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
-            _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-            _view.SortCommand.SelectedItem.Returns(TreeViewNodeComparer.Duration);
-
-            var nodes = new TreeNode().Nodes;
-            nodes.Add(treeNode);
-            _view.Nodes.Returns(nodes);
-            _view.TreeView.Returns(new TreeView());
-
-            // Act
-            _strategy.OnTestRunFinished();
-
-            // Assert
-            _view.Received().Sort();
-        }
-
-        [Test]
-        public void MakeTreeNode_ShowDurationIsActive_TreeNodeName_ContainsDuration()
-        {
-            // Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
-            TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
-            ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
-
-            // Act
-            var treeNode = _strategy.MakeTreeNode(testNode, false);
-
-            // Assert
-            Assert.That(treeNode.Text, Does.Match(@"Test1 \[1[,.]500s\]"));
-        }
-
-        [Test]
-        public void MakeTreeNode_ShowDurationIsInactive_TreeNodeName_ContainsTestName()
-        {
-            // Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(false);
-            TestNode testNode = new TestNode("<test-case id='1' name='Test1'/>");
-            ResultNode result = new ResultNode($"<test-case id='1' result='Passed' duration='1.5'/>");
-            _model.TestResultManager.GetResultForTest(testNode.Id).Returns(result);
-
-            // Act
-            var treeNode = _strategy.MakeTreeNode(testNode, false);
-
-            // Assert
-            Assert.That(treeNode.Text, Does.Match(@"Test1"));
+            _grouping.Received().OnTestRunFinished();
         }
 
         [Test]
@@ -316,7 +181,7 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             // Assert
             Assert.That((treeNode.Tag as TestNode).Id, Is.EqualTo("1-1031"));
-            Assert.That(treeNode.Text, Is.EqualTo("Library.Test.Folder"));
+            Assert.That(treeNode.Text, Is.EqualTo("Library.Test.Folder (0)"));
             Assert.That(treeNode.Nodes.Count, Is.EqualTo(0));
         }
 
@@ -327,8 +192,12 @@ namespace TestCentric.Gui.Presenters.TestTree
             string xml =
                 "<test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
-                        @"<test-suite type='TestSuite' id='1-1032' name='Test' />" +
-                        @"<test-suite type='TestSuite' id='1-1033' name='Folder' />" +
+                        "<test-suite type='TestSuite' id='1-1032' name='Test' >" +
+                            "<test-case id='1-1040' name='Test1'/>" +
+                        "</test-suite>" +
+                        "<test-suite type='TestSuite' id='1-1033' name='Folder' >" +
+                            "<test-case id='1-1050' name='Test1'/>" +
+                        "</test-suite>" +
                     "</test-suite>" +
                 "</test-suite>";
 
@@ -340,15 +209,15 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             // Assert
             Assert.That((treeNode.Tag as TestNode).Id, Is.EqualTo("1-1031"));
-            Assert.That(treeNode.Text, Is.EqualTo("Library"));
+            Assert.That(treeNode.Text, Is.EqualTo("Library (2)"));
 
             var child1 = treeNode.Nodes[0];
             Assert.That((child1.Tag as TestNode).Id, Is.EqualTo("1-1032"));
-            Assert.That(child1.Text, Is.EqualTo("Test"));
+            Assert.That(child1.Text, Is.EqualTo("Test (1)"));
 
             var child2 = treeNode.Nodes[1];
             Assert.That((child2.Tag as TestNode).Id, Is.EqualTo("1-1033"));
-            Assert.That(child2.Text, Is.EqualTo("Folder"));
+            Assert.That(child2.Text, Is.EqualTo("Folder (1)"));
         }
 
         [Test]
@@ -373,7 +242,7 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             // Assert
             Assert.That((treeNode.Tag as TestNode).Id, Is.EqualTo("1-1031"));
-            Assert.That(treeNode.Text, Is.EqualTo("Library.Test.Folder"));
+            Assert.That(treeNode.Text, Is.EqualTo("Library.Test.Folder (0)"));
             Assert.That(treeNode.Nodes.Count, Is.EqualTo(0));
         }
 
@@ -384,8 +253,12 @@ namespace TestCentric.Gui.Presenters.TestTree
             string xml =
                 "<test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='SetUpFixture' id='1-1031' name='Library'>" +
-                        @"<test-suite type='TestSuite' id='1-1032' name='Test' />" +
-                        @"<test-suite type='TestSuite' id='1-1033' name='Folder' />" +
+                        "<test-suite type='TestSuite' id='1-1032' name='Test'>" +
+                            "<test-case id='1-1040' name='Test1'/>" +
+                        "</test-suite>" +
+                        "<test-suite type='TestSuite' id='1-1033' name='Folder'>" +
+                            "<test-case id='1-1050' name='Test1'/>" +
+                        "</test-suite>" +
                     "</test-suite>" +
                 "</test-suite>";
 
@@ -397,15 +270,15 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             // Assert
             Assert.That((treeNode.Tag as TestNode).Id, Is.EqualTo("1-1031"));
-            Assert.That(treeNode.Text, Is.EqualTo("Library"));
+            Assert.That(treeNode.Text, Is.EqualTo("Library (2)"));
 
             var child1 = treeNode.Nodes[0];
             Assert.That((child1.Tag as TestNode).Id, Is.EqualTo("1-1032"));
-            Assert.That(child1.Text, Is.EqualTo("Test"));
+            Assert.That(child1.Text, Is.EqualTo("Test (1)"));
 
             var child2 = treeNode.Nodes[1];
             Assert.That((child2.Tag as TestNode).Id, Is.EqualTo("1-1033"));
-            Assert.That(child2.Text, Is.EqualTo("Folder"));
+            Assert.That(child2.Text, Is.EqualTo("Folder (1)"));
         }
 
         [Test]

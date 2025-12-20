@@ -5,13 +5,14 @@
 
 
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System;
 using TestCentric.Gui.Model;
 using System.Linq;
+using System.Timers;
 
 namespace TestCentric.Gui.Presenters.NUnitGrouping
 {
+
     /// <summary>
     /// This class is introduced to improve the TreeView performance for regrouping
     /// It introduces bulk processing of test events instead of processing test events one-by-one.
@@ -61,7 +62,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                 {
                     _timer = new Timer();
                     _timer.Interval = 800;
-                    _timer.Tick += TimerTimeout;
+                    _timer.Elapsed += TimerTimeout;
                     _timer.Start();
                 }
             };

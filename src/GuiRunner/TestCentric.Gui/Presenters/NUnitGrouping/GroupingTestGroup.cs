@@ -6,6 +6,7 @@
 namespace TestCentric.Gui.Presenters.NUnitGrouping
 {
     using System.Collections.Generic;
+    using System.Linq;
     using TestCentric.Gui.Model;
     using TestCentric.Gui.Model.Filter;
 
@@ -15,41 +16,39 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
     public class GroupingTestGroup : TestGroup
     {
         /// <inheritdoc />
-        public GroupingTestGroup(TestNode associatedTestNode, string name) : base(name)
+        public GroupingTestGroup(TreeNodeViewModel viewModel, string name) : base(name)
         {
-            AssociatedTestNode = associatedTestNode;
+            NodeViewModel = viewModel;
         }
 
         /// <inheritdoc />
-        public GroupingTestGroup(TestNode associatedTestNode, string name, int imageIndex) : base(name, imageIndex)
+        public GroupingTestGroup(TreeNodeViewModel viewModel, string name, int imageIndex) : base(name, imageIndex)
         {
-            AssociatedTestNode = associatedTestNode;
+            NodeViewModel = viewModel;
         }
 
-        public TestNode AssociatedTestNode { get; set; }
+        internal TreeNodeViewModel NodeViewModel { get; }
+
+        internal TestNode AssociatedTestNode => NodeViewModel.AssociatedTestNode;
+
+        public override double? Duration => NodeViewModel.TestDuration;
 
         public override TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
         {
             TestFilterBuilder builder = new TestFilterBuilder(guiFilter);
 
-            foreach (TestNode test in GetNonExplicitTests())
+            foreach (TestNode test in NodeViewModel.GetNonExplicitTests())
                 builder.AddSelectedTest(test);
 
             // Special case in which no filter can be composed and a fallback to individual IDs must be applied
-            builder.AllTestCaseProvider = GetNonExplicitTests;
+            builder.AllTestCaseProvider = NodeViewModel.GetNonExplicitTests;
             return builder.Build();
         }
 
-        protected IList<TestNode> GetNonExplicitTests()
+        /// <inheritdoc />
+        public override IEnumerator<TestNode> GetEnumerator()
         {
-            IList<TestNode> result = new List<TestNode>();
-
-            foreach (TestNode test in this)
-                if (test.RunState != RunState.Explicit &&
-                    (test.Parent.RunState != RunState.Explicit || test.Parent == AssociatedTestNode))
-                    result.Add(test);
-
-            return result;
+            return TreeNodeViewModel.GetTestCases(NodeViewModel).Select(s => s.AssociatedTestNode).GetEnumerator();
         }
     }
 }

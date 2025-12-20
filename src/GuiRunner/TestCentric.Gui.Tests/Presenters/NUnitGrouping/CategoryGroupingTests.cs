@@ -18,7 +18,6 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
     internal class CategoryGroupingTests
     {
         private ITestModel _model;
-        private INUnitTreeDisplayStrategy _strategy;
         private ITestTreeView _view;
         private TreeNodeCollection _createNodes;
 
@@ -28,25 +27,16 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             _model = Substitute.For<ITestModel>();
             IUserSettings userSettings = Substitute.For<IUserSettings>();
             userSettings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
+            userSettings.Gui.TestTree.NUnitGroupBy.Returns("CATEGORY");
             userSettings.Gui.TestTree.ShowNamespace.Returns(true);
             _model.Settings.Returns(userSettings);
-            _strategy = Substitute.For<INUnitTreeDisplayStrategy>();
             _view = Substitute.For<ITestTreeView>();
 
             var treeView = new TreeView();
             _view.TreeView.Returns(treeView);
 
-            _strategy.ShowTreeNodeType(null).ReturnsForAnyArgs(true);
-
             // We can't construct a TreeNodeCollection, so we need to fake it
             _createNodes = new TreeNode().Nodes;
-            _strategy.MakeTreeNode(Arg.Any<TestNode>()).ReturnsForAnyArgs(x => new TreeNode(x.ArgAt<TestNode>(0).Name) { Tag = x.ArgAt<TestNode>(0) });
-            _strategy.MakeTreeNode(Arg.Any<TestGroup>()).ReturnsForAnyArgs(x => {
-                var testGroup = x.ArgAt<TestGroup>(0);
-                var treeNode = new TreeNode(testGroup.Name) { Tag = testGroup };
-                testGroup.TreeNode = treeNode;
-                return treeNode;
-            });
             _view.When(t => t.Add(Arg.Any<TreeNode>())).Do(x => _createNodes.Add(x.ArgAt<TreeNode>(0)));
             _view.Nodes.Returns(x => _createNodes);
         }
@@ -67,9 +57,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                             CreateTestcaseXml("3-2011", "TestA", ""),
                             CreateTestcaseXml("3-2012", "TestB", "")))));
 
+            _model.LoadedTests.Returns(testNode);
+
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(1));
@@ -101,9 +93,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                             CreateTestcaseXml("3-2011", "TestA", category),
                             CreateTestcaseXml("3-2012", "TestB", category)))));
 
+            _model.LoadedTests.Returns(testNode);
+
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(1));
@@ -134,10 +128,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                         CreateTestFixtureXml("3-2010", "Fixture_2", new List<string>() { "CategoryA", "CategoryB" },
                             CreateTestcaseXml("3-2011", "TestA", ""),
                             CreateTestcaseXml("3-2012", "TestB", "")))));
+            _model.LoadedTests.Returns(testNode);
 
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(2));
@@ -178,10 +173,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                         CreateTestFixtureXml("3-2010", "Fixture_2", new List<string>(),
                             CreateTestcaseXml("3-2011", "TestA", new List<string>() { "CategoryA", "CategoryB" }),
                             CreateTestcaseXml("3-2012", "TestB", "")))));
+            _model.LoadedTests.Returns(testNode);
 
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(3));
@@ -227,10 +223,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                                 CreateTestFixtureXml("3-3010", "Fixture_2", new List<string>() { "CategoryA" },
                                     CreateTestcaseXml("3-3011", "TestA", ""),
                                     CreateTestcaseXml("3-3012", "TestB", "")))))));
+            _model.LoadedTests.Returns(testNode);
 
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(1));
@@ -263,10 +260,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                                 CreateTestFixtureXml("3-3010", "Fixture_2", new List<string>(),
                                     CreateTestcaseXml("3-3011", "TestA", "CategoryC"),
                                     CreateTestcaseXml("3-3012", "TestB", "CategoryD")))))));
+            _model.LoadedTests.Returns(testNode);
 
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(4));
@@ -312,10 +310,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                                 CreateTestFixtureXml("3-3010", "Fixture_2", new List<string>(),
                                     CreateTestcaseXml("3-3011", "TestA", "CategoryA"),
                                     CreateTestcaseXml("3-3012", "TestB", "CategoryB")))))));
+            _model.LoadedTests.Returns(testNode);
 
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(2));
@@ -348,10 +347,11 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                         CreateTestFixtureXml("3-1010", "Fixture_1", new List<string>() { "CategoryA", "CategoryA" },
                             CreateTestcaseXml("3-1011", "TestA", "CategoryA"),
                             CreateTestcaseXml("3-1012", "TestB", "")))));
+            _model.LoadedTests.Returns(testNode);
 
             // Act
-            var grouping = new CategoryGrouping(_strategy, _model, _view);
-            grouping.CreateTree(testNode);
+            var strategy = new NUnitTreeDisplayStrategy(_view, _model);
+            strategy.OnTestLoaded(testNode, null);
 
             // Assert tree nodes
             Assert.That(_createNodes.Count, Is.EqualTo(1));

@@ -7,14 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using TestCentric.Gui.Model;
-using TestCentric.Gui.Views;
 
 namespace TestCentric.Gui.Presenters.NUnitGrouping
 {
-    public class CategoryGrouping : GroupingBase
+    public class TreeViewModelCategoryGrouping : TreeViewModelGroupingBase
     {
-        public CategoryGrouping(INUnitTreeDisplayStrategy support, ITestModel model, ITestTreeView view) :
-            base(support, model, view)
+        public TreeViewModelCategoryGrouping(ITestModel model) : base(model)
         {
         }
 
@@ -42,11 +40,18 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
 
             return categories;
         }
-
-        /// <inheritdoc />
-        protected override TestGroup CreateTestGroup(string name, TestNode testNode)
+        protected override TreeNodeViewModel CreateTreeNodeViewModel(TestNode testNode, string name)
         {
-            return new CategoryGroupingTestGroup(testNode, CurrentRootGroupName, name);
+            return new TreeNodeViewModel(Model, testNode, name) { CreateTestItemCallback = CreateTestItemCallback };
+        }
+
+        private ITestItem CreateTestItemCallback(TreeNodeViewModel viewModel)
+        {
+            // For leaf nodes (e.g. a single test case) return TestItem
+            if (!viewModel.AssociatedTestNode.IsAssembly && !viewModel.AssociatedTestNode.IsSuite && !viewModel.AssociatedTestNode.IsProject)
+                return viewModel.AssociatedTestNode;
+
+            return new CategoryGroupingTestGroup(viewModel, CurrentRootGroupName, viewModel.Name);
         }
     }
 }

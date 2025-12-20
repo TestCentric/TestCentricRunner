@@ -151,6 +151,8 @@ namespace TestCentric.Gui.Model
             }
         }
 
+        public TestSelection TestsInRun => _lastTestRun.SelectedTests;
+
         #endregion
 
         #region Current State of the Model
@@ -248,6 +250,17 @@ namespace TestCentric.Gui.Model
                 }
 
                 return testNodes.Contains(testNode);
+            }
+
+            public TestSelection TestsInRun()
+            {
+                // Get list of testNodes only once
+                if (testNodes.Count == 0)
+                {
+                    GetTestNodes(SelectedTests, SelectedTests.GetExplicitChildNodes());
+                }
+
+                return new TestSelection(testNodes);
             }
 
             private void GetTestNodes(IEnumerable<TestNode> selectedTests, IList<TestNode> explicitTests)
