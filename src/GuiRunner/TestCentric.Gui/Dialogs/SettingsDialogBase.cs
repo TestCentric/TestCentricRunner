@@ -161,7 +161,7 @@ namespace TestCentric.Gui.Dialogs
 
             foreach(var entry in PackageSettingChanges)
             {
-                Model.TestCentricProject.AddSetting(entry.Key, entry.Value);
+                Model.TestCentricProject?.AddSetting(entry.Key, entry.Value);
             }
         }
         #endregion

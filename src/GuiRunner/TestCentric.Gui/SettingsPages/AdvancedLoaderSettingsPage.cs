@@ -203,7 +203,7 @@ namespace TestCentric.Gui.SettingsPages
             this.numberOfAgentsCheckBox.Name = "numberOfAgentsCheckBox";
             this.numberOfAgentsCheckBox.Size = new System.Drawing.Size(205, 17);
             this.numberOfAgentsCheckBox.TabIndex = 44;
-            this.numberOfAgentsCheckBox.Text = "LImit simultaneous agent processes to";
+            this.numberOfAgentsCheckBox.Text = "Limit simultaneous agent processes to";
             this.numberOfAgentsCheckBox.UseVisualStyleBackColor = true;
             this.numberOfAgentsCheckBox.CheckedChanged += new System.EventHandler(this.numberOfAgentsCheckBox_CheckedChanged);
             // 
