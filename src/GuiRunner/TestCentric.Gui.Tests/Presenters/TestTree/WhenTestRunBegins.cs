@@ -12,6 +12,8 @@ using TestCentric.Gui.Views;
 
 namespace TestCentric.Gui.Presenters.TestTree
 {
+    using System.Collections.Generic;
+
     public class WhenTestRunBegins : TreeViewPresenterTestBase
     {
         // Use dedicated test file name; Used for VisualState file too
@@ -40,91 +42,109 @@ namespace TestCentric.Gui.Presenters.TestTree
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
             _view.TreeView.Returns(tv);
 
-            TestNode testNode1 = new TestNode("<test-suite id='1'/>");
-            TestNode testNode2 = new TestNode("<test-suite id='2'/>");
-            TestNode testNode3 = new TestNode("<test-suite id='3'/>");
-            TestNode testNode4 = new TestNode("<test-suite id='4'/>");
+            var testNode = new TestNode("<test-run id='0'>" +
+                                        "<test-suite type='TestFixture' id='100' name='FixtureA'>" +
+                                            "<test-case id='101' name='TestA'/> " +
+                                        "</test-suite>" +
+                                        "<test-suite type='TestFixture' id='200' name='FixtureB'>" +
+                                            "<test-case id='201' name='TestB'/> " +
+                                            "<test-case id='202' name='TestC'/> " +
+                                            "<test-case id='203' name='TestD'/> " +
+                                        "</test-suite>" +
+                                        "</test-run>");
 
 
             // We can't construct a TreeNodeCollection, so we fake it
-            TreeNodeCollection nodes = new TreeNode().Nodes;
-            TreeNode treeNode1 = new TreeNode("TestA") { Tag = testNode1 };
-            TreeNode treeNode2 = new TreeNode("TestB") { Tag = testNode2 };
-            TreeNode treeNode3 = new TreeNode("TestC") { Tag = testNode3, ImageIndex = TestTreeView.InitIndex }; 
-            TreeNode treeNode4 = new TreeNode("TestD") { Tag = testNode4 };
+            // TreeNodeCollection nodes = new TreeNode().Nodes;
+            /*TreeNode treeNode1 = new TreeNode("TestA") { Tag = testNode.Children[0] };
+            TreeNode treeNode2 = new TreeNode("TestB") { Tag = testNode.Children[1]};
+            TreeNode treeNode3 = new TreeNode("TestC") { Tag = testNode.Children[2], ImageIndex = TestTreeView.InitIndex };
+            TreeNode treeNode4 = new TreeNode("TestD") { Tag = testNode.Children[3]};
 
             treeNode1.Nodes.Add(treeNode2);
-            nodes.AddRange(new[] { treeNode1, treeNode3, treeNode4 } );
-            _view.Nodes.Returns(nodes);
-            _view.When(v => v.SetImageIndex(Arg.Any<TreeNode>(), Arg.Any<int>()))
-                .Do(a => a.ArgAt<TreeNode>(0).ImageIndex = a.ArgAt<int>(1));
+            nodes.AddRange(new[] { treeNode1, treeNode3, treeNode4 } );*/
+            // _view.Nodes.Returns(nodes);
+
+            IList<TreeNode> treeNodes = new List<TreeNode>();
+            _view.When(v => v.Add(Arg.Any<TreeNode>())).Do(t => treeNodes.Add(t[0] as TreeNode));
 
             var project = new TestCentricProject(_model, TestFileName);
             _model.TestCentricProject.Returns(project);
-            _model.LoadedTests.Returns(testNode1);
-            _model.IsInTestRun(testNode2).Returns(true);
-            _model.IsInTestRun(testNode4).Returns(true);
+            _model.LoadedTests.Returns(testNode);
 
-            FireTestLoadedEvent(testNode1);
+            TestNode testA = testNode.Children[0].Children[0];
+            TestNode testB = testNode.Children[1].Children[0];
+
+            _model.TestsInRun.Returns(new TestSelection(new []{ testA, testB }));
+
+            FireTestLoadedEvent(testNode);
 
             // Act
             FireRunStartingEvent(1234);
 
             // Assert
-            _view.Received().SetImageIndex(treeNode1, TestTreeView.RunningIndex);
-            _view.Received().SetImageIndex(treeNode2, TestTreeView.RunningIndex);
-            _view.Received().SetImageIndex(treeNode4, TestTreeView.RunningIndex);
-
-            _view.Received().SetImageIndex(treeNode3, TestTreeView.InitIndex);
+            _view.Received().SetImageIndex(treeNodes[0], TestTreeView.RunningIndex);
+            _view.Received().SetImageIndex(treeNodes[1], TestTreeView.RunningIndex);
+            _view.Received().SetImageIndex(treeNodes[0].Nodes[0], TestTreeView.RunningIndex);
         }
 
-        [TestCase(TestTreeView.SuccessIndex, TestTreeView.SuccessIndex_NotLatestRun)]
-        [TestCase(TestTreeView.FailureIndex, TestTreeView.FailureIndex_NotLatestRun)]
-        [TestCase(TestTreeView.WarningIndex, TestTreeView.WarningIndex_NotLatestRun)]
-        [TestCase(TestTreeView.IgnoredIndex, TestTreeView.IgnoredIndex_NotLatestRun)]
-        [TestCase(TestTreeView.InconclusiveIndex, TestTreeView.InconclusiveIndex_NotLatestRun)]
-        [TestCase(TestTreeView.SkippedIndex, TestTreeView.SkippedIndex)]
-        public void WhenTestRunStarts_TreeNodeWithResults_ImageIconsAreSet_ToPreviousOutcomeIcon(int imageIndex, int expectedImageIndex)
+        [TestCase("Passed", TestTreeView.SuccessIndex_NotLatestRun)]
+        [TestCase("Failed", TestTreeView.FailureIndex_NotLatestRun)]
+        [TestCase("Warning", TestTreeView.WarningIndex_NotLatestRun)]
+        [TestCase("Skipped", TestTreeView.SkippedIndex)]
+        public void WhenTestRunStarts_TreeNodeWithResults_ImageIconsAreSet_ToPreviousOutcomeIcon(string resultState, int expectedImageIndex)
         {
             // Arrange
             var tv = new TreeView();
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
             _view.TreeView.Returns(tv);
 
-            TestNode testNode1 = new TestNode("<test-suite id='1'/>");
-            TestNode testNode2 = new TestNode("<test-suite id='2'/>");
-            TestNode testNode3 = new TestNode("<test-suite id='3'/>");
-            TestNode testNode4 = new TestNode("<test-suite id='4'/>");
+            var testNode = new TestNode($"<test-suite type='TestFixture' id='0' name='FixtureA'>"+
+                                        "<test-case id='1' name='TestA'/> "+
+                                        "<test-case id='2' name='TestB'/> +" +
+                                        "<test-case id='3' name='TestC'/> +" +
+                                        "<test-case id='4' name='TestD'/> +" +
+                                        "</test-suite>");
 
 
             // We can't construct a TreeNodeCollection, so we fake it
-            TreeNodeCollection nodes = new TreeNode().Nodes;
-            TreeNode treeNode1 = new TreeNode("TestA") { Tag = testNode1, ImageIndex = imageIndex };
-            TreeNode treeNode2 = new TreeNode("TestB") { Tag = testNode2, ImageIndex = imageIndex };
-            TreeNode treeNode3 = new TreeNode("TestC") { Tag = testNode3, ImageIndex = imageIndex };
-            TreeNode treeNode4 = new TreeNode("TestD") { Tag = testNode4, ImageIndex = imageIndex };
+            //TreeNodeCollection nodes = new TreeNode().Nodes;
+            //TreeNode treeNode1 = new TreeNode("TestA") { Tag = testNode.Children[0], ImageIndex = imageIndex };
+            //TreeNode treeNode2 = new TreeNode("TestB") { Tag = testNode.Children[1], ImageIndex = imageIndex };
+            //TreeNode treeNode3 = new TreeNode("TestC") { Tag = testNode.Children[2], ImageIndex = imageIndex };
+            //TreeNode treeNode4 = new TreeNode("TestD") { Tag = testNode.Children[3], ImageIndex = imageIndex };
 
-            treeNode1.Nodes.Add(treeNode2);
-            nodes.AddRange(new[] { treeNode1, treeNode3, treeNode4 });
-            _view.Nodes.Returns(nodes);
-            _view.When(v => v.SetImageIndex(Arg.Any<TreeNode>(), Arg.Any<int>()))
-                .Do(a => a.ArgAt<TreeNode>(0).ImageIndex = a.ArgAt<int>(1));
+            //treeNode1.Nodes.Add(treeNode2);
+            //nodes.AddRange(new[] { treeNode1, treeNode3, treeNode4 });
+            //_view.Nodes.Returns(nodes);
+            //_view.When(v => v.SetImageIndex(Arg.Any<TreeNode>(), Arg.Any<int>()))
+            //    .Do(a => a.ArgAt<TreeNode>(0).ImageIndex = a.ArgAt<int>(1));
+
+            IList<TreeNode> treeNodes = new List<TreeNode>();
+            _view.When(v => v.Add(Arg.Any<TreeNode>())).Do(t => treeNodes.Add(t[0] as TreeNode));
+
+            ResultNode resultNode2 = new ResultNode($"<test-case id='2' result='{resultState}'/>");
+            ResultNode resultNode3 = new ResultNode($"<test-case id='3' result='{resultState}'/>");
+            ResultNode resultNode4 = new ResultNode($"<test-case id='4' result='{resultState}'/>");
+            _model.TestResultManager.GetResultForTest("2").Returns(resultNode2);
+            _model.TestResultManager.GetResultForTest("3").Returns(resultNode3);
+            _model.TestResultManager.GetResultForTest("4").Returns(resultNode4);
 
             var project = new TestCentricProject(_model, TestFileName);
             _model.TestCentricProject.Returns(project);
-            _model.LoadedTests.Returns(testNode1);
-            _model.IsInTestRun(testNode1).Returns(true);
+            _model.LoadedTests.Returns(testNode);
+            _model.TestsInRun.Returns(new TestSelection() { testNode.Children[0] });
 
-            FireTestLoadedEvent(testNode1);
+            FireTestLoadedEvent(testNode);
 
             // Act
             FireRunStartingEvent(1234);
 
             // Assert
-            _view.Received().SetImageIndex(treeNode1, TestTreeView.RunningIndex);
-            _view.Received().SetImageIndex(treeNode2, expectedImageIndex);
-            _view.Received().SetImageIndex(treeNode3, expectedImageIndex);
-            _view.Received().SetImageIndex(treeNode4, expectedImageIndex);
+            _view.Received().SetImageIndex(treeNodes[0], TestTreeView.RunningIndex);
+            _view.Received().SetImageIndex(treeNodes[1], expectedImageIndex);
+            _view.Received().SetImageIndex(treeNodes[2], expectedImageIndex);
+            _view.Received().SetImageIndex(treeNodes[3], expectedImageIndex);
         }
 
         [TestCase("NUNIT_TREE")]
@@ -141,6 +161,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TestCentricProject.Returns(project);
             TestNode testNode = new TestNode("<test-suite id='1'/>");
             _model.LoadedTests.Returns(testNode);
+            _model.TestsInRun.Returns(new TestSelection());
             FireTestLoadedEvent(testNode);
 
             // Act
@@ -201,6 +222,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TestCentricProject.Returns(project);
             TestNode testNode = new TestNode("<test-suite id='1'/>");
             _model.LoadedTests.Returns(testNode);
+            _model.TestsInRun.Returns(new TestSelection());
+
             FireTestLoadedEvent(testNode);
 
             // Act

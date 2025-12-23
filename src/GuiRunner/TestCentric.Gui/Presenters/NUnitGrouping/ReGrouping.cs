@@ -22,18 +22,12 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
     /// </summary>
     internal class ReGrouping
     {
-        public ReGrouping(ITestTreeView view, INUnitTreeDisplayStrategy strategy, INUnitGrouping grouping)
+        public ReGrouping(ITreeViewModel treeViewModel)
         {
-            TreeView = view;
-            Strategy = strategy;
-            Grouping = grouping;
+            TreeViewModel = treeViewModel;
         }
 
-        private INUnitGrouping Grouping { get; }
-
-        private ITestTreeView TreeView { get; }
-
-        private INUnitTreeDisplayStrategy Strategy { get; }
+        private ITreeViewModel TreeViewModel { get; }
 
         /// <summary>
         /// Move the TreeNode path of a TestNode to a new group
@@ -41,37 +35,26 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         /// </summary>
         public void Regroup(IList<TestNode> testNodes)
         {
-            TreeView.TreeView.BeginUpdate();
-
-            var treeNodes = new List<TreeNode>();
             foreach (TestNode testNode in testNodes)
             {
                 if (testNode.IsSuite)
                     continue;
 
-                TreeNode treeNode = GetTreeNode(testNode);
-
                 // 1. Determine new group
-                string newGroupName = Grouping.GetGroupNames(testNode).First();
+                string newGroupName = TreeViewModel.GetGroupNames(testNode).First();
 
                 // 2. Remove TestCase from groups and remove TreeNodes if required
-                IList<TreeNode> oldTreeNodes = UpdateOrRemoveTreeNodesInPath(treeNode, testNode);
-                treeNodes.AddRange(oldTreeNodes);
+                TreeViewModel.RemoveNode(testNode);
 
                 // 3. Create new TreeNode path
-                IList <TreeNode> newTreeNodes = Grouping.CreateTreeNodes(testNode, newGroupName);
-                treeNodes.AddRange(newTreeNodes);
+                TreeViewModel.CreateTreeNodeViewModels(testNode, newGroupName);
 
                 // 4. Expand newly created treeNodes
-                ExpandTreeNodes(newTreeNodes);
+                // ExpandTreeNodes(newTreeNodes);
             }
 
             // 5. Update all tree nodes to reflect changed number of containing tests in group
-            IList<TestGroup> groups = treeNodes.Select(t => t.Tag).OfType<TestGroup>().Distinct().ToList();
-            Strategy.UpdateTreeNodeNames(groups);
-            TreeNodeImageHandler.SetTreeNodeImages(TreeView, groups);
-
-            TreeView.TreeView.EndUpdate();
+            TreeViewModel.UpdateTreeModel(testNodes);
         }
 
         /// <summary>
@@ -79,61 +62,24 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         /// </summary>
         public bool IsRegroupRequired(TestNode testNode)
         {
-            TreeNode treeNode = GetTreeNode(testNode);
-            string newGroupName = Grouping.GetGroupNames(testNode).First();
-            string oldGroupName = GetOldGroupName(treeNode);
+            TreeNodeViewModel viewModelNode = TreeViewModel.GetTreeNodeViewModel(testNode);
+
+            string newGroupName = TreeViewModel.GetGroupNames(testNode).First();
+            string oldGroupName = GetOldGroupName(viewModelNode);
             return oldGroupName != newGroupName;
-        }
-
-        private TreeNode GetTreeNode(TestNode testNode)
-        {
-            // Currently there's only one single TreeNode associated to a TestNode
-            // Only 'category grouping' will have multiple associated TreeNodes, but that grouping doesn't require regrouping
-            return Strategy.GetTreeNodesForTest(testNode).FirstOrDefault();
-        }
-
-        private string GetOldGroupName(TreeNode treeNode)
-        {
-            while (treeNode.Parent != null)
-                treeNode = treeNode.Parent;
-
-            if (treeNode.Tag is TestGroup testGroup)
-                return testGroup.Name;
-
-            return "";
-        }
-
-        private IList<TreeNode> UpdateOrRemoveTreeNodesInPath(TreeNode treeNode, TestNode testNode)
-        {
-            IList<TreeNode> treeNodes = GetTreeNodePath(treeNode);
-
-            // Remove leaf tree node associated with test case
-            Strategy.RemoveTreeNode(treeNode);
-
-            // Update all tree nodes and groups along the tree node path
-            IList<TestGroup> groups = treeNodes.Select(t => t.Tag).OfType<TestGroup>().ToList();
-            foreach (TestGroup group in groups)
-                Grouping.RemoveTestFromGroup(group, testNode);
-
-            return treeNodes;
-        }
-
-        private IList<TreeNode> GetTreeNodePath(TreeNode treeNode)
-        {
-            IList<TreeNode> treeNodes = new List<TreeNode>();
-
-            while (treeNode != null)
-            {
-                treeNodes.Add(treeNode);
-                treeNode = treeNode.Parent;
-            }
-
-            return treeNodes;
         }
 
         private void ExpandTreeNodes(IList<TreeNode> newTreeNodes)
         {
             newTreeNodes.FirstOrDefault()?.Expand();
+        }
+
+        private string GetOldGroupName(TreeNodeViewModel viewModel)
+        {
+            while (viewModel.Parent != null)
+                viewModel = viewModel.Parent;
+
+            return viewModel.Name;
         }
     }
 }

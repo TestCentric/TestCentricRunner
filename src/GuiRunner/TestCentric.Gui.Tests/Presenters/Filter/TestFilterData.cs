@@ -21,13 +21,13 @@ namespace TestCentric.Gui.Presenters.Filter
                                         CreateTestSuiteXml("3-2001", "NamespaceB", 
                                             CreateTestFixtureXml("3-2010", "Fixture_2", new List<string>(),
                                                 CreateTestcaseXml("3-2011", "TestA", ""),
-                                                CreateTestcaseXml("3-2012", "TestB", ""))),
+                                                CreateTestcaseXml("3-2012", "TestB", "")),
                                             CreateExplicitTestFixtureXml("3-3010", "ExplicitFixture", new List<string>(),
                                                 CreateTestcaseXml("3-3011", "TestA", ""),
                                                 CreateTestcaseXml("3-3012", "TestB", "")),
                                             CreateTestFixtureXml("3-4010", "Fixture_3", new List<string>(),
                                                 CreateTestcaseXml("3-4011", "TestA", ""),
-                                                CreateExplicitTestcaseXml("3-4012", "TestB", "")))));
+                                                CreateExplicitTestcaseXml("3-4012", "TestB", ""))))));
         }
 
         internal static TestNode GetTestById(TestNode node, string id)

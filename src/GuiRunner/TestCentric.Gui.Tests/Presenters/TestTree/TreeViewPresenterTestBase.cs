@@ -30,6 +30,9 @@ namespace TestCentric.Gui.Presenters.TestTree
             _view.Load += Raise.Event<System.EventHandler>(_view, new System.EventArgs());
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
 
+            TreeView treeView = new TreeView();
+            _view.TreeView.Returns(treeView);
+
             // We can't construct a TreeNodeCollection, so we fake it
             var nodes = new TreeNode().Nodes;
             nodes.Add(new TreeNode("test.dll"));

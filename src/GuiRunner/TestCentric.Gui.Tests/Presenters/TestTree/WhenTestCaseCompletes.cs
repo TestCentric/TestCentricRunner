@@ -9,6 +9,7 @@ using NSubstitute;
 
 namespace TestCentric.Gui.Presenters.TestTree
 {
+    using System.Linq;
     using Model;
     using Views;
 
@@ -46,6 +47,8 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             var project = new TestCentricProject(_model, "dummy.dll");
             _model.TestCentricProject.Returns(project);
+            _model.GetTestById("123").Returns(testNode.Children.First());
+            _model.TestResultManager.GetResultForTest("123").Returns(resultNode);
 
             //var treeNode = _adapter.MakeTreeNode(result);
             //_adapter.NodeIndex[suiteResult.Id] = treeNode;

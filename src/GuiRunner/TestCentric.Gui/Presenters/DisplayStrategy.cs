@@ -212,7 +212,7 @@ namespace TestCentric.Gui.Presenters
         /// Update all tree node names
         /// If setting 'ShowDuration' is active and test results are available, show test duration in tree node.
         /// </summary>
-        public void UpdateTreeNodeNames()
+        public virtual void UpdateTreeNodeNames()
         {
             UpdateTreeNodeNames(_view.Nodes);
         }

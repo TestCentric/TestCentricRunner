@@ -14,8 +14,8 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
     public class CategoryGroupingTestGroup : GroupingTestGroup
     {
         /// <inheritdoc />
-        public CategoryGroupingTestGroup(TestNode associatedTestNode, string category, string name)
-            : base(associatedTestNode, name)
+        public CategoryGroupingTestGroup(TreeNodeViewModel viewModel, string category, string name)
+            : base(viewModel, name)
         {
             Category = category;
         }
@@ -29,7 +29,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             builder.AddSelectedTest(AssociatedTestNode);
 
             // Special case in which no filter can be composed and a fallback to individual IDs must be applied
-            builder.AllTestCaseProvider = GetNonExplicitTests;
+            builder.AllTestCaseProvider = NodeViewModel.GetNonExplicitTests;
             return builder.Build();
         }
     }

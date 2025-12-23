@@ -95,6 +95,8 @@ namespace TestCentric.Gui.Model
         /// </summary>
         bool IsInTestRun(TestNode testNode);
 
+        TestSelection TestsInRun { get; }
+
         #endregion
 
         #region Methods
