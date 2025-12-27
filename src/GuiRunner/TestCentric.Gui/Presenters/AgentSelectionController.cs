@@ -63,15 +63,18 @@ namespace TestCentric.Gui.Presenters
         {
             IPopup agentMenu = _view.SelectAgentMenu;
             IList<string> agentsToEnable = _model.GetAgentsForPackage(_model.TestCentricProject);
+            string selectedAgent = _model.TestCentricProject?.Settings.GetValueOrDefault(SettingDefinitions.SelectedAgentName);
+            if (string.IsNullOrEmpty(selectedAgent))
+                selectedAgent = "DEFAULT";
 
             agentMenu.Enabled = agentsToEnable.Count > 1;
             if (agentMenu.Enabled)
             {
-                var packageSettings = _model.TestCentricProject.Settings;
                 foreach (ToolStripMenuItem item in agentMenu.MenuItems)
                 {
                     string itemTag = item.Tag as string;
                     item.Enabled = itemTag == "DEFAULT" || agentsToEnable.Contains(itemTag);
+                    item.Checked = itemTag == selectedAgent;
                 }
             }
         }
