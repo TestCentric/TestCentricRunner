@@ -98,26 +98,21 @@ namespace TestCentric.Gui.Model
         {
             ProjectPath = path;
 
-            using (StreamReader reader = new StreamReader(ProjectPath))
+            try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(NUnit.Engine.TestPackage));
+                string fileContent = File.ReadAllText(ProjectPath);
+                TestPackage newPackage = PackageHelper.FromXml(fileContent);
 
-                try
-                {
-                    var newPackage = (NUnit.Engine.TestPackage)serializer.Deserialize(reader);
+                foreach (var subPackage in newPackage.SubPackages)
+                    AddSubPackage(subPackage.FullName);
 
-                    foreach (var subPackage in newPackage.SubPackages)
-                    {
-                        AddSubPackage(subPackage.FullName);
-                    }
-
-                    LoadTests();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Unable to deserialize TestProject.", ex);
-                }
+                LoadTests();
             }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unable to load TestProject from {path}", ex);
+            }
+
 
             IsDirty = false;
         }
@@ -133,22 +128,6 @@ namespace TestCentric.Gui.Model
             using (StreamWriter writer = new StreamWriter(ProjectPath))
                 writer.Write(this.ToXml());
         }
-
-        //public void Save(TextWriter writer)
-        //{
-        //    XmlSerializer serializer = new XmlSerializer(typeof(NUnit.Engine.TestPackage));
-
-        //    try
-        //    {
-        //        serializer.Serialize(writer, this);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Unable to serialize TestProject.", ex);
-        //    }
-
-        //    IsDirty = false;
-        //}
 
         public void LoadTests()
         {
