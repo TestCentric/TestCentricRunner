@@ -120,6 +120,7 @@ namespace TestCentric.Gui.Model
             Assert.That(project.IsDirty, Is.False);
         }
 
+        [Test]
         public void NewProjectIsNotDirtyAfterSaving()
         {
             var project = new TestCentricProject(_model, new[] { "dummy.dll" });
