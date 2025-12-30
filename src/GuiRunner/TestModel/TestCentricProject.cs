@@ -127,6 +127,8 @@ namespace TestCentric.Gui.Model
         {
             using (StreamWriter writer = new StreamWriter(ProjectPath))
                 writer.Write(this.ToXml());
+
+            IsDirty = false;
         }
 
         public void LoadTests()
