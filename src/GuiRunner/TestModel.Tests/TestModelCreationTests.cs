@@ -51,7 +51,6 @@ namespace TestCentric.Gui.Model
                     parms[index++] = $"{key}={options.TestParameters[key]}";
 
                 checker.CheckSetting(options.TestParameters, SettingDefinitions.TestParametersDictionary.Name);
-                checker.CheckSetting(string.Join(";", parms), SettingDefinitions.TestParameters.Name);
             }
         }
 

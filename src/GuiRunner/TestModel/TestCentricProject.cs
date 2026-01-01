@@ -65,15 +65,7 @@ namespace TestCentric.Gui.Model
                 if (options.SimulateUnloadTimeout)
                     AddSetting("SimulateUnloadError", true);
                 if (options.TestParameters.Count > 0)
-                {
-                    string[] parms = new string[options.TestParameters.Count];
-                    int index = 0;
-                    foreach (string key in options.TestParameters.Keys)
-                        parms[index++] = $"{key}={options.TestParameters[key]}";
-
-                    AddSetting("TestParametersDictionary", options.TestParameters);
-                    AddSetting("TestParameters", string.Join(";", parms));
-                }
+                    AddSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
             }
 
             foreach (var subpackage in SubPackages)
@@ -161,6 +153,15 @@ namespace TestCentric.Gui.Model
                 TestFiles.Remove(subPackage.FullName);
                 IsDirty = true;
             }
+        }
+
+        /// <summary>
+        /// Override TestPackage.AddSetting to set IsDirty flag
+        /// </summary>
+        public new void AddSetting(PackageSetting setting)
+        {
+            base.AddSetting(setting);
+            IsDirty = true;
         }
 
         public void AddSetting(string key, object value)

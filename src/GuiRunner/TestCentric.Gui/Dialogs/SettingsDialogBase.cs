@@ -12,6 +12,7 @@ namespace TestCentric.Gui.Dialogs
     using System;
     using Model;
     using Model.Settings;
+    using NUnit.Engine;
     using Presenters;
 
     /// <summary>
@@ -43,7 +44,7 @@ namespace TestCentric.Gui.Dialogs
             Presenter = presenter;
             Model = model;
             Settings = model.Settings;
-            PackageSettingChanges = new Dictionary<string, object>();
+            PackageSettingChanges = new List<PackageSetting>();
         }
 
         protected override void OnActivated(EventArgs e)
@@ -143,7 +144,7 @@ namespace TestCentric.Gui.Dialogs
 
         public IUserSettings Settings { get; }
 
-        public IDictionary<string, object> PackageSettingChanges { get; }
+        public IList<PackageSetting> PackageSettingChanges { get; }
 
         public SettingsPageCollection SettingsPages
         {
@@ -159,9 +160,10 @@ namespace TestCentric.Gui.Dialogs
                 if (page.SettingsLoaded)
                     page.ApplySettings();
 
-            foreach(var entry in PackageSettingChanges)
+            foreach(PackageSetting setting in PackageSettingChanges)
             {
-                Model.TestCentricProject?.AddSetting(entry.Key, entry.Value);
+                Model.TestCentricProject?.RemoveSetting(setting.Name);
+                Model.TestCentricProject?.AddSetting(setting);
             }
         }
         #endregion

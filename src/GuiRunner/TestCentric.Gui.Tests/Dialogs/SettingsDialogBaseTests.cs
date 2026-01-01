@@ -23,7 +23,7 @@ namespace TestCentric.Gui.Dialogs
             model.TestCentricProject.Returns(project);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
-            settingsDialog.PackageSettingChanges.Add(SettingDefinitions.DebugTests.Name, true);
+            settingsDialog.PackageSettingChanges.Add(SettingDefinitions.DebugTests.WithValue(true));
 
             // 2. Act
             settingsDialog.ApplySettings();
@@ -41,7 +41,7 @@ namespace TestCentric.Gui.Dialogs
             model.TestCentricProject.Returns((TestCentricProject)null);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
-            settingsDialog.PackageSettingChanges.Add(SettingDefinitions.DebugTests.Name, true);
+            settingsDialog.PackageSettingChanges.Add(SettingDefinitions.DebugTests.WithValue(true));
 
             // 2. Act
             settingsDialog.ApplySettings();

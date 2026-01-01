@@ -146,6 +146,19 @@ namespace TestCentric.Gui.Model
         }
 
         [Test]
+        public void IsDirty_AfterAddPackageSetting_IsTrue()
+        {
+            // 1. Arrange
+            TestCentricProject project = new TestCentricProject(_model);
+
+            // 2. Act
+            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
+
+            // 3. Assert
+            Assert.That(project.IsDirty, Is.True);
+        }
+
+        [Test]
         public void IsDirty_AfterAddSubPackage_IsTrue()
         {
             // 1. Arrange
@@ -217,6 +230,20 @@ namespace TestCentric.Gui.Model
 
             // 2. Act
             project.AddSetting(SettingDefinitions.DebugTests.Name, true);
+
+            // 3. Assert
+            Assert.That(project.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
+            Assert.That(project.Settings.GetSetting(SettingDefinitions.DebugTests.Name), Is.EqualTo(true));
+        }
+
+        [Test]
+        public void AddPackageSetting_AddsSettingToProject()
+        {
+            // 1. Arrange
+            TestCentricProject project = new TestCentricProject(_model);
+
+            // 2. Act
+            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
 
             // 3. Assert
             Assert.That(project.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
