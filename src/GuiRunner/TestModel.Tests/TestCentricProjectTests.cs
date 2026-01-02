@@ -452,10 +452,12 @@ namespace TestCentric.Gui.Model
             project.SaveAs("TestCentricTestProject.tcproj");
 
             // 2. Act
-            project.Load("TestCentricTestProject.tcproj");
+            TestCentricProject newProject = new TestCentricProject(_model);
+            newProject.Load("TestCentricTestProject.tcproj");
 
             // 3. Assert
-            var debugTests = project.Settings.GetSetting(SettingDefinitions.DebugTests.Name);
+            Assert.That(newProject.Settings.HasSetting(SettingDefinitions.DebugTests), Is.True);
+            var debugTests = newProject.Settings.GetSetting(SettingDefinitions.DebugTests.Name);
             Assert.That(debugTests, Is.True);
         }
 

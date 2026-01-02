@@ -93,7 +93,7 @@ namespace TestCentric.Gui.Presenters
         {
             #region Model Events
 
-            _model.Events.TestCentricProjectLoaded += (TestEventArgs e) => UpdateTitlebar();
+            _model.Events.TestCentricProjectLoaded += (TestEventArgs e) => OnProjectLoaded();
 
             _model.Events.TestCentricProjectUnloaded += (TestEventArgs e) => UpdateTitlebar();
 
@@ -353,14 +353,7 @@ namespace TestCentric.Gui.Presenters
             //    _agentSelectionController.PopulateMenu();
             //};
 
-            _view.RunAsX86.CheckedChanged += () =>
-            {
-                var key = SettingDefinitions.RunAsX86.Name;
-                if (_view.RunAsX86.Checked)
-                    ChangePackageSettingAndReload(key, true);
-                else
-                    ChangePackageSettingAndReload(key, null);
-            };
+            _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
 
             _view.RecentFilesMenu.Popup += () =>
             {
@@ -574,9 +567,7 @@ namespace TestCentric.Gui.Presenters
                 }
 
                 if (dlg.ShowDialog(_view as IWin32Window) == DialogResult.OK)
-                {
-                    ChangePackageSettingAndReload("TestParametersDictionary", dlg.Parameters);
-                }
+                    SetPackageSettingAndReload(SettingDefinitions.TestParametersDictionary.WithValue(dlg.Parameters));
             }
         }
 
@@ -634,6 +625,17 @@ namespace TestCentric.Gui.Presenters
 
             }
             _view.Title = title;
+        }
+
+        private void OnProjectLoaded()
+        {
+            // Update checked state according to loaded project settings
+            // Unregister CheckedChanged event temporarily to avoid reloading (while loading a project)
+            _view.RunAsX86.CheckedChanged -= OnRunAsX86Changed;
+            _view.RunAsX86.Checked = _model.TestCentricProject.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86);
+            _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
+
+            UpdateTitlebar();
         }
 
         #endregion
@@ -846,13 +848,14 @@ namespace TestCentric.Gui.Presenters
             return "\"" + s + "\"";
         }
 
-        private void ChangePackageSettingAndReload(string key, object setting)
+        private void OnRunAsX86Changed()
         {
-            var settings = _model.TestCentricProject.Settings;
-            if (setting == null || setting as string == "DEFAULT")
-                settings.Remove(key);
-            else
-                settings.Set(key, setting);
+            SetPackageSettingAndReload(SettingDefinitions.RunAsX86.WithValue(_view.RunAsX86.Checked));
+        }
+
+        private void SetPackageSettingAndReload(PackageSetting setting)
+        {
+            _model.TestCentricProject.SetTopLevelSetting(setting);
 
             // Even though the _model has a Reload method, we cannot use it because Reload
             // does not re-create the Engine.  Since we just changed a setting, we must

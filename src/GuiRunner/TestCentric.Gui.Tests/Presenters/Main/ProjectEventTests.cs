@@ -15,6 +15,8 @@ using TestCentric.Gui.Model;
 
 namespace TestCentric.Gui.Presenters.Main
 {
+    using NUnit.Common;
+
     public class ProjectEventTests : MainPresenterTestBase
     {
         [Test]
@@ -52,6 +54,21 @@ namespace TestCentric.Gui.Presenters.Main
             // Assert
             _model.Received().SaveProject("TestCentric.tcproj");
             _view.Received().Title = "TestCentric - TestCentric.tcproj";
+        }
+
+        [Test]
+        [TestCase(true)]
+        [TestCase(false)]
+
+        public void WhenProjectIsLoaded_RunAsX86Command_IsUpdatedFromProjectSetting(bool runAsX86)
+        {
+            var project = new TestCentricProject(_model, "dummy.dll");
+            project.SetTopLevelSetting(SettingDefinitions.RunAsX86.WithValue(runAsX86));
+            _model.TestCentricProject.Returns(project);
+
+            FireProjectLoadedEvent();
+
+            _view.RunAsX86.Received().Checked = runAsX86;
         }
 
         [Test]
