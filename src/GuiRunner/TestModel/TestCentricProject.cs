@@ -60,10 +60,6 @@ namespace TestCentric.Gui.Model
                     SetTopLevelSetting(SettingDefinitions.RunAsX86.WithValue(true));
                 if (options.DebugAgent)
                     SetSubPackageSetting(SettingDefinitions.DebugAgent.WithValue(true));
-                if (options.SimulateUnloadError)
-                    AddSetting("SimulateUnloadError", true);
-                if (options.SimulateUnloadTimeout)
-                    AddSetting("SimulateUnloadError", true);
                 if (options.TestParameters.Count > 0)
                     SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
             }
