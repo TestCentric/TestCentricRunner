@@ -44,14 +44,16 @@ namespace TestCentric.Gui.Dialogs
             Presenter = presenter;
             Model = model;
             Settings = model.Settings;
-            PackageSettingChanges = new List<PackageSetting>();
+            SubPackageSettingChanges = new List<PackageSetting>();
+            TopLevelPackageSettingChanges = new List<PackageSetting>();
         }
 
         protected override void OnActivated(EventArgs e)
         {
             base.OnActivated(e);
 
-            PackageSettingChanges.Clear();
+            SubPackageSettingChanges.Clear();
+            TopLevelPackageSettingChanges.Clear();
         }
 
         public SettingsDialogBase()
@@ -144,7 +146,9 @@ namespace TestCentric.Gui.Dialogs
 
         public IUserSettings Settings { get; }
 
-        public IList<PackageSetting> PackageSettingChanges { get; }
+        public IList<PackageSetting> SubPackageSettingChanges { get; }
+
+        public IList<PackageSetting> TopLevelPackageSettingChanges { get; }
 
         public SettingsPageCollection SettingsPages
         {
@@ -160,11 +164,11 @@ namespace TestCentric.Gui.Dialogs
                 if (page.SettingsLoaded)
                     page.ApplySettings();
 
-            foreach(PackageSetting setting in PackageSettingChanges)
-            {
-                Model.TestCentricProject?.RemoveSetting(setting.Name);
-                Model.TestCentricProject?.AddSetting(setting);
-            }
+            foreach(PackageSetting setting in SubPackageSettingChanges)
+                Model.TestCentricProject?.SetSubPackageSetting(setting);
+
+            foreach (PackageSetting setting in TopLevelPackageSettingChanges)
+                Model.TestCentricProject?.SetTopLevelSetting(setting);
         }
         #endregion
 
@@ -182,7 +186,7 @@ namespace TestCentric.Gui.Dialogs
 
             // NOTE: Currently, all changes require reload. If this changes
             // we will need to add some filtering here.
-            if (Model.IsProjectLoaded && PackageSettingChanges.Count > 0)
+            if (Model.IsProjectLoaded && (SubPackageSettingChanges.Count > 0 || TopLevelPackageSettingChanges.Count > 0))
             {
                 if (MessageDisplay.YesNo("Some changes will only take effect when you reload the test project. Do you want to reload now?"))
                     _reloadProjectOnClose = true;

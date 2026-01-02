@@ -258,19 +258,19 @@ namespace TestCentric.Gui.SettingsPages
             int numAgents = numberOfAgentsCheckBox.Checked
                 ? (int)numberOfAgentsUpDown.Value : 0;
             if (numAgents != Settings.Engine.Agents)
-                PackageSettingChanges.Add(SettingDefinitions.MaxAgents.WithValue(numAgents));
+                TopLevelPackageSettingChanges.Add(SettingDefinitions.MaxAgents.WithValue(numAgents));
             Settings.Engine.Agents = numAgents;
 
             bool shadowCopyFiles = !disableShadowCopyCheckBox.Checked;
             if (shadowCopyFiles != Settings.Engine.ShadowCopyFiles)
-                PackageSettingChanges.Add(SettingDefinitions.ShadowCopyFiles.WithValue(shadowCopyFiles));
+                SubPackageSettingChanges.Add(SettingDefinitions.ShadowCopyFiles.WithValue(shadowCopyFiles));
             Settings.Engine.ShadowCopyFiles = shadowCopyFiles;
 
             string principalPolicy = principalPolicyCheckBox.Checked
                 ? (string)principalPolicyListBox.SelectedItem
                 : nameof(PrincipalPolicy.UnauthenticatedPrincipal);
             if (principalPolicy != Settings.Engine.PrincipalPolicy)
-                PackageSettingChanges.Add(SettingDefinitions.PrincipalPolicy.WithValue(principalPolicy));
+                SubPackageSettingChanges.Add(SettingDefinitions.PrincipalPolicy.WithValue(principalPolicy));
             Settings.Engine.PrincipalPolicy = principalPolicy;
 
             Settings.Engine.SetPrincipalPolicy = principalPolicyCheckBox.Checked;

@@ -44,28 +44,28 @@ namespace TestCentric.Gui.Model
             var options = model.Options;
 
             if (engineSettings.Agents > 0)
-                AddSetting(SettingDefinitions.MaxAgents.WithValue(engineSettings.Agents));
+                SetTopLevelSetting(SettingDefinitions.MaxAgents.WithValue(engineSettings.Agents));
             if (engineSettings.SetPrincipalPolicy)
-                AddSetting(SettingDefinitions.PrincipalPolicy.WithValue(engineSettings.PrincipalPolicy));
-            AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(engineSettings.ShadowCopyFiles));
+                SetSubPackageSetting(SettingDefinitions.PrincipalPolicy.WithValue(engineSettings.PrincipalPolicy));
+            SetSubPackageSetting(SettingDefinitions.ShadowCopyFiles.WithValue(engineSettings.ShadowCopyFiles));
 
             if (options != null) // Happens when we test
             {
-                AddSetting(SettingDefinitions.InternalTraceLevel.WithValue(options.InternalTraceLevel ?? "Off"));
+                SetSubPackageSetting(SettingDefinitions.InternalTraceLevel.WithValue(options.InternalTraceLevel ?? "Off"));
                 if (options.WorkDirectory != null)
-                    AddSetting(SettingDefinitions.WorkDirectory.WithValue(options.WorkDirectory));
+                    SetSubPackageSetting(SettingDefinitions.WorkDirectory.WithValue(options.WorkDirectory));
                 if (options.MaxAgents >= 0)
-                    AddSetting(SettingDefinitions.MaxAgents.WithValue(options.MaxAgents));
+                    SetTopLevelSetting(SettingDefinitions.MaxAgents.WithValue(options.MaxAgents));
                 if (options.RunAsX86)
-                    AddSetting(SettingDefinitions.RunAsX86.WithValue(true));
+                    SetTopLevelSetting(SettingDefinitions.RunAsX86.WithValue(true));
                 if (options.DebugAgent)
-                    AddSetting(SettingDefinitions.DebugAgent.WithValue(true));
+                    SetSubPackageSetting(SettingDefinitions.DebugAgent.WithValue(true));
                 if (options.SimulateUnloadError)
                     AddSetting("SimulateUnloadError", true);
                 if (options.SimulateUnloadTimeout)
                     AddSetting("SimulateUnloadError", true);
                 if (options.TestParameters.Count > 0)
-                    AddSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
+                    SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
             }
 
             foreach (var subpackage in SubPackages)
@@ -155,12 +155,10 @@ namespace TestCentric.Gui.Model
             }
         }
 
-        /// <summary>
-        /// Override TestPackage.AddSetting to set IsDirty flag
-        /// </summary>
-        public new void AddSetting(PackageSetting setting)
+        public void SetSubPackageSetting(PackageSetting setting)
         {
-            base.AddSetting(setting);
+            RemoveSetting(setting.Name);
+            AddSetting(setting);
             IsDirty = true;
         }
 
@@ -175,8 +173,16 @@ namespace TestCentric.Gui.Model
             Settings.Remove(key);
             foreach (var subPackage in SubPackages)
                 subPackage.Settings.Remove(key);
+
+            IsDirty = true;
         }
 
         public void RemoveSetting(NUnit.Engine.SettingDefinition setting) => RemoveSetting(setting.Name);
+
+        public void SetTopLevelSetting(PackageSetting setting)
+        {
+            Settings.Set(setting);
+            IsDirty = true;
+        }
     }
 }

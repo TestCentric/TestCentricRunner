@@ -14,6 +14,8 @@ using SettingDefinitions = NUnit.Common.SettingDefinitions;
 
 namespace TestCentric.Gui.Model
 {
+    using NUnit.Engine;
+
     public class CreateNewProjectTests
     {
         private TestModel _model;
@@ -41,17 +43,21 @@ namespace TestCentric.Gui.Model
             Assert.That(_model.TestCentricProject.TestFiles, Is.EqualTo(testFiles));
         }
 
-        // TODO: Remove? Use and test fluent methods?
-        [TestCase(nameof(SettingDefinitions.RequestedRuntimeFramework), "net-2.0")]
-        [TestCase(nameof(SettingDefinitions.MaxAgents), 8)]
-        [TestCase(nameof(SettingDefinitions.ShadowCopyFiles), false)]
-        public void PackageReflectsPackageSettings(string key, object value)
+        private static TestCaseData[] PackageSettingTestCases = new TestCaseData[]
+        {
+            new TestCaseData(SettingDefinitions.RequestedFrameworkName.WithValue("net-2.0")),
+            new TestCaseData(SettingDefinitions.MaxAgents.WithValue(8)),
+            new TestCaseData(SettingDefinitions.ShadowCopyFiles.WithValue(false)),
+        };
+
+        [TestCaseSource(nameof(PackageSettingTestCases))]
+        public void PackageReflectsPackageSettings(PackageSetting setting)
         {
             var package = _model.CreateNewProject(new[] { "my.dll" });
-            package.AddSetting(key, value);
+            package.SetTopLevelSetting(setting);
 
-            Assert.That(package.Settings.HasSetting(key));
-            Assert.That(package.Settings.GetSetting(key), Is.EqualTo(value));
+            Assert.That(package.Settings.HasSetting(setting.Name));
+            Assert.That(package.Settings.GetSetting(setting.Name), Is.EqualTo(setting.Value));
         }
 
         // TODO: Remove? Use and test fluent methods?
@@ -64,8 +70,7 @@ namespace TestCentric.Gui.Model
                 { "parm2", "value2" }
             };
             var package = _model.CreateNewProject(new[] { "my.dll" });
-            package.AddSetting("TestParametersDictionary", testParms);
-
+            package.SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(testParms));
             Assert.That(package.Settings.HasSetting("TestParametersDictionary"));
             var parms = package.Settings.GetSetting("TestParametersDictionary") as IDictionary<string, string>;
             Assert.That(parms, Is.Not.Null);
