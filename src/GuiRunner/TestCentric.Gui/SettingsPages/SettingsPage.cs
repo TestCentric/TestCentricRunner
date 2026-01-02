@@ -12,6 +12,7 @@ namespace TestCentric.Gui
     using Dialogs;
     using Model;
     using Model.Settings;
+    using NUnit.Engine;
 
     /// <summary>
     /// SettingsPage is the base class for all pages used
@@ -89,7 +90,8 @@ namespace TestCentric.Gui
         protected ITestModel Model { get; private set; }
         protected IUserSettings Settings { get; private set; }
 
-        protected IDictionary<string, object> PackageSettingChanges { get; private set; }
+        protected IList<PackageSetting> SubPackageSettingChanges { get; private set; }
+        protected IList<PackageSetting> TopLevelPackageSettingChanges { get; private set; }
 
         #endregion
 
@@ -134,7 +136,8 @@ namespace TestCentric.Gui
 
                 Model = dlg.Model;
                 Settings = dlg.Settings;
-                PackageSettingChanges = dlg.PackageSettingChanges;
+                SubPackageSettingChanges = dlg.SubPackageSettingChanges;
+                TopLevelPackageSettingChanges = dlg.TopLevelPackageSettingChanges;
 
                 LoadSettings();
             }

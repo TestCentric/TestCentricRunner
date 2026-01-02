@@ -15,7 +15,7 @@ namespace TestCentric.Gui.Dialogs
     internal class SettingsDialogBaseTests
     {
         [Test]
-        public void ApplySettings_IsAppliedToProject()
+        public void ApplySettings_SubPackageChanges_AreAppliedToProject()
         {
             // 1. Arrange
             ITestModel model = Substitute.For<ITestModel>();
@@ -23,7 +23,25 @@ namespace TestCentric.Gui.Dialogs
             model.TestCentricProject.Returns(project);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
-            settingsDialog.PackageSettingChanges.Add(SettingDefinitions.DebugTests.Name, true);
+            settingsDialog.SubPackageSettingChanges.Add(SettingDefinitions.DebugTests.WithValue(true));
+
+            // 2. Act
+            settingsDialog.ApplySettings();
+
+            // 3. Assert
+            Assert.That(project.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
+        }
+
+        [Test]
+        public void ApplySettings_TopLevelPackageChanges_AreAppliedToProject()
+        {
+            // 1. Arrange
+            ITestModel model = Substitute.For<ITestModel>();
+            TestCentricProject project = new TestCentricProject(model);
+            model.TestCentricProject.Returns(project);
+
+            SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
+            settingsDialog.TopLevelPackageSettingChanges.Add(SettingDefinitions.DebugTests.WithValue(true));
 
             // 2. Act
             settingsDialog.ApplySettings();
@@ -41,7 +59,8 @@ namespace TestCentric.Gui.Dialogs
             model.TestCentricProject.Returns((TestCentricProject)null);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
-            settingsDialog.PackageSettingChanges.Add(SettingDefinitions.DebugTests.Name, true);
+            settingsDialog.TopLevelPackageSettingChanges.Add(SettingDefinitions.DebugTests.WithValue(true));
+            settingsDialog.SubPackageSettingChanges.Add(SettingDefinitions.DebugTests.WithValue(true));
 
             // 2. Act
             settingsDialog.ApplySettings();

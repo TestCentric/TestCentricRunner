@@ -7,10 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TestCentric.Gui
 {
@@ -102,12 +100,6 @@ namespace TestCentric.Gui
 
             Add("debug-agent", "Launch debugger in testcentric-agent when it starts.", false,
                 v => DebugAgent = _isDebug, true);
-
-            Add("simulate-unload-error", "Throw CannotUnloadAppDomainException when unloading AppDomain.", false,
-                v => SimulateUnloadError = _isDebug, true);
-
-            Add("simulate-unload-timeout", "Inject infinite loop when unloading AppDomain.", false,
-                v => SimulateUnloadTimeout = _isDebug, true);
 
             Add("help|h", "Display the help message and exit.", false,
                 v => ShowHelp = true);
@@ -217,8 +209,6 @@ namespace TestCentric.Gui
         public string WorkDirectory { get; private set; }
         public IDictionary<string, string> TestParameters { get; } = new Dictionary<string, string>();
         public bool DebugAgent { get; private set; }
-        public bool SimulateUnloadError { get; private set; }
-        public bool SimulateUnloadTimeout { get; private set; }
 
         // Error Processing
 

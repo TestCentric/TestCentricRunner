@@ -320,7 +320,7 @@ namespace TestCentric.Gui.Presenters
                 "NUnit.TestAdapter.Agent2" 
             });
             
-            project.AddSetting(SettingDefinitions.SelectedAgentName.WithValue("NUnit.TestAdapter.Agent2"));
+            project.SetSubPackageSetting(SettingDefinitions.SelectedAgentName.WithValue("NUnit.TestAdapter.Agent2"));
             
             _model.AvailableAgents.Returns(new List<string> 
             { 
@@ -479,8 +479,8 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             var project = new TestCentricProject(_model);
             _model.TestCentricProject.Returns(project);
-            project.AddSetting(SettingDefinitions.SelectedAgentName.WithValue("SomeAgent"));
-            project.AddSetting(SettingDefinitions.RequestedAgentName.WithValue("SomeAgent"));
+            project.SetSubPackageSetting(SettingDefinitions.SelectedAgentName.WithValue("SomeAgent"));
+            project.SetSubPackageSetting(SettingDefinitions.RequestedAgentName.WithValue("SomeAgent"));
             
             _model.GetAgentsForPackage(project).Returns(new List<string> 
             { 
