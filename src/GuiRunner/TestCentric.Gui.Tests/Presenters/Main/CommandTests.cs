@@ -84,7 +84,6 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().OpenExistingProject(file);
         }
 
-        [Test]
         [TestCase(null)]
         [TestCase("")]
         public void OpenTestCentricProjectCommand_NoFileSelected_DoesNotCreateProject(string fileName)
@@ -224,8 +223,6 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().ReloadTests();
         }
 
-
-        [Test]
         [TestCase(true)]
         [TestCase(false)]
         public void RunAsX86CheckedChanged_SettingIsAppliedToProject(bool isChecked)

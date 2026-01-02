@@ -3,11 +3,6 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NSubstitute;
 using NUnit.Framework;
 using TestCentric.Gui.Elements;
@@ -56,10 +51,8 @@ namespace TestCentric.Gui.Presenters.Main
             _view.Received().Title = "TestCentric - TestCentric.tcproj";
         }
 
-        [Test]
         [TestCase(true)]
         [TestCase(false)]
-
         public void WhenProjectIsLoaded_RunAsX86Command_IsUpdatedFromProjectSetting(bool runAsX86)
         {
             var project = new TestCentricProject(_model, "dummy.dll");
