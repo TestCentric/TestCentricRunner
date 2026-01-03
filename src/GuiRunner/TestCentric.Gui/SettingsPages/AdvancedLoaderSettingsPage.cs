@@ -245,6 +245,7 @@ namespace TestCentric.Gui.SettingsPages
 
         public override void LoadSettings()
         {
+            // Update UI elements based on current settings in TestCentricProject
             int agents = PackageSettings.GetValueOrDefault(SettingDefinitions.MaxAgents);
             numberOfAgentsCheckBox.Checked = agents > 0;
             numberOfAgentsUpDown.Value = agents;
@@ -252,6 +253,9 @@ namespace TestCentric.Gui.SettingsPages
             disableShadowCopyCheckBox.Checked = !PackageSettings.GetValueOrDefault(SettingDefinitions.ShadowCopyFiles); ;
             
             string principalPolicy = PackageSettings.GetValueOrDefault(SettingDefinitions.PrincipalPolicy);
+            if (string.IsNullOrEmpty(principalPolicy))
+                principalPolicy = nameof(PrincipalPolicy.UnauthenticatedPrincipal);
+
             principalPolicyCheckBox.Checked = principalPolicyListBox.Enabled =
                 principalPolicy != nameof(PrincipalPolicy.UnauthenticatedPrincipal);
             principalPolicyListBox.SelectedItem = principalPolicy;
@@ -259,6 +263,8 @@ namespace TestCentric.Gui.SettingsPages
 
         public override void ApplySettings()
         {
+            // Check if current values in UI elements differ from those in TestCentricProject
+            // If values differ, add them to SettingsChanges list, so they can be applied later
             int numAgents = numberOfAgentsCheckBox.Checked
                 ? (int)numberOfAgentsUpDown.Value : 0;
             if (numAgents != PackageSettings.GetValueOrDefault(SettingDefinitions.MaxAgents))

@@ -19,9 +19,13 @@ namespace TestCentric.Gui.Dialogs
             TreeBasedSettingsDialog.Display(presenter, model,
             new GuiSettingsPage("General"),
             new TreeSettingsPage("Tree Display", presenter.ImageSetManager),
-            new AdvancedLoaderSettingsPage("Assembly Load Settings"),
             new AssemblyReloadSettingsPage("Automatic Reload"),
             new ProjectEditorSettingsPage("Project Editor"));
+        }
+
+        public static void DisplayTestRunSettings(TestCentricPresenter presenter, ITestModel model)
+        {
+            TreeBasedSettingsDialog.Display(presenter, model, new AdvancedLoaderSettingsPage("Assembly Load Settings"));
         }
     }
 }
