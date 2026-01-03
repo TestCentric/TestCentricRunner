@@ -9,15 +9,7 @@ namespace TestCentric.Gui.Model.Settings
 
     public interface IEngineSettings
     {
-        bool ShadowCopyFiles { get; set; }
-
-        int Agents { get; set; }
-
         bool RerunOnChange { get; set; }
-
-        bool SetPrincipalPolicy { get; set; }
-
-        string PrincipalPolicy { get; set; }
     }
 
 
@@ -29,43 +21,11 @@ namespace TestCentric.Gui.Model.Settings
     public class EngineSettings : ApplicationSettingsBase, IEngineSettings
     {
         [UserScopedSetting]
-        [DefaultSettingValue("true")]
-        public bool ShadowCopyFiles
-        {
-            get { return (bool)this[nameof(ShadowCopyFiles)]; }
-            set { this[nameof(ShadowCopyFiles)] = value;  }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue("0")]
-        public int Agents
-        {
-            get { return (int)this[nameof(Agents)]; }
-            set { this[nameof(Agents)] = value; }
-        }
-
-        [UserScopedSetting]
         [DefaultSettingValue("false")]
         public bool RerunOnChange
         {
             get { return (bool)this[nameof(RerunOnChange)]; }
             set { this[nameof(RerunOnChange)] = value; }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue("false")]
-        public bool SetPrincipalPolicy
-        {
-            get { return (bool)this[nameof(SetPrincipalPolicy)]; }
-            set { this[nameof(SetPrincipalPolicy)] = value; }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue(nameof(System.Security.Principal.PrincipalPolicy.UnauthenticatedPrincipal))]
-        public string PrincipalPolicy
-        {
-            get { return (string)this[nameof(PrincipalPolicy)]; }
-            set { this[nameof(PrincipalPolicy)] = value; }
         }
     }
 }
