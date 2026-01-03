@@ -62,6 +62,7 @@ namespace TestCentric.Gui.Views
         ICommand OpenWorkDirectoryCommand { get; }
         ICommand ExtensionsCommand { get; }
         ICommand SettingsCommand { get; }
+        ICommand TestRunSettingsCommand { get; }
 
         // Help Menu Items
         ICommand TestCentricHelpCommand { get; }

@@ -494,6 +494,11 @@ namespace TestCentric.Gui.Presenters
                 SettingsDialog.Display(this, _model);
             };
 
+            _view.TestRunSettingsCommand.Execute += () =>
+            {
+                SettingsDialog.DisplayTestRunSettings(this, _model);
+            };
+
             _view.TestCentricHelpCommand.Execute += () =>
             {
                 System.Diagnostics.Process.Start("https://test-centric.org/testcentric-gui");
@@ -776,6 +781,7 @@ namespace TestCentric.Gui.Presenters
             _view.RecentFilesMenu.Enabled = !testRunning && !testLoading;
             _view.ExitCommand.Enabled = !testLoading;
             _view.SaveResultsCommand.Enabled = _view.TransformResultsCommand.Enabled = !testRunning && !testLoading && hasResults;
+            _view.TestRunSettingsCommand.Enabled = testLoaded && !testRunning;
         }
 
         private void UpdateRunSelectedTestsTooltip()

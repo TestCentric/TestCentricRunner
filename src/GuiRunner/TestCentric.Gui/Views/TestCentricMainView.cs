@@ -42,6 +42,7 @@ namespace TestCentric.Gui.Views
 
         private System.Windows.Forms.ToolStripMenuItem toolsMenu;
         private System.Windows.Forms.ToolStripMenuItem settingsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testRunSettingsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveResultsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transformResultsMenuItem;
 
@@ -142,6 +143,7 @@ namespace TestCentric.Gui.Views
             CloseProjectCommand = new CommandMenuElement(closeMenuItem);
             AddTestFilesCommand = new CommandMenuElement(addTestFileMenuItem);
             ReloadTestsCommand = new CommandMenuElement(reloadTestsMenuItem);
+            TestRunSettingsCommand = new CommandMenuElement(testRunSettingsMenuItem);
             SelectAgentMenu = new PopupMenuElement(selectAgentMenu);
             RunAsX86 = new CheckedMenuElement(runAsX86MenuItem);
             RecentFilesMenu = new PopupMenuElement(recentFilesMenu);
@@ -287,6 +289,7 @@ namespace TestCentric.Gui.Views
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.extensionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testRunSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testCentricHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -580,8 +583,9 @@ namespace TestCentric.Gui.Views
             this.addTestFileMenuItem,
             this.toolStripSeparator1,
             this.reloadTestsMenuItem,
-            this.selectAgentMenu,
             this.toolStripSeparator2,
+            this.testRunSettingsMenuItem,
+            this.selectAgentMenu,
             this.runAsX86MenuItem,
             this.toolStripSeparator3,
             this.recentFilesMenu,
@@ -865,6 +869,12 @@ namespace TestCentric.Gui.Views
             this.settingsMenuItem.Name = "settingsMenuItem";
             this.settingsMenuItem.Size = new System.Drawing.Size(194, 22);
             this.settingsMenuItem.Text = "&Settings...";
+            // 
+            // testRunSettingsMenuItem
+            // 
+            this.testRunSettingsMenuItem.Name = "testRunSettingsMenuItem";
+            this.testRunSettingsMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.testRunSettingsMenuItem.Text = "&Test Run Settings...";
             // 
             // helpItem
             // 
@@ -1202,6 +1212,7 @@ namespace TestCentric.Gui.Views
         public ICommand OpenWorkDirectoryCommand { get; }
         public ICommand ExtensionsCommand { get; }
         public ICommand SettingsCommand { get; }
+        public ICommand TestRunSettingsCommand { get; }
 
         // Help Menu Items
         public ICommand TestCentricHelpCommand { get; }

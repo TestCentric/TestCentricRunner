@@ -20,19 +20,11 @@ namespace TestCentric.Gui.Model.Settings
         public static TestCaseData[] DefaultValueTestCases = new TestCaseData[]
         {
             new TestCaseData(nameof(EngineSettings.RerunOnChange), "false"),
-            new TestCaseData(nameof(EngineSettings.ShadowCopyFiles), "true"),
-            new TestCaseData(nameof(EngineSettings.Agents), "0"),
-            new TestCaseData(nameof(EngineSettings.SetPrincipalPolicy), "false"),
-            new TestCaseData(nameof(EngineSettings.PrincipalPolicy), "UnauthenticatedPrincipal")
         };
 
         public static TestCaseData[] SetValueTestCases = new TestCaseData[]
         {
             new TestCaseData(nameof(EngineSettings.RerunOnChange), false),
-            new TestCaseData(nameof(EngineSettings.ShadowCopyFiles), true),
-            new TestCaseData(nameof(EngineSettings.Agents), 0),
-            new TestCaseData(nameof(EngineSettings.SetPrincipalPolicy), false),
-            new TestCaseData(nameof(EngineSettings.PrincipalPolicy), "UnauthenticatedPrincipal")
         };
     }
 }

@@ -12,6 +12,8 @@ using NUnit.Engine;
 
 namespace TestCentric.Gui.Model
 {
+    using System.Linq;
+
     public class TestCentricProject : NUnit.Engine.TestPackage
     {
         private ITestModel _model;
@@ -40,15 +42,10 @@ namespace TestCentric.Gui.Model
             _model = model;
             TestFiles = new List<string>(filenames);
 
-            var engineSettings = _model.Settings.Engine;
+            // Turn on shadow copy in new TestCentric project by default
+            SetSubPackageSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
+
             var options = model.Options;
-
-            if (engineSettings.Agents > 0)
-                SetTopLevelSetting(SettingDefinitions.MaxAgents.WithValue(engineSettings.Agents));
-            if (engineSettings.SetPrincipalPolicy)
-                SetSubPackageSetting(SettingDefinitions.PrincipalPolicy.WithValue(engineSettings.PrincipalPolicy));
-            SetSubPackageSetting(SettingDefinitions.ShadowCopyFiles.WithValue(engineSettings.ShadowCopyFiles));
-
             if (options != null) // Happens when we test
             {
                 SetSubPackageSetting(SettingDefinitions.InternalTraceLevel.WithValue(options.InternalTraceLevel ?? "Off"));
@@ -96,7 +93,11 @@ namespace TestCentric.Gui.Model
                     Settings.Set(packageSetting);
 
                 foreach (var subPackage in newPackage.SubPackages)
+                {
                     AddSubPackage(subPackage.FullName);
+                    foreach (var setting in subPackage.Settings)
+                        SubPackages.Last().Settings.Set(setting);
+                }
 
                 LoadTests();
             }
