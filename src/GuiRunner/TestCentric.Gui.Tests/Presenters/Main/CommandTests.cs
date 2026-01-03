@@ -13,6 +13,7 @@ namespace TestCentric.Gui.Presenters.Main
 {
     using Elements;
     using Model;
+    using NUnit.Common;
     using Views;
 
     public class CommandTests : MainPresenterTestBase
@@ -83,7 +84,6 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().OpenExistingProject(file);
         }
 
-        [Test]
         [TestCase(null)]
         [TestCase("")]
         public void OpenTestCentricProjectCommand_NoFileSelected_DoesNotCreateProject(string fileName)
@@ -223,6 +223,24 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().ReloadTests();
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void RunAsX86CheckedChanged_SettingIsAppliedToProject(bool isChecked)
+        {
+            // 1. Arrange
+            List<string> testFiles = ["FILE1", "FILE2"];
+            var project = new TestCentricProject(_model, testFiles);
+            _model.TestCentricProject.Returns(project);
+            _view.RunAsX86.Checked.Returns(isChecked);
+
+            // 2. Act
+            _view.RunAsX86.CheckedChanged += Raise.Event<CommandHandler>();
+
+            // 3. Assert
+            Assert.That(project.Settings.HasSetting(SettingDefinitions.RunAsX86), Is.True);
+            Assert.That(project.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86), Is.EqualTo(isChecked));
+            _model.ReceivedWithAnyArgs().LoadTests(null);
+        }
         public void SelectRuntimeCommand_PopsUpMenu()
         {
         }

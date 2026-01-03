@@ -91,6 +91,10 @@ namespace TestCentric.Gui.Model
                 string fileContent = File.ReadAllText(ProjectPath);
                 TestPackage newPackage = PackageHelper.FromXml(fileContent);
 
+                // Apply top level settings from loaded package
+                foreach (PackageSetting packageSetting in newPackage.Settings)
+                    Settings.Set(packageSetting);
+
                 foreach (var subPackage in newPackage.SubPackages)
                     AddSubPackage(subPackage.FullName);
 
