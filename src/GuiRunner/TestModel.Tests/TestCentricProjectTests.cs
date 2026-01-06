@@ -522,24 +522,6 @@ namespace TestCentric.Gui.Model
 
         #endregion
 
-        #region LoadTests Tests
-
-        [Test]
-        public void LoadTests_CallsModelLoadTests()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject(_model, new List<string> { "Test1.dll", "Test2.dll" });
-
-            // 2. Act
-            project.LoadTests();
-
-            // 3. Assert
-            _model.Received(1).LoadTests(Arg.Is<IList<string>>(list => 
-                list.Count == 2 && list.Contains("Test1.dll") && list.Contains("Test2.dll")));
-        }
-
-        #endregion
-
         #region Options Integration Tests
 
         [Test]

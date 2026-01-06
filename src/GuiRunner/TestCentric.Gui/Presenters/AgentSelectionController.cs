@@ -101,7 +101,7 @@ namespace TestCentric.Gui.Presenters
                 // does not re-create the Engine.  Since we just changed a setting, we must
                 // re-create the Engine by unloading/reloading the tests. We make a copy of
                 // __model.TestFiles because the method does an unload before it loads.
-                _model.TestCentricProject.LoadTests();
+                _model.LoadTests(_model.TestCentricProject.TestFiles);
             }
 
             void EnsureSingleItemChecked(ToolStripMenuItem itemToCheck)

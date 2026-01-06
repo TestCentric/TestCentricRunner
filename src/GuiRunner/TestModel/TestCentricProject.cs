@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Serialization;
 using NUnit.Common;
 using NUnit.Engine;
 
@@ -16,7 +15,6 @@ namespace TestCentric.Gui.Model
 
     public class TestCentricProject : NUnit.Engine.TestPackage
     {
-        private ITestModel _model;
 
         public static bool IsProjectFile(string path) => Path.GetExtension(path).ToLower() == ".tcproj";
 
@@ -29,7 +27,6 @@ namespace TestCentric.Gui.Model
 
         public TestCentricProject(ITestModel model)
         {
-            _model = model;
             TestFiles = new List<String>();
         }
 
@@ -39,7 +36,6 @@ namespace TestCentric.Gui.Model
         public TestCentricProject(ITestModel model, IList<string> filenames)
             :base(filenames)
         {
-            _model = model;
             TestFiles = new List<string>(filenames);
 
             // Turn on shadow copy in new TestCentric project by default
@@ -74,11 +70,6 @@ namespace TestCentric.Gui.Model
             IsDirty = false;
         }
 
-        public TestCentricProject()
-        {
-
-        }
-
         public void Load(string path)
         {
             ProjectPath = path;
@@ -98,8 +89,6 @@ namespace TestCentric.Gui.Model
                     foreach (var setting in subPackage.Settings)
                         SubPackages.Last().Settings.Set(setting);
                 }
-
-                LoadTests();
             }
             catch (Exception ex)
             {
@@ -122,16 +111,6 @@ namespace TestCentric.Gui.Model
                 writer.Write(this.ToXml());
 
             IsDirty = false;
-        }
-
-        public void LoadTests()
-        {
-            _model.LoadTests(TestFiles);
-        }
-
-        public void UnloadTests()
-        {
-
         }
 
         public new void AddSubPackage(string fullName)

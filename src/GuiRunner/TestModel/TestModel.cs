@@ -295,7 +295,7 @@ namespace TestCentric.Gui.Model
 
             _events.FireTestCentricProjectLoaded();
 
-            TestCentricProject.LoadTests();
+            LoadTests(filenames);
 
             return TestCentricProject;
         }
@@ -317,7 +317,7 @@ namespace TestCentric.Gui.Model
             foreach( string fileName in fileNames)
                 TestCentricProject.AddSubPackage(fileName);
 
-            TestCentricProject.LoadTests();
+            LoadTests(TestCentricProject.TestFiles);
             _events.FireTestCentricProjectLoaded();
         }
 
@@ -328,7 +328,7 @@ namespace TestCentric.Gui.Model
 
             TestCentricProject.RemoveSubPackage(subPackage);
 
-            TestCentricProject.LoadTests();
+            LoadTests(TestCentricProject.TestFiles);
             _events.FireTestCentricProjectLoaded();
         }
 
@@ -340,6 +340,8 @@ namespace TestCentric.Gui.Model
             TestCentricProject = new TestCentricProject(this);
 
             TestCentricProject.Load(projectPath);
+
+            LoadTests(TestCentricProject.TestFiles);
 
             _events.FireTestCentricProjectLoaded();
         }
