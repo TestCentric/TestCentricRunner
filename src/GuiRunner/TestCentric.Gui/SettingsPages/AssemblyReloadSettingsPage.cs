@@ -134,13 +134,13 @@ namespace TestCentric.Gui.SettingsPages
 
         public override void LoadSettings()
         {
-            rerunOnChangeCheckBox.Checked = Settings.Engine.RerunOnChange;
+            rerunOnChangeCheckBox.Checked = Settings.Gui.RerunOnChange;
             clearResultsCheckBox.Checked = Settings.Gui.ClearResultsOnReload;
         }
 
         public override void ApplySettings()
         {
-            Settings.Engine.RerunOnChange = rerunOnChangeCheckBox.Checked;
+            Settings.Gui.RerunOnChange = rerunOnChangeCheckBox.Checked;
             Settings.Gui.ClearResultsOnReload = clearResultsCheckBox.Checked;
         }
 

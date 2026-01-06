@@ -32,6 +32,8 @@ namespace TestCentric.Gui.Model.Settings
 
         string InitialSettingsPage { get; set; }
 
+        bool RerunOnChange { get; set; }
+
         bool ClearResultsOnReload { get; set; }
 
         Font Font { get; set; }
@@ -79,6 +81,14 @@ namespace TestCentric.Gui.Model.Settings
         {
             get { return (string)this[nameof(InitialSettingsPage)]; }
             set { this[nameof(InitialSettingsPage)] = value; }
+        }
+
+        [UserScopedSetting]
+        [DefaultSettingValue("false")]
+        public bool RerunOnChange
+        {
+            get { return (bool)this[nameof(RerunOnChange)]; }
+            set { this[nameof(RerunOnChange)] = value; }
         }
 
         [UserScopedSetting]
