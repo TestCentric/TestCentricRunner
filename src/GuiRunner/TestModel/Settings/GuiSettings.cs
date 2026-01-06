@@ -39,8 +39,6 @@ namespace TestCentric.Gui.Model.Settings
         Font FixedFont { get; set; }
 
         InternalTraceLevel InternalTraceLevel { get; set; }
-
-        string ProjectEditorPath { get; set; }
     }
 
     public class GuiSettings : ApplicationSettingsBase, IGuiSettings
@@ -113,14 +111,6 @@ namespace TestCentric.Gui.Model.Settings
         {
             get { return (InternalTraceLevel)this[nameof(InternalTraceLevel)]; }
             set { this[nameof(InternalTraceLevel)] = value; }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue("")]
-        public string ProjectEditorPath
-        {
-            get { return (string)this[nameof(ProjectEditorPath)]; }
-            set { this[nameof(ProjectEditorPath)] = value; }
         }
     }
 }

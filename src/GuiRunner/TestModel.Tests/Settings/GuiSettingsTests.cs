@@ -26,7 +26,6 @@ namespace TestCentric.Gui.Model.Settings
             new TestCaseData(nameof(GuiSettings.Font), "Microsoft Sans Serif, 8.25pt"),
             new TestCaseData(nameof(GuiSettings.FixedFont), "Courier New, 8.0pt"),
             new TestCaseData(nameof(GuiSettings.InternalTraceLevel), "Off"),
-            new TestCaseData(nameof(GuiSettings.ProjectEditorPath), string.Empty),
         };
 
         public static TestCaseData[] SetValueTestCases = new TestCaseData[]
@@ -36,7 +35,6 @@ namespace TestCentric.Gui.Model.Settings
             new TestCaseData(nameof(GuiSettings.InitialSettingsPage), "Results"),
             new TestCaseData(nameof(GuiSettings.ClearResultsOnReload), true),
             new TestCaseData(nameof(GuiSettings.InternalTraceLevel), NUnit.Engine.InternalTraceLevel.Error),
-            new TestCaseData(nameof(GuiSettings.ProjectEditorPath), "d:/temp"),
         };
     }
 }
