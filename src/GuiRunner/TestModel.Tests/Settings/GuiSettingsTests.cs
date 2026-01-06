@@ -21,7 +21,6 @@ namespace TestCentric.Gui.Model.Settings
             new TestCaseData(nameof(GuiSettings.GuiLayout), "Full"),
             new TestCaseData(nameof(GuiSettings.LoadLastProject), "true"),
             new TestCaseData(nameof(GuiSettings.InitialSettingsPage), string.Empty),
-            new TestCaseData(nameof(GuiSettings.ClearResultsOnReload), "false"),
             new TestCaseData(nameof(GuiSettings.RerunOnChange), "false"),
             new TestCaseData(nameof(GuiSettings.GuiLayout), "Full"),
             new TestCaseData(nameof(GuiSettings.Font), "Microsoft Sans Serif, 8.25pt"),
@@ -35,7 +34,6 @@ namespace TestCentric.Gui.Model.Settings
             new TestCaseData(nameof(GuiSettings.LoadLastProject), true),
             new TestCaseData(nameof(GuiSettings.InitialSettingsPage), "Results"),
             new TestCaseData(nameof(GuiSettings.RerunOnChange), true),
-            new TestCaseData(nameof(GuiSettings.ClearResultsOnReload), true),
             new TestCaseData(nameof(GuiSettings.InternalTraceLevel), NUnit.Engine.InternalTraceLevel.Error),
         };
     }

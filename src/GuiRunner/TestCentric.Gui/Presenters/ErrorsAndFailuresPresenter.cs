@@ -56,12 +56,6 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestLoaded += (e) => ClearDisplay();
             _model.Events.TestUnloaded += (e) => ClearDisplay();
-            _model.Events.TestReloaded += (e) =>
-            {
-                if (_settings.Gui.ClearResultsOnReload)
-                    ClearDisplay();
-            };
-
             _model.Events.RunStarting += (e) => ClearDisplay();
 
             _model.Events.TestFinished += (TestResultEventArgs e) => OnNewResult(e.Result);

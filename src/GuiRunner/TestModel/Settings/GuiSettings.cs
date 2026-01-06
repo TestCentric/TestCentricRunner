@@ -34,8 +34,6 @@ namespace TestCentric.Gui.Model.Settings
 
         bool RerunOnChange { get; set; }
 
-        bool ClearResultsOnReload { get; set; }
-
         Font Font { get; set; }
 
         Font FixedFont { get; set; }
@@ -89,14 +87,6 @@ namespace TestCentric.Gui.Model.Settings
         {
             get { return (bool)this[nameof(RerunOnChange)]; }
             set { this[nameof(RerunOnChange)] = value; }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue("false")]
-        public bool ClearResultsOnReload
-        {
-            get { return (bool)this[nameof(ClearResultsOnReload)]; }
-            set { this[nameof(ClearResultsOnReload)] = value; }
         }
 
         [UserScopedSetting]

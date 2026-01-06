@@ -35,26 +35,6 @@ namespace TestCentric.Gui.Presenters
         }
 
         [Test]
-        public void WhenTestIsReloaded_IfClearResultsIsFalse_DisplayIsNotCleared()
-        {
-            _settings.Gui.ClearResultsOnReload = false;
-
-            FireTestReloadedEvent(FAKE_TEST_RUN);
-
-            _view.DidNotReceive().Clear();
-        }
-
-        [Test]
-        public void WhenTestIsReloaded_IfClearResultsIsTrue_DisplayIsCleared()
-        {
-            _settings.Gui.ClearResultsOnReload = true;
-
-            FireTestReloadedEvent(FAKE_TEST_RUN);
-
-            _view.Received().Clear();
-        }
-
-        [Test]
         public void WhenTestIsUnloaded_DisplayIsCleared()
         {
             FireTestUnloadedEvent();
