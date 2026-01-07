@@ -18,7 +18,6 @@ namespace TestCentric.Gui.Model.Settings
 
         public static TestCaseData[] DefaultValueTestCases = new TestCaseData[]
         {
-            new TestCaseData(nameof(TestTreeSettings.InitialTreeDisplay), "0"),
             new TestCaseData(nameof(TestTreeSettings.AlternateImageSet), "Classic"),
             new TestCaseData(nameof(TestTreeSettings.ShowCheckBoxes), "false"),
             new TestCaseData(nameof(TestTreeSettings.ShowTestDuration), "false"),
@@ -30,7 +29,6 @@ namespace TestCentric.Gui.Model.Settings
 
         public static TestCaseData[] SetValueTestCases = new TestCaseData[]
         {
-            new TestCaseData(nameof(TestTreeSettings.InitialTreeDisplay), 1),
             new TestCaseData(nameof(TestTreeSettings.AlternateImageSet), "Circle"),
             new TestCaseData(nameof(TestTreeSettings.ShowCheckBoxes), false),
             new TestCaseData(nameof(TestTreeSettings.ShowTestDuration), true),

@@ -9,8 +9,6 @@ namespace TestCentric.Gui.Model.Settings
 
     public interface ITestTreeSettings
     {
-        int InitialTreeDisplay { get; set; }
-
         string AlternateImageSet { get; set; }
 
         bool ShowCheckBoxes { get; set; }
@@ -31,14 +29,6 @@ namespace TestCentric.Gui.Model.Settings
     public class TestTreeSettings : ApplicationSettingsBase, ITestTreeSettings
     {
         public ITestListSettings TestList { get; } = new TestListSettings();
-
-        [UserScopedSetting]
-        [DefaultSettingValue("0")]
-        public int InitialTreeDisplay
-        {
-            get { return (int)this[nameof(InitialTreeDisplay)]; }
-            set { this[nameof(InitialTreeDisplay)] = value; }
-        }
 
         [UserScopedSetting]
         [DefaultSettingValue("Classic")]
