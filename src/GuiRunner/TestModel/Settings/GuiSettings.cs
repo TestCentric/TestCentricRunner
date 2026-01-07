@@ -14,8 +14,6 @@ namespace TestCentric.Gui.Model.Settings
     {
         ITestTreeSettings TestTree { get; }
 
-        IRecentProjectsSettings RecentProjects { get; }
-
         IRecentFiles RecentFiles { get; }
 
         IMiniFormSettings MiniForm { get; }
@@ -44,8 +42,6 @@ namespace TestCentric.Gui.Model.Settings
     public class GuiSettings : ApplicationSettingsBase, IGuiSettings
     {
         public ITestTreeSettings TestTree { get; } = new TestTreeSettings();
-
-        public IRecentProjectsSettings RecentProjects { get; } = new RecentProjectsSettings();
 
         public IRecentFiles RecentFiles { get; } = new RecentFiles();
 

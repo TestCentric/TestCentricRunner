@@ -38,7 +38,6 @@ namespace TestCentric.Gui.Model.Settings
                 { (ApplicationSettingsBase)Gui.MainForm, "TestCentric.Gui.MainForm" },
                 { (ApplicationSettingsBase)Gui.MiniForm, "TestCentric.Gui.MiniForm" },
                 { (ApplicationSettingsBase)Gui.ErrorDisplay, "TestCentric.Gui.ErrorDisplay" },
-                { (ApplicationSettingsBase)Gui.RecentProjects, "TestCentric.Gui.RecentProjects" },
                 { (ApplicationSettingsBase)Gui.RecentFiles, "TestCentric.Gui.RecentFiles" },
                 { (ApplicationSettingsBase)Gui.TextOutput, "TestCentric.Gui.TextOutput" },
                 { (ApplicationSettingsBase)Gui.TestTree, "TestCentric.Gui.TestTree" },
