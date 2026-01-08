@@ -13,8 +13,6 @@ namespace TestCentric.Gui.SettingsPages
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox rerunOnChangeCheckBox;
         private System.Windows.Forms.HelpProvider helpProvider1;
-        private CheckBox clearResultsCheckBox;
-        private Label label2;
         private Label label3;
         private System.ComponentModel.IContainer components = null;
 
@@ -52,8 +50,6 @@ namespace TestCentric.Gui.SettingsPages
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rerunOnChangeCheckBox = new System.Windows.Forms.CheckBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.clearResultsCheckBox = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -88,27 +84,6 @@ namespace TestCentric.Gui.SettingsPages
             this.rerunOnChangeCheckBox.TabIndex = 13;
             this.rerunOnChangeCheckBox.Text = "Re-run last tests run when reloading";
             // 
-            // clearResultsCheckBox
-            // 
-            this.clearResultsCheckBox.AutoSize = true;
-            this.clearResultsCheckBox.Enabled = false;
-            this.helpProvider1.SetHelpString(this.clearResultsCheckBox, "If checked, any prior results are cleared when reloading");
-            this.clearResultsCheckBox.Location = new System.Drawing.Point(25, 91);
-            this.clearResultsCheckBox.Name = "clearResultsCheckBox";
-            this.helpProvider1.SetShowHelp(this.clearResultsCheckBox, true);
-            this.clearResultsCheckBox.Size = new System.Drawing.Size(161, 17);
-            this.clearResultsCheckBox.TabIndex = 35;
-            this.clearResultsCheckBox.Text = "Clear results when reloading.";
-            // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(21, 121);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(336, 33);
-            this.label2.TabIndex = 36;
-            this.label2.Text = "This setting is currently disabled. Results are aloways cleared due to  a problem" +
-    " in the engine Reload function.";
-            // 
             // label3
             // 
             this.label3.Location = new System.Drawing.Point(21, 35);
@@ -120,8 +95,6 @@ namespace TestCentric.Gui.SettingsPages
             // AssemblyReloadSettingsPage
             // 
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.clearResultsCheckBox);
             this.Controls.Add(this.rerunOnChangeCheckBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox1);
@@ -134,14 +107,12 @@ namespace TestCentric.Gui.SettingsPages
 
         public override void LoadSettings()
         {
-            rerunOnChangeCheckBox.Checked = Settings.Engine.RerunOnChange;
-            clearResultsCheckBox.Checked = Settings.Gui.ClearResultsOnReload;
+            rerunOnChangeCheckBox.Checked = Settings.Gui.RerunOnChange;
         }
 
         public override void ApplySettings()
         {
-            Settings.Engine.RerunOnChange = rerunOnChangeCheckBox.Checked;
-            Settings.Gui.ClearResultsOnReload = clearResultsCheckBox.Checked;
+            Settings.Gui.RerunOnChange = rerunOnChangeCheckBox.Checked;
         }
 
         protected override void OnHelpRequested(HelpEventArgs hevent)

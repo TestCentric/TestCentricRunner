@@ -118,7 +118,7 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestReloaded += (TestNodeEventArgs e) =>
             {
-                Initialize(_model.Settings.Gui.ClearResultsOnReload);
+                Initialize(false);
             };
 
             _model.Events.RunStarting += (RunStartingEventArgs e) =>

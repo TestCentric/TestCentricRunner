@@ -18,8 +18,6 @@ namespace TestCentric.Gui.Model.Settings
         bool Maximized { get; set; }
 
         int SplitPosition { get; set; }
-
-        bool ShowStatusBar { get; set; }
     }
 
     public class MainFormSettings : ApplicationSettingsBase, IMainFormSettings
@@ -54,14 +52,6 @@ namespace TestCentric.Gui.Model.Settings
         {
             get { return (int)this[nameof(SplitPosition)]; }
             set { this[nameof(SplitPosition)] = value; }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue("true")]
-        public bool ShowStatusBar
-        {
-            get { return (bool)this[nameof(ShowStatusBar)]; }
-            set { this[nameof(ShowStatusBar)] = value; }
         }
     }
 }

@@ -230,9 +230,6 @@ namespace TestCentric.Gui.Presenters
                             _view.GuiLayout.SelectedItem = newLayout;
                         }
                         break;
-                    case "TestCentric.Gui.MainForm.ShowStatusBar":
-                        _view.StatusBarView.Visible = _settings.Gui.MainForm.ShowStatusBar;
-                        break;
                     case "TestCentric.Gui.TestTree.DisplayFormat":
                         _view.DisplayFormat.SelectedItem = _settings.Gui.TestTree.DisplayFormat;
                         UpdateTreeDisplayMenuItem();
@@ -374,7 +371,6 @@ namespace TestCentric.Gui.Presenters
                         _model.OpenExistingFile(path);
                     };
                     menuItems.Add(menuItem);
-                    if (num >= _settings.Gui.RecentProjects.MaxFiles) break;
                 }
             };
 
@@ -908,7 +904,7 @@ namespace TestCentric.Gui.Presenters
             if (useFullGui)
                 _view.SplitterPosition = _settings.Gui.MainForm.SplitPosition;
 
-            _view.StatusBarView.Visible = useFullGui && _settings.Gui.MainForm.ShowStatusBar;
+            _view.StatusBarView.Visible = useFullGui;
         }
 
         private static bool IsValidLocation(Point location, Size size)

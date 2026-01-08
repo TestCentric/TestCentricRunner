@@ -19,8 +19,6 @@ namespace TestCentric.Gui.Model.Settings
 
         IGuiSettings Gui { get; }
 
-        IEngineSettings Engine { get; }
-
         void SaveSettings();
     }
 
@@ -36,12 +34,10 @@ namespace TestCentric.Gui.Model.Settings
             // Add all sub settings objects with their prefix
             _settingGroups = new Dictionary<ApplicationSettingsBase, string>()
             {
-                { (ApplicationSettingsBase)Engine, "TestCentric.Engine" },
                 { (ApplicationSettingsBase)Gui, "TestCentric.Gui" },
                 { (ApplicationSettingsBase)Gui.MainForm, "TestCentric.Gui.MainForm" },
                 { (ApplicationSettingsBase)Gui.MiniForm, "TestCentric.Gui.MiniForm" },
                 { (ApplicationSettingsBase)Gui.ErrorDisplay, "TestCentric.Gui.ErrorDisplay" },
-                { (ApplicationSettingsBase)Gui.RecentProjects, "TestCentric.Gui.RecentProjects" },
                 { (ApplicationSettingsBase)Gui.RecentFiles, "TestCentric.Gui.RecentFiles" },
                 { (ApplicationSettingsBase)Gui.TextOutput, "TestCentric.Gui.TextOutput" },
                 { (ApplicationSettingsBase)Gui.TestTree, "TestCentric.Gui.TestTree" },
@@ -54,8 +50,6 @@ namespace TestCentric.Gui.Model.Settings
 
 
         public IGuiSettings Gui { get; } = new GuiSettings();
-
-        public IEngineSettings Engine { get; } = new EngineSettings();
 
         public void SaveSettings()
         {

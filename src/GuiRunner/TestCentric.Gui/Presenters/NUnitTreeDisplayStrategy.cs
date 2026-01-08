@@ -117,41 +117,19 @@ namespace TestCentric.Gui.Presenters
 
         private void SetDefaultInitialExpansion()
         {
-            var displayStyle = (InitialTreeExpansion)_settings.Gui.TestTree.InitialTreeDisplay;
-
             TreeNode firstNode = null;
             foreach (TreeNode node in _view.Nodes)
             {
-                SetInitialExpansion(displayStyle, node);
+                if (_view.VisibleNodeCount >= node.GetNodeCount(true))
+                    node.ExpandAll();
+                else
+                    CollapseToFixtures(node);
+
                 if (firstNode == null)
                     firstNode = node;
             }
 
             firstNode?.EnsureVisible();
-        }
-
-        private void SetInitialExpansion(InitialTreeExpansion displayStyle, TreeNode treeNode)
-        {
-            switch (displayStyle)
-            {
-                case InitialTreeExpansion.Auto:
-                    if (_view.VisibleNodeCount >= treeNode.GetNodeCount(true))
-                        treeNode.ExpandAll();
-                    else
-                        CollapseToFixtures(treeNode);
-                    break;
-                case InitialTreeExpansion.Expand:
-                    treeNode.ExpandAll();
-                    break;
-                case InitialTreeExpansion.Collapse:
-                    treeNode.Collapse();
-                    break;
-                case InitialTreeExpansion.HideTests:
-                    CollapseToFixtures(treeNode);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(displayStyle), displayStyle, null);
-            }
         }
     }
 }

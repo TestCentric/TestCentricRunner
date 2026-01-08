@@ -40,25 +40,13 @@ namespace TestCentric.Gui.Presenters
         }
 
         [Test]
-        public void TestReloaded_IfClearOnReloadIsFalse_DoesNotClearDisplay()
+        public void TestReloaded_DoesNotClearDisplay()
         {
-            _settings.Gui.ClearResultsOnReload = false;
             new TextOutputPresenter(_view, _model);
 
             FireTestReloadedEvent(FAKE_TEST_RUN);
 
             VerifyDisplayWasNotCleared();
-        }
-
-        [Test]
-        public void TestReloaded_IfClearOnReloadIsTrue_ClearsDisplay()
-        {
-            _settings.Gui.ClearResultsOnReload = true;
-            new TextOutputPresenter(_view, _model);
-
-            FireTestReloadedEvent(FAKE_TEST_RUN);
-
-            VerifyDisplayWasCleared();
         }
 
         [Test]

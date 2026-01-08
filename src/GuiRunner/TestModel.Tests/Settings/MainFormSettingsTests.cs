@@ -26,7 +26,6 @@ namespace TestCentric.Gui.Model.Settings
             new TestCaseData(nameof(MainFormSettings.Size), "700, 400"),
             new TestCaseData(nameof(MainFormSettings.SplitPosition), "290"),
             new TestCaseData(nameof(MainFormSettings.Maximized), "false"),
-            new TestCaseData(nameof(MainFormSettings.ShowStatusBar), "true"),
         };
 
         public static TestCaseData[] SetValueTestCases = new TestCaseData[]
@@ -35,7 +34,6 @@ namespace TestCentric.Gui.Model.Settings
             new TestCaseData(nameof(MainFormSettings.Size), newSizeValue),
             new TestCaseData(nameof(MainFormSettings.SplitPosition), 100),
             new TestCaseData(nameof(MainFormSettings.Maximized), true),
-            new TestCaseData(nameof(MainFormSettings.ShowStatusBar), false),
         };
     }
 }

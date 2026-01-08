@@ -14,8 +14,6 @@ namespace TestCentric.Gui.Model.Settings
     {
         ITestTreeSettings TestTree { get; }
 
-        IRecentProjectsSettings RecentProjects { get; }
-
         IRecentFiles RecentFiles { get; }
 
         IMiniFormSettings MiniForm { get; }
@@ -32,22 +30,18 @@ namespace TestCentric.Gui.Model.Settings
 
         string InitialSettingsPage { get; set; }
 
-        bool ClearResultsOnReload { get; set; }
+        bool RerunOnChange { get; set; }
 
         Font Font { get; set; }
 
         Font FixedFont { get; set; }
 
         InternalTraceLevel InternalTraceLevel { get; set; }
-
-        string ProjectEditorPath { get; set; }
     }
 
     public class GuiSettings : ApplicationSettingsBase, IGuiSettings
     {
         public ITestTreeSettings TestTree { get; } = new TestTreeSettings();
-
-        public IRecentProjectsSettings RecentProjects { get; } = new RecentProjectsSettings();
 
         public IRecentFiles RecentFiles { get; } = new RecentFiles();
 
@@ -85,10 +79,10 @@ namespace TestCentric.Gui.Model.Settings
 
         [UserScopedSetting]
         [DefaultSettingValue("false")]
-        public bool ClearResultsOnReload
+        public bool RerunOnChange
         {
-            get { return (bool)this[nameof(ClearResultsOnReload)]; }
-            set { this[nameof(ClearResultsOnReload)] = value; }
+            get { return (bool)this[nameof(RerunOnChange)]; }
+            set { this[nameof(RerunOnChange)] = value; }
         }
 
         [UserScopedSetting]
@@ -113,14 +107,6 @@ namespace TestCentric.Gui.Model.Settings
         {
             get { return (InternalTraceLevel)this[nameof(InternalTraceLevel)]; }
             set { this[nameof(InternalTraceLevel)] = value; }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue("")]
-        public string ProjectEditorPath
-        {
-            get { return (string)this[nameof(ProjectEditorPath)]; }
-            set { this[nameof(ProjectEditorPath)] = value; }
         }
     }
 }

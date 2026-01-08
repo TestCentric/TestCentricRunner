@@ -15,8 +15,6 @@ namespace TestCentric.Gui.SettingsPages
     {
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox initialDisplayComboBox;
         private System.Windows.Forms.CheckBox showCheckBoxesCheckBox;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private Label label6;
@@ -65,8 +63,6 @@ namespace TestCentric.Gui.SettingsPages
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TreeSettingsPage));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.initialDisplayComboBox = new System.Windows.Forms.ComboBox();
             this.showCheckBoxesCheckBox = new System.Windows.Forms.CheckBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.label6 = new System.Windows.Forms.Label();
@@ -105,36 +101,11 @@ namespace TestCentric.Gui.SettingsPages
             this.label1.TabIndex = 9;
             this.label1.Text = "Tree View";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(32, 24);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 13);
-            this.label2.TabIndex = 32;
-            this.label2.Text = "Initial display on load";
-            // 
-            // initialDisplayComboBox
-            // 
-            this.initialDisplayComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.helpProvider1.SetHelpString(this.initialDisplayComboBox, "Selects the initial display style of the tree when an assembly is loaded");
-            this.initialDisplayComboBox.ItemHeight = 13;
-            this.initialDisplayComboBox.Items.AddRange(new object[] {
-            "Auto",
-            "Expand",
-            "Collapse",
-            "HideTests"});
-            this.initialDisplayComboBox.Location = new System.Drawing.Point(270, 24);
-            this.initialDisplayComboBox.Name = "initialDisplayComboBox";
-            this.helpProvider1.SetShowHelp(this.initialDisplayComboBox, true);
-            this.initialDisplayComboBox.Size = new System.Drawing.Size(168, 21);
-            this.initialDisplayComboBox.TabIndex = 33;
-            // 
             // showCheckBoxesCheckBox
             // 
             this.showCheckBoxesCheckBox.AutoSize = true;
             this.helpProvider1.SetHelpString(this.showCheckBoxesCheckBox, "If checked, a checkbox is displayed next to each item in the tree.");
-            this.showCheckBoxesCheckBox.Location = new System.Drawing.Point(32, 150);
+            this.showCheckBoxesCheckBox.Location = new System.Drawing.Point(32, 120);
             this.showCheckBoxesCheckBox.Name = "showCheckBoxesCheckBox";
             this.helpProvider1.SetShowHelp(this.showCheckBoxesCheckBox, true);
             this.showCheckBoxesCheckBox.Size = new System.Drawing.Size(227, 17);
@@ -145,7 +116,7 @@ namespace TestCentric.Gui.SettingsPages
             // 
             this.label6.BackColor = System.Drawing.SystemColors.Window;
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Location = new System.Drawing.Point(66, 81);
+            this.label6.Location = new System.Drawing.Point(66, 45);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(164, 36);
             this.label6.TabIndex = 47;
@@ -153,7 +124,7 @@ namespace TestCentric.Gui.SettingsPages
             // successImage
             // 
             this.successImage.Image = ((System.Drawing.Image)(resources.GetObject("successImage.Image")));
-            this.successImage.Location = new System.Drawing.Point(78, 92);
+            this.successImage.Location = new System.Drawing.Point(78, 56);
             this.successImage.Name = "successImage";
             this.successImage.Size = new System.Drawing.Size(16, 16);
             this.successImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -163,7 +134,7 @@ namespace TestCentric.Gui.SettingsPages
             // failureImage
             // 
             this.failureImage.Image = ((System.Drawing.Image)(resources.GetObject("failureImage.Image")));
-            this.failureImage.Location = new System.Drawing.Point(103, 92);
+            this.failureImage.Location = new System.Drawing.Point(103, 56);
             this.failureImage.Name = "failureImage";
             this.failureImage.Size = new System.Drawing.Size(16, 16);
             this.failureImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -173,7 +144,7 @@ namespace TestCentric.Gui.SettingsPages
             // warningImage
             // 
             this.warningImage.Image = ((System.Drawing.Image)(resources.GetObject("warningImage.Image")));
-            this.warningImage.Location = new System.Drawing.Point(153, 92);
+            this.warningImage.Location = new System.Drawing.Point(153, 56);
             this.warningImage.Name = "warningImage";
             this.warningImage.Size = new System.Drawing.Size(16, 16);
             this.warningImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -183,7 +154,7 @@ namespace TestCentric.Gui.SettingsPages
             // ignoredImage
             // 
             this.ignoredImage.Image = ((System.Drawing.Image)(resources.GetObject("ignoredImage.Image")));
-            this.ignoredImage.Location = new System.Drawing.Point(128, 92);
+            this.ignoredImage.Location = new System.Drawing.Point(128, 56);
             this.ignoredImage.Name = "ignoredImage";
             this.ignoredImage.Size = new System.Drawing.Size(16, 16);
             this.ignoredImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -194,7 +165,7 @@ namespace TestCentric.Gui.SettingsPages
             // 
             this.inconclusiveImage.Enabled = false;
             this.inconclusiveImage.Image = ((System.Drawing.Image)(resources.GetObject("inconclusiveImage.Image")));
-            this.inconclusiveImage.Location = new System.Drawing.Point(178, 92);
+            this.inconclusiveImage.Location = new System.Drawing.Point(178, 56);
             this.inconclusiveImage.Name = "inconclusiveImage";
             this.inconclusiveImage.Size = new System.Drawing.Size(16, 16);
             this.inconclusiveImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -204,7 +175,7 @@ namespace TestCentric.Gui.SettingsPages
             // skippedImage
             // 
             this.skippedImage.Image = ((System.Drawing.Image)(resources.GetObject("skippedImage.Image")));
-            this.skippedImage.Location = new System.Drawing.Point(203, 92);
+            this.skippedImage.Location = new System.Drawing.Point(203, 56);
             this.skippedImage.Name = "skippedImage";
             this.skippedImage.Size = new System.Drawing.Size(16, 16);
             this.skippedImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -214,7 +185,7 @@ namespace TestCentric.Gui.SettingsPages
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(32, 60);
+            this.label4.Location = new System.Drawing.Point(32, 24);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 13);
             this.label4.TabIndex = 53;
@@ -223,7 +194,7 @@ namespace TestCentric.Gui.SettingsPages
             // imageSetListBox
             // 
             this.imageSetListBox.FormattingEnabled = true;
-            this.imageSetListBox.Location = new System.Drawing.Point(270, 61);
+            this.imageSetListBox.Location = new System.Drawing.Point(270, 24);
             this.imageSetListBox.Name = "imageSetListBox";
             this.imageSetListBox.Size = new System.Drawing.Size(168, 56);
             this.imageSetListBox.TabIndex = 54;
@@ -240,8 +211,6 @@ namespace TestCentric.Gui.SettingsPages
             this.Controls.Add(this.failureImage);
             this.Controls.Add(this.successImage);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.initialDisplayComboBox);
             this.Controls.Add(this.showCheckBoxesCheckBox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
@@ -260,7 +229,6 @@ namespace TestCentric.Gui.SettingsPages
 
         public override void LoadSettings()
         {
-            initialDisplayComboBox.SelectedIndex = Settings.Gui.TestTree.InitialTreeDisplay;
             showCheckBoxesCheckBox.Checked = Settings.Gui.TestTree.ShowCheckBoxes;
 
             foreach (string imageSetName in _imageSetManager.ImageSets.Keys)
@@ -271,7 +239,6 @@ namespace TestCentric.Gui.SettingsPages
 
         public override void ApplySettings()
         {
-            Settings.Gui.TestTree.InitialTreeDisplay = initialDisplayComboBox.SelectedIndex;
             Settings.Gui.TestTree.ShowCheckBoxes = showCheckBoxesCheckBox.Checked;
 
             if (imageSetListBox.SelectedIndex >= 0)
