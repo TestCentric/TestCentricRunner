@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using NUnit.Common;
 using NUnit.Engine;
@@ -69,14 +68,12 @@ namespace TestCentric.Gui.Model
             }
         }
 
-        public static ITestModel CreateTestModel(GuiOptions options)
-        {
-            return CreateTestModel(new TestEngine(), options);
-        }
-
         // Public for testing
-        public static ITestModel CreateTestModel(ITestEngine testEngine, GuiOptions options)
+        public static ITestModel CreateTestModel(ITestEngine testEngine, GuiOptions options = null)
         {
+            if (options is null)
+                options = new GuiOptions();
+
             // Currently the InternalTraceLevel can only be set from the command-line.
             // We can't use user settings to provide a default because the settings
             // are an engine service and the engine have the internal trace level
@@ -161,6 +158,8 @@ namespace TestCentric.Gui.Model
         /// The current TestProject
         /// </summary>
         public TestCentricProject TestCentricProject { get; set; }
+
+        public TestPackage TopLevelPackage => TestCentricProject.TopLevelPackage;
 
         public bool IsProjectLoaded => TestCentricProject != null;
 
@@ -286,12 +285,12 @@ namespace TestCentric.Gui.Model
         /// </summary>
         /// <param name="filenames">The test files contained as subprojects of the new project.</param>
         /// <returns>The newly created test project</returns>
-        public TestCentricProject CreateNewProject(IList<string> filenames)
+        public TestCentricProject CreateNewProject(string[] filenames)
         {
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject(this, filenames);
+            TestCentricProject = new TestCentricProject(new GuiOptions(filenames));
 
             _events.FireTestCentricProjectLoaded();
 
@@ -300,13 +299,24 @@ namespace TestCentric.Gui.Model
             return TestCentricProject;
         }
 
-        public TestCentricProject CreateNewProject()
+        public void CreateNewProject(GuiOptions options)
         {
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject(this);
-            return TestCentricProject;
+            TestCentricProject = new TestCentricProject(options);
+
+            _events.FireTestCentricProjectLoaded();
+
+            LoadTests(options.InputFiles);
+        }
+
+        public void CreateNewProject()
+        {
+            if (IsProjectLoaded)
+                CloseProject();
+
+            TestCentricProject = new TestCentricProject();
         }
 
         public void AddTests(IEnumerable<string> fileNames)
@@ -323,7 +333,7 @@ namespace TestCentric.Gui.Model
 
         public void RemoveTestPackage(NUnit.Engine.TestPackage subPackage)
         {
-            if (!IsProjectLoaded || IsTestRunning || subPackage == null || TestCentricProject.SubPackages.Count <= 1)
+            if (!IsProjectLoaded || IsTestRunning || subPackage == null || TopLevelPackage.SubPackages.Count <= 1)
                 return;
 
             TestCentricProject.RemoveSubPackage(subPackage);
@@ -337,7 +347,7 @@ namespace TestCentric.Gui.Model
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject(this);
+            TestCentricProject = new TestCentricProject();
 
             TestCentricProject.Load(projectPath);
 
@@ -394,7 +404,7 @@ namespace TestCentric.Gui.Model
             _lastTestRun = TestRunSpecification.Empty;
             _lastRunWasDebugRun = false;
 
-            Runner = TestEngine.GetRunner(TestCentricProject);
+            Runner = TestEngine.GetRunner(TopLevelPackage);
             log.Debug($"Got {Runner.GetType().Name} for package");
 
             try
@@ -424,7 +434,7 @@ namespace TestCentric.Gui.Model
             _events.FireTestLoaded(LoadedTests);
 
             if (TestCentricProject.ProjectPath == null)
-                foreach (var subPackage in TestCentricProject.SubPackages)
+                foreach (var subPackage in TopLevelPackage.SubPackages)
                     RecentFiles.Latest = subPackage.FullName;
             else 
                 RecentFiles.Latest = TestCentricProject.ProjectPath;
@@ -451,7 +461,7 @@ namespace TestCentric.Gui.Model
         private void MapTestsToPackages()
         {
             _packageMap.Clear();
-            MapTestToPackage(LoadedTests, TestCentricProject);
+            MapTestToPackage(LoadedTests, TopLevelPackage);
         }
 
         private void MapTestToPackage(TestNode test, NUnit.Engine.TestPackage package)
@@ -465,7 +475,7 @@ namespace TestCentric.Gui.Model
         public IList<string> GetAgentsForPackage(NUnit.Engine.TestPackage package = null)
         {
             if (package == null)
-                package = TestCentricProject;
+                package = TopLevelPackage;
 
             if (package == null)                // no project is loaded
                 return new List<string>();
@@ -516,7 +526,7 @@ namespace TestCentric.Gui.Model
             // Replace Runner in case settings changed
             UnloadTestsIgnoringErrors();
             Runner.Dispose();
-            Runner = TestEngine.GetRunner(TestCentricProject);
+            Runner = TestEngine.GetRunner(TopLevelPackage);
 
             // Discover tests
             LoadedTests = new TestNode(Runner.Explore(NUnit.Engine.TestFilter.Empty));
@@ -775,13 +785,13 @@ namespace TestCentric.Gui.Model
             // in a different mode than last time.
             if (_lastRunWasDebugRun != runSpec.DebuggingRequested)
             {
-                foreach (var subPackage in TestCentricProject.SubPackages)
+                foreach (var subPackage in TopLevelPackage.SubPackages)
                 {
                     subPackage.Settings.Set(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
                 }
 
                 Runner?.Dispose();
-                Runner = TestEngine.GetRunner(TestCentricProject);
+                Runner = TestEngine.GetRunner(TopLevelPackage);
 
                 // It is not strictly necessary to load the tests
                 // because the runner will do that automatically, however,

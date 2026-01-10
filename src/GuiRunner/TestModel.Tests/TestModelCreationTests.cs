@@ -37,8 +37,8 @@ namespace TestCentric.Gui.Model
             Assert.That(engine.WorkDirectory, Is.EqualTo(options.WorkDirectory));
             Assert.That(engine.InternalTraceLevel.ToString(), Is.EqualTo(options.InternalTraceLevel ?? "Off"));
 
-            var project = model.CreateNewProject(options.InputFiles);
-            var checker = new PackageSettingsChecker(project.Settings);
+            model.CreateNewProject(options);
+            var checker = new PackageSettingsChecker(model.TopLevelPackage.Settings);
 
             checker.CheckSetting(options.MaxAgents, SettingDefinitions.MaxAgents.Name);
             checker.CheckSetting(options.RunAsX86, SettingDefinitions.RunAsX86.Name);

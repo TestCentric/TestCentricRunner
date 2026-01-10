@@ -552,7 +552,7 @@ namespace TestCentric.Gui.Presenters
 
         private bool CanRemovePackageNode(TestNode testNode)
         {
-            return _model.HasTests && !_model.IsTestRunning && testNode != null && testNode.IsAssembly && _model.TestCentricProject.SubPackages.Count > 1;
+            return _model.HasTests && !_model.IsTestRunning && testNode != null && testNode.IsAssembly && _model.TopLevelPackage.SubPackages.Count > 1;
         }
 
         #endregion

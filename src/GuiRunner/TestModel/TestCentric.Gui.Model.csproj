@@ -1,14 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>TestCentric.Gui.Model</RootNamespace>
-    <AssemblyName>TestCentric.Gui.Model</AssemblyName>
-    <TargetFramework>net462</TargetFramework>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <UseWindowsForms>true</UseWindowsForms>
-  </PropertyGroup>
-  <ItemGroup>
-	  <PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />
-	  <PackageReference Include="NUnit.Engine" Version="$(NUnitEngineVersion)" />
-	  <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
-  </ItemGroup>
+	
+    <PropertyGroup>
+        <RootNamespace>TestCentric.Gui.Model</RootNamespace>
+        <AssemblyName>TestCentric.Gui.Model</AssemblyName>
+        <TargetFramework>net462</TargetFramework>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <UseWindowsForms>true</UseWindowsForms>
+    </PropertyGroup>
+	
+    <ItemGroup>
+	    <PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />
+	    <PackageReference Include="NUnit.Engine" Version="$(NUnitEngineVersion)" />
+	    <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
+    </ItemGroup>
+	
 </Project>

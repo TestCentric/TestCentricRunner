@@ -12,53 +12,49 @@ using NUnit.Engine;
 namespace TestCentric.Gui.Model
 {
     using System.Linq;
+    using System.Xml;
+    using NUnit;
 
-    public class TestCentricProject : NUnit.Engine.TestPackage
+    public class TestCentricProject
     {
-
         public static bool IsProjectFile(string path) => Path.GetExtension(path).ToLower() == ".tcproj";
 
-        public string FileName => Path.GetFileName(ProjectPath);
         public string ProjectPath { get; private set; }
 
-        public IList<String> TestFiles { get; private set; }
+        public TestPackage TopLevelPackage { get; private set; }
+
+        public IList<String> TestFiles { get; }
 
         public bool IsDirty { get; private set; }
 
-        public TestCentricProject(ITestModel model)
+        public TestCentricProject(GuiOptions options = null)
         {
-            TestFiles = new List<String>();
-        }
+            if (options is null)
+                options = new GuiOptions();
 
-        public TestCentricProject(ITestModel model, string filename)
-            : this(model, new string[] { filename }) { }
-
-        public TestCentricProject(ITestModel model, IList<string> filenames)
-            :base(filenames)
-        {
-            TestFiles = new List<string>(filenames);
+            TestFiles = [.. options.InputFiles];
+            TopLevelPackage = new TestPackage(TestFiles);
 
             // Turn on shadow copy in new TestCentric project by default
-            SetSubPackageSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
+            AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
 
-            var options = model.Options;
             if (options != null) // Happens when we test
             {
-                SetSubPackageSetting(SettingDefinitions.InternalTraceLevel.WithValue(options.InternalTraceLevel ?? "Off"));
+                AddSetting(SettingDefinitions.InternalTraceLevel.WithValue(options.InternalTraceLevel ?? "Off"));
                 if (options.WorkDirectory != null)
-                    SetSubPackageSetting(SettingDefinitions.WorkDirectory.WithValue(options.WorkDirectory));
+                    AddSetting(SettingDefinitions.WorkDirectory.WithValue(options.WorkDirectory));
                 if (options.MaxAgents >= 0)
-                    SetTopLevelSetting(SettingDefinitions.MaxAgents.WithValue(options.MaxAgents));
+                    AddSetting(SettingDefinitions.MaxAgents.WithValue(options.MaxAgents));
                 if (options.RunAsX86)
-                    SetTopLevelSetting(SettingDefinitions.RunAsX86.WithValue(true));
+                    AddSetting(SettingDefinitions.RunAsX86.WithValue(true));
                 if (options.DebugAgent)
-                    SetSubPackageSetting(SettingDefinitions.DebugAgent.WithValue(true));
+                    AddSetting(SettingDefinitions.DebugAgent.WithValue(true));
                 if (options.TestParameters.Count > 0)
-                    SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
+                    AddSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
             }
 
-            foreach (var subpackage in SubPackages)
-                switch(Path.GetExtension(subpackage.Name))
+            foreach (var subpackage in TopLevelPackage.SubPackages)
+                switch (Path.GetExtension(subpackage.Name))
                 {
                     case ".sln":
                         subpackage.AddSetting(SettingDefinitions.SkipNonTestAssemblies.WithValue(true));
@@ -76,18 +72,42 @@ namespace TestCentric.Gui.Model
 
             try
             {
-                string fileContent = File.ReadAllText(ProjectPath);
-                TestPackage newPackage = PackageHelper.FromXml(fileContent);
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(path);
+                StringReader reader = new StringReader(xmlDoc.OuterXml);
+                XmlReader xmlReader = XmlReader.Create(reader);
 
-                // Apply top level settings from loaded package
-                foreach (PackageSetting packageSetting in newPackage.Settings)
-                    Settings.Set(packageSetting);
+                if (!FindTestCentricProjectElement())
+                    throw new InvalidCastException("Invalid TestCentricProject XML");
 
-                foreach (var subPackage in newPackage.SubPackages)
+                // Currently, we have no attributes on the TestCentricProject element
+                // so proceed tot he next item in the reader, it will either be a TestPackage
+                // or the TestCentricProject end element.
+                while (xmlReader.Read())
                 {
-                    AddSubPackage(subPackage.FullName);
-                    foreach (var setting in subPackage.Settings)
-                        SubPackages.Last().Settings.Set(setting);
+                    switch (xmlReader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            if (xmlReader.Name == "TestPackage")
+                                TopLevelPackage = ReadXml(xmlReader);
+                            else
+                                throw new Exception($"Invalid element: `{xmlReader.Name}`.");
+                            break;
+                        case XmlNodeType.EndElement:
+                            if (xmlReader.Name == "TestCentricProject")
+                                break;
+                            else
+                                throw new Exception($"Invalid end element '{xmlReader.Name}'");
+                    }
+                }
+
+                bool FindTestCentricProjectElement()
+                {
+                    while (xmlReader.Read())
+                        if (xmlReader.NodeType == XmlNodeType.Element)
+                            return xmlReader.Name == "TestCentricProject";
+
+                    return false;
                 }
             }
             catch (Exception ex)
@@ -108,28 +128,35 @@ namespace TestCentric.Gui.Model
         public void Save()
         {
             using (StreamWriter writer = new StreamWriter(ProjectPath))
-                writer.Write(this.ToXml());
+            using (XmlWriter xmlWriter = XmlWriter.Create(writer))
+            {
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("TestCentricProject");
+                if (TopLevelPackage is not null)
+                   xmlWriter.WriteRaw(TopLevelPackage.ToXml());
+                xmlWriter.WriteEndElement();
+            }
 
             IsDirty = false;
         }
 
-        public new void AddSubPackage(string fullName)
+        public void AddSubPackage(string fullName)
         {
-            base.AddSubPackage(fullName);
+            TopLevelPackage.AddSubPackage(fullName);
             TestFiles.Add(fullName);
             IsDirty = true;
         }
-        public new void AddSubPackage(NUnit.Engine.TestPackage subPackage)
+        public void AddSubPackage(TestPackage subPackage)
         {
-            base.AddSubPackage(subPackage);
+            TopLevelPackage.AddSubPackage(subPackage);
             IsDirty = true;
         }
 
-        public void RemoveSubPackage(NUnit.Engine.TestPackage subPackage)
+        public void RemoveSubPackage(TestPackage subPackage)
         {
             if (subPackage != null)
             {
-                SubPackages.Remove(subPackage);
+                TopLevelPackage.SubPackages.Remove(subPackage);
                 TestFiles.Remove(subPackage.FullName);
                 IsDirty = true;
             }
@@ -138,31 +165,165 @@ namespace TestCentric.Gui.Model
         public void SetSubPackageSetting(PackageSetting setting)
         {
             RemoveSetting(setting.Name);
-            AddSetting(setting);
+            TopLevelPackage.AddSetting(setting);
             IsDirty = true;
         }
 
-        public void AddSetting(string key, object value)
+        public void AddSetting(PackageSetting setting)
         {
-            Settings.Set(key, value);
+            TopLevelPackage.AddSetting(setting);
+            IsDirty = true;
+        }
+
+        public void AddSetting(string key, string value)
+        {
+            TopLevelPackage.AddSetting(key, value);
+            IsDirty = true;
+        }
+
+        public void AddSetting(string key, bool value)
+        {
+            TopLevelPackage.AddSetting(key, value);
+            IsDirty = true;
+        }
+
+        public void AddSetting(string key, int value)
+        {
+            TopLevelPackage.AddSetting(key, value);
             IsDirty = true;
         }
 
         public void RemoveSetting(string key)
         {
-            Settings.Remove(key);
-            foreach (var subPackage in SubPackages)
+            TopLevelPackage.Settings.Remove(key);
+            foreach (var subPackage in TopLevelPackage.SubPackages)
                 subPackage.Settings.Remove(key);
 
             IsDirty = true;
         }
 
-        public void RemoveSetting(NUnit.Engine.SettingDefinition setting) => RemoveSetting(setting.Name);
+        public void RemoveSetting(SettingDefinition setting) => RemoveSetting(setting.Name);
 
         public void SetTopLevelSetting(PackageSetting setting)
         {
-            Settings.Set(setting);
+            TopLevelPackage.Settings.Set(setting);
             IsDirty = true;
         }
+
+        #region NUnit TestPackage Load Helpers
+
+        // These two methods are private in NUnit and have been extracted for temporary use.
+        // If NUnit can support their public use we'll be able to remove them.
+
+        private static TestPackage ReadXml(XmlReader xmlReader)
+        {
+            TestPackage testPackage = new TestPackage();
+            testPackage.ID = xmlReader.GetAttribute("id").ShouldNotBeNull("xmlReader.GetAttribute(\"id\")");
+            testPackage.FullName = xmlReader.GetAttribute("fullname");
+            if (!xmlReader.IsEmptyElement)
+            {
+                while (xmlReader.Read())
+                {
+                    switch (xmlReader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            {
+                                string name = xmlReader.Name;
+                                if (!(name == "Settings"))
+                                {
+                                    if (name == "TestPackage")
+                                    {
+                                        testPackage.SubPackages.Add(ReadXml(xmlReader));
+                                    }
+                                }
+                                else
+                                {
+                                    ReadSettings(testPackage.Settings, xmlReader);
+                                }
+                                break;
+                            }
+                        case XmlNodeType.EndElement:
+                            if (xmlReader.Name == "TestPackage")
+                            {
+                                return testPackage;
+                            }
+                            throw new Exception("Unexpected EndElement: " + xmlReader.Name);
+                    }
+                }
+                throw new Exception("Invalid XML: TestPackage Element not terminated.");
+            }
+            return testPackage;
+        }
+
+        private static void ReadSettings(PackageSettings packageSettings, XmlReader xmlReader)
+        {
+            while (xmlReader.MoveToNextAttribute())
+            {
+                string name = xmlReader.Name;
+                string value = xmlReader.Value;
+                SettingDefinition settingDefinition = SettingDefinitions.Lookup(name);
+                bool result2;
+                int result3;
+                if (settingDefinition != null)
+                {
+                    switch (name)
+                    {
+                        case "LOAD":
+                            packageSettings.Add(SettingDefinitions.LOAD.WithValue(value.Split(';')));
+                            continue;
+                        case "TestParametersDictionary":
+                            {
+                                XmlDocument xmlDocument = new XmlDocument();
+                                xmlDocument.LoadXml(value);
+                                Dictionary<string, string> dictionary = new Dictionary<string, string>();
+                                foreach (XmlNode item in xmlDocument.SelectNodes("parms/parm").ShouldNotBeNull("doc.SelectNodes(\"parms/parm\")"))
+                                {
+                                    dictionary.Add(item.GetAttribute("key").ShouldNotBeNull("node.GetAttribute(\"key\")"), item.GetAttribute("value").ShouldNotBeNull("node.GetAttribute(\"value\")"));
+                                }
+                                packageSettings.Add(SettingDefinitions.TestParametersDictionary.WithValue(dictionary));
+                                continue;
+                            }
+                        case "InternalTraceWriter":
+                            continue;
+                    }
+                    Type valueType = settingDefinition.ValueType;
+                    if ((object)valueType == null)
+                    {
+                        continue;
+                    }
+                    if (valueType.IsAssignableFrom(typeof(string)))
+                    {
+                        packageSettings.Add(name, value);
+                        continue;
+                    }
+                    Type type = valueType;
+                    if (type.IsAssignableFrom(typeof(bool)))
+                    {
+                        packageSettings.Add(name, bool.Parse(value));
+                        continue;
+                    }
+                    Type type2 = valueType;
+                    if (type2.IsAssignableFrom(typeof(int)))
+                    {
+                        packageSettings.Add(name, int.Parse(value));
+                    }
+                }
+                else if (bool.TryParse(value, out result2))
+                {
+                    packageSettings.Add(name, result2);
+                }
+                else if (int.TryParse(value, out result3))
+                {
+                    packageSettings.Add(name, result3);
+                }
+                else
+                {
+                    packageSettings.Add(name, value);
+                }
+            }
+            xmlReader.MoveToElement();
+        }
+
+        #endregion
     }
 }
