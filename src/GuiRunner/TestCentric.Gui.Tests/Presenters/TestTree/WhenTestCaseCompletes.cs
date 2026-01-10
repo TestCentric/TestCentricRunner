@@ -45,7 +45,7 @@ namespace TestCentric.Gui.Presenters.TestTree
                 : string.Format($"<test-case id='123' result='{result}' label='{label}'/>"));
             _model.LoadedTests.Returns(testNode);
 
-            var project = new TestCentricProject(_model, "dummy.dll");
+            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
             _model.TestCentricProject.Returns(project);
             _model.GetTestById("123").Returns(testNode.Children.First());
             _model.TestResultManager.GetResultForTest("123").Returns(resultNode);

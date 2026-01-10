@@ -31,7 +31,7 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             _model.HasTests.Returns(true);
             _model.IsTestRunning.Returns(false);
-            var project = new TestCentricProject(_model, TestFileName);
+            var project = new TestCentricProject(new GuiOptions(TestFileName));
             _model.TestCentricProject.Returns(project);
 
             TestNode testNode = new TestNode("<test-suite id='1'/>");

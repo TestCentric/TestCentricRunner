@@ -26,7 +26,7 @@ namespace TestCentric.Gui.Presenters.Main
             _model.SelectedTests.Returns(new TestSelection(new[] { testNode }));
             _view.ResultTabs.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
 
-            var project = new TestCentricProject(_model, "dummy.dll");
+            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
             _model.TestCentricProject.Returns(project);
             FireTestLoadedEvent(testNode);
         }

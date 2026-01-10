@@ -12,7 +12,7 @@ namespace TestCentric.Gui.Views
 
     public interface IDialogManager
     {
-        IList<string> SelectMultipleFiles(string title, string filter);
+        string[] SelectMultipleFiles(string title, string filter);
 
         string GetFileOpenPath(string title, string filter);
 

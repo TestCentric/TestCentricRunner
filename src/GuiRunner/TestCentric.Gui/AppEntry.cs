@@ -63,7 +63,7 @@ namespace TestCentric.Gui
             ITestModel model = null;
             try
             {
-                model = TestModel.CreateTestModel(options);
+                model = TestModel.CreateTestModel(new TestEngine(), options);
             }
             catch (Exception ex)
             {

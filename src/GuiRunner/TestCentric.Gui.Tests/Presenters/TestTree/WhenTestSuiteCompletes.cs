@@ -51,7 +51,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TestResultManager.GetResultForTest("100").Returns(resultNode);
             _model.TestResultManager.GetResultForTest("200").Returns(testCaseResultNode);
 
-            var project = new TestCentricProject(_model, "dummy.dll");
+            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
             _model.TestCentricProject.Returns(project);
 
             _model.Events.TestLoaded += Raise.Event<TestNodeEventHandler>(new TestNodeEventArgs(testNode));

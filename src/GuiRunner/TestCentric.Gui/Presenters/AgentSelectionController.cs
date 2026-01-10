@@ -27,9 +27,8 @@ namespace TestCentric.Gui.Presenters
 
         public bool AllowAgentSelection()
         {
-            var package = _model.TestCentricProject;
-            return package != null &&
-                _model.GetAgentsForPackage(package).Count > 1;
+            var package = _model.TopLevelPackage;
+            return _model.GetAgentsForPackage(package).Count > 1;
         }
 
         public void PopulateMenu()
@@ -62,8 +61,8 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems()
         {
             IPopup agentMenu = _view.SelectAgentMenu;
-            IList<string> agentsToEnable = _model.GetAgentsForPackage(_model.TestCentricProject);
-            string selectedAgent = _model.TestCentricProject?.Settings.GetValueOrDefault(SettingDefinitions.SelectedAgentName);
+            IList<string> agentsToEnable = _model.GetAgentsForPackage(_model.TopLevelPackage);
+            string selectedAgent = _model.TestCentricProject?.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.SelectedAgentName);
             if (string.IsNullOrEmpty(selectedAgent))
                 selectedAgent = "DEFAULT";
 
@@ -101,7 +100,7 @@ namespace TestCentric.Gui.Presenters
                 // does not re-create the Engine.  Since we just changed a setting, we must
                 // re-create the Engine by unloading/reloading the tests. We make a copy of
                 // __model.TestFiles because the method does an unload before it loads.
-                _model.TestCentricProject.LoadTests();
+                _model.LoadTests(_model.TestCentricProject.TestFiles);
             }
 
             void EnsureSingleItemChecked(ToolStripMenuItem itemToCheck)

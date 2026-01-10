@@ -19,7 +19,7 @@ namespace TestCentric.Gui.Dialogs
         {
             // 1. Arrange
             ITestModel model = Substitute.For<ITestModel>();
-            TestCentricProject project = new TestCentricProject(model);
+            TestCentricProject project = new TestCentricProject();
             model.TestCentricProject.Returns(project);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
@@ -29,7 +29,7 @@ namespace TestCentric.Gui.Dialogs
             settingsDialog.ApplySettings();
 
             // 3. Assert
-            Assert.That(project.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
+            Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace TestCentric.Gui.Dialogs
         {
             // 1. Arrange
             ITestModel model = Substitute.For<ITestModel>();
-            TestCentricProject project = new TestCentricProject(model);
+            TestCentricProject project = new TestCentricProject();
             model.TestCentricProject.Returns(project);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
@@ -47,7 +47,7 @@ namespace TestCentric.Gui.Dialogs
             settingsDialog.ApplySettings();
 
             // 3. Assert
-            Assert.That(project.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
+            Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
         }
 
 

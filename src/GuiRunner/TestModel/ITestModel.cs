@@ -46,6 +46,8 @@ namespace TestCentric.Gui.Model
 
         TestCentricProject TestCentricProject { get; }
 
+        TestPackage TopLevelPackage { get; }
+
         bool IsProjectLoaded { get; }
 
         // TestNode hierarchy representing the discovered tests
@@ -102,12 +104,13 @@ namespace TestCentric.Gui.Model
         #region Methods
 
         // Create a new project containing the provided test files
-        TestCentricProject CreateNewProject(IList<string> filenames);
+        TestCentricProject CreateNewProject(string[] filenames);
+        void CreateNewProject(GuiOptions options);
 
         /// <summary>
         /// Create a new empty project
         /// </summary>
-        TestCentricProject CreateNewProject();
+        void CreateNewProject();
 
         /// <summary>
         /// Add the test files to the current test project
