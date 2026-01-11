@@ -19,7 +19,8 @@ namespace TestCentric.Gui.Model
 
         // Settings automatically added to all packages
         // TODO: Review this
-        const string DEFAULT_SETTINGS = "ShadowCopyFiles = \"True\" InternalTraceLevel = \"Off\" MaxAgents = \"0\"";
+        const string TOP_DEFAULT_SETTINGS = "ShadowCopyFiles = \"True\" InternalTraceLevel = \"Off\" MaxAgents = \"0\"";
+        const string ALL_DEFAULT_SETTINGS = "ShadowCopyFiles = \"True\" InternalTraceLevel = \"Off\"";
 
         private static readonly string TEMP_PATH = Path.GetFullPath(Path.GetTempFileName());
 
@@ -55,11 +56,11 @@ namespace TestCentric.Gui.Model
                 <?xml version = "1.0" encoding="utf-8"?>
                 <TestCentricProject>
                 <TestPackage id="{package.ID}">
-                <Settings {DEFAULT_SETTINGS} foo="bar" num="42" critical="True" />
+                <Settings {TOP_DEFAULT_SETTINGS} foo="bar" num="42" critical="True" />
                 <TestPackage id="{subPackages[0].ID}" fullname="{Path.GetFullPath("test1.dll")}">
-                <Settings {DEFAULT_SETTINGS} foo="bar" num="42" critical="True" cpu="x86" /></TestPackage>
+                <Settings {ALL_DEFAULT_SETTINGS} foo="bar" num="42" critical="True" cpu="x86" /></TestPackage>
                 <TestPackage id="{subPackages[1].ID}" fullname="{Path.GetFullPath("test2.dll")}">
-                <Settings {DEFAULT_SETTINGS} foo="bar" num="42" critical="True" /></TestPackage></TestPackage>
+                <Settings {ALL_DEFAULT_SETTINGS} foo="bar" num="42" critical="True" /></TestPackage></TestPackage>
                 </TestCentricProject>
                 """.Replace(CR, string.Empty).Replace(LF, string.Empty);
 
@@ -95,7 +96,7 @@ namespace TestCentric.Gui.Model
                 <?xml version="1.0" encoding="utf-8"?>
                 <TestCentricProject>
                 <TestPackage id="{project.TopLevelPackage.ID}">
-                <Settings {DEFAULT_SETTINGS} />
+                <Settings {TOP_DEFAULT_SETTINGS} />
                 </TestPackage>
                 </TestCentricProject>
                 """.Replace(CR, string.Empty).Replace(LF, string.Empty);

@@ -165,7 +165,7 @@ namespace TestCentric.Gui.Dialogs
                     page.ApplySettings();
 
             foreach(PackageSetting setting in SubPackageSettingChanges)
-                Model.TestCentricProject?.SetSubPackageSetting(setting);
+                Model.TestCentricProject?.AddSetting(setting);
 
             foreach (PackageSetting setting in TopLevelPackageSettingChanges)
                 Model.TestCentricProject?.SetTopLevelSetting(setting);

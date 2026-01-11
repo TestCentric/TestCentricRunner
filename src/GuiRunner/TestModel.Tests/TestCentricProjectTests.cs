@@ -165,7 +165,7 @@ namespace TestCentric.Gui.Model
             TestCentricProject project = new TestCentricProject();
 
             // 2. Act
-            project.SetSubPackageSetting(SettingDefinitions.DebugTests.WithValue(true));
+            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
 
             // 3. Assert
             Assert.That(project.IsDirty, Is.True);
@@ -178,7 +178,7 @@ namespace TestCentric.Gui.Model
             TestCentricProject project = new TestCentricProject();
 
             // 2. Act
-            project.SetSubPackageSetting(SettingDefinitions.DebugTests.WithValue(true));
+            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
 
             // 3. Assert
             Assert.That(project.IsDirty, Is.True);
@@ -283,7 +283,7 @@ namespace TestCentric.Gui.Model
             TestCentricProject project = new TestCentricProject();
 
             // 2. Act
-            project.SetSubPackageSetting(SettingDefinitions.DebugTests.WithValue(true));
+            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
 
             // 3. Assert
             Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);

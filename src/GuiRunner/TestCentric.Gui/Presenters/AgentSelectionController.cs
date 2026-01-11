@@ -92,8 +92,8 @@ namespace TestCentric.Gui.Presenters
                 string itemTag = item.Tag as string;
                 if (itemTag is not null && itemTag != "DEFAULT")
                 {
-                    _model.TestCentricProject.SetSubPackageSetting(SettingDefinitions.SelectedAgentName.WithValue(itemTag));
-                    _model.TestCentricProject.SetSubPackageSetting(SettingDefinitions.RequestedAgentName.WithValue(itemTag));
+                    _model.TestCentricProject.AddSetting(SettingDefinitions.SelectedAgentName.WithValue(itemTag));
+                    _model.TestCentricProject.AddSetting(SettingDefinitions.RequestedAgentName.WithValue(itemTag));
                 }
 
                 // Even though the _model has a Reload method, we cannot use it because Reload

@@ -11,7 +11,6 @@ using NUnit.Engine;
 
 namespace TestCentric.Gui.Model
 {
-    using System.Linq;
     using System.Xml;
     using NUnit;
 
@@ -44,13 +43,13 @@ namespace TestCentric.Gui.Model
                 if (options.WorkDirectory != null)
                     AddSetting(SettingDefinitions.WorkDirectory.WithValue(options.WorkDirectory));
                 if (options.MaxAgents >= 0)
-                    AddSetting(SettingDefinitions.MaxAgents.WithValue(options.MaxAgents));
+                    SetTopLevelSetting(SettingDefinitions.MaxAgents.WithValue(options.MaxAgents));
                 if (options.RunAsX86)
                     AddSetting(SettingDefinitions.RunAsX86.WithValue(true));
                 if (options.DebugAgent)
-                    AddSetting(SettingDefinitions.DebugAgent.WithValue(true));
+                    SetTopLevelSetting(SettingDefinitions.DebugAgent.WithValue(true));
                 if (options.TestParameters.Count > 0)
-                    AddSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
+                    SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(options.TestParameters));
             }
 
             foreach (var subpackage in TopLevelPackage.SubPackages)
@@ -160,13 +159,6 @@ namespace TestCentric.Gui.Model
                 TestFiles.Remove(subPackage.FullName);
                 IsDirty = true;
             }
-        }
-
-        public void SetSubPackageSetting(PackageSetting setting)
-        {
-            RemoveSetting(setting.Name);
-            TopLevelPackage.AddSetting(setting);
-            IsDirty = true;
         }
 
         public void AddSetting(PackageSetting setting)
