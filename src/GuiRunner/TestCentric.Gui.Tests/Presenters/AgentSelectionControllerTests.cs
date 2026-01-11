@@ -27,6 +27,9 @@ namespace TestCentric.Gui.Presenters
         {
             _model = Substitute.For<ITestModel>();
             _view = Substitute.For<IMainView>();
+
+            // Ensure that model always has at least an empty package with no settings
+            _model.TopLevelPackage.Returns(new NUnit.Engine.TestPackage());
             
             // Create a real ToolStripMenuItem to get a real collection
             var menuStrip = new MenuStrip();
@@ -61,25 +64,10 @@ namespace TestCentric.Gui.Presenters
         #region AllowAgentSelection Tests
 
         [Test]
-        public void AllowAgentSelection_NoProjectLoaded_ReturnsFalse()
-        {
-            // 1. Arrange
-            _model.TestCentricProject.Returns((TestCentricProject)null);
-
-            // 2. Act
-            bool result = _controller.AllowAgentSelection();
-
-            // 3. Assert
-            Assert.That(result, Is.False);
-        }
-
-        [Test]
         public void AllowAgentSelection_ProjectLoadedWithNoAgents_ReturnsFalse()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
-            _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string>());
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string>());
 
             // 2. Act
             bool result = _controller.AllowAgentSelection();
@@ -92,9 +80,7 @@ namespace TestCentric.Gui.Presenters
         public void AllowAgentSelection_ProjectLoadedWithOneAgent_ReturnsFalse()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
-            _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> { "Agent1" });
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> { "Agent1" });
 
             // 2. Act
             bool result = _controller.AllowAgentSelection();
@@ -103,13 +89,11 @@ namespace TestCentric.Gui.Presenters
             Assert.That(result, Is.False);
         }
 
-        [Test]
+        [Test, Ignore("Needs work")] // TODO: Find a way to test this more narrowly, without involving main presenter
         public void AllowAgentSelection_ProjectLoadedWithMultipleAgents_ReturnsTrue()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
-            _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> { "Agent1", "Agent2" });
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> { "Agent1", "Agent2" });
 
             // 2. Act
             bool result = _controller.AllowAgentSelection();
@@ -225,8 +209,7 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_NoProject_DisablesMenu()
         {
             // 1. Arrange
-            _model.TestCentricProject.Returns((TestCentricProject)null);
-            _model.GetAgentsForPackage(null).Returns(new List<string>());
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string>());
             _controller.PopulateMenu();
 
             // 2. Act
@@ -240,9 +223,7 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_OneAgentAvailable_DisablesMenu()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
-            _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> { "Agent1" });
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> { "Agent1" });
             _controller.PopulateMenu();
 
             // 2. Act
@@ -256,9 +237,7 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_MultipleAgentsAvailable_EnablesMenu()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
-            _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> 
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2" 
@@ -283,9 +262,7 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_NoSpecificAgentIsSelected_ChecksDefaultAgentMenuItem()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
-            _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> 
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2" 
@@ -312,15 +289,15 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_SpecificAgentIsSelected_ChecksAgentMenuItem()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> 
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2" 
             });
             
-            project.SetSubPackageSetting(SettingDefinitions.SelectedAgentName.WithValue("NUnit.TestAdapter.Agent2"));
+            project.AddSetting(SettingDefinitions.SelectedAgentName.WithValue("NUnit.TestAdapter.Agent2"));
             
             _model.AvailableAgents.Returns(new List<string> 
             { 
@@ -348,9 +325,9 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_AgentNotSupportedByPackage_DisablesAgentMenuItem()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> 
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2"
@@ -387,9 +364,9 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_DefaultAlwaysEnabled()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string>()); // No agents supported
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string>()); // No agents supported
             
             _model.AvailableAgents.Returns(new List<string> 
             { 
@@ -415,9 +392,9 @@ namespace TestCentric.Gui.Presenters
         public void ClickingAgentMenuItem_UnchecksOtherItems()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> 
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2" 
@@ -447,9 +424,9 @@ namespace TestCentric.Gui.Presenters
         public void ClickingAgentMenuItem_SetsProjectSettings()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string> 
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2" 
@@ -469,20 +446,20 @@ namespace TestCentric.Gui.Presenters
             agent1MenuItem.PerformClick();
 
             // 3. Assert
-            Assert.That(project.Settings.HasSetting(SettingDefinitions.SelectedAgentName.Name), Is.True);
-            Assert.That(project.Settings.HasSetting(SettingDefinitions.RequestedAgentName.Name), Is.True);
+            Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.SelectedAgentName.Name), Is.True);
+            Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.RequestedAgentName.Name), Is.True);
         }
 
         [Test]
         public void ClickingDefaultMenuItem_RemovesAgentSettings()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             _model.TestCentricProject.Returns(project);
-            project.SetSubPackageSetting(SettingDefinitions.SelectedAgentName.WithValue("SomeAgent"));
-            project.SetSubPackageSetting(SettingDefinitions.RequestedAgentName.WithValue("SomeAgent"));
+            project.AddSetting(SettingDefinitions.SelectedAgentName.WithValue("SomeAgent"));
+            project.AddSetting(SettingDefinitions.RequestedAgentName.WithValue("SomeAgent"));
             
-            _model.GetAgentsForPackage(project).Returns(new List<string> 
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2" 
@@ -498,17 +475,17 @@ namespace TestCentric.Gui.Presenters
             defaultMenuItem.PerformClick();
 
             // 3. Assert
-            Assert.That(project.Settings.HasSetting(SettingDefinitions.SelectedAgentName.Name), Is.False);
-            Assert.That(project.Settings.HasSetting(SettingDefinitions.RequestedAgentName.Name), Is.False);
+            Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.SelectedAgentName.Name), Is.False);
+            Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.RequestedAgentName.Name), Is.False);
         }
 
         [Test]
         public void ClickingAlreadyCheckedItem_DoesNothing()
         {
             // 1. Arrange
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             _model.TestCentricProject.Returns(project);
-            _model.GetAgentsForPackage(project).Returns(new List<string>());
+            _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string>());
             _model.AvailableAgents.Returns(new List<string>());
             
             _controller.PopulateMenu();

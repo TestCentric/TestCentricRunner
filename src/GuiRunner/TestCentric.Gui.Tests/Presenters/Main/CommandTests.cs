@@ -59,7 +59,7 @@ namespace TestCentric.Gui.Presenters.Main
 
             _view.OpenTestAssemblyCommand.Execute += Raise.Event<CommandHandler>();
 
-            _model.DidNotReceiveWithAnyArgs().CreateNewProject(null);
+            _model.DidNotReceiveWithAnyArgs().CreateNewProject();
         }
 
         [Test]
@@ -130,10 +130,8 @@ namespace TestCentric.Gui.Presenters.Main
         [Test]
         public void AddTestFilesCommand_TellsModelToLoadTests()
         {
-            var testFiles = new List<string>();
-            testFiles.Add("FILE1");
-            testFiles.Add("FILE2");
-            var project = new TestCentricProject(_model, testFiles);
+            var options = new GuiOptions("FILE1", "FILE2");
+            var project = new TestCentricProject(options);
             _model.TestCentricProject.Returns(project);
 
             var filesToAdd = new string[] { Path.GetFullPath("/path/to/test.dll") };
@@ -151,14 +149,14 @@ namespace TestCentric.Gui.Presenters.Main
 
             _view.AddTestFilesCommand.Execute += Raise.Event<CommandHandler>();
 
-            _model.DidNotReceiveWithAnyArgs().CreateNewProject(null);
+            _model.DidNotReceiveWithAnyArgs().CreateNewProject();
         }
 
         [TestCase(false)]
         [TestCase(true)]
         public void CloseProjectCommand_CallsCloseProject(bool dirty)
         {
-            var project = new TestCentricProject(_model, "dummy.dll");
+            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
             if (dirty) project.AddSetting("SomeSetting", "VALUE");
             _model.TestCentricProject.Returns(project);
             _view.MessageDisplay.YesNo(Arg.Any<string>()).Returns(false);
@@ -228,8 +226,8 @@ namespace TestCentric.Gui.Presenters.Main
         public void RunAsX86CheckedChanged_SettingIsAppliedToProject(bool isChecked)
         {
             // 1. Arrange
-            List<string> testFiles = ["FILE1", "FILE2"];
-            var project = new TestCentricProject(_model, testFiles);
+            var options = new GuiOptions("FILE1", "FILE2");
+            var project = new TestCentricProject(options);
             _model.TestCentricProject.Returns(project);
             _view.RunAsX86.Checked.Returns(isChecked);
 
@@ -237,8 +235,8 @@ namespace TestCentric.Gui.Presenters.Main
             _view.RunAsX86.CheckedChanged += Raise.Event<CommandHandler>();
 
             // 3. Assert
-            Assert.That(project.Settings.HasSetting(SettingDefinitions.RunAsX86), Is.True);
-            Assert.That(project.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86), Is.EqualTo(isChecked));
+            Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.RunAsX86), Is.True);
+            Assert.That(project.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86), Is.EqualTo(isChecked));
             _model.ReceivedWithAnyArgs().LoadTests(null);
         }
         public void SelectRuntimeCommand_PopsUpMenu()

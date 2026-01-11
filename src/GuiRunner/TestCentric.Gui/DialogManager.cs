@@ -13,7 +13,7 @@ namespace TestCentric.Gui.Views
     {
         #region IDialogManager Members
 
-        public IList<string> SelectMultipleFiles(string title, string filter)
+        public string[] SelectMultipleFiles(string title, string filter)
         {
             OpenFileDialog dlg = CreateOpenFileDialog(title, filter);
 

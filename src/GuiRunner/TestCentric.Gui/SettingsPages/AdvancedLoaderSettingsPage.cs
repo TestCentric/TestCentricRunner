@@ -241,7 +241,7 @@ namespace TestCentric.Gui.SettingsPages
         }
         #endregion
 
-        private PackageSettings PackageSettings => Model.TestCentricProject.Settings;
+        private PackageSettings PackageSettings => Model.TopLevelPackage.Settings;
 
         public override void LoadSettings()
         {

@@ -275,7 +275,7 @@ namespace TestCentric.Gui.Presenters
                 if (_options.InputFiles.Count == 1)
                     _model.OpenExistingFile(_options.InputFiles[0]);
                 else if (_options.InputFiles.Count > 1)
-                    _model.CreateNewProject(_options.InputFiles);
+                    _model.CreateNewProject(_options);
                 else if (_settings.Gui.LoadLastProject && !_options.NoLoad)
                     _model.OpenMostRecentFile();
 
@@ -560,9 +560,9 @@ namespace TestCentric.Gui.Presenters
                 dlg.Font = _settings.Gui.Font;
                 dlg.StartPosition = FormStartPosition.CenterParent;
 
-                if (_model.TestCentricProject.Settings.HasSetting("TestParametersDictionary"))
+                if (_model.TopLevelPackage.Settings.HasSetting("TestParametersDictionary"))
                 {
-                    var testParms = _model.TestCentricProject.Settings.GetSetting("TestParametersDictionary") as IDictionary<string, string>;
+                    var testParms = _model.TopLevelPackage.Settings.GetSetting("TestParametersDictionary") as IDictionary<string, string>;
                     foreach (string key in testParms.Keys)
                         dlg.Parameters.Add(key, testParms[key]);
                 }
@@ -595,7 +595,7 @@ namespace TestCentric.Gui.Presenters
 
         private void OpenTestAssembly()
         {
-            IList<string> files = _view.DialogManager.SelectMultipleFiles("New Project", CreateOpenFileFilter());
+            string[] files = _view.DialogManager.SelectMultipleFiles("New Project", CreateOpenFileFilter());
             if (files.Any())
                 _model.CreateNewProject(files);
         }
@@ -622,7 +622,7 @@ namespace TestCentric.Gui.Presenters
             string title = "TestCentric Runner for NUnit";
             if (_model.TestCentricProject != null)
             {
-                title = $"TestCentric - {_model.TestCentricProject.FileName ?? "UNNAMED.tcproj"}";
+                title = $"TestCentric - {_model.TestCentricProject.ProjectPath ?? "UNNAMED.tcproj"}";
 
             }
             _view.Title = title;
@@ -633,7 +633,7 @@ namespace TestCentric.Gui.Presenters
             // Update checked state according to loaded project settings
             // Unregister CheckedChanged event temporarily to avoid reloading (while loading a project)
             _view.RunAsX86.CheckedChanged -= OnRunAsX86Changed;
-            _view.RunAsX86.Checked = _model.TestCentricProject.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86);
+            _view.RunAsX86.Checked = _model.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86);
             _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
 
             UpdateTitlebar();
@@ -648,7 +648,7 @@ namespace TestCentric.Gui.Presenters
             MessageBoxResult messageBoxResult = MessageBoxResult.OK;
             if (!_options.Unattended && _model.TestCentricProject.IsDirty)
             {
-                messageBoxResult = _view.MessageDisplay.YesNoCancel($"Do you want to save {_model.TestCentricProject.Name}?");
+                messageBoxResult = _view.MessageDisplay.YesNoCancel($"Do you want to save {_model.TestCentricProject.ProjectPath}?");
                 if (messageBoxResult == MessageBoxResult.Yes)
                     SaveProject();
             }
@@ -665,9 +665,9 @@ namespace TestCentric.Gui.Presenters
 
         public void AddTestFiles()
         {
-            var filesToAdd = _view.DialogManager.SelectMultipleFiles("Add Test Files", CreateOpenFileFilter());
+            string[] filesToAdd = _view.DialogManager.SelectMultipleFiles("Add Test Files", CreateOpenFileFilter());
 
-            if (filesToAdd.Count > 0)
+            if (filesToAdd.Length > 0)
                 _model.AddTests(filesToAdd);
         }
 
@@ -863,7 +863,7 @@ namespace TestCentric.Gui.Presenters
             // does not re-create the Engine.  Since we just changed a setting, we must
             // re-create the Engine by unloading/reloading the tests. We make a copy of
             // __model.TestFiles because the method does an unload before it loads.
-            _model.TestCentricProject.LoadTests();
+            _model.LoadTests(_model.TestCentricProject.TestFiles);
         }
 
         private void applyFont(Font font)

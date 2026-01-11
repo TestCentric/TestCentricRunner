@@ -56,8 +56,8 @@ namespace TestCentric.Gui.Model
             var package = _model.CreateNewProject(new[] { "my.dll" });
             package.SetTopLevelSetting(setting);
 
-            Assert.That(package.Settings.HasSetting(setting.Name));
-            Assert.That(package.Settings.GetSetting(setting.Name), Is.EqualTo(setting.Value));
+            Assert.That(package.TopLevelPackage.Settings.HasSetting(setting.Name));
+            Assert.That(package.TopLevelPackage.Settings.GetSetting(setting.Name), Is.EqualTo(setting.Value));
         }
 
         // TODO: Remove? Use and test fluent methods?
@@ -71,8 +71,8 @@ namespace TestCentric.Gui.Model
             };
             var package = _model.CreateNewProject(new[] { "my.dll" });
             package.SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(testParms));
-            Assert.That(package.Settings.HasSetting("TestParametersDictionary"));
-            var parms = package.Settings.GetSetting("TestParametersDictionary") as IDictionary<string, string>;
+            Assert.That(package.TopLevelPackage.Settings.HasSetting("TestParametersDictionary"));
+            var parms = package.TopLevelPackage.Settings.GetSetting("TestParametersDictionary") as IDictionary<string, string>;
             Assert.That(parms, Is.Not.Null);
 
             Assert.That(parms, Contains.Key("parm1"));
@@ -97,15 +97,15 @@ namespace TestCentric.Gui.Model
 
         [TestCase("my.dll")]
         [TestCase("my.sln")]
-        [TestCase("my.dll,my.sln")]
-        [TestCase("my.sln,my.dll")]
-        [TestCase("my.sln,another.sln")]
-        public void PackageForSolutionFileHasSkipNonTestAssemblies(string files)
+        [TestCase("my.dll", "my.sln")]
+        [TestCase("my.sln", "my.dll")]
+        [TestCase("my.sln", "another.sln")]
+        public void PackageForSolutionFileHasSkipNonTestAssemblies(params string[] files)
         {
-            _model.CreateNewProject(files.Split(','));
+            _model.CreateNewProject(new GuiOptions(files));
             string skipKey = SettingDefinitions.SkipNonTestAssemblies.Name;
 
-            foreach (var subpackage in _model.TestCentricProject.SubPackages)
+            foreach (var subpackage in _model.TopLevelPackage.SubPackages)
             {
                 if (subpackage.Name.EndsWith(".sln"))
                 {
@@ -121,14 +121,14 @@ namespace TestCentric.Gui.Model
         [Test]
         public void NewProject_IsNotDirty()
         {
-            var project = new TestCentricProject(_model, new[] { "dummy.dll" });
+            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
             Assert.That(project.IsDirty, Is.False);
         }
 
         [Test]
         public void NewProjectIsNotDirtyAfterSaving()
         {
-            var project = new TestCentricProject(_model, new[] { "dummy.dll" });
+            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
             project.SaveAs("temp.tcproj");
             Assert.That(project.IsDirty, Is.False);
         }
@@ -136,7 +136,7 @@ namespace TestCentric.Gui.Model
         [Test]
         public void LoadedProjectIsNotDirty()
         {
-            var project = new TestCentricProject(_model);
+            var project = new TestCentricProject();
             project.SaveAs("temp.tcproj");
             project.Load("temp.tcproj");
             Assert.That(project.IsDirty, Is.False);
@@ -166,7 +166,7 @@ namespace TestCentric.Gui.Model
             var project = _model.CreateNewProject(new[] { "dummy.dll", "dummy2.dll" });
             project.SaveAs("temp.tcproj");
 
-            var subPackage = project.SubPackages[0];
+            var subPackage = project.TopLevelPackage.SubPackages[0];
             project.RemoveSubPackage(subPackage);
             Assert.That(project.IsDirty);
         }
@@ -177,9 +177,9 @@ namespace TestCentric.Gui.Model
             var project = _model.CreateNewProject(new[] { "dummy.dll", "dummy2.dll" });
             project.SaveAs("temp.tcproj");
 
-            var subPackage = project.SubPackages[0];
+            var subPackage = project.TopLevelPackage.SubPackages[0];
             project.RemoveSubPackage(subPackage);
-            Assert.That(project.SubPackages.Count, Is.EqualTo(1));
+            Assert.That(project.TopLevelPackage.SubPackages.Count, Is.EqualTo(1));
         }
     }
 }

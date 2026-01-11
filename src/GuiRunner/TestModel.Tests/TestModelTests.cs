@@ -78,7 +78,7 @@ namespace TestCentric.Gui.Model
 
             // Act
             model.CreateNewProject(new[] { "Dummy.dll", "Dummy2.dll" });
-            var subPackage = model.TestCentricProject.SubPackages[1];
+            var subPackage = model.TopLevelPackage.SubPackages[1];
             model.RemoveTestPackage(subPackage);
 
             // Assert
@@ -236,7 +236,7 @@ namespace TestCentric.Gui.Model
 
             // Assert
             runner.Received().Dispose();
-            Assert.That(project.SubPackages[0].Settings.GetValueOrDefault(SettingDefinitions.DebugTests), Is.True);
+            Assert.That(project.TopLevelPackage.SubPackages[0].Settings.GetValueOrDefault(SettingDefinitions.DebugTests), Is.True);
         }
 
         [Test]
@@ -262,7 +262,7 @@ namespace TestCentric.Gui.Model
 
             // Assert
             runner.Received().Dispose();
-            Assert.That(project.SubPackages[0].Settings.GetValueOrDefault(SettingDefinitions.DebugTests), Is.False);
+            Assert.That(project.TopLevelPackage.SubPackages[0].Settings.GetValueOrDefault(SettingDefinitions.DebugTests), Is.False);
         }
     }
 }
