@@ -100,6 +100,11 @@ namespace TestCentric.Gui.Model
                     }
                 }
 
+                // Update the list of test files
+                TestFiles.Clear();
+                foreach (TestPackage subPackage in TopLevelPackage.SubPackages)
+                    TestFiles.Add(subPackage.FullName);
+
                 bool FindTestCentricProjectElement()
                 {
                     while (xmlReader.Read())
