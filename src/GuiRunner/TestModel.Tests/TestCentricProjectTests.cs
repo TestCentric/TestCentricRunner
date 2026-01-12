@@ -493,6 +493,24 @@ namespace TestCentric.Gui.Model
             Assert.That(loadedProject.ProjectPath, Is.EqualTo("TestCentricTestProject.tcproj"));
         }
 
+        [Test]
+        public void Load_SetsTestFiles()
+        {
+            // 1. Arrange
+            TestCentricProject project = new TestCentricProject(new GuiOptions("Test1.dll", "Test2.dll"));
+            project.SaveAs("TestCentricTestProject.tcproj");
+
+            TestCentricProject loadedProject = new TestCentricProject();
+
+            // 2. Act
+            loadedProject.Load("TestCentricTestProject.tcproj");
+
+            // 3. Assert
+            Assert.That(loadedProject.TestFiles.Count, Is.EqualTo(2));
+            Assert.That(loadedProject.TestFiles[0], Does.EndWith("Test1.dll"));
+            Assert.That(loadedProject.TestFiles[1], Does.Contain("Test2.dll"));
+        }
+
         #endregion
 
         #region FileName and ProjectPath Tests
