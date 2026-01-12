@@ -11,6 +11,8 @@ using NUnit.Framework;
 
 namespace TestCentric.Gui.Presenters.Main
 {
+    using System.Runtime.InteropServices;
+    using System.Runtime.InteropServices.ComTypes;
     using Elements;
     using Model;
     using NUnit.Common;
@@ -93,6 +95,17 @@ namespace TestCentric.Gui.Presenters.Main
             _view.OpenTestCentricProjectCommand.Execute += Raise.Event<CommandHandler>();
 
             _model.DidNotReceiveWithAnyArgs().OpenExistingProject(null);
+        }
+
+        [Test]
+        public void OpenTestCentricProjectCommand_ThrowsException_ErrorMessage_IsDisplayed()
+        {
+            _view.DialogManager.GetFileOpenPath(null, null).ReturnsForAnyArgs("Test.dll");
+            _model.When(m => m.OpenExistingProject("Test.dll")).Do(x => throw new IOException("Disk error"));
+
+            _view.OpenTestCentricProjectCommand.Execute += Raise.Event<CommandHandler>();
+
+            _view.MessageDisplay.Received().Error(Arg.Any<string>());
         }
 
         [Test]
