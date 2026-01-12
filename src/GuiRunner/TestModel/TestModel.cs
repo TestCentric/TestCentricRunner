@@ -159,7 +159,7 @@ namespace TestCentric.Gui.Model
         /// </summary>
         public TestCentricProject TestCentricProject { get; set; }
 
-        public TestPackage TopLevelPackage => TestCentricProject.TopLevelPackage;
+        public TestPackage TopLevelPackage => TestCentricProject?.TopLevelPackage;
 
         public bool IsProjectLoaded => TestCentricProject != null;
 
