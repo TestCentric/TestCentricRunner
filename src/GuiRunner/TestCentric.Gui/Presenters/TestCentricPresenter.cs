@@ -589,8 +589,16 @@ namespace TestCentric.Gui.Presenters
             var filter = "TestCentric Projects (*.tcproj)|*.tcproj";
 
             string file = _view.DialogManager.GetFileOpenPath("Existing Project", filter);
-            if (!string.IsNullOrEmpty(file))
-                _model.OpenExistingProject(file);
+
+            try
+            {
+                if (!string.IsNullOrEmpty(file))
+                    _model.OpenExistingProject(file);
+            }
+            catch (Exception exception)
+            {
+                _view.MessageDisplay.Error("Unable to open project\n\n" + MessageBuilder.FromException(exception));
+            }
         }
 
         private void OpenTestAssembly()
