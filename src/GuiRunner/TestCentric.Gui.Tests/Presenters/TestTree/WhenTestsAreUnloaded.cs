@@ -3,11 +3,12 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using NUnit.Framework;
 using NSubstitute;
+using NUnit.Framework;
 
 namespace TestCentric.Gui.Presenters.TestTree
 {
+    using TestCentric.Gui.Model;
     using TestCentric.Gui.Model.Settings;
 
     public class WhenTestsAreUnloaded : TreeViewPresenterTestBase
@@ -15,8 +16,8 @@ namespace TestCentric.Gui.Presenters.TestTree
         [SetUp]
         public void SimulateTestUnload()
         {
-            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
+            _model.TreeConfiguration.DisplayFormat.Returns("NUNIT_TREE");
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             ClearAllReceivedCalls();
 

@@ -50,7 +50,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                 if (!_resultUptodate)
                     CalculateResultState();
 
-                if (TestModel.Settings.Gui.TestTree.ShowTestDuration && TestDuration.HasValue)
+                if (TestModel.TreeConfiguration.ShowTestDuration && TestDuration.HasValue)
                     name += ((FormattableString)$" [{TestDuration.Value:0.000}s]").ToString(DurationCultureInfo);
 
                 return name;

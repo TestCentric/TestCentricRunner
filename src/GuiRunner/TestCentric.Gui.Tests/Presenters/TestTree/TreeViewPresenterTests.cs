@@ -21,26 +21,28 @@ namespace TestCentric.Gui.Presenters.TestTree
     {
         [TestCase(true)]
         [TestCase(false)]
-        public void WhenSettingsAreChanged_ShowCheckBoxes_NewSettingIsApplied(bool showCheckBoxSetting)
+        public void WhenTreeConfigurationIsChanged_ShowCheckBoxes_NewValueIsApplied(bool showCheckBoxSetting)
         {
-            _model.Settings.Gui.TestTree.ShowCheckBoxes.Returns(showCheckBoxSetting);
-            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.ShowCheckBoxes"));
+            _model.TreeConfiguration.ShowCheckBoxes.Returns(showCheckBoxSetting);
+
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowCheckBoxes)));
 
             Assert.That(_view.ShowCheckBoxes.Checked, Is.EqualTo(showCheckBoxSetting));
         }
 
         [TestCase(true)]
         [TestCase(false)]
-        public void WhenSettingsAreChanged_ShowNamespace_StrategyIsReloaded(bool showNamespace)
+        public void WhenTreeConfigurationIsChanged_ShowNamespace_StrategyIsReloaded(bool showNamespace)
         {
             ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
             _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
-            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
+            _model.TreeConfiguration.DisplayFormat.Returns("NUNIT_TREE");
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // Act
-            _model.Settings.Gui.TestTree.ShowNamespace.Returns(showNamespace);
-            _settings.Changed += Raise.Event<Model.Settings.SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.ShowNamespace"));
+            _model.TreeConfiguration.ShowNamespaces = showNamespace;
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowNamespaces)));
+
 
             // Assert
             strategy.Received(2).Reload();
@@ -70,7 +72,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _view.ShowTestDuration.CheckedChanged += Raise.Event<CommandHandler>();
 
             // 3. Assert
-            Assert.That(_model.Settings.Gui.TestTree.ShowTestDuration, Is.EqualTo(showTestDuration));
+            Assert.That(_model.TreeConfiguration.ShowTestDuration, Is.EqualTo(showTestDuration));
         }
 
         [Test]
@@ -281,8 +283,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             // 1. Arrange
             ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
             _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
-            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
+            _model.TreeConfiguration.DisplayFormat.Returns("NUNIT_TREE");
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // 2. Act
             _model.Events.TestFilterChanged += Raise.Event<TestEventHandler>(new TestEventArgs());
@@ -362,8 +364,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             // 1. Arrange
             ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
             _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
-            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
+            _model.TreeConfiguration.DisplayFormat.Returns("NUNIT_TREE");
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // 2. Act
             _view.ClearResultsContextCommand.Execute += Raise.Event<CommandHandler>();
@@ -378,8 +380,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             // 1. Arrange
             ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
             _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
-            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            _settings.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs("TestCentric.Gui.TestTree.DisplayFormat"));
+            _model.TreeConfiguration.DisplayFormat.Returns("NUNIT_TREE");
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // 2. Act
             _view.ClearResultsContextCommand.Execute += Raise.Event<CommandHandler>();

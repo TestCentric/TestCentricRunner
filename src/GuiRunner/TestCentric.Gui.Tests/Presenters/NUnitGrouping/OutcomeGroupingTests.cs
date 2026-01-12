@@ -29,9 +29,9 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
             _view = Substitute.For<ITestTreeView>();
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
             IUserSettings userSettings = Substitute.For<IUserSettings>();
-            userSettings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            userSettings.Gui.TestTree.NUnitGroupBy.Returns("OUTCOME");
-            userSettings.Gui.TestTree.ShowNamespace.Returns(true);
+            _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
+            _model.TreeConfiguration.NUnitGroupBy = "OUTCOME";
+            _model.TreeConfiguration.ShowNamespaces = true;
             _model.Settings.Returns(userSettings);
 
             var treeView = new TreeView();

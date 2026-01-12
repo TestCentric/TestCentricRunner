@@ -27,6 +27,8 @@ namespace TestCentric.Gui.Model
 
         IUserSettings Settings { get; }
 
+        ITreeConfiguration TreeConfiguration { get; }
+
         // Project Support
         bool NUnitProjectSupport { get; }
         bool VisualStudioSupport { get; }

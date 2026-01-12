@@ -13,20 +13,6 @@ namespace TestCentric.Gui.Presenters.TestTree
     public class WhenPresenterIsCreated : TreeViewPresenterTestBase
     {
         [Test]
-        public void ShowCheckBoxesIsSet()
-        {
-            bool showCheckBoxes = _settings.Gui.TestTree.ShowCheckBoxes;
-            _view.ShowCheckBoxes.Received().Checked = showCheckBoxes;
-        }
-
-        [Test]
-        public void ShowTestDurationIsSet()
-        {
-            bool showTestDuration = _settings.Gui.TestTree.ShowTestDuration;
-            _view.ShowTestDuration.Received().Checked = showTestDuration;
-        }
-
-        [Test]
         public void SortingMode_IsUpdated_ToDefaultSorter()
         {
             _view.Received().Sort(Arg.Is<IComparer>(c => c.GetType().Name == "NameComparer"));

@@ -8,13 +8,13 @@ using System.Windows.Forms;
 
 namespace TestCentric.Gui.Presenters
 {
-    using Model;
-    using Views;
-    using Dialogs;
-    using System.IO;
-    using TestCentric.Gui.Controls;
     using System.Collections;
+    using System.IO;
+    using Dialogs;
+    using Model;
+    using TestCentric.Gui.Controls;
     using TestCentric.Gui.Model.Settings;
+    using Views;
 
     /// <summary>
     /// TreeViewPresenter is the presenter for the TestTreeView
@@ -23,11 +23,12 @@ namespace TestCentric.Gui.Presenters
     {
         private ITestTreeView _view;
         private ITestModel _model;
-        private Model.Settings.ITestTreeSettings _treeSettings;
         private ITreeDisplayStrategyFactory _treeDisplayStrategyFactory;
 
         // Accessed by tests
         public ITreeDisplayStrategy Strategy { get; private set; }
+
+        public ITreeConfiguration TreeConfiguration { get; }
 
         #region Constructor
 
@@ -37,13 +38,9 @@ namespace TestCentric.Gui.Presenters
             _model = model;
             _treeDisplayStrategyFactory = factory;
 
-            _treeSettings = _model.Settings.Gui.TestTree;
-
-            _view.ShowCheckBoxes.Checked = _view.CheckBoxes = _treeSettings.ShowCheckBoxes;
-            _view.ShowTestDuration.Checked = _treeSettings.ShowTestDuration;
+            TreeConfiguration = _model.TreeConfiguration;
 
             UpdateTreeViewSortMode();
-
             WireUpEvents();
         }
 
@@ -59,11 +56,9 @@ namespace TestCentric.Gui.Presenters
                 EnsureNonRunnableFilesAreVisible(ea.Test);
 
                 bool visualStateLoaded = TryLoadVisualState(out VisualState visualState);
-                if (visualStateLoaded)
-                    UpdateTreeSettingsFromVisualState(visualState);
-                Strategy = _treeDisplayStrategyFactory.Create(_treeSettings.DisplayFormat, _view, _model);
+                UpdateTreeConfiguration(visualState);
+                Strategy = _treeDisplayStrategyFactory.Create(TreeConfiguration.DisplayFormat, _view, _model);
 
-                _view.ShowCheckBoxes.Checked = visualStateLoaded ? visualState.ShowCheckBoxes : _treeSettings.ShowCheckBoxes;
                 _view.CategoryFilter.Init(_model);
                 Strategy.OnTestLoaded(ea.Test, visualState);
                 CheckPropertiesDisplay();
@@ -129,6 +124,7 @@ namespace TestCentric.Gui.Presenters
             _model.Events.SuiteFinished += OnTestFinished;
 
             _model.Settings.Changed += OnSettingsChanged;
+            TreeConfiguration.Changed += OnTreeConfigurationChanged;
 
             // View context commands
 
@@ -145,12 +141,13 @@ namespace TestCentric.Gui.Presenters
 
             _view.ShowCheckBoxes.CheckedChanged += () =>
             {
-                _view.CheckBoxes = _view.ShowCheckBoxes.Checked;
+                TreeConfiguration.ShowCheckBoxes = _view.ShowCheckBoxes.Checked;
+                _view.CheckBoxes = TreeConfiguration.ShowCheckBoxes;
             };
 
             _view.ShowTestDuration.CheckedChanged += () =>
             {
-                _treeSettings.ShowTestDuration = _view.ShowTestDuration.Checked;
+                TreeConfiguration.ShowTestDuration = _view.ShowTestDuration.Checked;
                 Strategy?.UpdateTreeNodeNames();
             };
 
@@ -300,19 +297,6 @@ namespace TestCentric.Gui.Presenters
         {
             switch (e.SettingName)
             {
-                case "TestCentric.Gui.TestTree.DisplayFormat":
-                    Strategy = _treeDisplayStrategyFactory.Create(_treeSettings.DisplayFormat, _view, _model);
-                    Strategy.Reload();
-                    break;
-
-                case "TestCentric.Gui.TestTree.NUnitGroupBy":
-                case "TestCentric.Gui.TestTree.TestList.GroupBy":
-                case "TestCentric.Gui.TestTree.ShowNamespace":
-                    Strategy?.Reload();
-                    break;
-                case "TestCentric.Gui.TestTree.ShowCheckBoxes":
-                    _view.ShowCheckBoxes.Checked = _treeSettings.ShowCheckBoxes;
-                    break;
 
                 case "TestCentric.Gui.GuiLayout":
                     if (_model.Settings.Gui.GuiLayout == "Full")
@@ -321,6 +305,25 @@ namespace TestCentric.Gui.Presenters
 
                 case "TestCentric.Gui.TestTree.ShowFilter":
                     _view.SetTestFilterVisibility(_model.Settings.Gui.TestTree.ShowFilter);
+                    break;
+            }
+        }
+
+        private void OnTreeConfigurationChanged(object sender, SettingsEventArgs e)
+        {
+            switch (e.SettingName)
+            {
+                case nameof(TreeConfiguration.DisplayFormat):
+                    Strategy = _treeDisplayStrategyFactory.Create(TreeConfiguration.DisplayFormat, _view, _model);
+                    Strategy.Reload();
+                    break;
+                case nameof(TreeConfiguration.NUnitGroupBy):
+                case nameof(TreeConfiguration.TestListGroupBy):
+                case nameof(TreeConfiguration.ShowNamespaces):
+                    Strategy?.Reload();
+                    break;
+                case nameof(TreeConfiguration.ShowCheckBoxes):
+                    _view.ShowCheckBoxes.Checked = TreeConfiguration.ShowCheckBoxes;
                     break;
             }
         }
@@ -349,27 +352,42 @@ namespace TestCentric.Gui.Presenters
             _view.Sort(comparer);
         }
 
-        private void UpdateTreeSettingsFromVisualState(VisualState visualState)
+        private void UpdateTreeConfiguration(VisualState visualState)
         {
             // 1. Unsubscribe from setting changed events
             // (Avoid triggering reload while loading the tree)
             _model.Settings.Changed -= OnSettingsChanged;
+            TreeConfiguration.Changed -= OnTreeConfigurationChanged;
 
-            // 2. Update settings
-            _treeSettings.DisplayFormat = visualState.DisplayStrategy;
-            if (visualState.DisplayStrategy == "NUNIT_TREE")
+            // 2. Update tree configuration
+            if (visualState != null)
             {
-                _treeSettings.NUnitGroupBy = visualState.GroupBy;
+                // Update from VisualState
+                TreeConfiguration.ShowCheckBoxes = visualState.ShowCheckBoxes;
+                TreeConfiguration.DisplayFormat = visualState.DisplayStrategy;
+                TreeConfiguration.ShowNamespaces = visualState.ShowNamespace;
+                TreeConfiguration.NUnitGroupBy = TreeConfiguration.DisplayFormat == "NUNIT_TREE" ? visualState.GroupBy : "UNGROUPED";
+                TreeConfiguration.TestListGroupBy = TreeConfiguration.DisplayFormat == "TEST_LIST" ? visualState.GroupBy : "UNGROUPED";
             }
-            else if (visualState.DisplayStrategy == "TEST_LIST")
+            else
             {
-                _treeSettings.TestList.GroupBy = visualState.GroupBy;
+                // Reset to default values for new projects
+                ITestTreeSettings treeSettings = _model.Settings.Gui.TestTree;
+                TreeConfiguration.ShowCheckBoxes = treeSettings.ShowCheckBoxes;
+                TreeConfiguration.DisplayFormat = treeSettings.DisplayFormat;
+                TreeConfiguration.NUnitGroupBy = "UNGROUPED";
+                TreeConfiguration.TestListGroupBy = "UNGROUPED";
+                TreeConfiguration.ShowNamespaces = true;
+                TreeConfiguration.ShowTestDuration = false;
             }
 
-            _treeSettings.ShowNamespace = visualState.ShowNamespace;
+            // Update UI elements according to latest values
+            _view.ShowCheckBoxes.Checked = TreeConfiguration.ShowCheckBoxes;
+            _view.ShowTestDuration.Checked = TreeConfiguration.ShowTestDuration;
 
             // 3. Subscribe again to setting changed events
             _model.Settings.Changed += OnSettingsChanged;
+            TreeConfiguration.Changed += OnTreeConfigurationChanged;
         }
 
         private void EnsureNonRunnableFilesAreVisible(TestNode testNode)

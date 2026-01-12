@@ -7,6 +7,7 @@ namespace TestCentric.Gui.Presenters
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using NSubstitute;
     using NUnit.Framework;
@@ -49,7 +50,7 @@ namespace TestCentric.Gui.Presenters
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
+            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +
@@ -87,7 +88,7 @@ namespace TestCentric.Gui.Presenters
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
+            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             string xmlText = "<test-suite type='TestSuite'> " + $"<properties> <property name='Category' value='{categoryTestFixture}' /> </properties> " +
                                 "<test-suite type='TestFixture'>" +
@@ -120,7 +121,7 @@ namespace TestCentric.Gui.Presenters
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
+            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             TestNode testNode = new TestNode(
                         "<test-suite type='TestFixture' id='3-1000'> " +
@@ -154,7 +155,7 @@ namespace TestCentric.Gui.Presenters
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("CATEGORY");
+            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestFixture'> " +
@@ -194,7 +195,7 @@ namespace TestCentric.Gui.Presenters
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("DURATION");
+            model.TreeConfiguration.TestListGroupBy = "DURATION";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +
@@ -241,7 +242,7 @@ namespace TestCentric.Gui.Presenters
             List<TreeNode> treeNodes = new List<TreeNode>();
             view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
 
-            model.Settings.Gui.TestTree.TestList.GroupBy.Returns("OUTCOME");
+            model.TreeConfiguration.TestListGroupBy = "OUTCOME";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +

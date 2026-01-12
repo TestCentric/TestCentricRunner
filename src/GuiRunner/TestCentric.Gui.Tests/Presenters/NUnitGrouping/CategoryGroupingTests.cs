@@ -26,9 +26,10 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         {
             _model = Substitute.For<ITestModel>();
             IUserSettings userSettings = Substitute.For<IUserSettings>();
-            userSettings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            userSettings.Gui.TestTree.NUnitGroupBy.Returns("CATEGORY");
-            userSettings.Gui.TestTree.ShowNamespace.Returns(true);
+            _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
+            _model.TreeConfiguration.NUnitGroupBy = "CATEGORY";
+            _model.TreeConfiguration.ShowNamespaces = true;
+
             _model.Settings.Returns(userSettings);
             _view = Substitute.For<ITestTreeView>();
 

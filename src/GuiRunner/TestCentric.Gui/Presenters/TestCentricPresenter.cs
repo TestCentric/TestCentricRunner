@@ -68,6 +68,7 @@ namespace TestCentric.Gui.Presenters
             _view = view;
             _model = model;
             _options = options;
+            TreeConfiguration = _model.TreeConfiguration;
 
             _settings = _model.Settings;
 
@@ -230,19 +231,24 @@ namespace TestCentric.Gui.Presenters
                             _view.GuiLayout.SelectedItem = newLayout;
                         }
                         break;
-                    case "TestCentric.Gui.TestTree.DisplayFormat":
-                        _view.DisplayFormat.SelectedItem = _settings.Gui.TestTree.DisplayFormat;
+                }
+            };
+
+            TreeConfiguration.Changed += (s, e) =>
+            {
+                switch (e.SettingName)
+                {
+                    case nameof(Model.TreeConfiguration.DisplayFormat):
+                        _view.DisplayFormat.SelectedItem = TreeConfiguration.DisplayFormat;
                         UpdateTreeDisplayMenuItem();
                         UpdateViewCommands();
                         break;
-                    case "TestCentric.Gui.TestTree.NUnitGroupBy":
-                        _view.NUnitGroupBy.SelectedItem = _settings.Gui.TestTree.NUnitGroupBy;
+                    case nameof(Model.TreeConfiguration.NUnitGroupBy):
+                    case nameof(Model.TreeConfiguration.TestListGroupBy):
+                        UpdateTreeDisplayMenuItem();
                         break;
-                    case "TestCentric.Gui.TestTree.TestList.GroupBy":
-                        _view.TestListGroupBy.SelectedItem = _settings.Gui.TestTree.TestList.GroupBy;
-                        break;
-                    case "TestCentric.Gui.TestTree.ShowNamespace":
-                        _view.ShowNamespace.Checked = _settings.Gui.TestTree.ShowNamespace;
+                    case nameof(Model.TreeConfiguration.ShowNamespaces):
+                        _view.ShowNamespace.Checked = TreeConfiguration.ShowNamespaces;
                         break;
                 }
             };
@@ -442,12 +448,12 @@ namespace TestCentric.Gui.Presenters
 
             _view.DisplayFormat.SelectionChanged += () =>
             {
-                _settings.Gui.TestTree.DisplayFormat = _view.DisplayFormat.SelectedItem;
+                TreeConfiguration.DisplayFormat = _view.DisplayFormat.SelectedItem;
             };
 
             _view.ShowNamespace.CheckedChanged += () =>
             {
-                _settings.Gui.TestTree.ShowNamespace = _view.ShowNamespace.Checked;
+                TreeConfiguration.ShowNamespaces = _view.ShowNamespace.Checked;
             };
 
             _view.ShowHideFilterButton.CheckedChanged += () =>
@@ -457,12 +463,12 @@ namespace TestCentric.Gui.Presenters
 
             _view.NUnitGroupBy.SelectionChanged += () =>
             {
-                _settings.Gui.TestTree.NUnitGroupBy = _view.NUnitGroupBy.SelectedItem;
+                TreeConfiguration.NUnitGroupBy = _view.NUnitGroupBy.SelectedItem;
             };
 
             _view.TestListGroupBy.SelectionChanged += () =>
             {
-                _settings.Gui.TestTree.TestList.GroupBy = _view.TestListGroupBy.SelectedItem;
+                TreeConfiguration.TestListGroupBy = _view.TestListGroupBy.SelectedItem;
             };
 
             _view.StopRunButton.Execute += ExecuteNormalStop;
@@ -579,6 +585,9 @@ namespace TestCentric.Gui.Presenters
         #region Properties
 
         public ImageSetManager ImageSetManager { get; }
+
+        private ITreeConfiguration TreeConfiguration { get; }
+
 
         #endregion
 
@@ -952,22 +961,17 @@ namespace TestCentric.Gui.Presenters
 
         private void UpdateTreeDisplayMenuItem()
         {
-            // Get current display format from settings
-            string displayFormat = _settings.Gui.TestTree.DisplayFormat;
-
+            // Use case: project was loaded and TreeConfiguration was updated from VisualState file
+            // => Update UI elements from tree configuration
+            string displayFormat = TreeConfiguration.DisplayFormat;
             _view.DisplayFormat.SelectedItem = displayFormat;
 
-            switch (displayFormat)
-            {
-                case "NUNIT_TREE":
-                    _view.NUnitGroupBy.SelectedItem = _settings.Gui.TestTree.NUnitGroupBy;
-                    break;
-                case "TEST_LIST":
-                    _view.TestListGroupBy.SelectedItem = _settings.Gui.TestTree.TestList.GroupBy;
-                    break;
-            }
+            if (displayFormat == "NUNIT_TREE")
+                _view.NUnitGroupBy.SelectedItem = TreeConfiguration.NUnitGroupBy;
+            else if (displayFormat == "TEST_LIST")
+                _view.TestListGroupBy.SelectedItem = TreeConfiguration.TestListGroupBy;
 
-            _view.ShowNamespace.Checked = _settings.Gui.TestTree.ShowNamespace;
+            _view.ShowNamespace.Checked = TreeConfiguration.ShowNamespaces;
             _view.ShowNamespace.Enabled = displayFormat == "NUNIT_TREE";
         }
 

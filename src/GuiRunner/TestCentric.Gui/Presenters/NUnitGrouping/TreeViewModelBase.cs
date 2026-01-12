@@ -27,6 +27,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public TreeViewModelBase(ITestModel model)
         {
             Model = model;
+            TreeConfiguration = model.TreeConfiguration;
             RootViewModels = new List<TreeNodeViewModel>();
 
             var regrouping = new ReGrouping(this);
@@ -34,6 +35,8 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         }
 
         protected ITestModel Model { get; }
+
+        protected ITreeConfiguration TreeConfiguration { get; }
 
         /// <summary>
         /// List of all root groups (outcome, duration or category groups)
@@ -310,7 +313,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         protected bool ShowTreeNodeType(TestNode testNode)
         {
             if (FoldNamespaceNodesHandler.IsNamespaceNode(testNode))
-                return Model.Settings.Gui.TestTree.ShowNamespace;
+                return TreeConfiguration.ShowNamespaces;
 
             return true;
         }

@@ -48,7 +48,7 @@ namespace TestCentric.Gui.Presenters
             ClearTree();
 
             // 1. Create tree view model
-            switch (_model.Settings.Gui.TestTree.NUnitGroupBy)
+            switch (TreeConfiguration.NUnitGroupBy)
             {
                 case "CATEGORY": _treeViewModel = new TreeViewModelCategoryGrouping(_model); break;
                 case "OUTCOME": _treeViewModel = new TreeViewModelOutcomeGrouping(_model); break;
@@ -113,7 +113,7 @@ namespace TestCentric.Gui.Presenters
             TreeViewBuilder?.OnTestRunFinished(nodesInRun);
         }
 
-        protected override VisualState CreateVisualState() => new VisualState("NUNIT_TREE", _settings.Gui.TestTree.NUnitGroupBy, _settings.Gui.TestTree.ShowNamespace).LoadFrom(_view.TreeView);
+        protected override VisualState CreateVisualState() => new VisualState("NUNIT_TREE", TreeConfiguration.NUnitGroupBy, TreeConfiguration.ShowNamespaces).LoadFrom(_view.TreeView);
 
         private void SetDefaultInitialExpansion()
         {
