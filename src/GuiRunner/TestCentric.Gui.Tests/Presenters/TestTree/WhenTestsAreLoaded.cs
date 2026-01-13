@@ -86,20 +86,16 @@ namespace TestCentric.Gui.Presenters.TestTree
             Assert.That(_view.ShowCheckBoxes.Checked, Is.EqualTo(showCheckBox));
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestLoaded_NoVisualState_ShowNamespace_IsAppliedFromSettings(bool showNamespace)
+        [Test]
+        public void TestLoaded_NoVisualState_ShowNamespace_IsSetoToTrue()
         {
-            // Arrange: adapt settings
-            _model.Settings.Gui.TestTree.ShowNamespace = showNamespace;
-
             // Act: load tests
             TestNode testNode = new TestNode("<test-suite id='1'/>");
             _model.LoadedTests.Returns(testNode);
             FireTestLoadedEvent(testNode);
 
             // Assert
-            Assert.That(_model.Settings.Gui.TestTree.ShowNamespace, Is.EqualTo(showNamespace));
+            Assert.That(_model.TreeConfiguration.ShowNamespaces, Is.EqualTo(true));
         }
 
         [TestCase(true)]
@@ -121,7 +117,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             FireTestLoadedEvent(testNode);
 
             // Assert
-            Assert.That(_settings.Gui.TestTree.ShowNamespace, Is.EqualTo(showNamespace));
+            Assert.That(_model.TreeConfiguration.ShowNamespaces, Is.EqualTo(showNamespace));
         }
 
         [TestCase("NUNIT_TREE", typeof(NUnitTreeDisplayStrategy))]
@@ -184,7 +180,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             FireTestLoadedEvent(testNode);
 
             // Assert
-            Assert.That(_model.Settings.Gui.TestTree.DisplayFormat, Is.EqualTo(displayFormat));
+            Assert.That(_model.TreeConfiguration.DisplayFormat, Is.EqualTo(displayFormat));
         }
 
         [TestCase("UNGROUPED")]
@@ -200,8 +196,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             string fileName = VisualState.GetVisualStateFileName(TestFileName);
             visualState.Save(fileName);
 
-            _model.Settings.Gui.TestTree.TestList.GroupBy = "DURATION";
-
+            _model.TreeConfiguration.TestListGroupBy = "DURATION";
             var tv = new TreeView();
             _view.TreeView.Returns(tv);
 
@@ -211,8 +206,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             FireTestLoadedEvent(testNode);
 
             // Assert
-            Assert.That(_model.Settings.Gui.TestTree.NUnitGroupBy, Is.EqualTo(groupBy));
-            Assert.That(_model.Settings.Gui.TestTree.TestList.GroupBy, Is.EqualTo("DURATION"));     // Assert that testList groupBy was not changed accidently
+            Assert.That(_model.TreeConfiguration.NUnitGroupBy, Is.EqualTo(groupBy));
+            Assert.That(_model.TreeConfiguration.TestListGroupBy, Is.EqualTo("UNGROUPED"));     // Assert that testList groupBy is reset
         }
 
         [TestCase("ASSEMBLY")]
@@ -227,8 +222,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             string fileName = VisualState.GetVisualStateFileName(TestFileName);
             visualState.Save(fileName);
 
-            _model.Settings.Gui.TestTree.NUnitGroupBy = "DURATION";
-
+            _model.TreeConfiguration.NUnitGroupBy = "DURATION";
             var tv = new TreeView();
             _view.TreeView.Returns(tv);
 
@@ -238,8 +232,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             FireTestLoadedEvent(testNode);
 
             // Assert
-            Assert.That(_model.Settings.Gui.TestTree.TestList.GroupBy, Is.EqualTo(groupBy));
-            Assert.That(_model.Settings.Gui.TestTree.NUnitGroupBy, Is.EqualTo("DURATION"));     // Assert that NUnit groupBy was not changed accidently
+            Assert.That(_model.TreeConfiguration.TestListGroupBy, Is.EqualTo(groupBy));
+            Assert.That(_model.TreeConfiguration.NUnitGroupBy, Is.EqualTo("UNGROUPED"));     // Assert that NUnit groupBy is reset
         }
 
         [Test]

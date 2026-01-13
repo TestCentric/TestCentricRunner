@@ -24,7 +24,9 @@ namespace TestCentric.Gui.Presenters.TestTree
         {
             _view = Substitute.For<ITestTreeView>();
             _model = Substitute.For<ITestModel>();
-            _model.Settings.Gui.TestTree.ShowNamespace.Returns(true);
+            _model.TreeConfiguration.ShowNamespaces = true;
+            _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
+            _model.TreeConfiguration.NUnitGroupBy = "UNGROUPED";
 
             // We can't construct a TreeNodeCollection, so we fake it
             var nodes = new TreeNode().Nodes;
@@ -127,7 +129,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Namespaces_AreShown_NamespaceNodes_AreCreated()
         {
             // Arrange
-            _model.Settings.Gui.TestTree.ShowNamespace.Returns(true);
+            _model.TreeConfiguration.ShowNamespaces = true;
             string xml = 
                 "<test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
@@ -145,7 +147,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Namespaces_AreNotShown_NamespaceNodes_AreNotCreated()
         {
             // Arrange
-            _model.Settings.Gui.TestTree.ShowNamespace.Returns(false);
+            _model.TreeConfiguration.ShowNamespaces = false;
             string xml =
                 "<test-run> <test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +

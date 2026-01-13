@@ -49,7 +49,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                 BuildTreeFromViewModel(treeNode, viewModel);
             }
 
-            if (Model.Settings.Gui.TestTree.ShowTestDuration)
+            if (Model.TreeConfiguration.ShowTestDuration)
                 TreeView.Sort();
 
             _changedNodes.Clear();
@@ -244,7 +244,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
 
                 UpdateTreeIconsOnRunStart(TreeViewModel.RootViewModels);
 
-                if (Model.Settings.Gui.TestTree.ShowTestDuration)
+                if (Model.TreeConfiguration.ShowTestDuration)
                 {
                     var nodesInRun = GetNodesInTestRunFunc();
                     foreach (var node in nodesInRun)
@@ -292,7 +292,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                         TreeView.SetImageIndex(treeNode, imageIndex);
                 }
 
-                if (Model.Settings.Gui.TestTree.ShowTestDuration)
+                if (Model.TreeConfiguration.ShowTestDuration)
                 {
                     foreach (TreeNodeViewModel node in nodesInTestRun)
                     {

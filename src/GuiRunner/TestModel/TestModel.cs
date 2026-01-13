@@ -114,6 +114,8 @@ namespace TestCentric.Gui.Model
 
         public IUserSettings Settings { get; }
 
+        public ITreeConfiguration TreeConfiguration { get; } = new TreeConfiguration();
+
         public IList<string> AvailableAgents { get; }
 
         public IRecentFiles RecentFiles => Settings.Gui.RecentFiles;

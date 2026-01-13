@@ -338,35 +338,35 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [Test]
-        public void DisplayFormatChange_ChangesModelSetting()
+        public void DisplayFormatChange_Changes_TreeConfiguration()
         {
             _view.DisplayFormat.SelectedItem.Returns("TEST_LIST");
             _view.DisplayFormat.SelectionChanged += Raise.Event<CommandHandler>();
 
             // Assert
-            _settings.Gui.TestTree.Received().DisplayFormat = "TEST_LIST";
+            Assert.That(_model.TreeConfiguration.DisplayFormat, Is.EqualTo("TEST_LIST"));
         }
 
         [Test]
-        public void TestListGroupByChange_ChangesModelSetting()
+        public void TestListGroupByChange_Changes_TreeConfiguration()
         {
             _view.DisplayFormat.SelectedItem.Returns("TEST_LIST");
             _view.TestListGroupBy.SelectedItem.Returns("OUTCOME");
             _view.TestListGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
 
             // Assert
-            _settings.Gui.TestTree.TestList.Received().GroupBy = "OUTCOME";
+            Assert.That(_model.TreeConfiguration.TestListGroupBy, Is.EqualTo("OUTCOME"));
         }
 
         [Test]
-        public void NUnitTreeGroupByChange_ChangesModelSetting()
+        public void NUnitTreeGroupByChange_Changes_TreeConfiguration()
         {
             _view.DisplayFormat.SelectedItem.Returns("NUNIT_TREE");
             _view.NUnitGroupBy.SelectedItem.Returns("CATEGORY");
             _view.NUnitGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
 
             // Assert
-            _settings.Gui.TestTree.Received().NUnitGroupBy = "CATEGORY";
+            Assert.That(_model.TreeConfiguration.NUnitGroupBy, Is.EqualTo("CATEGORY"));
         }
 
         [Test]
@@ -426,7 +426,7 @@ namespace TestCentric.Gui.Presenters.Main
 
         [TestCase(true)]
         [TestCase(false)]
-        public void ShowNamespaceChanged_ChangesModelSetting(bool showNamespace)
+        public void ShowNamespaceChanged_Changes_TreeConfiguration(bool showNamespace)
         {
             // Arrange
             _view.ShowNamespace.Checked .Returns(showNamespace);
@@ -435,7 +435,7 @@ namespace TestCentric.Gui.Presenters.Main
             _view.ShowNamespace.CheckedChanged += Raise.Event<CommandHandler>();
 
             // Assert
-            Assert.That(_model.Settings.Gui.TestTree.ShowNamespace, Is.EqualTo(showNamespace));
+            Assert.That(_model.TreeConfiguration.ShowNamespaces, Is.EqualTo(showNamespace));
         }
 
         [TestCase(true)]

@@ -20,10 +20,7 @@ namespace TestCentric.Gui.Model.Settings
         {
             new TestCaseData(nameof(TestTreeSettings.AlternateImageSet), "Classic"),
             new TestCaseData(nameof(TestTreeSettings.ShowCheckBoxes), "false"),
-            new TestCaseData(nameof(TestTreeSettings.ShowTestDuration), "false"),
             new TestCaseData(nameof(TestTreeSettings.DisplayFormat), "NUNIT_TREE"),
-            new TestCaseData(nameof(TestTreeSettings.ShowNamespace), "true"),
-            new TestCaseData(nameof(TestTreeSettings.NUnitGroupBy), "UNGROUPED"),
             new TestCaseData(nameof(TestTreeSettings.ShowFilter), "true"),
         };
 
@@ -31,10 +28,7 @@ namespace TestCentric.Gui.Model.Settings
         {
             new TestCaseData(nameof(TestTreeSettings.AlternateImageSet), "Circle"),
             new TestCaseData(nameof(TestTreeSettings.ShowCheckBoxes), false),
-            new TestCaseData(nameof(TestTreeSettings.ShowTestDuration), true),
             new TestCaseData(nameof(TestTreeSettings.DisplayFormat), "TEST_LIST"),
-            new TestCaseData(nameof(TestTreeSettings.ShowNamespace), true),
-            new TestCaseData(nameof(TestTreeSettings.NUnitGroupBy), "CATEGORY"),
             new TestCaseData(nameof(TestTreeSettings.ShowFilter), false),
         };
     }

@@ -15,7 +15,10 @@ namespace TestCentric.Gui.SettingsPages
     {
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox showCheckBoxesCheckBox;
+        private System.Windows.Forms.ComboBox displayFormatComboBox;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private Label label6;
         private PictureBox successImage;
@@ -63,7 +66,10 @@ namespace TestCentric.Gui.SettingsPages
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TreeSettingsPage));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.showCheckBoxesCheckBox = new System.Windows.Forms.CheckBox();
+            this.displayFormatComboBox = new System.Windows.Forms.ComboBox();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.label6 = new System.Windows.Forms.Label();
             this.successImage = new System.Windows.Forms.PictureBox();
@@ -101,16 +107,48 @@ namespace TestCentric.Gui.SettingsPages
             this.label1.TabIndex = 9;
             this.label1.Text = "Tree View";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 115);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Default settings for new projects:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(32, 168);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(55, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Default tree display format:";
+            // 
             // showCheckBoxesCheckBox
             // 
             this.showCheckBoxesCheckBox.AutoSize = true;
-            this.helpProvider1.SetHelpString(this.showCheckBoxesCheckBox, "If checked, a checkbox is displayed next to each item in the tree.");
-            this.showCheckBoxesCheckBox.Location = new System.Drawing.Point(32, 120);
+            this.helpProvider1.SetHelpString(this.showCheckBoxesCheckBox, "Selects the default display of the checkbox when a new project is created.");
+            this.showCheckBoxesCheckBox.Location = new System.Drawing.Point(32, 140);
             this.showCheckBoxesCheckBox.Name = "showCheckBoxesCheckBox";
             this.helpProvider1.SetShowHelp(this.showCheckBoxesCheckBox, true);
             this.showCheckBoxesCheckBox.Size = new System.Drawing.Size(227, 17);
             this.showCheckBoxesCheckBox.TabIndex = 36;
-            this.showCheckBoxesCheckBox.Text = "Display a checkbox next to each tree item.";
+            this.showCheckBoxesCheckBox.Text = "Default display of a checkbox next to each tree item.";
+            // 
+            // displayFormatComboBox
+            // 
+            this.displayFormatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.helpProvider1.SetHelpString(this.displayFormatComboBox, "Selects the default tree display format when a new project is created");
+            this.displayFormatComboBox.ItemHeight = 13;
+            this.displayFormatComboBox.Items.AddRange(new object[] {
+            "NUnit Tree",
+            "Test List"});
+            this.displayFormatComboBox.Location = new System.Drawing.Point(270, 165);
+            this.displayFormatComboBox.Name = "initialDisplayComboBox";
+            this.helpProvider1.SetShowHelp(this.displayFormatComboBox, true);
+            this.displayFormatComboBox.Size = new System.Drawing.Size(168, 21);
+            this.displayFormatComboBox.TabIndex = 33;
             // 
             // label6
             // 
@@ -212,8 +250,11 @@ namespace TestCentric.Gui.SettingsPages
             this.Controls.Add(this.successImage);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.showCheckBoxesCheckBox);
+            this.Controls.Add(this.displayFormatComboBox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label3);
             this.Name = "TreeSettingsPage";
             ((System.ComponentModel.ISupportInitialize)(this.successImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.failureImage)).EndInit();
@@ -231,6 +272,9 @@ namespace TestCentric.Gui.SettingsPages
         {
             showCheckBoxesCheckBox.Checked = Settings.Gui.TestTree.ShowCheckBoxes;
 
+            int selectedDisplayFormatIndex = Settings.Gui.TestTree.DisplayFormat == "TEST_LIST" ? 1 : 0;
+            displayFormatComboBox.SelectedIndex = selectedDisplayFormatIndex;
+
             foreach (string imageSetName in _imageSetManager.ImageSets.Keys)
                 imageSetListBox.Items.Add(imageSetName);
 
@@ -240,6 +284,8 @@ namespace TestCentric.Gui.SettingsPages
         public override void ApplySettings()
         {
             Settings.Gui.TestTree.ShowCheckBoxes = showCheckBoxesCheckBox.Checked;
+            string displayFormat = displayFormatComboBox.SelectedIndex == 0 ? "NUNIT_TREE" : "TEST_LIST";
+            Settings.Gui.TestTree.DisplayFormat = displayFormat;
 
             if (imageSetListBox.SelectedIndex >= 0)
                 Settings.Gui.TestTree.AlternateImageSet = (string)imageSetListBox.SelectedItem;

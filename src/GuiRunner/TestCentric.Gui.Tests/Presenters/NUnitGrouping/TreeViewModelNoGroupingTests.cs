@@ -20,7 +20,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void Setup()
         {
             _model = Substitute.For<ITestModel>();
-            _model.Settings.Gui.TestTree.ShowNamespace.Returns(true);
+            _model.TreeConfiguration.ShowNamespaces = true;
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void CreateTreeModel_ShowNamespaceFalse_OmitsNamespaces()
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowNamespace.Returns(false);
+            _model.TreeConfiguration.ShowNamespaces = false;
             TestNode rootNode = new TestNode(@"
                 <test-run id='0'>
                     <test-suite type='Assembly' id='1' name='Library.Test.dll'>

@@ -104,8 +104,7 @@ namespace TestCentric.Gui.Presenters
 
         protected override string DefaultGroupSetting
         {
-            get { return _settings.Gui.TestTree.TestList.GroupBy; }
-            set { _settings.Gui.TestTree.TestList.GroupBy = value; }
+            get { return TreeConfiguration.TestListGroupBy; }
         }
 
         #endregion

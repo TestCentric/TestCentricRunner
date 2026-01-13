@@ -42,10 +42,10 @@ namespace TestCentric.Gui.Presenters.Main
 
         [TestCase("NUNIT_TREE")]
         [TestCase("TEST_LIST")]
-        public void CheckMenu_DisplayFormat_SelectedItem_IsInitialzedFromSettings(string displayFormat)
+        public void CheckMenu_DisplayFormat_SelectedItem_IsInitializedFromTreeConfiguration(string displayFormat)
         {
             // 1. Arrange
-            _settings.Gui.TestTree.DisplayFormat = displayFormat;
+            _model.TreeConfiguration.DisplayFormat = displayFormat;
 
             // 2. Act
             _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
@@ -58,11 +58,11 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
         [TestCase("DURATION")]
-        public void CheckMenu_NUnitTreeGroupBy_SelectedItem_IsInitializedFromSettings(string groupBy)
+        public void CheckMenu_NUnitTreeGroupBy_SelectedItem_IsInitializedFromTreeConfiguration(string groupBy)
         {
             // 1. Arrange
-            _settings.Gui.TestTree.DisplayFormat = "NUNIT_TREE";
-            _settings.Gui.TestTree.NUnitGroupBy = groupBy;
+            _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
+            _model.TreeConfiguration.NUnitGroupBy = groupBy;
 
             // 2. Act
             _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
@@ -74,11 +74,11 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
-        public void CheckMenu_TestListGroupBy_SelectedItem_TestList_IsInitialzedFromSettings(string groupBy)
+        public void CheckMenu_TestListGroupBy_SelectedItem_TestList_IsInitializedFromTreeConfiguration(string groupBy)
         {
             // 1. Arrange
-            _settings.Gui.TestTree.DisplayFormat = "TEST_LIST";
-            _settings.Gui.TestTree.TestList.GroupBy = groupBy;
+            _model.TreeConfiguration.DisplayFormat = "TEST_LIST";
+            _model.TreeConfiguration.TestListGroupBy = groupBy;
 
             // 2. Act
             _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());

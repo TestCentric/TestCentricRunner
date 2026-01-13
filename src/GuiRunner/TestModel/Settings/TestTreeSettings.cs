@@ -13,23 +13,13 @@ namespace TestCentric.Gui.Model.Settings
 
         bool ShowCheckBoxes { get; set; }
 
-        bool ShowTestDuration { get; set; }
-
         string DisplayFormat { get; set; }
 
-        bool ShowNamespace { get; set; }
-
-        string NUnitGroupBy { get; set; }
-
         bool ShowFilter { get; set; }
-
-        ITestListSettings TestList { get; }
     }
 
     public class TestTreeSettings : ApplicationSettingsBase, ITestTreeSettings
     {
-        public ITestListSettings TestList { get; } = new TestListSettings();
-
         [UserScopedSetting]
         [DefaultSettingValue("Classic")]
         public string AlternateImageSet
@@ -56,14 +46,6 @@ namespace TestCentric.Gui.Model.Settings
         {
             get { return (bool)this[nameof(ShowCheckBoxes)]; }
             set { this[nameof(ShowCheckBoxes)] = value; }
-        }
-
-        [UserScopedSetting]
-        [DefaultSettingValue("false")]
-        public bool ShowTestDuration
-        {
-            get { return (bool)this[nameof(ShowTestDuration)]; }
-            set { this[nameof(ShowTestDuration)] = value; }
         }
 
         [UserScopedSetting]

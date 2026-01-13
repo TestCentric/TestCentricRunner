@@ -41,7 +41,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void DisplayName_ForTestCase(bool showTestDuration)
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(showTestDuration);
+            _model.TreeConfiguration.ShowTestDuration = showTestDuration;
             TestNode testNode = new TestNode("<test-case id='1' name='TestA' />");
             TreeNodeViewModel viewModel = CreateViewModel(testNode, "1");
 
@@ -72,7 +72,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void DisplayName_ForFixture_WithTestcases(bool showTestDuration)
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(showTestDuration);
+            _model.TreeConfiguration.ShowTestDuration = showTestDuration;
             TestNode testNode = new TestNode("<test-suite type='TestFixture' id='0' name='Fixture1'><test-case id='1' name='TestA' /> </test-suite>");
             TreeNodeViewModel viewModel = CreateViewModel(testNode, "0");
 
@@ -115,7 +115,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void DisplayName_ShowTestDurationIsEnabled_ForTestCase_ContainsDuration()
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
+            _model.TreeConfiguration.ShowTestDuration = true;
             TestNode testNode = new TestNode("<test-case id='1' name='TestA' />");
             TreeNodeViewModel viewModel = CreateViewModel(testNode, "1");
             ResultNode resultNode = new ResultNode("<test-case id='1' duration='1.0'/>");
@@ -132,7 +132,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void DisplayName_ShowTestDurationIsEnabled_ForTestFixture_ContainsDuration()
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
+            _model.TreeConfiguration.ShowTestDuration = true;
             TestNode testNode = TestFilterData.GetSampleTestProject();
             ResultNode resultNode0 = new ResultNode("<test-case id='3-1010' duration='1.0'/>");
             ResultNode resultNode1 = new ResultNode("<test-case id='3-1011' duration='1.0'/>");
@@ -154,7 +154,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void SetInTestRun_AllChildrenAndAllParent_AreInRun()
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
+            _model.TreeConfiguration.ShowTestDuration = true;
             TestNode testNode = TestFilterData.GetSampleTestProject();
             TreeNodeViewModel rootViewModel = CreateViewModel(testNode, "3-1000");
 
@@ -300,7 +300,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void OnTestRunStarted_ResetsTestDuration_WhenInTestRun()
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
+            _model.TreeConfiguration.ShowTestDuration = true;
             ResultNode resultNode = new ResultNode("<test-case id='1' result='Passed' duration='2.5'/>");
             _model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
@@ -589,7 +589,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
         public void TestDuration_ForSuite_SumsChildDurations()
         {
             // 1. Arrange
-            _model.Settings.Gui.TestTree.ShowTestDuration.Returns(true);
+            _model.TreeConfiguration.ShowTestDuration = true;
             ResultNode resultNode1 = new ResultNode("<test-case id='1' result='Passed' duration='1.5'/>");
             ResultNode resultNode2 = new ResultNode("<test-case id='2' result='Passed' duration='2.5'/>");
             _model.TestResultManager.GetResultForTest("1").Returns(resultNode1);

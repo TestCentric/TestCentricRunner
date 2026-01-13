@@ -41,7 +41,6 @@ namespace TestCentric.Gui.Model.Settings
                 { (ApplicationSettingsBase)Gui.RecentFiles, "TestCentric.Gui.RecentFiles" },
                 { (ApplicationSettingsBase)Gui.TextOutput, "TestCentric.Gui.TextOutput" },
                 { (ApplicationSettingsBase)Gui.TestTree, "TestCentric.Gui.TestTree" },
-                { (ApplicationSettingsBase)Gui.TestTree.TestList, "TestCentric.Gui.TestTree.TestList" },
             };
 
             foreach (ApplicationSettingsBase settingsBase in _settingGroups.Keys)

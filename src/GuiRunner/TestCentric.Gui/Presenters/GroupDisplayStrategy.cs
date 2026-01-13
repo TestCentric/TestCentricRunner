@@ -161,7 +161,7 @@ namespace TestCentric.Gui.Presenters
             _grouping = CreateTestGrouping(DefaultGroupSetting);
         }
 
-        protected abstract string DefaultGroupSetting { get; set; }
+        protected abstract string DefaultGroupSetting { get; }
 
         protected TestGrouping CreateTestGrouping(string groupBy)
         {

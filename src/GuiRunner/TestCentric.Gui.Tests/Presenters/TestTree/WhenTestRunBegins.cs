@@ -13,6 +13,7 @@ using TestCentric.Gui.Views;
 namespace TestCentric.Gui.Presenters.TestTree
 {
     using System.Collections.Generic;
+    using TestCentric.Gui.Model.Settings;
 
     public class WhenTestRunBegins : TreeViewPresenterTestBase
     {
@@ -182,10 +183,8 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void WhenTestRunStarts_CurrentGroupBy_IsSaved_InVisualFile(string groupBy)
         {
             // Arrange
+            _model.TestsInRun.Returns(new TestSelection());
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-            _settings.Gui.TestTree.DisplayFormat = "TEST_LIST";
-            _settings.Gui.TestTree.TestList.GroupBy = groupBy;
-
             var tv = new TreeView();
             _view.TreeView.Returns(tv);
 
@@ -194,6 +193,10 @@ namespace TestCentric.Gui.Presenters.TestTree
             TestNode testNode = new TestNode("<test-suite id='1'/>");
             _model.LoadedTests.Returns(testNode);
             FireTestLoadedEvent(testNode);
+
+            _model.TreeConfiguration.DisplayFormat.Returns("TEST_LIST");
+            _model.TreeConfiguration.TestListGroupBy.Returns(groupBy);
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // Act
             FireRunStartingEvent(1234);
@@ -212,8 +215,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         {
             // Arrange
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-            _settings.Gui.TestTree.DisplayFormat = "NUNIT_TREE";
-            _settings.Gui.TestTree.NUnitGroupBy = groupBy;
 
             var tv = new TreeView();
             _view.TreeView.Returns(tv);
@@ -225,6 +226,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TestsInRun.Returns(new TestSelection());
 
             FireTestLoadedEvent(testNode);
+            _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
+            _model.TreeConfiguration.NUnitGroupBy = groupBy;
 
             // Act
             FireRunStartingEvent(1234);

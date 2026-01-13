@@ -54,6 +54,8 @@ namespace TestCentric.Gui.Presenters
             get { return _model.HasResults; }
         }
 
+        protected ITreeConfiguration TreeConfiguration => _model.TreeConfiguration;
+
         public abstract string StrategyID { get; }
 
         public abstract string Description { get; }
@@ -93,7 +95,7 @@ namespace TestCentric.Gui.Presenters
                 UpdateTreeIconsOnRunStart(_view.Nodes);
             });
 
-            if (_settings.Gui.TestTree.ShowTestDuration)
+            if (TreeConfiguration.ShowTestDuration)
                 _view.InvokeIfRequired(() => UpdateTreeNodeNames());
         }
 
@@ -103,7 +105,7 @@ namespace TestCentric.Gui.Presenters
             {
                 _view.InvokeIfRequired(() => _view.Sort());
             }
-            if (_settings.Gui.TestTree.ShowTestDuration)
+            if (TreeConfiguration.ShowTestDuration)
                 _view.InvokeIfRequired(() => UpdateTreeNodeNames());
 
             _view.InvokeIfRequired(() =>
@@ -202,7 +204,7 @@ namespace TestCentric.Gui.Presenters
 
             // Check if test result is available for this node
             ResultNode result = _model.TestResultManager.GetResultForTest(testNode.Id);
-            if (_settings.Gui.TestTree.ShowTestDuration && result != null)
+            if (TreeConfiguration.ShowTestDuration && result != null)
                 treeNodeName += $" [{result.Duration:0.000}s]";
 
             return treeNodeName;
@@ -243,7 +245,7 @@ namespace TestCentric.Gui.Presenters
             else if (treeNode.Tag is TestGroup testGroup)
             {
                 treeNodeName = GroupDisplayName(testGroup);
-                if (_settings.Gui.TestTree.ShowTestDuration && testGroup.Duration.HasValue)
+                if (TreeConfiguration.ShowTestDuration && testGroup.Duration.HasValue)
                     treeNodeName += $" [{testGroup.Duration.Value:0.000}s]";
             }
 
