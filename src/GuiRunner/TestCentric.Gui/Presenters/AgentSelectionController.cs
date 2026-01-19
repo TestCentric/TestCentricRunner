@@ -62,7 +62,7 @@ namespace TestCentric.Gui.Presenters
         {
             IPopup agentMenu = _view.SelectAgentMenu;
             IList<string> agentsToEnable = _model.GetAgentsForPackage(_model.TopLevelPackage);
-            string selectedAgent = _model.TestCentricProject?.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.SelectedAgentName);
+            string selectedAgent = _model.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.SelectedAgentName);
             if (string.IsNullOrEmpty(selectedAgent))
                 selectedAgent = "DEFAULT";
 

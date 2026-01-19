@@ -24,8 +24,6 @@ namespace TestCentric.Gui.Model
 
         public IList<String> TestFiles { get; }
 
-        public bool IsDirty { get; private set; }
-
         public TestCentricProject(GuiOptions options = null)
         {
             if (options is null)
@@ -61,8 +59,6 @@ namespace TestCentric.Gui.Model
                     case ".tcproj":
                         throw new InvalidOperationException("A TestCentric project may not contain another TestCentric project.");
                 }
-
-            IsDirty = false;
         }
 
         public void Load(string path)
@@ -113,9 +109,6 @@ namespace TestCentric.Gui.Model
             {
                 throw new Exception($"Unable to load TestProject from {path}", ex);
             }
-
-
-            IsDirty = false;
         }
 
         public void SaveAs(string projectPath)
@@ -135,21 +128,14 @@ namespace TestCentric.Gui.Model
                    xmlWriter.WriteRaw(TopLevelPackage.ToXml());
                 xmlWriter.WriteEndElement();
             }
-
-            IsDirty = false;
         }
 
         public void AddSubPackage(string fullName)
         {
             TopLevelPackage.AddSubPackage(fullName);
             TestFiles.Add(fullName);
-            IsDirty = true;
         }
-        public void AddSubPackage(TestPackage subPackage)
-        {
-            TopLevelPackage.AddSubPackage(subPackage);
-            IsDirty = true;
-        }
+        public void AddSubPackage(TestPackage subPackage) => TopLevelPackage.AddSubPackage(subPackage);
 
         public void RemoveSubPackage(TestPackage subPackage)
         {
@@ -157,50 +143,27 @@ namespace TestCentric.Gui.Model
             {
                 TopLevelPackage.SubPackages.Remove(subPackage);
                 TestFiles.Remove(subPackage.FullName);
-                IsDirty = true;
             }
         }
 
-        public void AddSetting(PackageSetting setting)
-        {
-            TopLevelPackage.AddSetting(setting);
-            IsDirty = true;
-        }
+        public void AddSetting(PackageSetting setting) => TopLevelPackage.AddSetting(setting);
 
-        public void AddSetting(string key, string value)
-        {
-            TopLevelPackage.AddSetting(key, value);
-            IsDirty = true;
-        }
+        public void AddSetting(string key, string value) => TopLevelPackage.AddSetting(key, value);
 
-        public void AddSetting(string key, bool value)
-        {
-            TopLevelPackage.AddSetting(key, value);
-            IsDirty = true;
-        }
+        public void AddSetting(string key, bool value) => TopLevelPackage.AddSetting(key, value);
 
-        public void AddSetting(string key, int value)
-        {
-            TopLevelPackage.AddSetting(key, value);
-            IsDirty = true;
-        }
+        public void AddSetting(string key, int value) => TopLevelPackage.AddSetting(key, value);
 
         public void RemoveSetting(string key)
         {
             TopLevelPackage.Settings.Remove(key);
             foreach (var subPackage in TopLevelPackage.SubPackages)
                 subPackage.Settings.Remove(key);
-
-            IsDirty = true;
         }
 
         public void RemoveSetting(SettingDefinition setting) => RemoveSetting(setting.Name);
 
-        public void SetTopLevelSetting(PackageSetting setting)
-        {
-            TopLevelPackage.Settings.Set(setting);
-            IsDirty = true;
-        }
+        public void SetTopLevelSetting(PackageSetting setting) => TopLevelPackage.Settings.Set(setting);
 
         #region NUnit TestPackage Load Helpers
 

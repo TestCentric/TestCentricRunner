@@ -97,7 +97,7 @@ namespace TestCentric.Gui
             new ErrorsAndFailuresPresenter(view.ErrorsAndFailuresView, model);
             new TextOutputPresenter(view.TextOutputView, model);
             new TreeViewPresenter(view.TreeView, model, new TreeDisplayStrategyFactory());
-            new TestCentricPresenter(view, model, options);
+            new TestCentricPresenter(view, model);
 
             try
             {

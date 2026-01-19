@@ -16,7 +16,10 @@ namespace TestCentric.Gui.Presenters.TestTree
     public class WhenTestsAreLoaded : TreeViewPresenterTestBase
     {
         // Use dedicated test file name; Used for VisualState file too
-        const string TestFileName = "TreeViewPresenterTestsLoaded.dll";
+        const string TEST_FILE_NAME = "TreeViewPresenterTestsLoaded.dll";
+        static readonly string VISUAL_STATE_FILE_NAME = VisualState.GetVisualStateFileName(TEST_FILE_NAME);
+        static readonly TestNode TEST_NODE = new TestNode("<test-suite id='1'/>");
+        static readonly GuiOptions OPTIONS = new GuiOptions(TEST_FILE_NAME);
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -31,19 +34,18 @@ namespace TestCentric.Gui.Presenters.TestTree
 
             _model.HasTests.Returns(true);
             _model.IsTestRunning.Returns(false);
-            var project = new TestCentricProject(new GuiOptions(TestFileName));
-            _model.TestCentricProject.Returns(project);
+            _model.Options.Returns(OPTIONS);
+            _model.TestCentricProject.Returns(new TestCentricProject(OPTIONS));
+            _model.LoadedTests.Returns(TEST_NODE);
 
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            _view.TreeView.Returns(new TreeView());
         }
 
         [TearDown]
         public void TearDown()
         {
             // Delete VisualState file to prevent any unintended side effects
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
+            string fileName = VisualState.GetVisualStateFileName(TEST_FILE_NAME);
             if (File.Exists(fileName))
                 File.Delete(fileName);
         }
@@ -56,9 +58,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.Settings.Gui.TestTree.ShowCheckBoxes = showCheckBoxSetting;
 
             // Act: load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_view.ShowCheckBoxes.Checked, Is.EqualTo(showCheckBoxSetting));
@@ -69,18 +69,16 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void TestLoaded_WithVisualState_ShowCheckBox_IsAppliedFromVisualState(bool showCheckBox)
         {
             // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState();
-            visualState.ShowCheckBoxes = showCheckBox;
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            visualState.Save(fileName);
+            VisualState visualState = new VisualState()
+            {
+                ShowCheckBoxes = showCheckBox
+            };
+            visualState.Save(VISUAL_STATE_FILE_NAME);
 
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
+            TryLoadVisualStateReturns(visualState);
 
             // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_view.ShowCheckBoxes.Checked, Is.EqualTo(showCheckBox));
@@ -94,9 +92,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.Settings.Gui.TestTree.ShowNamespace = showNamespace;
 
             // Act: load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_model.Settings.Gui.TestTree.ShowNamespace, Is.EqualTo(showNamespace));
@@ -107,18 +103,16 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void TestLoaded_WithVisualState_ShowNamespace_IsAppliedFromVisualState(bool showNamespace)
         {
             // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState();
-            visualState.ShowNamespace = showNamespace;
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            visualState.Save(fileName);
+            VisualState visualState = new VisualState()
+            {
+                ShowNamespace = showNamespace
+            };
+            visualState.Save(VISUAL_STATE_FILE_NAME);
 
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
+            TryLoadVisualStateReturns(visualState);
 
             // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_settings.Gui.TestTree.ShowNamespace, Is.EqualTo(showNamespace));
@@ -129,18 +123,16 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void TestLoaded_WithVisualState_TreeStrategy_IsCreatedFromVisualState(string displayFormat, Type expectedStrategy)
         {
             // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState();
-            visualState.DisplayStrategy = displayFormat;
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            visualState.Save(fileName);
+            VisualState visualState = new VisualState()
+            {
+                DisplayStrategy = displayFormat
+            };
+            visualState.Save(VISUAL_STATE_FILE_NAME);
 
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
+            TryLoadVisualStateReturns(visualState);
 
             // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_presenter.Strategy, Is.TypeOf(expectedStrategy));
@@ -153,13 +145,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             // Arrange: adapt settings
             _model.Settings.Gui.TestTree.DisplayFormat = displayFormat;
 
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
-
             // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_presenter.Strategy, Is.TypeOf(expectedStrategy));
@@ -170,18 +157,16 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void TestLoaded_WithVisualState_DisplayFormatSetting_IsUpdatedFromVisualState(string displayFormat)
         {
             // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState();
-            visualState.DisplayStrategy = displayFormat;
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            visualState.Save(fileName);
+            VisualState visualState = new VisualState()
+            {
+                DisplayStrategy = displayFormat
+            };
+            visualState.Save(VISUAL_STATE_FILE_NAME);
 
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
+            TryLoadVisualStateReturns(visualState);
 
             // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_model.Settings.Gui.TestTree.DisplayFormat, Is.EqualTo(displayFormat));
@@ -194,21 +179,19 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void TestLoaded_WithVisualState_NUnitTreeGroupBySetting_IsUpdatedFromVisualState(string groupBy)
         {
             // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState();
-            visualState.DisplayStrategy = "NUNIT_TREE";
-            visualState.GroupBy = groupBy;
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            visualState.Save(fileName);
+            VisualState visualState = new VisualState()
+            {
+                DisplayStrategy = "NUNIT_TREE",
+                GroupBy = groupBy
+            };
+            visualState.Save(VISUAL_STATE_FILE_NAME);
 
             _model.Settings.Gui.TestTree.TestList.GroupBy = "DURATION";
 
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
+            TryLoadVisualStateReturns(visualState);
 
             // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_model.Settings.Gui.TestTree.NUnitGroupBy, Is.EqualTo(groupBy));
@@ -221,21 +204,19 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void TestLoaded_WithVisualState_TestListGroupBySetting_IsUpdatedFromVisualState(string groupBy)
         {
             // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState();
-            visualState.DisplayStrategy = "TEST_LIST";
-            visualState.GroupBy = groupBy;
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            visualState.Save(fileName);
+            VisualState visualState = new VisualState()
+            {
+                DisplayStrategy = "TEST_LIST",
+                GroupBy = groupBy
+            };
+            visualState.Save(VISUAL_STATE_FILE_NAME);
 
             _model.Settings.Gui.TestTree.NUnitGroupBy = "DURATION";
 
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
+            TryLoadVisualStateReturns(visualState);
 
             // Act: Load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             Assert.That(_model.Settings.Gui.TestTree.TestList.GroupBy, Is.EqualTo(groupBy));
@@ -246,12 +227,19 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void TestLoaded_CategoryFilter_IsInitialized()
         {
             // Act: load tests
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
+            FireTestLoadedEvent(TEST_NODE);
 
             // Assert
             _view.CategoryFilter.Received().Init(_model);
+        }
+
+        private void TryLoadVisualStateReturns(VisualState visualState)
+        {
+            _model.TryLoadVisualState(out Arg.Any<VisualState>())
+                .Returns(x => {
+                    x[0] = visualState;
+                    return true;
+                });
         }
 
         // TODO: Version 1 Test - Make it work if needed.
@@ -271,7 +259,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         //[Platform(Exclude = "Linux", Reason = "Display issues")]
         //public void WhenTestLoadCompletes_MultipleAssemblies_TopNodeIsTestRun()
         //{
-        //    TestNode testNode = new TestNode("<test-run id='2'><test-suite id='101' name='test.dll'/><test-suite id='102' name='another.dll'/></test-run>");
         //    ClearAllReceivedCalls();
         //    _model.TestFiles.Returns(new List<string>(new[] { "test.dll", "another.dll" }));
         //    FireTestLoadedEvent(testNode);
@@ -284,7 +271,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         //[Platform(Exclude = "Linux", Reason = "Display issues")]
         //public void WhenTestLoadCompletes_SingleAssembly_TopNodeIsAssembly()
         //{
-        //    TestNode testNode = new TestNode("<test-run><test-suite id='1' name='another.dll'/></test-run>");
         //    ClearAllReceivedCalls();
         //    _model.TestFiles.Returns(new List<string>(new[] { "test.dll" }));
         //    FireTestLoadedEvent(testNode);

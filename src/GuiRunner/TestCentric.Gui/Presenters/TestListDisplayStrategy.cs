@@ -96,7 +96,17 @@ namespace TestCentric.Gui.Presenters
             ApplyResultsToTree();
         }
 
-        protected override VisualState CreateVisualState() => new VisualState("TEST_LIST", _grouping?.ID).LoadFrom(_view.TreeView);
+        public override VisualState CreateVisualState()
+        {
+            VisualState visualState = null;
+
+            _view.InvokeIfRequired(() =>
+            {
+                visualState = new VisualState("TEST_LIST", _grouping?.ID).LoadFrom(_view.TreeView);
+            });
+
+            return visualState;
+        }
 
         #endregion
 

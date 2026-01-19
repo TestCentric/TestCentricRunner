@@ -8,14 +8,8 @@ using System.IO;
 using System.Windows.Forms;
 using NUnit.Framework;
 
-namespace TestCentric.Gui
+namespace TestCentric.Gui.Model
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Xml;
-    using Model;
-    using TestCentric.Gui.Presenters;
-
     [TestFixtureSource(nameof(TestData))]
     public class VisualStateTests : VisualStateTestBase
     {

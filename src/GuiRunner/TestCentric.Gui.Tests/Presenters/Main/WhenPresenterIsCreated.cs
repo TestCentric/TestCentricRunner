@@ -40,15 +40,19 @@ namespace TestCentric.Gui.Presenters.Main
             ViewElement(propName).Received().Visible = visible;
         }
 
+        // NOTE: Tests below need to re-create the presenter, which was
+        // created in MainPresenterTestBase, so that it will reflect different
+        // values for user and package settings.
+
         [TestCase("NUNIT_TREE")]
         [TestCase("TEST_LIST")]
-        public void CheckMenu_DisplayFormat_SelectedItem_IsInitialzedFromSettings(string displayFormat)
+        public void CheckMenu_DisplayFormat_SelectedItem_IsInitializedFromSettings(string displayFormat)
         {
             // 1. Arrange
             _settings.Gui.TestTree.DisplayFormat = displayFormat;
 
             // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
+            _presenter = new TestCentricPresenter(_view, _model);
 
             // 3. Assert
             _view.DisplayFormat.Received().SelectedItem = displayFormat;
@@ -65,7 +69,7 @@ namespace TestCentric.Gui.Presenters.Main
             _settings.Gui.TestTree.NUnitGroupBy = groupBy;
 
             // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
+            _presenter = new TestCentricPresenter(_view, _model);
 
             // 3. Assert
             _view.NUnitGroupBy.Received().SelectedItem = groupBy;
@@ -74,14 +78,14 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
-        public void CheckMenu_TestListGroupBy_SelectedItem_TestList_IsInitialzedFromSettings(string groupBy)
+        public void CheckMenu_TestListGroupBy_SelectedItem_TestList_IsInitializedFromSettings(string groupBy)
         {
             // 1. Arrange
             _settings.Gui.TestTree.DisplayFormat = "TEST_LIST";
             _settings.Gui.TestTree.TestList.GroupBy = groupBy;
 
             // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
+            _presenter = new TestCentricPresenter(_view, _model);
 
             // 3. Assert
             _view.TestListGroupBy.Received().SelectedItem = groupBy;
@@ -89,13 +93,13 @@ namespace TestCentric.Gui.Presenters.Main
 
         [TestCase(true)]
         [TestCase(false)]
-        public void FilterButton_IsInitialzedFromSettings(bool filterIsVisible)
+        public void FilterButton_IsInitializedFromSettings(bool filterIsVisible)
         {
             // 1. Arrange
             _settings.Gui.TestTree.ShowFilter = filterIsVisible;
 
             // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
+            _presenter = new TestCentricPresenter(_view, _model);
 
             // 3. Assert
             _view.ShowHideFilterButton.Received().Checked = filterIsVisible;
@@ -111,7 +115,7 @@ namespace TestCentric.Gui.Presenters.Main
             _view.TreeView.ShowCheckBoxes.Checked.Returns(checkBoxVisible);
 
             // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
+            _presenter = new TestCentricPresenter(_view, _model);
 
             // 3. Assert
             (runSelectedTestsButton as IToolTip).Received().ToolTipText = expectedTooltip;

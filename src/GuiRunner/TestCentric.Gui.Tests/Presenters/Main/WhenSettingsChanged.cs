@@ -90,7 +90,6 @@ namespace TestCentric.Gui.Presenters.Main
             _view.TreeView.ShowCheckBoxes.Checked.Returns(checkBoxVisible);
 
             // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
             _view.TreeView.ShowCheckBoxes.CheckedChanged += Raise.Event<CommandHandler>();
 
             // 3. Assert
