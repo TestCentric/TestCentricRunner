@@ -26,6 +26,7 @@ namespace TestCentric.Gui.Presenters
             // Ensure that model always has at least an empty package with no settings
             var options = new GuiOptions();
             _model.Options.Returns(options);
+            _model.IsProjectLoaded.Returns(true);
             _model.TestCentricProject.Returns(new TestCentricProject(options));
             _model.TopLevelPackage.Returns(new NUnit.Engine.TestPackage());
             

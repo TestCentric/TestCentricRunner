@@ -96,13 +96,12 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestsUnloading += ea =>
             {
-                var visualState = Strategy.CreateVisualState();
+                SaveVisualState();
                 ClosePropertiesDisplay();
                 CloseXmlDisplay();
             };
 
             _model.Events.TestsReloading += ea => SaveVisualState();
-
 
             _model.Events.RunStarting += (ea) =>
             {
