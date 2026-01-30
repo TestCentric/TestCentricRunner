@@ -249,7 +249,7 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.UnhandledException += (TestCentric.Gui.Model.UnhandledExceptionEventArgs e) =>
             {
-                MessageBoxDisplay.Error($"{e.Message}\n\n{e.StackTrace}", "TestCentric - Internal Error");
+                _view.MessageDisplay.Error($"{e.Message}\n\n{e.StackTrace}", "TestCentric - Internal Error");
             };
 
             #endregion
@@ -311,7 +311,7 @@ namespace TestCentric.Gui.Presenters
                         _model.StopTestRun(true);
                     }
 
-                    if (CloseProject() == MessageBoxResult.Cancel)
+                    if (CloseProject() == DialogResult.Cancel)
                         e.Cancel = true;
                 }
 
@@ -359,9 +359,14 @@ namespace TestCentric.Gui.Presenters
                 if (menuItems == null)
                     return;
 
+                var entries = _model.Settings.Gui.RecentFiles.Entries;
+                for (int index = entries.Count; --index >= 0;)
+                    if (!File.Exists(entries[index]))
+                        entries.RemoveAt(index);
+
                 menuItems.Clear();
                 int num = 0;
-                foreach (string entry in _model.Settings.Gui.RecentFiles.Entries)
+                foreach (string entry in entries)
                 {
                     var menuText = string.Format("{0} {1}", ++num, entry);
                     var menuItem = new ToolStripMenuItem(menuText);
@@ -643,17 +648,17 @@ namespace TestCentric.Gui.Presenters
 
         #region Close Methods
 
-        public MessageBoxResult CloseProject()
+        public DialogResult CloseProject()
         {
-            MessageBoxResult messageBoxResult = MessageBoxResult.OK;
+            DialogResult messageBoxResult = DialogResult.OK;
             if (!_options.Unattended && _model.TestCentricProject.IsDirty)
             {
                 messageBoxResult = _view.MessageDisplay.YesNoCancel($"Do you want to save {_model.TestCentricProject.ProjectPath}?");
-                if (messageBoxResult == MessageBoxResult.Yes)
+                if (messageBoxResult == DialogResult.Yes)
                     SaveProject();
             }
 
-            if (messageBoxResult != MessageBoxResult.Cancel)
+            if (messageBoxResult != DialogResult.Cancel)
                 _model.CloseProject();
 
             return messageBoxResult;

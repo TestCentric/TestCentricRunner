@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using NUnit.Engine;
+using TestCentric.Gui.Dialogs;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Presenters;
 using TestCentric.Gui.Views;
@@ -35,10 +36,7 @@ namespace TestCentric.Gui
 
             if (options.ShowHelp)
             {
-                // TODO: We would need to have a custom message box
-                // in order to use a fixed font and display the options
-                // so that the values all line up.
-                MessageDisplay.Info(options.GetHelpText());
+                MessageDisplay.Info(options.GetHelpText(), "TestCentric Runner for NUnit");
                 return 0;
             }
 
@@ -150,11 +148,6 @@ namespace TestCentric.Gui
             //options.WriteOptionDescriptions(writer);
 
             return writer.GetStringBuilder().ToString();
-        }
-
-        private static IMessageDisplay MessageDisplay
-        {
-            get { return new MessageBoxDisplay("TestCentric Runner for NUnit"); }
         }
     }
 }
