@@ -24,8 +24,11 @@ namespace TestCentric.Gui
         private const int SCREEN_EDGE = 20;
         private const int SCREEN_MARGIN = 2 * SCREEN_EDGE;
 
+        // These three constants must match the Form layout
         private const int FORM_MARGIN = 7;
+        private const int ICON_WIDTH = 48;
         private const int ICON_TEXT_SPACING = 10;
+
         private IWin32Window _owner;
         private string _defaultCaption;
 
@@ -54,13 +57,12 @@ namespace TestCentric.Gui
 
         public DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
         {
-            messageTextBox.Text = text ?? string.Empty;
-            messageTextBox.Select(0, 0);
+            _messageText = text;
             Text = caption ?? _defaultCaption;
 
             SelectIconImage(icon);
             SetupButtons(buttons);
-            AdjustSizes(icon);
+            AdjustSizes(icon, text);
 
             return ShowDialog(_owner);
         }
@@ -130,28 +132,44 @@ namespace TestCentric.Gui
             button.DialogResult = result;
         }
 
-        private void AdjustSizes(MessageBoxIcon icon)
+        private void AdjustSizes(MessageBoxIcon icon, string text)
         {
+            _displayRect = ClientRectangle;
+            _displayRect.Height -= FORM_MARGIN * 2 + buttonPanel.Height;
+
             if (icon == MessageBoxIcon.None)
             {
-                messageTextBox.Left = iconPictureBox.Left;
-                messageTextBox.Width += iconPictureBox.Width + ICON_TEXT_SPACING;
+                _displayRect.Location = new Point(FORM_MARGIN, FORM_MARGIN);
+                _displayRect.Width -= FORM_MARGIN * 2;
+            }
+            else
+            {
+                _displayRect.Location = new Point(iconPictureBox.Right + ICON_TEXT_SPACING, FORM_MARGIN);
+                _displayRect.Width -= FORM_MARGIN * 2 + ICON_WIDTH + ICON_TEXT_SPACING;
             }
 
             Graphics g = Graphics.FromHwnd(Handle);
             Screen screen = Screen.FromHandle(Handle);
             //SizeF layoutArea = new SizeF(screen.WorkingArea.Width - SCREEN_MARGIN, screen.WorkingArea.Height - SCREEN_MARGIN);
-            SizeF layoutArea = new SizeF(messageTextBox.Width, screen.WorkingArea.Height - SCREEN_MARGIN);
+            SizeF layoutArea = new SizeF(_displayRect.Width, screen.WorkingArea.Height - SCREEN_MARGIN);
             Size sizeNeeded = Size.Ceiling(
-                g.MeasureString(messageTextBox.Text, Font, layoutArea));
-            // Not Clear why text is being cut short, but we add 20 for now to ensure it fits.
-            sizeNeeded.Height += 20;
+                g.MeasureString(text, Font, layoutArea));
 
-            messageTextBox.ClientSize = sizeNeeded;
+            _displayRect.Size = sizeNeeded;
 
-            buttonPanel.Top = messageTextBox.Bottom + 10;
+            buttonPanel.Top = _displayRect.Bottom + FORM_MARGIN;
 
             this.ClientSize = new Size(buttonPanel.Right, buttonPanel.Bottom);
+        }
+
+        private Rectangle _displayRect;
+        private string _messageText;
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            Graphics g = Graphics.FromHwnd(Handle);
+            g.DrawString(_messageText, Font, Brushes.Black, _displayRect);
         }
     }
 }

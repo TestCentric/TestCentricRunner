@@ -30,7 +30,6 @@ namespace TestCentric.Gui
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageDisplayForm));
             this.iconPictureBox = new System.Windows.Forms.PictureBox();
-            this.messageTextBox = new System.Windows.Forms.TextBox();
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -48,23 +47,9 @@ namespace TestCentric.Gui
             this.iconPictureBox.TabIndex = 0;
             this.iconPictureBox.TabStop = false;
             // 
-            // messageTextBox
-            // 
-            this.messageTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.messageTextBox.BackColor = System.Drawing.SystemColors.Control;
-            this.messageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.messageTextBox.Location = new System.Drawing.Point(61, 7);
-            this.messageTextBox.MinimumSize = new System.Drawing.Size(355, 82);
-            this.messageTextBox.Multiline = true;
-            this.messageTextBox.Name = "messageTextBox";
-            this.messageTextBox.ReadOnly = true;
-            this.messageTextBox.Size = new System.Drawing.Size(382, 82);
-            this.messageTextBox.TabIndex = 1;
-            // 
             // buttonPanel
             // 
+            this.buttonPanel.BackColor = System.Drawing.SystemColors.Control;
             this.buttonPanel.Controls.Add(this.button3);
             this.buttonPanel.Controls.Add(this.button2);
             this.buttonPanel.Controls.Add(this.button1);
@@ -107,10 +92,9 @@ namespace TestCentric.Gui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(452, 135);
             this.Controls.Add(this.buttonPanel);
-            this.Controls.Add(this.messageTextBox);
             this.Controls.Add(this.iconPictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -122,14 +106,12 @@ namespace TestCentric.Gui
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
             this.buttonPanel.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.PictureBox iconPictureBox;
-        private System.Windows.Forms.TextBox messageTextBox;
         private System.Windows.Forms.Panel buttonPanel;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
