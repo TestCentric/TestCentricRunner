@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
@@ -10,25 +10,30 @@ namespace TestCentric.Gui
 {
     public class TestCentricFormBase : Form
     {
-        private IMessageDisplay messageDisplay;
-        private string caption;
+        private IMessageDisplay _messageDisplay;
+        private string _caption;
 
-        public TestCentricFormBase() { }
-
-        public TestCentricFormBase(string caption)
+        public TestCentricFormBase(string caption = null)
         {
-            this.caption = caption;
+            _caption = caption;
         }
 
         public IMessageDisplay MessageDisplay
         {
             get
             {
-                if (messageDisplay == null)
-                    messageDisplay = new MessageBoxDisplay(caption == null ? Text : caption);
+                if (_messageDisplay == null)
+                    _messageDisplay = new MessageDisplay(this, _caption ?? Text);
 
-                return messageDisplay;
+                return _messageDisplay;
             }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            Text = _caption;
         }
     }
 }

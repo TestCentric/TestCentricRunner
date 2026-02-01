@@ -4,6 +4,7 @@
 // ***********************************************************************
 
 using System;
+using System.Windows.Forms;
 
 namespace TestCentric.Gui
 {
@@ -12,31 +13,14 @@ namespace TestCentric.Gui
     /// </summary>
     public interface IMessageDisplay
     {
-        void Error(string message);
+        void Error(string text, string caption = null);
 
-        void Info(string message);
+        void Info(string text, string caption = null);
 
-        bool YesNo(string message);
+        bool YesNo(string text, string caption = null);
 
-        MessageBoxResult YesNoCancel(string message);
+        bool OkCancel(string text, string caption = null);
 
-        bool OkCancel(string message);
-    }
-
-    /// <summary>
-    /// Enum representing the return value of a MessageBox
-    /// It contains the identical values in same order as the DialogResult enum from Windows Forms
-    /// It has the same intention as the interface <see cref="IMessageDisplay"/> to hide any implementation details to the caller.
-    /// </summary>
-    public enum MessageBoxResult
-    { 
-        None,
-        OK,
-        Cancel,
-        Abort,
-        Retry,
-        Ignore,
-        Yes,
-        No,
+        DialogResult YesNoCancel(string text, string caption = null);
     }
 }
