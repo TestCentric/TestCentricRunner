@@ -100,8 +100,8 @@ namespace TestCentric.Gui
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(268, 174);
             this.Name = "MessageDisplayForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MessageDialog";
             ((System.ComponentModel.ISupportInitialize)(this.iconPictureBox)).EndInit();
             this.buttonPanel.ResumeLayout(false);

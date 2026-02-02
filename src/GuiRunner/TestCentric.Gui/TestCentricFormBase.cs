@@ -23,7 +23,7 @@ namespace TestCentric.Gui
             get
             {
                 if (_messageDisplay == null)
-                    _messageDisplay = new MessageDisplay(this, _caption ?? Text);
+                    _messageDisplay = new MessageDisplay(_caption ?? Text);
 
                 return _messageDisplay;
             }
