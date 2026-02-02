@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<RootNamespace>TestCentric.Gui</RootNamespace>
+		<AssemblyName>msgtest</AssemblyName>
+		<TargetFramework>net462</TargetFramework>
+		<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AssemblyTitle>Message Tester</AssemblyTitle>
+        <Description>Utility for visually verifying message display</Description>
+        <ApplicationIcon>..\..\..\testcentric.ico</ApplicationIcon>
+    </PropertyGroup>
+    
+	<ItemGroup>
+        <ProjectReference Include="..\TestCentric.Gui\TestCentric.Gui.csproj" />
+    </ItemGroup>
+    
+	<ItemGroup>
+	  <Reference Include="System.Windows.Forms" />
+	</ItemGroup>
+	
+</Project>

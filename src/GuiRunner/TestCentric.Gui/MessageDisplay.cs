@@ -23,7 +23,7 @@ namespace TestCentric.Gui
         // Static instance of MessageDisplayForm, used by code that does not have access
         // to one of our Views or to any other Windows Form to serve as the owner of the
         // dialog. Messages using this instance are displayed centered on the screen.
-        private static readonly IMessageDisplay DefaultDialog = new MessageDisplayForm(null, DEFAULT_CAPTION);
+        private static readonly IMessageDisplay DefaultDialog = new MessageDisplayForm(DEFAULT_CAPTION);
 
         public static void Error(string message, string caption = DEFAULT_CAPTION) =>
             DefaultDialog.Info(message, caption);
@@ -44,15 +44,13 @@ namespace TestCentric.Gui
 
         #region Instance members for use when a View is available
 
-        private readonly IWin32Window _owner;
         private readonly string _caption;
         private MessageDisplayForm _myDialog;
 
-        public MessageDisplay(IWin32Window owner, string caption = DEFAULT_CAPTION)
+        public MessageDisplay(string caption = DEFAULT_CAPTION)
         {
-            _owner = owner;
             _caption = caption;
-            _myDialog = new MessageDisplayForm(owner, caption);
+            _myDialog = new MessageDisplayForm(caption);
         }
 
         void IMessageDisplay.Error(string text, string caption) =>

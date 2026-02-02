@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using System;
 using System.Drawing;
 using System.Security.Policy;
 using System.Windows.Forms;
@@ -28,15 +29,14 @@ namespace TestCentric.Gui
         private const int FORM_MARGIN = 7;
         private const int ICON_WIDTH = 48;
         private const int ICON_TEXT_SPACING = 10;
+        private const int MIN_TEXT_HEIGHT = 55;
 
-        private IWin32Window _owner;
         private string _defaultCaption;
 
-        public MessageDisplayForm(IWin32Window owner, string defaultCaption)
+        public MessageDisplayForm(string defaultCaption)
         {
             InitializeComponent();
 
-            _owner = owner;
             _defaultCaption = defaultCaption;
         }
 
@@ -64,7 +64,7 @@ namespace TestCentric.Gui
             SetupButtons(buttons);
             AdjustSizes(icon, text);
 
-            return ShowDialog(_owner);
+            return ShowDialog();
         }
 
         private void SelectIconImage(MessageBoxIcon icon)
@@ -156,6 +156,8 @@ namespace TestCentric.Gui
                 g.MeasureString(text, Font, layoutArea));
 
             _displayRect.Size = sizeNeeded;
+            if (_displayRect.Height < MIN_TEXT_HEIGHT)
+                _displayRect.Height = MIN_TEXT_HEIGHT;
 
             buttonPanel.Top = _displayRect.Bottom + FORM_MARGIN;
 

@@ -47,7 +47,7 @@ namespace TestCentric.Gui
             _title = key;
             int dot = key.LastIndexOf('.');
             if (dot >= 0) _title = key.Substring(dot + 1);
-            _messageDisplay = new MessageDisplay(this, "TestCentric Settings");
+            _messageDisplay = new MessageDisplay("TestCentric Settings");
         }
 
         /// <summary> 
