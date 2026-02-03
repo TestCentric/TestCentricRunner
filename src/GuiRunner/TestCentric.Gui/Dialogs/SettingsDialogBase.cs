@@ -56,7 +56,7 @@ namespace TestCentric.Gui.Dialogs
             TopLevelPackageSettingChanges.Clear();
         }
 
-        public SettingsDialogBase()
+        public SettingsDialogBase() : base("TestCentric Settings")
         {
             //
             // Required for Windows Form Designer support
