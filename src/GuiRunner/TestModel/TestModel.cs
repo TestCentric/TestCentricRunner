@@ -406,9 +406,9 @@ namespace TestCentric.Gui.Model
                 TestCentricProject.Save();
 
             // Save VisualState in the same directory as the project
-            //_events.RequestVisualState().ShouldNotBeNull().Save(
-            //    Path.ChangeExtension(TestCentricProject.ProjectPath, ".VisualState.xml"));
-                
+            _events.RequestVisualState().ShouldNotBeNull().Save(
+                Path.ChangeExtension(TestCentricProject.ProjectPath, ".VisualState.xml"));
+
             RecentFiles.Latest = TestCentricProject.ProjectPath;
         }
 

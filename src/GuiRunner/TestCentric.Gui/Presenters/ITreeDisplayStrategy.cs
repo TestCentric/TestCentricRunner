@@ -30,6 +30,8 @@ namespace TestCentric.Gui.Presenters
         /// </summary>
         void SaveVisualState();
 
+        VisualState CreateVisualState();
+
         /// <summary>
         /// Called when one test is finished: update tree node according to test result
         /// </summary>

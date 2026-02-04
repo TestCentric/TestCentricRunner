@@ -15,20 +15,19 @@ namespace TestCentric.Gui.Presenters
     using TestCentric.Gui.Views;
 
     [TestFixture]
-    internal class AgentSelectionControllerTests
+    internal class AgentSelectionControllerTests : PresenterTestBase<IMainView>
     {
-        private ITestModel _model;
-        private IMainView _view;
         private ToolStripMenuItem _selectAgentMenuItem;
         private AgentSelectionController _controller;
 
         [SetUp]
         public void SetUp()
         {
-            _model = Substitute.For<ITestModel>();
-            _view = Substitute.For<IMainView>();
-
             // Ensure that model always has at least an empty package with no settings
+            var options = new GuiOptions();
+            _model.Options.Returns(options);
+            _model.IsProjectLoaded.Returns(true);
+            _model.TestCentricProject.Returns(new TestCentricProject(options));
             _model.TopLevelPackage.Returns(new NUnit.Engine.TestPackage());
             
             // Create a real ToolStripMenuItem to get a real collection
@@ -289,15 +288,13 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_SpecificAgentIsSelected_ChecksAgentMenuItem()
         {
             // 1. Arrange
-            var project = new TestCentricProject();
-            _model.TestCentricProject.Returns(project);
             _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
                 "NUnit.TestAdapter.Agent1",
                 "NUnit.TestAdapter.Agent2" 
             });
             
-            project.AddSetting(SettingDefinitions.SelectedAgentName.WithValue("NUnit.TestAdapter.Agent2"));
+            _model.TopLevelPackage.Settings.Add(SettingDefinitions.SelectedAgentName.WithValue("NUnit.TestAdapter.Agent2"));
             
             _model.AvailableAgents.Returns(new List<string> 
             { 

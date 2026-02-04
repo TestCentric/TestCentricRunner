@@ -30,12 +30,12 @@ namespace TestCentric.Gui.Model
     public class TreeConfiguration : ITreeConfiguration
     {
         public event SettingsEventHandler Changed;
-        private bool _showCheckBoxes;
-        private bool _showNamespaces;
-        private bool _showTestDuration;
-        private string _displayFormat;
-        private string _nunitGroupBy;
-        private string _testListGroupBy;
+        private bool _showCheckBoxes = false;
+        private bool _showNamespaces = true;
+        private bool _showTestDuration = false;
+        private string _displayFormat = "NUNIT_TREE";
+        private string _nunitGroupBy = "UNGROUPED";
+        private string _testListGroupBy = "UNGROUPED";
 
         public bool ShowCheckBoxes
         {

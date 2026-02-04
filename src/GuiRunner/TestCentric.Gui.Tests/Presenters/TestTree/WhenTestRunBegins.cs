@@ -36,7 +36,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         }
 
         [Test]
-        public void WhenTestRunStarts_TreeNodeImageIconsAreSet()
+        public void TreeNodeImageIconsAreSet()
         {
             // Arrange
             var tv = new TreeView();
@@ -93,7 +93,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         [TestCase("Failed", TestTreeView.FailureIndex_NotLatestRun)]
         [TestCase("Warning", TestTreeView.WarningIndex_NotLatestRun)]
         [TestCase("Skipped", TestTreeView.SkippedIndex)]
-        public void WhenTestRunStarts_TreeNodeWithResults_ImageIconsAreSet_ToPreviousOutcomeIcon(string resultState, int expectedImageIndex)
+        public void TreeNodeWithResults_ImageIconsAreSet_ToPreviousOutcomeIcon(string resultState, int expectedImageIndex)
         {
             // Arrange
             var tv = new TreeView();
@@ -150,11 +150,12 @@ namespace TestCentric.Gui.Presenters.TestTree
 
         [TestCase("NUNIT_TREE")]
         [TestCase("TEST_LIST")]
-        public void WhenTestRunStarts_CurrentDisplayFormat_IsSaved_InVisualFile(string displayFormat)
+        public void CurrentDisplayFormat_IsSaved_InVisualFile(string displayFormat)
         {
             // Arrange
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
             _settings.Gui.TestTree.DisplayFormat = displayFormat;
+            _model.TreeConfiguration.DisplayFormat = displayFormat;
             var tv = new TreeView();
             _view.TreeView.Returns(tv);
 
@@ -174,48 +175,26 @@ namespace TestCentric.Gui.Presenters.TestTree
             Assert.That(visualState.DisplayStrategy, Is.EqualTo(displayFormat));
         }
 
-        // TODO: This is failing BUT manual tests show that the UNGROUPED display
-        // persists after closing and re-opening the app. Error in test itself?
-        //[TestCase("UNGROUPED")]
-        [TestCase("ASSEMBLY")]
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
-        public void WhenTestRunStarts_CurrentGroupBy_IsSaved_InVisualFile(string groupBy)
+        [TestCase("NUNIT_TREE", "UNGROUPED")]
+        [TestCase("NUNIT_TREE", "ASSEMBLY")]
+        [TestCase("NUNIT_TREE", "CATEGORY")]
+        [TestCase("NUNIT_TREE", "OUTCOME")]
+        [TestCase("NUNIT_TREE", "DURATION")]
+        // TODO: FIX
+        //[TestCase("TEST_LIST", "UNGROUPED")]
+        [TestCase("TEST_LIST", "ASSEMBLY")]
+        [TestCase("TEST_LIST", "CATEGORY")]
+        [TestCase("TEST_LIST", "OUTCOME")]
+        [TestCase("TEST_LIST", "DURATION")]
+        public void VisualStateIsSavedCorrectly(string displayFormat, string groupBy)
         {
             // Arrange
             _model.TestsInRun.Returns(new TestSelection());
             _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-            var tv = new TreeView();
-            _view.TreeView.Returns(tv);
-
-            var project = new TestCentricProject(new GuiOptions(TestFileName));
-            _model.TestCentricProject.Returns(project);
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            FireTestLoadedEvent(testNode);
-
-            _model.TreeConfiguration.DisplayFormat.Returns("TEST_LIST");
-            _model.TreeConfiguration.TestListGroupBy.Returns(groupBy);
-            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
-
-            // Act
-            FireRunStartingEvent(1234);
-
-            // Assert
-            string fileName = VisualState.GetVisualStateFileName(TestFileName);
-            VisualState visualState = VisualState.LoadFrom(fileName);
-            Assert.That(visualState.GroupBy, Is.EqualTo(groupBy));
-        }
-
-        [TestCase("UNGROUPED")]
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
-        [TestCase("DURATION")]
-        public void WhenTestRunStarts_NUnitTree_CurrentGroupBy_IsSaved_InVisualFile(string groupBy)
-        {
-            // Arrange
-            _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
-
+            _settings.Gui.TestTree.DisplayFormat = displayFormat;
+            _model.TreeConfiguration.DisplayFormat = displayFormat;
+            _model.TreeConfiguration.TestListGroupBy = groupBy;
+            _model.TreeConfiguration.NUnitGroupBy = groupBy;
             var tv = new TreeView();
             _view.TreeView.Returns(tv);
 
@@ -224,9 +203,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             TestNode testNode = new TestNode("<test-suite id='1'/>");
             _model.LoadedTests.Returns(testNode);
             _model.TestsInRun.Returns(new TestSelection());
-
             FireTestLoadedEvent(testNode);
-            _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
+            _model.TreeConfiguration.DisplayFormat = displayFormat;
             _model.TreeConfiguration.NUnitGroupBy = groupBy;
 
             // Act
@@ -235,16 +213,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             // Assert
             string fileName = VisualState.GetVisualStateFileName(TestFileName);
             VisualState visualState = VisualState.LoadFrom(fileName);
+            Assert.That(visualState.DisplayStrategy, Is.EqualTo(displayFormat));
             Assert.That(visualState.GroupBy, Is.EqualTo(groupBy));
         }
-
-        // TODO: Version 1 Test - Make it work if needed.
-        //[Test]
-        //public void WhenTestRunStarts_ResultsAreCleared()
-        //{
-        //    _settings.RunStarting += Raise.Event<TestEventHandler>(new TestEventArgs(TestAction.RunStarting, "Dummy", 1234));
-
-        //    _view.Received().ClearResults();
-        //}
     }
 }
