@@ -114,6 +114,8 @@ namespace TestCentric.Gui.Model
         /// </summary>
         void CreateNewProject();
 
+        bool TryLoadVisualState(out VisualState visualState);
+
         /// <summary>
         /// Add the test files to the current test project
         /// </summary>
@@ -131,7 +133,7 @@ namespace TestCentric.Gui.Model
 
         void OpenExistingFile(string filename);
 
-        void SaveProject(string filename);
+        void SaveProject(string filename = null);
 
         void CloseProject();
 
