@@ -8,7 +8,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
 using NUnit.Engine.Services;
@@ -321,6 +323,19 @@ namespace TestCentric.Gui.Model
             TestCentricProject = new TestCentricProject();
         }
 
+        public bool TryLoadVisualState(out VisualState visualState)
+        {
+            visualState = null;
+
+            if (Options.InputFiles.Count > 0)
+            {
+                var filename = VisualState.GetVisualStateFileName(Options.InputFiles[0]);
+                if (File.Exists(filename))
+                    visualState = VisualState.LoadFrom(filename);
+            }
+
+            return visualState != null;
+        }
         public void AddTests(IEnumerable<string> fileNames)
         {
             if (!IsProjectLoaded)
@@ -379,9 +394,21 @@ namespace TestCentric.Gui.Model
                 CreateNewProject(new[] { filename });
         }
 
-        public void SaveProject(string filename)
+
+        public void SaveProject(string filename = null)
         {
-            TestCentricProject.SaveAs(filename);
+            Guard.OperationValid(filename is not null || TestCentricProject.ProjectPath is not null,
+                "Cannot save a previously unsaved project without providing a file name.");
+
+            if (filename is not null)
+                TestCentricProject.SaveAs(filename);
+            else
+                TestCentricProject.Save();
+
+            // Save VisualState in the same directory as the project
+            //_events.RequestVisualState().ShouldNotBeNull().Save(
+            //    Path.ChangeExtension(TestCentricProject.ProjectPath, ".VisualState.xml"));
+                
             RecentFiles.Latest = TestCentricProject.ProjectPath;
         }
 
@@ -389,6 +416,9 @@ namespace TestCentric.Gui.Model
         {
             if (HasTests)
                 UnloadTests();
+
+            if (TestCentricProject.ProjectPath is not null)
+                SaveProject();
 
             TestCentricProject = null;
 

@@ -116,4 +116,9 @@ namespace TestCentric.Gui.Model
 
         public Exception Exception;
     }
+
+    public class VisualStateEventArgs : TestEventArgs
+    {
+        public VisualState VisualState;
+    }
 }

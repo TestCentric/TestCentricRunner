@@ -3,14 +3,9 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TestCentric.Gui
+namespace TestCentric.Gui.Model
 {
     public class VisualStateTestBase
     {

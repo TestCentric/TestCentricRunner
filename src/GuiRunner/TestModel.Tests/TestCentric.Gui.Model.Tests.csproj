@@ -10,6 +10,10 @@
     </PropertyGroup>
 	
     <ItemGroup>
+      <Compile Include="..\TestCentric.Gui.Tests\TreeViewExtensions.cs" Link="TreeViewExtensions.cs" />
+    </ItemGroup>
+	
+    <ItemGroup>
         <ProjectReference Include="..\..\TestData\mock-assembly\mock-assembly.csproj" />
         <ProjectReference Include="..\TestModel\TestCentric.Gui.Model.csproj" />
     </ItemGroup>

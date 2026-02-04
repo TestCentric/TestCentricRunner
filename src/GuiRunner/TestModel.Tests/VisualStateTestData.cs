@@ -6,7 +6,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace TestCentric.Gui
+namespace TestCentric.Gui.Model
 {
     public class VisualStateTestData
     {

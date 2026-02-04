@@ -6,18 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using System.Xml;
-using NUnit.Framework.Interfaces;
-using TestCentric.Gui.Presenters;
-using System.Runtime.Serialization;
 using System.Collections;
-using System.Xml.Linq;
 
-namespace TestCentric.Gui
+namespace TestCentric.Gui.Model
 {
     public class VisualStateSerializationTests : VisualStateTestBase
     {

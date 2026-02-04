@@ -58,9 +58,11 @@ namespace TestCentric.Gui.Model
             TestCentricProjectLoaded?.Invoke(new TestEventArgs());
         }
 
-        public void FireTestCentricProjecReloaded()
+        public VisualState RequestVisualState()
         {
-            TestCentricProjectReloaded?.Invoke(new TestEventArgs());
+            VisualStateEventArgs args = new VisualStateEventArgs();
+            VisualStateRequest?.Invoke(args);
+            return args.VisualState;
         }
 
         public void FireTestCentricProjectUnloaded()
@@ -134,8 +136,8 @@ namespace TestCentric.Gui.Model
 
         // TestCentricProject loading events
         public event TestEventHandler TestCentricProjectLoaded;
-        public event TestEventHandler TestCentricProjectReloaded;
         public event TestEventHandler TestCentricProjectUnloaded;
+        public event VisualStateEventHandler VisualStateRequest;
 
         // Test loading events
         public event TestFilesLoadingEventHandler TestsLoading;
