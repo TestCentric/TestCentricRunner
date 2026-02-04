@@ -55,8 +55,9 @@ namespace TestCentric.Gui.Presenters
             {
                 EnsureNonRunnableFilesAreVisible(ea.Test);
 
-                bool visualStateLoaded = TryLoadVisualState(out VisualState visualState);
-                UpdateTreeConfiguration(visualState);
+                bool visualStateLoaded = _model.TryLoadVisualState(out VisualState visualState);
+                if (visualStateLoaded)
+                    this.UpdateTreeConfiguration(visualState);
                 Strategy = _treeDisplayStrategyFactory.Create(TreeConfiguration.DisplayFormat, _view, _model);
 
                 _view.CategoryFilter.Init(_model);
@@ -76,7 +77,7 @@ namespace TestCentric.Gui.Presenters
                     _view.CategoryFilter.Close();
                     _view.CategoryFilter.Init(_model);
 
-                    TryLoadVisualState(out VisualState visualState);
+                    _model.TryLoadVisualState(out VisualState visualState);
                     Strategy.OnTestLoaded(ea.Test, visualState);
                     _view.CheckBoxes = _view.ShowCheckBoxes.Checked; // TODO: View should handle this
                 });
@@ -91,19 +92,18 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestsUnloading += ea =>
             {
-                Strategy.SaveVisualState();
+                SaveVisualState();
                 ClosePropertiesDisplay();
                 CloseXmlDisplay();
             };
 
-            _model.Events.TestsReloading += ea => Strategy.SaveVisualState();
-
+            _model.Events.TestsReloading += ea => SaveVisualState();
 
             _model.Events.RunStarting += (ea) =>
             {
                 // Save the visual state in case test run causes an exception
                 // or user terminates cancels the run.
-                Strategy.SaveVisualState();
+                SaveVisualState();
 
                 Strategy.OnTestRunStarting();
                 CheckPropertiesDisplay();
@@ -122,6 +122,11 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestFinished += OnTestFinished;
             _model.Events.SuiteFinished += OnTestFinished;
+
+            _model.Events.VisualStateRequest += (ea) =>
+            {
+                ea.VisualState = Strategy.CreateVisualState();
+            };
 
             _model.Settings.Changed += OnSettingsChanged;
             TreeConfiguration.Changed += OnTreeConfigurationChanged;
@@ -293,6 +298,12 @@ namespace TestCentric.Gui.Presenters
             //};
         }
 
+        public void SaveVisualState()
+        {
+            VisualState visualState = Strategy.CreateVisualState();
+            visualState.Save(VisualState.GetVisualStateFileName(_model.TestCentricProject.TestFiles[0]));
+        }
+
         private void OnSettingsChanged(object sender, SettingsEventArgs e)
         {
             switch (e.SettingName)
@@ -405,20 +416,6 @@ namespace TestCentric.Gui.Presenters
 
             _propertiesDisplay?.OnTestFinished(args.Result);
             _xmlDisplay?.OnTestFinished(args.Result);
-        }
-
-        private bool TryLoadVisualState(out VisualState visualState)
-        {
-            visualState = null;
-
-            if (_model.TestCentricProject.TestFiles.Count > 0)
-            {
-                var filename = VisualState.GetVisualStateFileName(_model.TestCentricProject.TestFiles[0]);
-                if (File.Exists(filename))
-                    visualState = VisualState.LoadFrom(filename);
-            }
-
-            return visualState != null;
         }
 
         TestPropertiesDialog _propertiesDisplay;

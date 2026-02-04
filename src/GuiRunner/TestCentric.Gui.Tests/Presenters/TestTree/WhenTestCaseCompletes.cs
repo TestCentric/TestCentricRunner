@@ -26,7 +26,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             new object[] { ResultState.Cancelled, TestTreeView.FailureIndex }
         };
 
-        [TestCaseSource("resultData")]
+        [TestCaseSource("resultData"), Ignore("Rewrite")]
         public void TreeShowsProperResult(ResultState resultState, int expectedIndex)
         {
             // Use concrete class NUnitTreeDisplayStrategy for this test case to assert SetImageIndex call

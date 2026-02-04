@@ -5,6 +5,7 @@
 
 using NSubstitute;
 using NUnit.Framework;
+using TestCentric.Gui.Model;
 
 namespace TestCentric.Gui.Presenters.Main
 {

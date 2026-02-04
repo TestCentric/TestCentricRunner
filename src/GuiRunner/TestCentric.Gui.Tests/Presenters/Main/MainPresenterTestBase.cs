@@ -20,7 +20,7 @@ namespace TestCentric.Gui.Presenters.Main
         public void CreatePresenter()
         {
             _model.ResultFormats.Returns(new[] { "nunit3" });
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
+            _presenter = new TestCentricPresenter(_view, _model);
         }
 
         [TearDown]

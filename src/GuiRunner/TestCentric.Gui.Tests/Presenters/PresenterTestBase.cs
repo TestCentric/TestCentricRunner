@@ -23,6 +23,7 @@ namespace TestCentric.Gui.Presenters
         protected TView _view;
         protected ITestModel _model;
         protected IUserSettings _settings;
+        protected GuiOptions _options;
 
         [SetUp]
         public void Initialize()
@@ -33,6 +34,8 @@ namespace TestCentric.Gui.Presenters
             _settings.Gui.TestTree.AlternateImageSet.Returns("Classic");
             _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
             _model.Settings.Returns(_settings);
+            _options = new GuiOptions();
+            _model.Options.Returns(_options);
             //_model.TestProject.Returns(new TestCentricProject(_model, "Dummy.dll"));
         }
 

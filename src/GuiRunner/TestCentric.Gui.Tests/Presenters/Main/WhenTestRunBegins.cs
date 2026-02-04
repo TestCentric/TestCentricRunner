@@ -49,5 +49,15 @@ namespace TestCentric.Gui.Presenters.Main
         {
             ViewElement(propName).Received().Visible = visible;
         }
+
+        [Test]
+        public void TestCentricProjectIsSaved()
+        {
+            var project = Substitute.For<TestCentricProject>(new GuiOptions("test.dll"));
+            _model.TestCentricProject.Returns(project);
+
+            this.FireRunStartingEvent(123);
+            project.Received().SaveAs("test.dll.tcproj");
+        }
     }
 }

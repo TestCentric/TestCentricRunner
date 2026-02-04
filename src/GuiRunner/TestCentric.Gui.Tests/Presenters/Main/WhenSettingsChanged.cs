@@ -87,7 +87,6 @@ namespace TestCentric.Gui.Presenters.Main
             // 2. Act
             _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
-
             // 3. Assert
             Assert.That(_view.ShowHideFilterButton.Visible, Is.EqualTo(expectedState));
             Assert.That(_view.ShowHideFilterButton.Enabled, Is.EqualTo(expectedState));
@@ -103,7 +102,7 @@ namespace TestCentric.Gui.Presenters.Main
             _view.TreeView.ShowCheckBoxes.Checked.Returns(checkBoxVisible);
 
             // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model, new GuiOptions());
+            _presenter = new TestCentricPresenter(_view, _model);
             _view.TreeView.ShowCheckBoxes.CheckedChanged += Raise.Event<CommandHandler>();
 
             // 3. Assert

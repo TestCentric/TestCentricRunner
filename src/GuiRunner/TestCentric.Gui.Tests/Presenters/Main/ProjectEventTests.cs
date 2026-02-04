@@ -12,52 +12,49 @@ namespace TestCentric.Gui.Presenters.Main
 {
     using NUnit.Common;
 
+    [TestFixture("dummy.dll")]
+    [TestFixture("test1.dll", "test2.dll")]
     public class ProjectEventTests : MainPresenterTestBase
     {
-        [Test, Ignore("Needs work")] // TODO: Find a way to test this more narrowly
-        public void WhenProjectIsCreated_TitleBarIsSet()
+        private string[] _testFiles;
+        private TestCentricProject _project;
+
+        private const string DEFAULT_TITLE_BAR = "TestCentric Runner for NUnit";
+
+        public ProjectEventTests(params string[] testFiles)
         {
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
-            _model.TestCentricProject.Returns(project);
+            _testFiles = testFiles;
+        }
 
-            FireProjectLoadedEvent();
-
-            _view.Received().Title = "TestCentric - UNNAMED.tcproj";
+        [SetUp]
+        public void CreateProject()
+        {
+            _project = new TestCentricProject(new GuiOptions(_testFiles));
+            _model.TestCentricProject.Returns(_project);
+            _model.TopLevelPackage.Returns(_project.TopLevelPackage);
         }
 
         [Test]
-        public void WhenProjectIsClosed_TitleBarIsSet()
+        public void WhenProjectIsCreated_TitleBarIsSetToDefault()
+        {
+            FireProjectLoadedEvent();
+
+            _view.Received().Title = DEFAULT_TITLE_BAR;
+        }
+
+        [Test]
+        public void WhenProjectIsClosed_TitleBarIsSetToDefault()
         {
             FireProjectUnloadedEvent();
 
-            _view.Received().Title = "TestCentric Runner for NUnit"; 
+            _view.Received().Title = DEFAULT_TITLE_BAR; 
         }
 
-
-        [Test]
-        public void WhenProjectIsSaved_TitleBarIsSet()
-        {
-            // Arrange
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
-            _model.TestCentricProject.Returns(project);
-            _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs("TestCentric.tcproj");
-
-            // Act
-            project.SaveAs("TestCentric.tcproj");
-            _view.SaveProjectCommand.Execute += Raise.Event<CommandHandler>();
-
-            // Assert
-            _model.Received().SaveProject("TestCentric.tcproj");
-            _view.Received().Title = "TestCentric - TestCentric.tcproj";
-        }
-
-        [TestCase(true), Ignore("Needs work")] // TODO: Find a way to test this more narrowly
+        [TestCase(true)]
         [TestCase(false)]
         public void WhenProjectIsLoaded_RunAsX86Command_IsUpdatedFromProjectSetting(bool runAsX86)
         {
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
-            project.SetTopLevelSetting(SettingDefinitions.RunAsX86.WithValue(runAsX86));
-            _model.TestCentricProject.Returns(project);
+            _project.SetTopLevelSetting(SettingDefinitions.RunAsX86.WithValue(runAsX86));
 
             FireProjectLoadedEvent();
 

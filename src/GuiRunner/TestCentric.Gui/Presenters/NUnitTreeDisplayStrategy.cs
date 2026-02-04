@@ -113,7 +113,17 @@ namespace TestCentric.Gui.Presenters
             TreeViewBuilder?.OnTestRunFinished(nodesInRun);
         }
 
-        protected override VisualState CreateVisualState() => new VisualState("NUNIT_TREE", TreeConfiguration.NUnitGroupBy, TreeConfiguration.ShowNamespaces).LoadFrom(_view.TreeView);
+        public override VisualState CreateVisualState()
+        {
+            VisualState visualState = null;
+
+            _view.InvokeIfRequired(() =>
+            {
+                visualState = new VisualState("NUNIT_TREE", _model.TreeConfiguration.NUnitGroupBy, _model.TreeConfiguration.ShowNamespaces).LoadFrom(_view.TreeView);
+            });
+
+            return visualState;
+        }
 
         private void SetDefaultInitialExpansion()
         {

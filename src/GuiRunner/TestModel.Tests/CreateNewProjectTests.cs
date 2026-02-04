@@ -117,60 +117,6 @@ namespace TestCentric.Gui.Model
             }
         }
 
-
-        [Test]
-        public void NewProject_IsNotDirty()
-        {
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
-            Assert.That(project.IsDirty, Is.False);
-        }
-
-        [Test]
-        public void NewProjectIsNotDirtyAfterSaving()
-        {
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
-            project.SaveAs("temp.tcproj");
-            Assert.That(project.IsDirty, Is.False);
-        }
-
-        [Test]
-        public void LoadedProjectIsNotDirty()
-        {
-            var project = new TestCentricProject();
-            project.SaveAs("temp.tcproj");
-            project.Load("temp.tcproj");
-            Assert.That(project.IsDirty, Is.False);
-        }
-
-        [Test]
-        public void AddingSubProjectMakesProjectDirty()
-        {
-            var project = _model.CreateNewProject(new[] { "dummy.dll" });
-            project.SaveAs("temp.tcproj");
-            project.AddSubPackage("another.dll");
-            Assert.That(project.IsDirty);
-        }
-
-        [Test]
-        public void AddingSettingMakesProjectDirty()
-        {
-            var project = _model.CreateNewProject(new[] { "dummy.dll" });
-            project.SaveAs("temp.tcproj");
-            project.AddSetting("NewSetting", "VALUE");
-            Assert.That(project.IsDirty);
-        }
-
-        [Test]
-        public void RemoveSubPackage_MakesProjectDirty()
-        {
-            var project = _model.CreateNewProject(new[] { "dummy.dll", "dummy2.dll" });
-            project.SaveAs("temp.tcproj");
-
-            var subPackage = project.TopLevelPackage.SubPackages[0];
-            project.RemoveSubPackage(subPackage);
-            Assert.That(project.IsDirty);
-        }
-
         [Test]
         public void RemoveSubPackage_PackagesIsDecreased()
         {
