@@ -5,7 +5,6 @@
 
 using System;
 using System.Drawing;
-using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace TestCentric.Gui
@@ -69,12 +68,13 @@ namespace TestCentric.Gui
 
         private void SelectIconImage(MessageBoxIcon icon)
         {
+            System.Reflection.Assembly assembly = GetType().Assembly;
             iconPictureBox.Image = icon switch
             {
-                MessageBoxIcon.Information => SystemIcons.Information.ToBitmap(),
-                MessageBoxIcon.Warning => SystemIcons.Warning.ToBitmap(),
-                MessageBoxIcon.Error => SystemIcons.Error.ToBitmap(),
-                MessageBoxIcon.Question => SystemIcons.Question.ToBitmap(),
+                MessageBoxIcon.Information => (new Bitmap(assembly.GetManifestResourceStream("TestCentric.Gui.Resources.Information.png"))),
+                MessageBoxIcon.Warning => (new Bitmap(assembly.GetManifestResourceStream("TestCentric.Gui.Resources.Warning.png"))),   
+                MessageBoxIcon.Error => (new Bitmap(assembly.GetManifestResourceStream("TestCentric.Gui.Resources.Error.png"))),
+                MessageBoxIcon.Question => (new Bitmap(assembly.GetManifestResourceStream("TestCentric.Gui.Resources.Question.png"))),
                 _ => null // Includes MessageBoxIcon.None
             };
 
