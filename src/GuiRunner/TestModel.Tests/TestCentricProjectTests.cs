@@ -308,6 +308,34 @@ namespace TestCentric.Gui.Model
         }
 
         [Test]
+        public void AddSetting_InvokedTwice_StoresCorrectly()
+        {
+            // 1. Arrange
+            TestCentricProject project = new TestCentricProject();
+
+            // 2. Act
+            project.AddSetting("BoolSetting", true);
+            project.AddSetting("BoolSetting", true);
+
+            // 3. Assert
+            Assert.That(project.TopLevelPackage.Settings.GetSetting("BoolSetting"), Is.EqualTo(true));
+        }
+
+        [Test]
+        public void AddSetting_InvokedTwice2_StoresCorrectly()
+        {
+            // 1. Arrange
+            TestCentricProject project = new TestCentricProject();
+
+            // 2. Act
+            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
+            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
+
+            // 3. Assert
+            Assert.That(project.TopLevelPackage.Settings.GetSetting(SettingDefinitions.DebugTests.Name), Is.EqualTo(true));
+        }
+
+        [Test]
         public void RemoveSetting_ByName_RemovesSettingFromProject()
         {
             // 1. Arrange
