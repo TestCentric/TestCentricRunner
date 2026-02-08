@@ -143,7 +143,11 @@
 	<ItemGroup>
         <EmbeddedResource Include="Images\pinned.gif" />
         <EmbeddedResource Include="Images\unpinned.gif" />
-    </ItemGroup>
+        <EmbeddedResource Include="Resources\Error.png" />
+        <EmbeddedResource Include="Resources\Information.png" />
+        <EmbeddedResource Include="Resources\Question.png" />
+        <EmbeddedResource Include="Resources\Warning.png" />
+	</ItemGroup>
     
 	<ItemGroup>
         <Compile Update="Properties\Resources.Designer.cs">

@@ -26,7 +26,7 @@ namespace TestCentric.Gui
         private static readonly IMessageDisplay DefaultDialog = new MessageDisplayForm(DEFAULT_CAPTION);
 
         public static void Error(string message, string caption = DEFAULT_CAPTION) =>
-            DefaultDialog.Info(message, caption);
+            DefaultDialog.Error(message, caption);
 
         public static void Info(string message, string caption = DEFAULT_CAPTION) =>
             DefaultDialog.Info(message, caption);
