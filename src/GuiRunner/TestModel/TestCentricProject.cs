@@ -169,29 +169,32 @@ namespace TestCentric.Gui.Model
 
         public void AddSetting(PackageSetting setting)
         {
-            RemoveSetting(setting.Name);
             TopLevelPackage.AddSetting(setting);
             IsDirty = true;
         }
 
         public void AddSetting(string key, string value)
         {
-            RemoveSetting(key);
             TopLevelPackage.AddSetting(key, value);
             IsDirty = true;
         }
 
         public void AddSetting(string key, bool value)
         {
-            RemoveSetting(key);
             TopLevelPackage.AddSetting(key, value);
             IsDirty = true;
         }
 
         public void AddSetting(string key, int value)
         {
-            RemoveSetting(key);
             TopLevelPackage.AddSetting(key, value);
+            IsDirty = true;
+        }
+
+        public void ApplySetting(PackageSetting setting)
+        {
+            RemoveSetting(setting.Name);
+            TopLevelPackage.AddSetting(setting);
             IsDirty = true;
         }
 
