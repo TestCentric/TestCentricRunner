@@ -13,10 +13,16 @@ namespace TestCentric.Gui.Presenters.TestTree
     using Model;
     using Views;
 
-    // TODO: FIX
-    [Ignore("Rewrite")]
-    public class WhenTestSuiteCompletes : TreeViewPresenterTestBase
+    public class WhenTestSuiteCompletes : PresenterTestBase<ITestTreeView>
     {
+        private TreeViewPresenter _presenter;
+
+        [SetUp]
+        public void Setup()
+        {
+            _presenter = new TreeViewPresenter(_view, _model, new TreeDisplayStrategyFactory());
+        }
+
         static object[] resultData = new object[] {
             new object[] { ResultState.Success, TestTreeView.SuccessIndex },
             new object[] { ResultState.Ignored, TestTreeView.IgnoredIndex },
@@ -31,13 +37,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         [TestCaseSource("resultData")]
         public void TreeShowsProperResult(ResultState resultState, int expectedIndex)
         {
-            // Use concrete class NUnitTreeDisplayStrategy for this test case to assert SetImageIndex call
-            _treeDisplayStrategyFactory.Create("NUNIT_TREE", _view, _model)
-                .Returns((x) => new NUnitTreeDisplayStrategy(x.Arg<ITestTreeView>(), x.Arg<ITestModel>()));
-            _model.IsProjectLoaded.Returns(true);
-            _model.HasTests.Returns(true);
-            _model.HasResults.Returns(true);
-
             var result = resultState.Status.ToString();
             var label = resultState.Label;
 
@@ -49,13 +48,20 @@ namespace TestCentric.Gui.Presenters.TestTree
                                                 ? string.Format("<test-suite id='200' result='{0}'/>", result)
                                                 : string.Format("<test-suite id='200' result='{0}' label='{1}'/>", result, label));
 
-            _model.LoadedTests.Returns(testNode);
             _model.GetTestById("100").Returns(testNode.Children.First());
             _model.TestResultManager.GetResultForTest("100").Returns(resultNode);
             _model.TestResultManager.GetResultForTest("200").Returns(testCaseResultNode);
 
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
-            _model.TestCentricProject.Returns(project);
+            // Make it look like the view loaded
+            _view.Load += Raise.Event<System.EventHandler>(_view, new System.EventArgs());
+
+            TreeView treeView = new TreeView();
+            _view.TreeView.Returns(treeView);
+
+            // We can't construct a TreeNodeCollection, so we fake it
+            var nodes = new TreeNode().Nodes;
+            nodes.Add(new TreeNode("test.dll"));
+            _view.Nodes.Returns(nodes);
 
             _model.Events.TestLoaded += Raise.Event<TestNodeEventHandler>(new TestNodeEventArgs(testNode));
             _model.Events.SuiteFinished += Raise.Event<TestResultEventHandler>(new TestResultEventArgs(resultNode));

@@ -31,12 +31,14 @@ namespace TestCentric.Gui.Presenters
             _view = Substitute.For<TView>();
             _model = Substitute.For<ITestModel>();
             _settings = Substitute.For<IUserSettings>();
-            _settings.Gui.TestTree.AlternateImageSet.Returns("Classic");
-            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
-            _model.Settings.Returns(_settings);
             _options = new GuiOptions();
+
+            _model.Settings.Returns(_settings);
             _model.Options.Returns(_options);
             //_model.TestProject.Returns(new TestCentricProject(_model, "Dummy.dll"));
+
+            _settings.Gui.TestTree.AlternateImageSet.Returns("Classic");
+            _settings.Gui.TestTree.DisplayFormat.Returns("NUNIT_TREE");
         }
 
         #region Helper Methods

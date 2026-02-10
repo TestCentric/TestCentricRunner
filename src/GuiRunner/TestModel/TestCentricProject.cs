@@ -164,7 +164,6 @@ namespace TestCentric.Gui.Model
         {
             RemoveSetting(setting.Name);
             TopLevelPackage.AddSetting(setting);
-            IsDirty = true;
         }
 
         public void RemoveSetting(string key)
