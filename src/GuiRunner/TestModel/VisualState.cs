@@ -6,17 +6,12 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Xml.Schema;
 using System.Xml;
-using System.Xml.Linq;
-using TestCentric.Gui.Controls;
-using TestCentric.Gui.Model;
-using TestCentric.Gui.Presenters;
 
-namespace TestCentric.Gui
+namespace TestCentric.Gui.Model
 {
     /// <summary>
     /// The VisualState class holds the latest visual state for a project.
@@ -90,34 +85,39 @@ namespace TestCentric.Gui
         {
             ShowCheckBoxes = treeView.CheckBoxes;
 
-            treeView.InvokeIfRequired(() =>
-            {
-                foreach (TreeNode treeNode in treeView.Nodes)
-                    ProcessTreeNode(treeNode, this.Nodes);
-            });
+            if (treeView.InvokeRequired)
+                treeView.Invoke(InternalLoadFrom);
+            else
+                InternalLoadFrom(treeView);
 
             return this;
 
-            void ProcessTreeNode(TreeNode treeNode, List<VisualTreeNode> visualNodes)
+            void InternalLoadFrom(TreeView treeView)
             {
-                bool isSelectedNode = treeNode == treeNode.TreeView.SelectedNode;
-                bool isTopNode = treeNode == treeNode.TreeView.TopNode;
-
-                var visualNode = new VisualTreeNode()
-                {
-                    Name = GetName(treeNode),
-                    Expanded = treeNode.IsExpanded,
-                    Checked = treeNode.Checked,
-                    Selected = isSelectedNode,
-                    IsTopNode = isTopNode
-                };
-
-                if (treeNode.IsExpanded || treeNode.Checked || isSelectedNode || isTopNode)
-                    RecordVisualNode(visualNode, visualNodes);
-
-                foreach (TreeNode childNode in treeNode.Nodes)
-                    ProcessTreeNode(childNode, visualNode.Nodes);
+                foreach (TreeNode treeNode in treeView.Nodes)
+                    ProcessTreeNode(treeNode, this.Nodes);
             }
+        }
+
+        void ProcessTreeNode(TreeNode treeNode, List<VisualTreeNode> visualNodes)
+        {
+            bool isSelectedNode = treeNode == treeNode.TreeView.SelectedNode;
+            bool isTopNode = treeNode == treeNode.TreeView.TopNode;
+
+            var visualNode = new VisualTreeNode()
+            {
+                Name = GetName(treeNode),
+                Expanded = treeNode.IsExpanded,
+                Checked = treeNode.Checked,
+                Selected = isSelectedNode,
+                IsTopNode = isTopNode
+            };
+
+            if (treeNode.IsExpanded || treeNode.Checked || isSelectedNode || isTopNode)
+                RecordVisualNode(visualNode, visualNodes);
+
+            foreach (TreeNode childNode in treeNode.Nodes)
+                ProcessTreeNode(childNode, visualNode.Nodes);
         }
 
         private void RecordVisualNode(VisualTreeNode visualNode, List<VisualTreeNode> visualNodes)
@@ -427,10 +427,8 @@ namespace TestCentric.Gui
 
         private static string GetName(TreeNode treeNode)
         {
-            if (treeNode.Tag is TestNode testNode)
-                return testNode.Name;
-            else if (treeNode.Tag is TestGroup testGroup)
-                return testGroup.Name;
+            if (treeNode.Tag is ITestItem testItem)
+                return testItem.Name;
 
             return treeNode.Text;
         }
@@ -438,28 +436,20 @@ namespace TestCentric.Gui
         #endregion
     }
 
-    //[Serializable]
     public class VisualTreeNode
     {
-        //[XmlAttribute]
         public string Name;
 
-        //[XmlAttribute, DefaultValue(false)]
         public bool Expanded;
 
-        //[XmlAttribute, DefaultValue(false)]
         public bool Checked;
 
-        //[XmlAttribute, DefaultValue(false)]
         public bool Selected;
 
-        //[XmlAttribute, DefaultValue(false)]
         public bool IsTopNode;
 
-        //[XmlArrayItem("Node")]
         public List<VisualTreeNode> Nodes = new List<VisualTreeNode>();
 
-        //[XmlIgnore]
         public bool NodesSpecified => Nodes.Count > 0;
 
         // Provided for use in test output

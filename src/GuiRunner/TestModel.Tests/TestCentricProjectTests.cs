@@ -50,7 +50,6 @@ namespace TestCentric.Gui.Model
             Assert.That(project, Is.Not.Null);
             Assert.That(project.TestFiles, Is.Not.Null);
             Assert.That(project.TestFiles.Count, Is.EqualTo(0));
-            Assert.That(project.IsDirty, Is.False);
         }
 
         [Test]
@@ -62,7 +61,6 @@ namespace TestCentric.Gui.Model
             // 2. Assert
             Assert.That(project.TestFiles.Count, Is.EqualTo(1));
             Assert.That(project.TestFiles[0], Is.EqualTo("TestAssembly.dll"));
-            Assert.That(project.IsDirty, Is.False);
         }
 
         [Test]
@@ -77,7 +75,6 @@ namespace TestCentric.Gui.Model
             // 3. Assert
             Assert.That(project.TestFiles.Count, Is.EqualTo(3));
             Assert.That(project.TestFiles, Is.EquivalentTo(filenames));
-            Assert.That(project.IsDirty, Is.False);
         }
 
         [Test]
@@ -117,132 +114,6 @@ namespace TestCentric.Gui.Model
 
             // 2. Assert
             Assert.That(result, Is.EqualTo(expected));
-        }
-
-        #endregion
-
-        #region IsDirty Tests
-
-        [Test]
-        public void IsDirty_NewProject_IsFalse()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-
-            // 2. Act & Assert
-            Assert.That(project.IsDirty, Is.False);
-        }
-
-        [Test]
-        public void IsDirty_AfterSetTopLevelSetting_IsTrue()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-
-            // 2. Act
-            project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.True);
-        }
-
-        [Test]
-        public void IsDirty_AfterRemoveSetting_IsTrue()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-
-            // 2. Act
-            project.RemoveSetting(SettingDefinitions.DebugTests.Name);
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.True);
-        }
-
-        [Test]
-        public void IsDirty_AfterSetSubPackageSetting_IsTrue()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-
-            // 2. Act
-            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.True);
-        }
-
-        [Test]
-        public void IsDirty_AfterAddPackageSetting_IsTrue()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-
-            // 2. Act
-            project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.True);
-        }
-
-        [Test]
-        public void IsDirty_AfterAddSubPackage_IsTrue()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-
-            // 2. Act
-            project.AddSubPackage("NewTest.dll");
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.True);
-        }
-
-        [Test]
-        public void IsDirty_AfterRemoveSubPackage_IsTrue()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject(new GuiOptions("Test1.dll", "Test2.dll" ));
-            var subPackage = project.TopLevelPackage.SubPackages[0];
-
-            // 2. Act
-            project.RemoveSubPackage(subPackage);
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.True);
-        }
-
-        [Test]
-        public void IsDirty_AfterSave_IsFalse()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-            project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
-            Assert.That(project.IsDirty, Is.True);
-
-            // 2. Act
-            project.SaveAs("TestCentricTestProject.tcproj");
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.False);
-        }
-
-        [Test]
-        public void IsDirty_AfterLoad_IsFalse()
-        {
-            // 1. Arrange
-            TestCentricProject project = new TestCentricProject();
-            project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
-            project.SaveAs("TestCentricTestProject.tcproj");
-            
-            project.SetTopLevelSetting(SettingDefinitions.MaxAgents.WithValue(5));
-            Assert.That(project.IsDirty, Is.True);
-
-            // 2. Act
-            project.Load("TestCentricTestProject.tcproj");
-
-            // 3. Assert
-            Assert.That(project.IsDirty, Is.False);
         }
 
         #endregion
@@ -468,7 +339,6 @@ namespace TestCentric.Gui.Model
 
             // 3. Assert
             Assert.That(File.Exists("TestCentricTestProject.tcproj"), Is.True);
-            Assert.That(project.IsDirty, Is.False);
         }
 
         [Test]

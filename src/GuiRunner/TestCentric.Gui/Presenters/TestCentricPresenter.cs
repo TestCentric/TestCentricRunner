@@ -63,13 +63,13 @@ namespace TestCentric.Gui.Presenters
 
         #region Constructor
 
-        public TestCentricPresenter(IMainView view, ITestModel model, GuiOptions options)
+        public TestCentricPresenter(IMainView view, ITestModel model)
         {
             _view = view;
             _model = model;
-            _options = options;
-            TreeConfiguration = _model.TreeConfiguration;
 
+            _options = _model.Options;
+            TreeConfiguration = _model.TreeConfiguration;
             _settings = _model.Settings;
 
             _agentSelectionController = new AgentSelectionController(_model, _view);
@@ -94,9 +94,26 @@ namespace TestCentric.Gui.Presenters
         {
             #region Model Events
 
-            _model.Events.TestCentricProjectLoaded += (TestEventArgs e) => OnProjectLoaded();
+            _model.Events.TestCentricProjectLoaded += (TestEventArgs e) =>
+            {
+                // Update checked state according to loaded project settings
+                // Unregister CheckedChanged event temporarily to avoid reloading (while loading a project)
+                _view.RunAsX86.CheckedChanged -= OnRunAsX86Changed;
+                _view.RunAsX86.Checked = _model.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86);
+                _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
+
+                UpdateTitlebar();
+            };
 
             _model.Events.TestCentricProjectUnloaded += (TestEventArgs e) => UpdateTitlebar();
+
+            void UpdateTitlebar()
+            {
+                var projectPath = _model.TestCentricProject?.ProjectPath;
+                _view.Title = projectPath is not null
+                    ? $"TestCentric - {_model.TestCentricProject.ProjectPath}"
+                    : "TestCentric Runner for NUnit";
+            }
 
             _model.Events.TestsLoading += (TestFilesLoadingEventArgs e) =>
             {
@@ -119,8 +136,10 @@ namespace TestCentric.Gui.Presenters
                 _view.ResultTabs.InvokeIfRequired(() => _view.ResultTabs.SelectedIndex = 0);
             };
 
-            _model.Events.TestsUnloading += (TestEventArgse) =>
+            _model.Events.TestsUnloading += (TestEventArgs e) =>
             {
+                _model.SaveProject();
+
                 UpdateViewCommands();
 
                 BeginLongRunningOperation("Unloading...");
@@ -303,22 +322,16 @@ namespace TestCentric.Gui.Presenters
 
             _view.FormClosing += (s, e) =>
             {
-                if (_model.IsProjectLoaded)
+                if (_model.IsProjectLoaded && _model.IsTestRunning)
                 {
-                    if (_model.IsTestRunning)
+                    if (!_view.MessageDisplay.YesNo("A test is running, do you want to forcibly stop the test and exit?"))
                     {
-                        if (!_view.MessageDisplay.YesNo("A test is running, do you want to forcibly stop the test and exit?"))
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        _stopRequested = _forcedStopRequested = true;
-                        _model.StopTestRun(true);
+                        e.Cancel = true;
+                        return;
                     }
 
-                    if (CloseProject() == DialogResult.Cancel)
-                        e.Cancel = true;
+                    _stopRequested = _forcedStopRequested = true;
+                    _model.StopTestRun(true);
                 }
 
                 if (!e.Cancel)
@@ -342,12 +355,40 @@ namespace TestCentric.Gui.Presenters
                 _view.RecentFilesMenu.Enabled = !isTestRunning;
             };
 
-            _view.OpenTestCentricProjectCommand.Execute += OpenTestCentricProject;
-            _view.OpenTestAssemblyCommand.Execute += OpenTestAssembly;
+            _view.OpenTestCentricProjectCommand.Execute += () =>
+            {
+                var filter = "TestCentric Projects (*.tcproj)|*.tcproj";
 
-            _view.SaveProjectCommand.Execute += SaveProject;
+                string file = _view.DialogManager.GetFileOpenPath("Existing Project", filter);
+                if (!string.IsNullOrEmpty(file))
+                    _model.OpenExistingProject(file);
+            };
 
-            _view.CloseProjectCommand.Execute += () => CloseProject();
+            _view.OpenTestAssemblyCommand.Execute += () =>
+            {
+                string[] files = _view.DialogManager.SelectMultipleFiles("New Project", CreateOpenFileFilter());
+                if (files.Any())
+                    _model.CreateNewProject(files);
+            };
+
+            _view.SaveProjectCommand.Execute += () =>
+            {
+                var projectPath = _model.TestCentricProject.ProjectPath;
+
+                if (string.IsNullOrEmpty(projectPath))
+                    projectPath = _model.TestCentricProject.TestFiles.Count == 1
+                        ? _model.TestCentricProject.TestFiles[0] + ".tcproj"
+                        : _view.DialogManager.GetFileSavePath(
+                            "Save TestCentric Project",
+                            "TestCentric Project(*.tcproj) | *.tcproj",
+                            _model.WorkDirectory, null);
+
+                if (projectPath is not null)
+                    _model.SaveProject(projectPath);
+            };
+
+            _view.CloseProjectCommand.Execute += () => _model.CloseProject();
+
             _view.AddTestFilesCommand.Execute += AddTestFiles;
             _view.ReloadTestsCommand.Execute += ReloadTests;
 
@@ -592,94 +633,6 @@ namespace TestCentric.Gui.Presenters
         public ImageSetManager ImageSetManager { get; }
 
         private ITreeConfiguration TreeConfiguration { get; }
-
-
-        #endregion
-
-        #region Project Management
-
-        private void OpenTestCentricProject()
-        {
-            var filter = "TestCentric Projects (*.tcproj)|*.tcproj";
-
-            string file = _view.DialogManager.GetFileOpenPath("Existing Project", filter);
-
-            try
-            {
-                if (!string.IsNullOrEmpty(file))
-                    _model.OpenExistingProject(file);
-            }
-            catch (Exception exception)
-            {
-                _view.MessageDisplay.Error("Unable to open project\n\n" + MessageBuilder.FromException(exception));
-            }
-        }
-
-        private void OpenTestAssembly()
-        {
-            string[] files = _view.DialogManager.SelectMultipleFiles("New Project", CreateOpenFileFilter());
-            if (files.Any())
-                _model.CreateNewProject(files);
-        }
-
-        private void SaveProject()
-        {
-            var projectPath = _view.DialogManager.GetFileSavePath("Save TestCentric Project", "TestCentric Project(*.tcproj) | *.tcproj", _model.WorkDirectory, null);
-            if (projectPath != null)
-            {
-                try
-                {
-                    _model.SaveProject(projectPath);
-                    UpdateTitlebar();
-                }
-                catch (Exception exception)
-                {
-                    _view.MessageDisplay.Error("Unable to save project\n\n" + MessageBuilder.FromException(exception));
-                }
-            }
-        }
-
-        private void UpdateTitlebar()
-        {
-            string title = "TestCentric Runner for NUnit";
-            if (_model.TestCentricProject != null)
-            {
-                title = $"TestCentric - {_model.TestCentricProject.ProjectPath ?? "UNNAMED.tcproj"}";
-
-            }
-            _view.Title = title;
-        }
-
-        private void OnProjectLoaded()
-        {
-            // Update checked state according to loaded project settings
-            // Unregister CheckedChanged event temporarily to avoid reloading (while loading a project)
-            _view.RunAsX86.CheckedChanged -= OnRunAsX86Changed;
-            _view.RunAsX86.Checked = _model.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86);
-            _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
-
-            UpdateTitlebar();
-        }
-
-        #endregion
-
-        #region Close Methods
-
-        public DialogResult CloseProject()
-        {
-            DialogResult messageBoxResult = DialogResult.OK;
-            if (!_options.Unattended && _model.TestCentricProject.IsDirty)
-            {
-                messageBoxResult = _view.MessageDisplay.YesNoCancel($"Do you want to save {_model.TestCentricProject.ProjectPath}?");
-                if (messageBoxResult == DialogResult.Yes)
-                    SaveProject();
-            }
-
-            if (messageBoxResult != DialogResult.Cancel)
-                _model.CloseProject();
-
-            return messageBoxResult;
-        }
 
         #endregion
 
