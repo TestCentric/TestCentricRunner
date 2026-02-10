@@ -8,6 +8,7 @@ namespace TestCentric.Gui.Model
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Security.Principal;
     using NSubstitute;
     using NUnit.Common;
     using NUnit.Framework;
@@ -305,6 +306,33 @@ namespace TestCentric.Gui.Model
             Assert.That(project.TopLevelPackage.Settings.GetSetting("BoolSetting"), Is.EqualTo(true));
             Assert.That(project.TopLevelPackage.Settings.GetSetting("IntSetting"), Is.EqualTo(42));
             Assert.That(project.TopLevelPackage.Settings.GetSetting("StringSetting"), Is.EqualTo("TestValue"));
+        }
+
+        [Test]
+        public void ApplySetting_Setting_IsStore()
+        {
+            // 1. Arrange
+            TestCentricProject project = new TestCentricProject();
+
+            // 2. Act
+            project.ApplySetting(SettingDefinitions.PrincipalPolicy.WithValue(PrincipalPolicy.WindowsPrincipal.ToString()));
+
+            // 3. Assert
+            Assert.That(project.TopLevelPackage.Settings.GetSetting(SettingDefinitions.PrincipalPolicy.Name), Is.EqualTo(PrincipalPolicy.WindowsPrincipal.ToString()));
+        }
+
+        [Test]
+        public void ApplySetting_SettingWasSetPreviouslySet_SettingsIsUpdated()
+        {
+            // 1. Arrange
+            TestCentricProject project = new TestCentricProject();
+
+            // 2. Act
+            project.ApplySetting(SettingDefinitions.DebugTests.WithValue(true));
+            project.ApplySetting(SettingDefinitions.DebugTests.WithValue(false));
+
+            // 3. Assert
+            Assert.That(project.TopLevelPackage.Settings.GetSetting(SettingDefinitions.DebugTests.Name), Is.EqualTo(false));
         }
 
         [Test]

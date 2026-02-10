@@ -13,6 +13,7 @@ namespace TestCentric.Gui.Model
 {
     using System.Xml;
     using NUnit;
+    using TestCentric.Gui.Model.Settings;
 
     public class TestCentricProject
     {
@@ -187,6 +188,13 @@ namespace TestCentric.Gui.Model
         public void AddSetting(string key, int value)
         {
             TopLevelPackage.AddSetting(key, value);
+            IsDirty = true;
+        }
+
+        public void ApplySetting(PackageSetting setting)
+        {
+            RemoveSetting(setting.Name);
+            TopLevelPackage.AddSetting(setting);
             IsDirty = true;
         }
 
