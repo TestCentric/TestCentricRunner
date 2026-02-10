@@ -93,8 +93,7 @@ namespace TestCentric.Gui.Presenters.Main
             _model.DidNotReceiveWithAnyArgs().OpenExistingProject(null);
         }
 
-        // TODO: FIX
-        [Test, Ignore("Rewrite")]
+        [Test, Ignore("Needs rewriting after implementation of MessageDispayForm")]
         public void OpenTestCentricProjectCommand_ThrowsException_ErrorMessage_IsDisplayed()
         {
             _view.DialogManager.GetFileOpenPath(null, null).ReturnsForAnyArgs("Test.tcproj");
