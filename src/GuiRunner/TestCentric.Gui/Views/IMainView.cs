@@ -79,7 +79,7 @@ namespace TestCentric.Gui.Views
         ICommand StopRunButton { get; }
         ICommand ForceStopButton { get; }
 
-        IViewElement DisplayFormatButton { get; }
+        IPopup DisplayFormatButton { get; }
         ISelection DisplayFormat { get; }
         ISelection TestListGroupBy { get; }
         ISelection NUnitGroupBy { get; }

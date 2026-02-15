@@ -54,12 +54,12 @@ namespace TestCentric.Gui.Views
             this.nunitTreeByCategoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeByOutcomeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeByDurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textListUngroupedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textListByAssemblyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textListByFixtureMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textListByCategoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textListByOutcomeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textListByDurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testListUngroupedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testListByAssemblyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testListByFixtureMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testListByCategoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testListByOutcomeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testListByDurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showFilterButton = new System.Windows.Forms.ToolStripButton();
             this.runParametersButton = new System.Windows.Forms.ToolStripButton();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
@@ -239,7 +239,6 @@ namespace TestCentric.Gui.Views
             this.displayFormatButton.Size = new System.Drawing.Size(29, 21);
             this.displayFormatButton.Text = "Display";
             this.displayFormatButton.ToolTipText = "Tree Display Format";
-            this.displayFormatButton.DropDown.Closing += DisplayFormatDropDown_Closing;
             // 
             // nunitTreeMenuItem
             // 
@@ -248,7 +247,6 @@ namespace TestCentric.Gui.Views
             this.nunitTreeMenuItem.Tag = "NUNIT_TREE";
             this.nunitTreeMenuItem.Text = "NUnit Tree";
             this.nunitTreeMenuItem.DropDownItems.AddRange(new ToolStripItem[] { nunitTreeShowNamespaceMenuItem, nunitTreeSeparator, nunitTreeUngroupedMenuItem, nunitTreeByCategoryMenuItem, nunitTreeByOutcomeMenuItem, nunitTreeByDurationMenuItem });
-            this.nunitTreeMenuItem.CheckedChanged += DisplayFormatNUnitTreeChanged;
             // 
             // testListMenuItem
             // 
@@ -256,15 +254,14 @@ namespace TestCentric.Gui.Views
             this.testListMenuItem.Size = new System.Drawing.Size(141, 22);
             this.testListMenuItem.Tag = "TEST_LIST";
             this.testListMenuItem.Text = "Test List";
-            this.testListMenuItem.DropDownItems.AddRange(new ToolStripItem[] { textListUngroupedMenuItem, textListByAssemblyMenuItem, textListByFixtureMenuItem, textListByCategoryMenuItem, textListByOutcomeMenuItem, textListByDurationMenuItem });
-            this.testListMenuItem.CheckedChanged += DisplayFormatTestListChanged;
+            this.testListMenuItem.DropDownItems.AddRange(new ToolStripItem[] { testListUngroupedMenuItem, testListByAssemblyMenuItem, testListByFixtureMenuItem, testListByCategoryMenuItem, testListByOutcomeMenuItem, testListByDurationMenuItem });
+            //
             // nunitTreeShowNamespaceMenuItem
             // 
             this.nunitTreeShowNamespaceMenuItem.Name = "nunitTreeShowNamespaceMenuItem";
             this.nunitTreeShowNamespaceMenuItem.Size = new System.Drawing.Size(198, 22);
             this.nunitTreeShowNamespaceMenuItem.Tag = "NUNIT_TREE_SHOW_NAMESPACE";
             this.nunitTreeShowNamespaceMenuItem.Text = "Show Namespace";
-            this.nunitTreeShowNamespaceMenuItem.Visible = false;
             // 
             // nunitTreeSeparator
             // 
@@ -277,7 +274,6 @@ namespace TestCentric.Gui.Views
             this.nunitTreeUngroupedMenuItem.Size = new System.Drawing.Size(198, 22);
             this.nunitTreeUngroupedMenuItem.Tag = "UNGROUPED";
             this.nunitTreeUngroupedMenuItem.Text = "No grouping";
-            this.nunitTreeUngroupedMenuItem.Visible = false;
             //
             // nunitTreeByCategoryMenuItem
             //
@@ -285,7 +281,6 @@ namespace TestCentric.Gui.Views
             this.nunitTreeByCategoryMenuItem.Size = new System.Drawing.Size(198, 22);
             this.nunitTreeByCategoryMenuItem.Tag = "CATEGORY";
             this.nunitTreeByCategoryMenuItem.Text = "By Category";
-            this.nunitTreeByCategoryMenuItem.Visible = false;
             //
             // nunitTreeByOutcomeMenuItem
             //
@@ -293,7 +288,6 @@ namespace TestCentric.Gui.Views
             this.nunitTreeByOutcomeMenuItem.Size = new System.Drawing.Size(198, 22);
             this.nunitTreeByOutcomeMenuItem.Tag = "OUTCOME";
             this.nunitTreeByOutcomeMenuItem.Text = "By Outcome";
-            this.nunitTreeByOutcomeMenuItem.Visible = false;
             //
             // nunitTreeByDurationMenuItem
             //
@@ -301,55 +295,48 @@ namespace TestCentric.Gui.Views
             this.nunitTreeByDurationMenuItem.Size = new System.Drawing.Size(198, 22);
             this.nunitTreeByDurationMenuItem.Tag = "DURATION";
             this.nunitTreeByDurationMenuItem.Text = "By Duration";
-            this.nunitTreeByDurationMenuItem.Visible = false;
             //
-            // textListUngroupedMenuItem
+            // testListUngroupedMenuItem
             //
-            this.textListUngroupedMenuItem.Name = "textListUngroupedMenuItem";
-            this.textListUngroupedMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.textListUngroupedMenuItem.Tag = "UNGROUPED";
-            this.textListUngroupedMenuItem.Text = "Simple List";
-            this.textListUngroupedMenuItem.Visible = false;
+            this.testListUngroupedMenuItem.Name = "textListUngroupedMenuItem";
+            this.testListUngroupedMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListUngroupedMenuItem.Tag = "UNGROUPED";
+            this.testListUngroupedMenuItem.Text = "Simple List";
             // 
-            // textListByAssemblyMenuItem
+            // testListByAssemblyMenuItem
             // 
-            this.textListByAssemblyMenuItem.Name = "textListByAssemblyMenuItem";
-            this.textListByAssemblyMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.textListByAssemblyMenuItem.Tag = "ASSEMBLY";
-            this.textListByAssemblyMenuItem.Text = "By Assembly";
-            this.textListByAssemblyMenuItem.Visible = false;
+            this.testListByAssemblyMenuItem.Name = "textListByAssemblyMenuItem";
+            this.testListByAssemblyMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByAssemblyMenuItem.Tag = "ASSEMBLY";
+            this.testListByAssemblyMenuItem.Text = "By Assembly";
             // 
-            // textListByFixtureMenuItem
+            // testListByFixtureMenuItem
             // 
-            this.textListByFixtureMenuItem.Name = "textListByFixtureMenuItem";
-            this.textListByFixtureMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.textListByFixtureMenuItem.Tag = "FIXTURE";
-            this.textListByFixtureMenuItem.Text = "By Fixture";
-            this.textListByFixtureMenuItem.Visible = false;
+            this.testListByFixtureMenuItem.Name = "textListByFixtureMenuItem";
+            this.testListByFixtureMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByFixtureMenuItem.Tag = "FIXTURE";
+            this.testListByFixtureMenuItem.Text = "By Fixture";
             // 
-            // textListByCategoryMenuItem
+            // testListByCategoryMenuItem
             // 
-            this.textListByCategoryMenuItem.Name = "textListByCategoryMenuItem";
-            this.textListByCategoryMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.textListByCategoryMenuItem.Tag = "CATEGORY";
-            this.textListByCategoryMenuItem.Text = "By Category";
-            this.textListByCategoryMenuItem.Visible = false;
+            this.testListByCategoryMenuItem.Name = "textListByCategoryMenuItem";
+            this.testListByCategoryMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByCategoryMenuItem.Tag = "CATEGORY";
+            this.testListByCategoryMenuItem.Text = "By Category";
             // 
-            // textListByOutcomeMenuItem
+            // testListByOutcomeMenuItem
             // 
-            this.textListByOutcomeMenuItem.Name = "textListByOutcomeMenuItem";
-            this.textListByOutcomeMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.textListByOutcomeMenuItem.Tag = "OUTCOME";
-            this.textListByOutcomeMenuItem.Text = "By Outcome";
-            this.textListByOutcomeMenuItem.Visible = false;
+            this.testListByOutcomeMenuItem.Name = "textListByOutcomeMenuItem";
+            this.testListByOutcomeMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByOutcomeMenuItem.Tag = "OUTCOME";
+            this.testListByOutcomeMenuItem.Text = "By Outcome";
             // 
-            // textListByDurationMenuItem
+            // testListByDurationMenuItem
             // 
-            this.textListByDurationMenuItem.Name = "textListByDurationMenuItem";
-            this.textListByDurationMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.textListByDurationMenuItem.Tag = "DURATION";
-            this.textListByDurationMenuItem.Text = "By Duration";
-            this.textListByDurationMenuItem.Visible = false;
+            this.testListByDurationMenuItem.Name = "textListByDurationMenuItem";
+            this.testListByDurationMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByDurationMenuItem.Tag = "DURATION";
+            this.testListByDurationMenuItem.Text = "By Duration";
             // 
             // showFilterButton
             // 
@@ -932,36 +919,6 @@ namespace TestCentric.Gui.Views
 
         }
 
-        private void DisplayFormatDropDown_Closing(object sender, ToolStripDropDownClosingEventArgs e)
-        {
-            e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
-        }
-
-        private void DisplayFormatNUnitTreeChanged(object sender, EventArgs e)
-        {
-            nunitTreeShowNamespaceMenuItem.Visible =
-            nunitTreeSeparator.Visible =
-            nunitTreeUngroupedMenuItem.Visible =
-            nunitTreeByCategoryMenuItem.Visible =
-            nunitTreeByOutcomeMenuItem.Visible =
-            nunitTreeByDurationMenuItem.Visible = nunitTreeMenuItem.Checked;
-            if (nunitTreeMenuItem.Checked && nunitTreeMenuItem.Visible)
-                this.nunitTreeMenuItem.DropDown.Show();
-        }
-
-        private void DisplayFormatTestListChanged(object sender, EventArgs e)
-        {
-            textListUngroupedMenuItem.Visible =
-            textListByAssemblyMenuItem.Visible =
-            textListByFixtureMenuItem.Visible =
-            textListByCategoryMenuItem.Visible =
-            textListByOutcomeMenuItem.Visible =
-            textListByDurationMenuItem.Visible = testListMenuItem.Checked;
-
-            if (testListMenuItem.Checked && testListMenuItem.Visible)
-                this.testListMenuItem.DropDown.Show();
-        }
-
         #endregion
 
         private System.Windows.Forms.Panel leftPanel;
@@ -1040,12 +997,12 @@ namespace TestCentric.Gui.Views
         private ToolStripMenuItem nunitTreeByCategoryMenuItem;
         private ToolStripMenuItem nunitTreeByOutcomeMenuItem;
         private ToolStripMenuItem nunitTreeByDurationMenuItem;
-        private ToolStripMenuItem textListUngroupedMenuItem;
-        private ToolStripMenuItem textListByAssemblyMenuItem;
-        private ToolStripMenuItem textListByFixtureMenuItem;
-        private ToolStripMenuItem textListByCategoryMenuItem;
-        private ToolStripMenuItem textListByOutcomeMenuItem;
-        private ToolStripMenuItem textListByDurationMenuItem;
+        private ToolStripMenuItem testListUngroupedMenuItem;
+        private ToolStripMenuItem testListByAssemblyMenuItem;
+        private ToolStripMenuItem testListByFixtureMenuItem;
+        private ToolStripMenuItem testListByCategoryMenuItem;
+        private ToolStripMenuItem testListByOutcomeMenuItem;
+        private ToolStripMenuItem testListByDurationMenuItem;
         private ToolStripButton stopRunButton;
         private ToolStripButton forceStopButton;
         private ProgressBarView progressBar;

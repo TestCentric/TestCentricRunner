@@ -12,6 +12,7 @@ namespace TestCentric.Gui.Views
 {
     using Controls;
     using Elements;
+    using TestCentric.Gui.Elements.ToolStripElements;
 
     public partial class TestCentricMainView : TestCentricFormBase, IMainView
     {
@@ -81,7 +82,7 @@ namespace TestCentric.Gui.Views
             RunFailedButton = new ToolStripButtonElement(runFailedButton);
             StopRunButton = new ToolStripButtonElement(stopRunButton);
             ForceStopButton = new ToolStripButtonElement(forceStopButton);
-            DisplayFormatButton = new ToolStripElement(displayFormatButton);
+            DisplayFormatButton = new DisplayFormatButton(displayFormatButton);
             DisplayFormat = new CheckedToolStripMenuGroup(
                 "displayFormat",
                 nunitTreeMenuItem, testListMenuItem);
@@ -90,7 +91,7 @@ namespace TestCentric.Gui.Views
                 nunitTreeUngroupedMenuItem, nunitTreeByCategoryMenuItem, nunitTreeByOutcomeMenuItem, nunitTreeByDurationMenuItem);
             TestListGroupBy = new CheckedToolStripMenuGroup(
                 "TestListGroupBy",
-                textListUngroupedMenuItem, textListByAssemblyMenuItem, textListByFixtureMenuItem, textListByCategoryMenuItem, textListByOutcomeMenuItem, textListByDurationMenuItem);
+                testListUngroupedMenuItem, testListByAssemblyMenuItem, testListByFixtureMenuItem, testListByCategoryMenuItem, testListByOutcomeMenuItem, testListByDurationMenuItem);
             ShowNamespace = new CheckedMenuElement(nunitTreeShowNamespaceMenuItem);
             ShowHideFilterButton = new ToolStripButtonElement(showFilterButton);
             RunParametersButton = new ToolStripButtonElement(runParametersButton);
@@ -181,7 +182,7 @@ namespace TestCentric.Gui.Views
         public ICommand StopRunButton { get; private set; }
         public ICommand ForceStopButton { get; private set; }
 
-        public IViewElement DisplayFormatButton { get; private set; }
+        public IPopup DisplayFormatButton { get; private set; }
         public ISelection DisplayFormat { get; private set; }
         public ISelection NUnitGroupBy { get; private set; }
         public ISelection TestListGroupBy { get; private set; }
