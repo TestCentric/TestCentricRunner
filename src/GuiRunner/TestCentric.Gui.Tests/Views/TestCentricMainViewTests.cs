@@ -62,22 +62,22 @@ namespace TestCentric.Gui.Views
             Assert.That(menuItem, Is.Not.Null);
 
             menuItem.Checked = checkState;
-            var subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "textListUngroupedMenuItem");
+            var subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListUngroupedMenuItem");
             Assert.That(subMenuItem, Is.Not.Null);
 
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "textListByDurationMenuItem");
+            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByDurationMenuItem");
             Assert.That(subMenuItem, Is.Not.Null);
 
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "textListByCategoryMenuItem");
+            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByCategoryMenuItem");
             Assert.That(subMenuItem, Is.Not.Null);
 
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "textListByOutcomeMenuItem");
+            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByOutcomeMenuItem");
             Assert.That(subMenuItem, Is.Not.Null);
 
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "textListByAssemblyMenuItem");
+            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByAssemblyMenuItem");
             Assert.That(subMenuItem, Is.Not.Null);
 
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "textListByFixtureMenuItem");
+            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByFixtureMenuItem");
             Assert.That(subMenuItem, Is.Not.Null);
         }
 

@@ -24,10 +24,8 @@ namespace TestCentric.Gui.Presenters
         public void SetUp()
         {
             // Ensure that model always has at least an empty package with no settings
-            var options = new GuiOptions();
-            _model.Options.Returns(options);
             _model.IsProjectLoaded.Returns(true);
-            _model.TestCentricProject.Returns(new TestCentricProject(options));
+            _model.TestCentricProject.Returns(new TestCentricProject("MyProject"));
             _model.TopLevelPackage.Returns(new NUnit.Engine.TestPackage());
             
             // Create a real ToolStripMenuItem to get a real collection
@@ -322,7 +320,7 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_AgentNotSupportedByPackage_DisablesAgentMenuItem()
         {
             // 1. Arrange
-            var project = new TestCentricProject();
+            var project = new TestCentricProject("MyProject");
             _model.TestCentricProject.Returns(project);
             _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
@@ -361,7 +359,7 @@ namespace TestCentric.Gui.Presenters
         public void UpdateMenuItems_DefaultAlwaysEnabled()
         {
             // 1. Arrange
-            var project = new TestCentricProject();
+            var project = new TestCentricProject("MyProject");
             _model.TestCentricProject.Returns(project);
             _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string>()); // No agents supported
             
@@ -389,7 +387,7 @@ namespace TestCentric.Gui.Presenters
         public void ClickingAgentMenuItem_UnchecksOtherItems()
         {
             // 1. Arrange
-            var project = new TestCentricProject();
+            var project = new TestCentricProject("MyProject");
             _model.TestCentricProject.Returns(project);
             _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
@@ -421,7 +419,7 @@ namespace TestCentric.Gui.Presenters
         public void ClickingAgentMenuItem_SetsProjectSettings()
         {
             // 1. Arrange
-            var project = new TestCentricProject();
+            var project = new TestCentricProject("MyProject");
             _model.TestCentricProject.Returns(project);
             _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string> 
             { 
@@ -451,7 +449,7 @@ namespace TestCentric.Gui.Presenters
         public void ClickingDefaultMenuItem_RemovesAgentSettings()
         {
             // 1. Arrange
-            var project = new TestCentricProject();
+            var project = new TestCentricProject("MyProject");
             _model.TestCentricProject.Returns(project);
             project.AddSetting(SettingDefinitions.SelectedAgentName.WithValue("SomeAgent"));
             project.AddSetting(SettingDefinitions.RequestedAgentName.WithValue("SomeAgent"));
@@ -480,7 +478,7 @@ namespace TestCentric.Gui.Presenters
         public void ClickingAlreadyCheckedItem_DoesNothing()
         {
             // 1. Arrange
-            var project = new TestCentricProject();
+            var project = new TestCentricProject("MyProject");
             _model.TestCentricProject.Returns(project);
             _model.GetAgentsForPackage(null).ReturnsForAnyArgs(new List<string>());
             _model.AvailableAgents.Returns(new List<string>());

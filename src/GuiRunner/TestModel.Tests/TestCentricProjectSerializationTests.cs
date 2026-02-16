@@ -17,11 +17,6 @@ namespace TestCentric.Gui.Model
 		private const string CR = "\r";
 		private const string LF = "\n";
 
-        // Settings automatically added to all packages
-        // TODO: Review this
-        const string TOP_DEFAULT_SETTINGS = "ShadowCopyFiles = \"True\" InternalTraceLevel = \"Off\" MaxAgents = \"0\"";
-        const string ALL_DEFAULT_SETTINGS = "ShadowCopyFiles = \"True\" InternalTraceLevel = \"Off\"";
-
         private static readonly string TEMP_PATH = Path.GetFullPath(Path.GetTempFileName());
 
 		[TearDown] public void CleanUp()
@@ -33,8 +28,7 @@ namespace TestCentric.Gui.Model
 		[Test]
 		public void SaveAndReloadTestProject()
 		{
-            var options = new GuiOptions("test1.dll", "test2.dll");
-			var project = new TestCentricProject(options);
+			var project = new TestCentricProject("MyProject", "test1.dll", "test2.dll");
 			var package = project.TopLevelPackage;
 			var subPackages = package.SubPackages;
 			Assert.That(subPackages.Count, Is.EqualTo(2));
@@ -56,11 +50,11 @@ namespace TestCentric.Gui.Model
                 <?xml version = "1.0" encoding="utf-8"?>
                 <TestCentricProject>
                 <TestPackage id="{package.ID}">
-                <Settings {TOP_DEFAULT_SETTINGS} foo="bar" num="42" critical="True" />
+                <Settings foo="bar" num="42" critical="True" />
                 <TestPackage id="{subPackages[0].ID}" fullname="{Path.GetFullPath("test1.dll")}">
-                <Settings {ALL_DEFAULT_SETTINGS} foo="bar" num="42" critical="True" cpu="x86" /></TestPackage>
+                <Settings foo="bar" num="42" critical="True" cpu="x86" /></TestPackage>
                 <TestPackage id="{subPackages[1].ID}" fullname="{Path.GetFullPath("test2.dll")}">
-                <Settings {ALL_DEFAULT_SETTINGS} foo="bar" num="42" critical="True" /></TestPackage></TestPackage>
+                <Settings foo="bar" num="42" critical="True" /></TestPackage></TestPackage>
                 </TestCentricProject>
                 """.Replace(CR, string.Empty).Replace(LF, string.Empty);
 
@@ -70,8 +64,7 @@ namespace TestCentric.Gui.Model
 			Assert.That(doc.OuterXml, CompareConstraint.IsIdenticalTo(expectedXml));
 
             // Load the saved file into a new project and check that
-            var newProject = new TestCentricProject();
-            newProject.Load(TEMP_PATH);
+            var newProject = TestCentricProject.LoadFrom(TEMP_PATH);
             Assert.That(newProject.ProjectPath, Is.EqualTo(TEMP_PATH));
             Assert.That(newProject.TopLevelPackage, Is.Not.Null);
 
@@ -89,15 +82,13 @@ namespace TestCentric.Gui.Model
         [Test]
 		public void SaveAndReloadEmptyTestProject()
 		{
-			var project = new TestCentricProject();
+			var project = new TestCentricProject("MyProject");
 			project.SaveAs(TEMP_PATH);
 
             string expectedXml = $"""
                 <?xml version="1.0" encoding="utf-8"?>
                 <TestCentricProject>
-                <TestPackage id="{project.TopLevelPackage.ID}">
-                <Settings {TOP_DEFAULT_SETTINGS} />
-                </TestPackage>
+                <TestPackage id="{project.TopLevelPackage.ID}" />
                 </TestCentricProject>
                 """.Replace(CR, string.Empty).Replace(LF, string.Empty);
 
@@ -107,8 +98,7 @@ namespace TestCentric.Gui.Model
             Assert.That(doc.OuterXml, CompareConstraint.IsIdenticalTo(expectedXml));
 
             // Load the saved file into a new project and check that
-            var newProject = new TestCentricProject();
-			newProject.Load(TEMP_PATH);
+            var newProject = TestCentricProject.LoadFrom(TEMP_PATH);
             Assert.That(newProject.ProjectPath, Is.EqualTo(TEMP_PATH));
             Assert.That(newProject.TopLevelPackage.ID, Is.EqualTo(project.TopLevelPackage.ID));
             Assert.That(newProject.TopLevelPackage.HasSubPackages, Is.False);

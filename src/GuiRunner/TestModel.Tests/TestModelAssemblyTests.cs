@@ -23,7 +23,7 @@ namespace TestCentric.Gui.Model
             _model = new TestModel(new TestEngine());
             var mockAssemblyPath = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
             Assert.That(File.Exists(mockAssemblyPath));
-            var project = _model.CreateNewProject([ mockAssemblyPath ]);
+            var project = _model.CreateNewProject("MyProject", mockAssemblyPath);
             _model.LoadTests(project.TestFiles);
         }
 

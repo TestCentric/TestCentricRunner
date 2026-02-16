@@ -36,7 +36,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             var treeView = new TreeView();
             _view.TreeView.Returns(treeView);
 
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
+            var project = new TestCentricProject("MyProject", "dummy.dll");
             _model.TestCentricProject.Returns(project);
 
             _strategy = GetDisplayStrategy();

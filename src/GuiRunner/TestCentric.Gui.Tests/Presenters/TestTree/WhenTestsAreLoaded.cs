@@ -22,7 +22,6 @@ namespace TestCentric.Gui.Presenters.TestTree
         const string TEST_FILE_NAME = "TreeViewPresenterTestsLoaded.dll";
         static readonly string VISUAL_STATE_FILE_NAME = VisualState.GetVisualStateFileName(TEST_FILE_NAME);
         static readonly TestNode TEST_NODE = new TestNode("<test-suite id='1'/>");
-        static readonly GuiOptions OPTIONS = new GuiOptions(TEST_FILE_NAME);
 
         private TreeViewPresenter _presenter;
 
@@ -34,8 +33,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _presenter = new TreeViewPresenter(_view, _model, new TreeDisplayStrategyFactory());
             _model.HasTests.Returns(true);
             _model.IsTestRunning.Returns(false);
-            _model.Options.Returns(OPTIONS);
-            _model.TestCentricProject.Returns(new TestCentricProject(OPTIONS));
+            _model.TestCentricProject.Returns(new TestCentricProject("MyProject", TEST_FILE_NAME));
             _model.TreeConfiguration.Returns(new TreeConfiguration());
             _model.LoadedTests.Returns(TEST_NODE);
 

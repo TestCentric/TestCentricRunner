@@ -12,17 +12,14 @@ namespace TestCentric.Gui.Model
     {
         public string DisplayStrategy;
         public string Grouping;
+        public string ExpectedGrouping;
         public VisualState InitialVisualState;
 
-        public VisualStateTestData(string strategy)
-        {
-            DisplayStrategy = strategy;
-        }
-
-        public VisualStateTestData(string strategy, string grouping)
+        public VisualStateTestData(string strategy, string grouping = null)
         {
             DisplayStrategy = strategy;
             Grouping = grouping;
+            ExpectedGrouping = grouping ?? "UNGROUPED";
         }
 
         public TreeView GetInitialTreeView()
@@ -39,7 +36,7 @@ namespace TestCentric.Gui.Model
                             TN("FixtureB", TN("Test6")))));
 
                 case "TEST_LIST":
-                    switch (Grouping)
+                    switch (ExpectedGrouping)
                     {
                         case "UNGROUPED":
                             return CreateTreeView(
@@ -88,6 +85,8 @@ namespace TestCentric.Gui.Model
             tv.SelectedNode = tv.Search("Test2");
             if (DisplayStrategy == "NUNIT_TREE" || Grouping == "ASSEMBLY")
                 tv.TopNode = tv.Search("Assembly1");
+            //else if (Grouping == "UNGROUPED")
+            //    tv.TopNode = tv.Nodes[0];
             else if (Grouping == "FIXTURE")
                 tv.TopNode = tv.Search("MyFixture");
             else if (Grouping == "CATEGORY")
@@ -103,7 +102,7 @@ namespace TestCentric.Gui.Model
             switch (DisplayStrategy)
             {
                 case "NUNIT_TREE":
-                    return  CreateVisualState(
+                    return CreateVisualState(
                         DisplayStrategy,
                         null,
                         true,
@@ -120,7 +119,7 @@ namespace TestCentric.Gui.Model
                                 VTN("FixtureA", EXP + CHK))));
 
                 case "TEST_LIST":
-                    switch (Grouping)
+                    switch (ExpectedGrouping)
                     {
                         case "UNGROUPED":
                             return CreateVisualState(
@@ -185,7 +184,7 @@ namespace TestCentric.Gui.Model
                     return GetExpectedVisualState();
 
                 case "TEST_LIST":
-                    switch (Grouping)
+                    switch (ExpectedGrouping)
                     {
                         case "UNGROUPED":
                         case "ASSEMBLY":
@@ -287,7 +286,7 @@ namespace TestCentric.Gui.Model
             return visualState;
         }
 
-        // Override ToString so tests deplay clearly
+        // Override ToString so tests display clearly
         public override string ToString()
         {
             return DisplayStrategy == "NUNIT_TREE"

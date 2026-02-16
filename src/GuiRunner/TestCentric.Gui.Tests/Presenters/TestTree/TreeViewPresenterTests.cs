@@ -417,7 +417,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.HasTests.Returns(hasTests);
             _model.IsTestRunning.Returns(isTestRunning);
 
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
+            var project = new TestCentricProject("MyProject", "dummy.dll");
             _model.TestCentricProject.Returns(project);
 
             // 2. Act
@@ -438,7 +438,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.HasTests.Returns(true);
             _model.IsTestRunning.Returns(false);
 
-            var project = new TestCentricProject(new GuiOptions("dummy.dll", "dummy2.dll"));
+            var project = new TestCentricProject("MyProject", "dummy.dll", "dummy2.dll");
             _model.TestCentricProject.Returns(project);
 
             // 2. Act
@@ -475,7 +475,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.HasTests.Returns(hasTests);
             _model.IsTestRunning.Returns(isTestRunning);
 
-            var project = new TestCentricProject(new GuiOptions("dummy.dll"));
+            var project = new TestCentricProject("MyProject", "dummy.dll");
             _model.TestCentricProject.Returns(project);
 
             // 2. Act
@@ -496,7 +496,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.HasTests.Returns(true);
             _model.IsTestRunning.Returns(false);
 
-            var project = new TestCentricProject(new GuiOptions("dummy.dll", "dummy2.dll"));
+            var project = new TestCentricProject("MyProject", "dummy.dll", "dummy2.dll");
             _model.TestCentricProject.Returns(project);
 
             // 2. Act

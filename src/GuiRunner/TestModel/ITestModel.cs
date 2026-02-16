@@ -106,15 +106,13 @@ namespace TestCentric.Gui.Model
         #region Methods
 
         // Create a new project containing the provided test files
-        TestCentricProject CreateNewProject(string[] filenames);
-        void CreateNewProject(GuiOptions options);
+        TestCentricProject CreateNewProject(string projectName, params string[] filenames);
 
-        /// <summary>
-        /// Create a new empty project
-        /// </summary>
-        void CreateNewProject();
+        void CreateNewProject(string projectName, GuiOptions options);
 
         bool TryLoadVisualState(out VisualState visualState);
+
+        void SaveVisualState(VisualState visualState);
 
         /// <summary>
         /// Add the test files to the current test project

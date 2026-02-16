@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace TestCentric.Gui.Views
@@ -32,6 +33,47 @@ namespace TestCentric.Gui.Views
             return dlg.ShowDialog() == DialogResult.OK
                 ? dlg.FileName
                 : null;
+        }
+
+        // TODO: Can we remove tcproj option?
+        public string CreateOpenFileFilter(bool nunit = false, bool vs = false, bool tcproj = false)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            // If any project types are supported, build Projects & Assemblies entry
+            if (nunit || vs || tcproj)
+            {
+                List<string> supportedSuffix = new List<string>();
+                if (nunit)
+                    supportedSuffix.Add("*.nunit");
+                if (vs)
+                    supportedSuffix.AddRange(new[] { "*.csproj", "*.fsproj", "*.vbproj", "*.vjsproj", "*.vcproj", "*.sln" });
+                if (tcproj)
+                    supportedSuffix.Add("*.tcproj");
+
+                supportedSuffix.AddRange(new[] { "*.dll", "*.exe" });
+
+                var description = string.Join(",", supportedSuffix);
+                var filter = string.Join(";", supportedSuffix);
+
+                string str = $"Projects & Assemblies ({description})|{filter}|";
+                sb.Append(str);
+
+                // Build entries for each individual project type
+                if (nunit)
+                    sb.Append("NUnit Projects (*.nunit)|*.nunit|");
+
+                if (vs)
+                    sb.Append("Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|");
+
+                if (tcproj)
+                    sb.Append("TestCentric Projects (*.tcproj)|*.tcproj|");
+            }
+
+            sb.Append("Assemblies (*.dll,*.exe)|*.dll;*.exe|");
+            sb.Append("All Files (*.*)|*.*");
+
+            return sb.ToString();
         }
 
         public string GetFileSavePath(string title, string filter, string initialDirectory, string suggestedName)

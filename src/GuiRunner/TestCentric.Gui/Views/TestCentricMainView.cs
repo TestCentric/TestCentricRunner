@@ -16,11 +16,6 @@ namespace TestCentric.Gui.Views
 
     public partial class TestCentricMainView : TestCentricFormBase, IMainView
     {
-        #region Instance variables
-
-
-        #endregion
-
         #region Construction and Disposal
 
         public TestCentricMainView() : base("TestCentric")
@@ -37,6 +32,7 @@ namespace TestCentric.Gui.Views
 
             // Initialize File Menu Commands
             FileMenu = new PopupMenuElement(fileMenu);
+            NewProjectCommand = new CommandMenuElement(newProjectMenuItem);
             OpenProjectCommand = new CommandMenuElement(openProjectMenuItem);
             OpenTestCentricProjectCommand = new CommandMenuElement(openTestCentricProjectMenuItem);
             OpenTestAssemblyCommand = new CommandMenuElement(openTestAssemblyMenuItem);
@@ -135,8 +131,8 @@ namespace TestCentric.Gui.Views
 
         // File Menu Items
         public IPopup FileMenu { get; }
+        public ICommand NewProjectCommand { get; }
         public ICommand OpenProjectCommand { get; }
-
         public ICommand OpenTestCentricProjectCommand { get; }
         public ICommand OpenTestAssemblyCommand { get; }
         public ICommand SaveProjectCommand { get; }

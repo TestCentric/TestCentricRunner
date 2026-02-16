@@ -27,7 +27,7 @@ namespace TestCentric.Gui.Model
             model.Events.TestCentricProjectLoaded += (t) => projectLoadedCalled = true;
 
             // Act
-            model.CreateNewProject();
+            model.CreateNewProject("MyProject");
             model.AddTests(new[] { "Dummy.dll" });
 
             // Assert
@@ -66,7 +66,7 @@ namespace TestCentric.Gui.Model
             };
 
             // Act
-            model.CreateNewProject();
+            model.CreateNewProject("TestCentric");
             model.SaveProject("TestCentric.tcproj");
 
             // Assert
@@ -87,7 +87,7 @@ namespace TestCentric.Gui.Model
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
 
-            model.CreateNewProject();
+            model.CreateNewProject("MyProject");
             model.LoadTests(new[] { "dummy.dll" });
             model.RunTests(testNode);
 
@@ -112,7 +112,7 @@ namespace TestCentric.Gui.Model
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
 
-            model.CreateNewProject();
+            model.CreateNewProject("MyProject");
             model.LoadTests(new[] { "dummy.dll" });
             model.RunTests(testNode);
 
@@ -143,7 +143,7 @@ namespace TestCentric.Gui.Model
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
 
-            model.CreateNewProject();
+            model.CreateNewProject("MyProject");
             model.LoadTests(new[] { "dummy.dll" });
             model.RunTests(tests);
 
@@ -170,7 +170,7 @@ namespace TestCentric.Gui.Model
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
 
-            model.CreateNewProject();
+            model.CreateNewProject("MyProject");
             model.LoadTests(new[] { "dummy.dll" });
 
             ResultNode resultNode1 = new ResultNode("<test-case id='1' />");
@@ -200,8 +200,8 @@ namespace TestCentric.Gui.Model
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
 
-            var project = model.CreateNewProject(new[] { "dummy.dll" });
-            model.LoadTests(new[] { "dummy.dll" });
+            var project = model.CreateNewProject("MyProject", "dummy.dll");
+            model.LoadTests(["dummy.dll"]);
 
             // Act
             model.DebugTests(testNode);
@@ -225,7 +225,7 @@ namespace TestCentric.Gui.Model
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
 
-            var project = model.CreateNewProject(new[] { "dummy.dll" });
+            var project = model.CreateNewProject("MyProject", "dummy.dll");
             model.LoadTests(new[] { "dummy.dll" });
 
             // Act
