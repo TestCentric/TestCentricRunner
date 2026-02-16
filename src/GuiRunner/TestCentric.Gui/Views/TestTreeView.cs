@@ -10,6 +10,7 @@ namespace TestCentric.Gui.Views
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using Elements;
 
     public partial class TestTreeView : UserControl, ITestTreeView
@@ -177,6 +178,7 @@ namespace TestCentric.Gui.Views
         public ContextMenuStrip TreeContextMenu => TreeView.ContextMenuStrip;
 
         private OutcomeImageSet _outcomeImages;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public OutcomeImageSet OutcomeImages
         {
             get { return _outcomeImages; }

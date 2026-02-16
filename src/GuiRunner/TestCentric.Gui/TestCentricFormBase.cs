@@ -13,7 +13,10 @@ namespace TestCentric.Gui
         private IMessageDisplay _messageDisplay;
         private string _caption;
 
-        public TestCentricFormBase(string caption = null)
+        // Default constructor required by designer
+        public TestCentricFormBase() { }
+
+        public TestCentricFormBase(string caption)
         {
             _caption = caption;
         }
