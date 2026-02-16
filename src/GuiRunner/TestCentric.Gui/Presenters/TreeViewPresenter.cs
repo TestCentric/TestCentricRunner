@@ -92,18 +92,18 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestsUnloading += ea =>
             {
-                SaveVisualState();
+                _model.SaveVisualState(Strategy.CreateVisualState());
                 ClosePropertiesDisplay();
                 CloseXmlDisplay();
             };
 
-            _model.Events.TestsReloading += ea => SaveVisualState();
+            _model.Events.TestsReloading += ea => _model.SaveVisualState(Strategy.CreateVisualState());
 
             _model.Events.RunStarting += (ea) =>
             {
                 // Save the visual state in case test run causes an exception
                 // or user terminates cancels the run.
-                SaveVisualState();
+                _model.SaveVisualState(Strategy.CreateVisualState());
 
                 Strategy.OnTestRunStarting();
                 CheckPropertiesDisplay();
@@ -300,8 +300,7 @@ namespace TestCentric.Gui.Presenters
 
         public void SaveVisualState()
         {
-            VisualState visualState = Strategy.CreateVisualState();
-            visualState.Save(VisualState.GetVisualStateFileName(_model.TestCentricProject.TestFiles[0]));
+            _model.SaveVisualState(Strategy.CreateVisualState());
         }
 
         private void OnSettingsChanged(object sender, SettingsEventArgs e)

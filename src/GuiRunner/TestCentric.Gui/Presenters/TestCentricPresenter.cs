@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using NUnit.Engine;
 using TestCentric.Gui.Dialogs;
@@ -105,7 +104,10 @@ namespace TestCentric.Gui.Presenters
                 UpdateTitlebar();
             };
 
-            _model.Events.TestCentricProjectUnloaded += (TestEventArgs e) => UpdateTitlebar();
+            _model.Events.TestCentricProjectUnloaded += (TestEventArgs e) =>
+            {
+                _view.Title = "TestCentric Runner for NUnit";
+            };
 
             void UpdateTitlebar()
             {
@@ -167,33 +169,33 @@ namespace TestCentric.Gui.Presenters
 
             };
 
-            _model.Events.TestLoadFailure += (TestLoadFailureEventArgs e) =>
-            {
-                OnLongRunningOperationComplete();
+            //_model.Events.TestLoadFailure += (TestLoadFailureEventArgs e) =>
+            //{
+            //    OnLongRunningOperationComplete();
 
-                // HACK: Engine should recognize .NET Standard and give the
-                // appropriate error message. For now, we compensate for its
-                // failure by issuing the message ourselves and reloading the
-                // previously loaded  test.
-                var msg = e.Exception.Message;
-                bool isNetStandardError =
-                    e.Exception.Message == "Unrecognized Target Framework Identifier: .NETStandard";
+            //    // HACK: Engine should recognize .NET Standard and give the
+            //    // appropriate error message. For now, we compensate for its
+            //    // failure by issuing the message ourselves and reloading the
+            //    // previously loaded  test.
+            //    var msg = e.Exception.Message;
+            //    bool isNetStandardError =
+            //        e.Exception.Message == "Unrecognized Target Framework Identifier: .NETStandard";
 
-                if (!isNetStandardError)
-                {
-                    _view.MessageDisplay.Error(e.Exception.Message);
-                    return;
-                }
+            //    if (!isNetStandardError)
+            //    {
+            //        _view.MessageDisplay.Error(e.Exception.Message);
+            //        return;
+            //    }
 
-                _view.MessageDisplay.Error("Test assemblies must target a specific platform, rather than .NETStandard.");
-                if (_lastFilesLoaded == null)
-                    _view.Close();
-                else
-                {
-                    _model.UnloadTests();
-                    _model.CreateNewProject(_lastFilesLoaded);
-                }
-            };
+            //    _view.MessageDisplay.Error("Test assemblies must target a specific platform, rather than .NETStandard.");
+            //    if (_lastFilesLoaded == null)
+            //        _view.Close();
+            //    else
+            //    {
+            //        _model.UnloadTests();
+            //        _model.CreateNewProject(_lastFilesLoaded);
+            //    }
+            //};
 
             _model.Events.TestChanged += (e) =>
             {
@@ -296,11 +298,15 @@ namespace TestCentric.Gui.Presenters
 
                 _agentSelectionController.PopulateMenu();
 
-                // Create an unnamed TestCentricProject and load test specified on command line
-                if (_options.InputFiles.Count == 1)
-                    _model.OpenExistingFile(_options.InputFiles[0]);
-                else if (_options.InputFiles.Count > 1)
-                    _model.CreateNewProject(_options);
+                var testFiles = _options.InputFiles.ToArray();
+                if (_options.Unattended)
+                    _model.CreateNewProject("TestProject", testFiles);
+                else if (testFiles.Length == 1 && TestCentricProject.IsProjectFile(testFiles[0]))
+                    _model.OpenExistingProject(testFiles[0]);
+                else if (testFiles.Length > 1)
+                    using (var dlg = new ProjectNameDialog(_view, _model))
+                        if (dlg.ShowDialog() == DialogResult.OK)
+                            _model.CreateNewProject(dlg.ProjectPath, testFiles);
                 else if (_settings.Gui.LoadLastProject && !_options.NoLoad)
                     _model.OpenMostRecentFile();
 
@@ -355,6 +361,8 @@ namespace TestCentric.Gui.Presenters
                 _view.RecentFilesMenu.Enabled = !isTestRunning;
             };
 
+            _view.NewProjectCommand.Execute += () => CreateNewProject();
+
             _view.OpenTestCentricProjectCommand.Execute += () =>
             {
                 var filter = "TestCentric Projects (*.tcproj)|*.tcproj";
@@ -364,12 +372,16 @@ namespace TestCentric.Gui.Presenters
                     _model.OpenExistingProject(file);
             };
 
-            _view.OpenTestAssemblyCommand.Execute += () =>
-            {
-                string[] files = _view.DialogManager.SelectMultipleFiles("New Project", CreateOpenFileFilter());
-                if (files.Any())
-                    _model.CreateNewProject(files);
-            };
+            // TODO: FIX this so it works
+            //_view.OpenTestAssemblyCommand.Execute += () =>
+            //{
+            //    string[] files = _view.DialogManager.SelectMultipleFiles("New Project", _view.DialogManager.CreateOpenFileFilter());
+            //    var nFiles = files.Length;
+            //    if (nFiles > 1)    
+            //        _model.CreateNewProject(files);
+            //    else if (nFiles == 1)
+            //        _model.CreateNewProject(Path.GetFileName(files[0]) + ".tcproj", files);
+            //};
 
             _view.SaveProjectCommand.Execute += () =>
             {
@@ -573,6 +585,18 @@ namespace TestCentric.Gui.Presenters
             #endregion
         }
 
+        private void CreateNewProject()
+        {
+            var dlg = new NewProjectDialog(_view, _model);
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                var projectPath = dlg.ProjectPath;
+                var testFiles = dlg.TestFiles;
+                _model.CreateNewProject(projectPath, dlg.TestFiles);
+            }
+        }
+
         private void SaveFormLocationAndSize(string guiLayout)
         {
             if (guiLayout == "Mini")
@@ -640,7 +664,7 @@ namespace TestCentric.Gui.Presenters
 
         public void AddTestFiles()
         {
-            string[] filesToAdd = _view.DialogManager.SelectMultipleFiles("Add Test Files", CreateOpenFileFilter());
+            string[] filesToAdd = _view.DialogManager.SelectMultipleFiles("Add Test Files", _view.DialogManager.CreateOpenFileFilter());
 
             if (filesToAdd.Length > 0)
                 _model.AddTests(filesToAdd);
@@ -772,46 +796,6 @@ namespace TestCentric.Gui.Presenters
                 formatItem.Click += (s, e) => SaveResults(format);
                 _view.SaveResultsCommand.MenuItems?.Insert(index++, formatItem);
             }
-        }
-
-        private string CreateOpenFileFilter(bool testCentricProject = false)
-        {
-            StringBuilder sb = new StringBuilder();
-            bool nunit = _model.NUnitProjectSupport;
-            bool vs = _model.VisualStudioSupport;
-
-            if (nunit || vs || testCentricProject)
-            {
-                List<string> supportedSuffix = new List<string>();
-                if (nunit)
-                    supportedSuffix.Add("*.nunit");
-                if (vs)
-                    supportedSuffix.AddRange(new[] { "*.csproj", "*.fsproj", "*.vbproj", "*.vjsproj", "*.vcproj", "*.sln" });
-                if (testCentricProject)
-                    supportedSuffix.Add("*.tcproj");
-
-                supportedSuffix.AddRange(new[] { "*.dll", "*.exe" });
-
-                var description = string.Join(",", supportedSuffix);
-                var filter = string.Join(";", supportedSuffix);
-
-                string str = $"Projects & Assemblies ({description})|{filter}|";
-                sb.Append(str);
-            }
-
-            if (nunit)
-                sb.Append("NUnit Projects (*.nunit)|*.nunit|");
-
-            if (vs)
-                sb.Append("Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|");
-
-            if (testCentricProject)
-                sb.Append("TestCentric Projects (*.tcproj)|*.tcproj|");
-
-            sb.Append("Assemblies (*.dll,*.exe)|*.dll;*.exe|");
-            sb.Append("All Files (*.*)|*.*");
-
-            return sb.ToString();
         }
 
         private static bool CanWriteProjectFile(string path)

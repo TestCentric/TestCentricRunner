@@ -29,7 +29,7 @@ namespace TestCentric.Gui.Presenters.Main
         [SetUp]
         public void CreateProject()
         {
-            _project = new TestCentricProject(new GuiOptions(_testFiles));
+            _project = new TestCentricProject("MyProject", _testFiles);
             _model.TestCentricProject.Returns(_project);
             _model.TopLevelPackage.Returns(_project.TopLevelPackage);
         }
@@ -39,7 +39,7 @@ namespace TestCentric.Gui.Presenters.Main
         {
             FireProjectLoadedEvent();
 
-            _view.Received().Title = DEFAULT_TITLE_BAR;
+            _view.Received().Title = "TestCentric - MyProject";
         }
 
         [Test]

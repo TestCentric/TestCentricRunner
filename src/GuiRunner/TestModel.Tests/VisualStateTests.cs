@@ -14,12 +14,17 @@ namespace TestCentric.Gui.Model
     public class VisualStateTests : VisualStateTestBase
     {
         private VisualStateTestData _data;
+        private string DisplayStrategy;
+        private string Grouping;
         private TreeView ExpandedTreeView;
         private VisualState ExpectedVisualState;
 
         public VisualStateTests(VisualStateTestData data)
         {
             _data = data;
+
+            DisplayStrategy = data.DisplayStrategy;
+            Grouping = data.Grouping;
             ExpandedTreeView = data.GetExpandedTreeView();
             ExpectedVisualState = data.GetExpectedVisualState();
         }
@@ -27,10 +32,12 @@ namespace TestCentric.Gui.Model
         [Test]
         public void CanCreateVisualStateFromTree()
         {
-            var visualState = new VisualState().LoadFrom(ExpandedTreeView);
+            var visualState = new VisualState(DisplayStrategy, Grouping).LoadFrom(ExpandedTreeView);
 
             Assert.Multiple(() =>
             {
+                Assert.That(visualState.DisplayStrategy, Is.EqualTo(DisplayStrategy));
+                Assert.That(visualState.GroupBy, Is.EqualTo(Grouping));
                 Assert.That(visualState.ShowCheckBoxes, Is.EqualTo(ExpandedTreeView.CheckBoxes));
                 Assert.That(visualState.Nodes, Is.EqualTo(ExpectedVisualState.Nodes));
             });
@@ -165,7 +172,8 @@ namespace TestCentric.Gui.Model
             {
                 Assert.That(treeView.CheckBoxes, Is.True, "CheckBoxes");
                 Assert.That(treeView.SelectedNode?.Text, Is.EqualTo(selectedNode), "SelectedNode");
-                Assert.That(treeView.TopNode?.Text, Is.EqualTo(expectedTopNode), "TopNode");
+                if (treeView.TopNode is not null)
+                    Assert.That(treeView.TopNode.Text, Is.EqualTo(expectedTopNode), "TopNode");
 
                 var fixtureA = treeView.Search("FixtureA");
 
@@ -230,6 +238,8 @@ namespace TestCentric.Gui.Model
         private static VisualStateTestData[] TestData = new VisualStateTestData[]
         {
             new VisualStateTestData("NUNIT_TREE"),
+            new VisualStateTestData("TEST_LIST"),
+            new VisualStateTestData("TEST_LIST", "UNGROUPED"),
             new VisualStateTestData("TEST_LIST", "ASSEMBLY"),
             new VisualStateTestData("TEST_LIST", "FIXTURE"),
             new VisualStateTestData("TEST_LIST", "CATEGORY"),

@@ -47,13 +47,13 @@ namespace TestCentric.Gui.Views
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.displayFormatButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.nunitTreeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testListMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeShowNamespaceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.nunitTreeUngroupedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeByCategoryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeByOutcomeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeByDurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testListMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testListUngroupedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testListByAssemblyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testListByFixtureMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +64,7 @@ namespace TestCentric.Gui.Views
             this.runParametersButton = new System.Windows.Forms.ToolStripButton();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.newProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTestCentricProjectMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openTestAssemblyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,9 +74,10 @@ namespace TestCentric.Gui.Views
             this.addTestFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.reloadTestsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.testRunSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAgentMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAgentDummyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.runAsX86MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.recentFilesMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,7 +107,6 @@ namespace TestCentric.Gui.Views
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.extensionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.testRunSettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testCentricHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -242,99 +243,111 @@ namespace TestCentric.Gui.Views
             // 
             // nunitTreeMenuItem
             // 
+            this.nunitTreeMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nunitTreeShowNamespaceMenuItem,
+            this.nunitTreeSeparator,
+            this.nunitTreeUngroupedMenuItem,
+            this.nunitTreeByCategoryMenuItem,
+            this.nunitTreeByOutcomeMenuItem,
+            this.nunitTreeByDurationMenuItem});
             this.nunitTreeMenuItem.Name = "nunitTreeMenuItem";
-            this.nunitTreeMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.nunitTreeMenuItem.Size = new System.Drawing.Size(129, 22);
             this.nunitTreeMenuItem.Tag = "NUNIT_TREE";
             this.nunitTreeMenuItem.Text = "NUnit Tree";
-            this.nunitTreeMenuItem.DropDownItems.AddRange(new ToolStripItem[] { nunitTreeShowNamespaceMenuItem, nunitTreeSeparator, nunitTreeUngroupedMenuItem, nunitTreeByCategoryMenuItem, nunitTreeByOutcomeMenuItem, nunitTreeByDurationMenuItem });
             // 
-            // testListMenuItem
-            // 
-            this.testListMenuItem.Name = "testListMenuItem";
-            this.testListMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.testListMenuItem.Tag = "TEST_LIST";
-            this.testListMenuItem.Text = "Test List";
-            this.testListMenuItem.DropDownItems.AddRange(new ToolStripItem[] { testListUngroupedMenuItem, testListByAssemblyMenuItem, testListByFixtureMenuItem, testListByCategoryMenuItem, testListByOutcomeMenuItem, testListByDurationMenuItem });
-            //
             // nunitTreeShowNamespaceMenuItem
             // 
             this.nunitTreeShowNamespaceMenuItem.Name = "nunitTreeShowNamespaceMenuItem";
-            this.nunitTreeShowNamespaceMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.nunitTreeShowNamespaceMenuItem.Size = new System.Drawing.Size(168, 22);
             this.nunitTreeShowNamespaceMenuItem.Tag = "NUNIT_TREE_SHOW_NAMESPACE";
             this.nunitTreeShowNamespaceMenuItem.Text = "Show Namespace";
             // 
             // nunitTreeSeparator
             // 
             this.nunitTreeSeparator.Name = "nunitTreeSeparator";
-            this.nunitTreeSeparator.Size = new System.Drawing.Size(184, 6);
-            //
+            this.nunitTreeSeparator.Size = new System.Drawing.Size(165, 6);
+            // 
             // nunitTreeUngroupedMenuItem
-            //
+            // 
             this.nunitTreeUngroupedMenuItem.Name = "nunitTreeUngroupedMenuItem";
-            this.nunitTreeUngroupedMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.nunitTreeUngroupedMenuItem.Size = new System.Drawing.Size(168, 22);
             this.nunitTreeUngroupedMenuItem.Tag = "UNGROUPED";
             this.nunitTreeUngroupedMenuItem.Text = "No grouping";
-            //
+            // 
             // nunitTreeByCategoryMenuItem
-            //
+            // 
             this.nunitTreeByCategoryMenuItem.Name = "nunitTreeByCategoryMenuItem";
-            this.nunitTreeByCategoryMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.nunitTreeByCategoryMenuItem.Size = new System.Drawing.Size(168, 22);
             this.nunitTreeByCategoryMenuItem.Tag = "CATEGORY";
             this.nunitTreeByCategoryMenuItem.Text = "By Category";
-            //
+            // 
             // nunitTreeByOutcomeMenuItem
-            //
+            // 
             this.nunitTreeByOutcomeMenuItem.Name = "nunitTreeByOutcomeMenuItem";
-            this.nunitTreeByOutcomeMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.nunitTreeByOutcomeMenuItem.Size = new System.Drawing.Size(168, 22);
             this.nunitTreeByOutcomeMenuItem.Tag = "OUTCOME";
             this.nunitTreeByOutcomeMenuItem.Text = "By Outcome";
-            //
+            // 
             // nunitTreeByDurationMenuItem
-            //
+            // 
             this.nunitTreeByDurationMenuItem.Name = "nunitTreeByDurationMenuItem";
-            this.nunitTreeByDurationMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.nunitTreeByDurationMenuItem.Size = new System.Drawing.Size(168, 22);
             this.nunitTreeByDurationMenuItem.Tag = "DURATION";
             this.nunitTreeByDurationMenuItem.Text = "By Duration";
-            //
+            // 
+            // testListMenuItem
+            // 
+            this.testListMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testListUngroupedMenuItem,
+            this.testListByAssemblyMenuItem,
+            this.testListByFixtureMenuItem,
+            this.testListByCategoryMenuItem,
+            this.testListByOutcomeMenuItem,
+            this.testListByDurationMenuItem});
+            this.testListMenuItem.Name = "testListMenuItem";
+            this.testListMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.testListMenuItem.Tag = "TEST_LIST";
+            this.testListMenuItem.Text = "Test List";
+            // 
             // testListUngroupedMenuItem
-            //
-            this.testListUngroupedMenuItem.Name = "textListUngroupedMenuItem";
-            this.testListUngroupedMenuItem.Size = new System.Drawing.Size(198, 22);
+            // 
+            this.testListUngroupedMenuItem.Name = "testListUngroupedMenuItem";
+            this.testListUngroupedMenuItem.Size = new System.Drawing.Size(141, 22);
             this.testListUngroupedMenuItem.Tag = "UNGROUPED";
             this.testListUngroupedMenuItem.Text = "Simple List";
             // 
             // testListByAssemblyMenuItem
             // 
-            this.testListByAssemblyMenuItem.Name = "textListByAssemblyMenuItem";
-            this.testListByAssemblyMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByAssemblyMenuItem.Name = "testListByAssemblyMenuItem";
+            this.testListByAssemblyMenuItem.Size = new System.Drawing.Size(141, 22);
             this.testListByAssemblyMenuItem.Tag = "ASSEMBLY";
             this.testListByAssemblyMenuItem.Text = "By Assembly";
             // 
             // testListByFixtureMenuItem
             // 
-            this.testListByFixtureMenuItem.Name = "textListByFixtureMenuItem";
-            this.testListByFixtureMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByFixtureMenuItem.Name = "testListByFixtureMenuItem";
+            this.testListByFixtureMenuItem.Size = new System.Drawing.Size(141, 22);
             this.testListByFixtureMenuItem.Tag = "FIXTURE";
             this.testListByFixtureMenuItem.Text = "By Fixture";
             // 
             // testListByCategoryMenuItem
             // 
-            this.testListByCategoryMenuItem.Name = "textListByCategoryMenuItem";
-            this.testListByCategoryMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByCategoryMenuItem.Name = "testListByCategoryMenuItem";
+            this.testListByCategoryMenuItem.Size = new System.Drawing.Size(141, 22);
             this.testListByCategoryMenuItem.Tag = "CATEGORY";
             this.testListByCategoryMenuItem.Text = "By Category";
             // 
             // testListByOutcomeMenuItem
             // 
-            this.testListByOutcomeMenuItem.Name = "textListByOutcomeMenuItem";
-            this.testListByOutcomeMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByOutcomeMenuItem.Name = "testListByOutcomeMenuItem";
+            this.testListByOutcomeMenuItem.Size = new System.Drawing.Size(141, 22);
             this.testListByOutcomeMenuItem.Tag = "OUTCOME";
             this.testListByOutcomeMenuItem.Text = "By Outcome";
             // 
             // testListByDurationMenuItem
             // 
-            this.testListByDurationMenuItem.Name = "textListByDurationMenuItem";
-            this.testListByDurationMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testListByDurationMenuItem.Name = "testListByDurationMenuItem";
+            this.testListByDurationMenuItem.Size = new System.Drawing.Size(141, 22);
             this.testListByDurationMenuItem.Tag = "DURATION";
             this.testListByDurationMenuItem.Text = "By Duration";
             // 
@@ -357,13 +370,6 @@ namespace TestCentric.Gui.Views
             this.runParametersButton.Size = new System.Drawing.Size(23, 21);
             this.runParametersButton.ToolTipText = "Test Run Parameters";
             // 
-            // nunitTreeShowNamespaceMenuItem
-            // 
-            this.nunitTreeShowNamespaceMenuItem.Name = "nunitTreeShowNamespaceMenuItem";
-            this.nunitTreeShowNamespaceMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.nunitTreeShowNamespaceMenuItem.Tag = "NUNIT_TREE_SHOW_NAMESPACE";
-            this.nunitTreeShowNamespaceMenuItem.Text = "Show Namespace";
-            // 
             // mainMenu
             // 
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -379,6 +385,7 @@ namespace TestCentric.Gui.Views
             // fileMenu
             // 
             this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newProjectMenuItem,
             this.openProjectMenuItem,
             this.saveProjectMenuItem,
             this.closeMenuItem,
@@ -398,69 +405,85 @@ namespace TestCentric.Gui.Views
             this.fileMenu.Size = new System.Drawing.Size(37, 20);
             this.fileMenu.Text = "&File";
             // 
+            // newProjectMenuItem
+            // 
+            this.newProjectMenuItem.Name = "newProjectMenuItem";
+            this.newProjectMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newProjectMenuItem.Text = "New Project...";
+            // 
             // openProjectMenuItem
             // 
-            this.openProjectMenuItem.Name = "openProjectMenuItem";
-            this.openProjectMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.openProjectMenuItem.Text = "&Open";
             this.openProjectMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.openTestCentricProjectMenuItem,
-                this.openTestAssemblyMenuItem
-            });
+            this.openTestCentricProjectMenuItem,
+            this.openTestAssemblyMenuItem});
+            this.openProjectMenuItem.Name = "openProjectMenuItem";
+            this.openProjectMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openProjectMenuItem.Text = "&Open";
             // 
             // openTestCentricProjectMenuItem
             // 
             this.openTestCentricProjectMenuItem.Name = "openTestCentricProjectMenuItem";
-            this.openTestCentricProjectMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.openTestCentricProjectMenuItem.Size = new System.Drawing.Size(181, 22);
             this.openTestCentricProjectMenuItem.Text = "TestCentric project...";
             // 
             // openTestAssemblyMenuItem
             // 
             this.openTestAssemblyMenuItem.Name = "openTestAssemblyMenuItem";
-            this.openTestAssemblyMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.openTestAssemblyMenuItem.Size = new System.Drawing.Size(181, 22);
             this.openTestAssemblyMenuItem.Text = "Assembly...";
             // 
             // saveProjectMenuItem
             // 
             this.saveProjectMenuItem.Name = "saveProjectMenuItem";
-            this.saveProjectMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.saveProjectMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveProjectMenuItem.Text = "&Save";
             // 
             // closeMenuItem
             // 
             this.closeMenuItem.Name = "closeMenuItem";
-            this.closeMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.closeMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeMenuItem.Text = "&Close";
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(184, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
             // 
             // addTestFileMenuItem
             // 
             this.addTestFileMenuItem.Name = "addTestFileMenuItem";
-            this.addTestFileMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.addTestFileMenuItem.Size = new System.Drawing.Size(180, 22);
             this.addTestFileMenuItem.Text = "&Add Test File...";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(184, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // reloadTestsMenuItem
             // 
             this.reloadTestsMenuItem.Name = "reloadTestsMenuItem";
             this.reloadTestsMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.reloadTestsMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.reloadTestsMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reloadTestsMenuItem.Text = "&Reload Tests";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // testRunSettingsMenuItem
+            // 
+            this.testRunSettingsMenuItem.Name = "testRunSettingsMenuItem";
+            this.testRunSettingsMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.testRunSettingsMenuItem.Text = "&Test Run Settings...";
             // 
             // selectAgentMenu
             // 
             this.selectAgentMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectAgentDummyMenuItem});
             this.selectAgentMenu.Name = "selectAgentMenu";
-            this.selectAgentMenu.Size = new System.Drawing.Size(187, 22);
+            this.selectAgentMenu.Size = new System.Drawing.Size(180, 22);
             this.selectAgentMenu.Text = "Select Agent";
             // 
             // selectAgentDummyMenuItem
@@ -469,28 +492,23 @@ namespace TestCentric.Gui.Views
             this.selectAgentDummyMenuItem.Size = new System.Drawing.Size(229, 22);
             this.selectAgentDummyMenuItem.Text = "Dummy entry to force Popup";
             // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(184, 6);
-            // 
             // runAsX86MenuItem
             // 
             this.runAsX86MenuItem.Name = "runAsX86MenuItem";
-            this.runAsX86MenuItem.Size = new System.Drawing.Size(187, 22);
+            this.runAsX86MenuItem.Size = new System.Drawing.Size(180, 22);
             this.runAsX86MenuItem.Text = "Run as X86";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(184, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // recentFilesMenu
             // 
             this.recentFilesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.recentFilesDummyMenuItem});
             this.recentFilesMenu.Name = "recentFilesMenu";
-            this.recentFilesMenu.Size = new System.Drawing.Size(187, 22);
+            this.recentFilesMenu.Size = new System.Drawing.Size(180, 22);
             this.recentFilesMenu.Text = "Recent &Files";
             // 
             // recentFilesDummyMenuItem
@@ -502,12 +520,12 @@ namespace TestCentric.Gui.Views
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(184, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.exitMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitMenuItem.Text = "E&xit";
             // 
             // viewMenu
@@ -630,24 +648,24 @@ namespace TestCentric.Gui.Views
             this.toolsMenu.Size = new System.Drawing.Size(46, 20);
             this.toolsMenu.Text = "T&ools";
             // 
-            // toolStripSeparator12
-            // 
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(118, 6);
-            // 
             // saveResultsMenuItem
             // 
+            this.saveResultsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator12,
+            this.transformResultsMenuItem});
             this.saveResultsMenuItem.Name = "saveResultsMenuItem";
             this.saveResultsMenuItem.Size = new System.Drawing.Size(194, 22);
             this.saveResultsMenuItem.Text = "&Save Test Results...";
-            this.saveResultsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.toolStripSeparator12,
-                this.transformResultsMenuItem });
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(196, 6);
             // 
             // transformResultsMenuItem
             // 
             this.transformResultsMenuItem.Name = "transformResultsMenuItem";
-            this.transformResultsMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.transformResultsMenuItem.Size = new System.Drawing.Size(199, 22);
             this.transformResultsMenuItem.Text = "&Transform Test Results...";
             // 
             // openWorkDirectoryMenuItem
@@ -673,12 +691,6 @@ namespace TestCentric.Gui.Views
             this.settingsMenuItem.Size = new System.Drawing.Size(194, 22);
             this.settingsMenuItem.Text = "&Settings...";
             // 
-            // testRunSettingsMenuItem
-            // 
-            this.testRunSettingsMenuItem.Name = "testRunSettingsMenuItem";
-            this.testRunSettingsMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.testRunSettingsMenuItem.Text = "&Test Run Settings...";
-            // 
             // helpItem
             // 
             this.helpItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -695,7 +707,7 @@ namespace TestCentric.Gui.Views
             // 
             this.testCentricHelpMenuItem.Name = "testCentricHelpMenuItem";
             this.testCentricHelpMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.testCentricHelpMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.testCentricHelpMenuItem.Size = new System.Drawing.Size(215, 22);
             this.testCentricHelpMenuItem.Text = "TestCentric ...";
             // 
             // nunitHelpMenuItem
@@ -703,24 +715,24 @@ namespace TestCentric.Gui.Views
             this.nunitHelpMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.nunitHelpMenuItem.Name = "nunitHelpMenuItem";
             this.nunitHelpMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F1)));
-            this.nunitHelpMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.nunitHelpMenuItem.Size = new System.Drawing.Size(215, 22);
             this.nunitHelpMenuItem.Text = "NUnit ...";
             // 
             // commandLineHelpMenuItem
             // 
             this.commandLineHelpMenuItem.Name = "commandLineHelpMenuItem";
-            this.commandLineHelpMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.commandLineHelpMenuItem.Size = new System.Drawing.Size(215, 22);
             this.commandLineHelpMenuItem.Text = "Command-Line Options ...";
             // 
             // helpMenuSeparator1
             // 
             this.helpMenuSeparator1.Name = "helpMenuSeparator1";
-            this.helpMenuSeparator1.Size = new System.Drawing.Size(174, 6);
+            this.helpMenuSeparator1.Size = new System.Drawing.Size(212, 6);
             // 
             // aboutMenuItem
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(215, 22);
             this.aboutMenuItem.Text = "&About TestCentric...";
             // 
             // treeSplitter
@@ -756,7 +768,7 @@ namespace TestCentric.Gui.Views
             // 
             // progressBar
             // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.BackColor = System.Drawing.Color.Transparent;
             this.progressBar.CausesValidation = false;
@@ -824,6 +836,7 @@ namespace TestCentric.Gui.Views
             // 
             // errorsAndFailuresView1
             // 
+            this.errorsAndFailuresView1.BackColor = System.Drawing.SystemColors.Control;
             this.errorsAndFailuresView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.errorsAndFailuresView1.EnableToolTips = false;
             this.errorsAndFailuresView1.Header = "Test name";
@@ -846,11 +859,11 @@ namespace TestCentric.Gui.Views
             this.outputTab.Text = "Text Output";
             this.outputTab.UseVisualStyleBackColor = true;
             // 
-            // textOutputView1
+            // textOutputView
             // 
             this.textOutputView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textOutputView.Location = new System.Drawing.Point(0, 0);
-            this.textOutputView.Name = "textOutputView1";
+            this.textOutputView.Name = "textOutputView";
             this.textOutputView.Size = new System.Drawing.Size(490, 333);
             this.textOutputView.TabIndex = 0;
             this.textOutputView.WordWrap = true;
@@ -1018,5 +1031,6 @@ namespace TestCentric.Gui.Views
         private ToolStripMenuItem saveProjectMenuItem;
         private ToolStripSeparator toolStripSeparator6;
         private TextOutputView textOutputView;
+        private ToolStripMenuItem newProjectMenuItem;
     }
 }

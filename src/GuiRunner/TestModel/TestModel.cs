@@ -284,17 +284,17 @@ namespace TestCentric.Gui.Model
         #region Methods
 
         /// <summary>
-        /// Create a new unnamed project, assign it to our TestProject property and
+        /// Create a new TestCentricProject, assign it to our TestProject property and
         /// load tests for the project. We return the project as well.
         /// </summary>
         /// <param name="filenames">The test files contained as subprojects of the new project.</param>
         /// <returns>The newly created test project</returns>
-        public TestCentricProject CreateNewProject(string[] filenames)
+        public TestCentricProject CreateNewProject(string projectPath, params string[] filenames)
         {
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject(new GuiOptions(filenames));
+            TestCentricProject = new TestCentricProject(projectPath, filenames);
 
             _events.FireTestCentricProjectLoaded();
 
@@ -303,24 +303,16 @@ namespace TestCentric.Gui.Model
             return TestCentricProject;
         }
 
-        public void CreateNewProject(GuiOptions options)
+        public void CreateNewProject(string projectName, GuiOptions options)
         {
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject(options);
+            TestCentricProject = new TestCentricProject(projectName, options);
 
             _events.FireTestCentricProjectLoaded();
 
             LoadTests(options.InputFiles);
-        }
-
-        public void CreateNewProject()
-        {
-            if (IsProjectLoaded)
-                CloseProject();
-
-            TestCentricProject = new TestCentricProject();
         }
 
         public bool TryLoadVisualState(out VisualState visualState)
@@ -336,6 +328,12 @@ namespace TestCentric.Gui.Model
 
             return visualState != null;
         }
+
+        public void SaveVisualState(VisualState visualState)
+        {
+
+        }
+
         public void AddTests(IEnumerable<string> fileNames)
         {
             if (!IsProjectLoaded)
@@ -364,9 +362,7 @@ namespace TestCentric.Gui.Model
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject();
-
-            TestCentricProject.Load(projectPath);
+            TestCentricProject = TestCentricProject.LoadFrom(projectPath);
 
             LoadTests(TestCentricProject.TestFiles);
 
@@ -383,7 +379,7 @@ namespace TestCentric.Gui.Model
                     OpenExistingFile(entry);
                     break;
                 }
-            }
+            }   
         }
 
         public void OpenExistingFile(string filename)
@@ -391,7 +387,7 @@ namespace TestCentric.Gui.Model
             if (TestCentricProject.IsProjectFile(filename))
                 OpenExistingProject(filename);
             else
-                CreateNewProject(new[] { filename });
+                CreateNewProject(Path.GetFileName(filename), new[] { filename });
         }
 
 

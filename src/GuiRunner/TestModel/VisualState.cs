@@ -22,11 +22,6 @@ namespace TestCentric.Gui.Model
         // Default constructor is required for serialization
         public VisualState() : this("NUNIT_TREE") { }
 
-        public VisualState(string strategyID)
-        {
-            DisplayStrategy = strategyID;
-        }
-
         public VisualState(string strategyID, string groupID, bool showNamespace)
         {
             DisplayStrategy = strategyID;
@@ -34,9 +29,9 @@ namespace TestCentric.Gui.Model
             ShowNamespace = showNamespace;
         }
 
-        public VisualState(string strategyID, string groupID)
+        public VisualState(string strategyID, string groupID = null)
         {
-            if (strategyID == "NUNIT_TREE")
+            if (strategyID == "NUNIT_TREE" && groupID != null)
                 throw new ArgumentException("When strategy is NUNIT_TREE, groupID may not be specified", nameof(groupID));
 
             DisplayStrategy = strategyID;
@@ -45,16 +40,12 @@ namespace TestCentric.Gui.Model
 
         #region Fields
 
-        //[XmlAttribute]
         public string DisplayStrategy;
 
-        //[XmlAttribute]
         public string GroupBy;
 
-        //[XmlIgnore]
         public bool GroupBySpecified => GroupBy != null;
 
-        //[XmlAttribute, DefaultValue(false)]
         public bool ShowCheckBoxes;
 
         public bool ShowNamespace;
@@ -63,10 +54,7 @@ namespace TestCentric.Gui.Model
         //public List<string> SelectedCategories;
         //public bool ExcludeCategories;
 
-        //[XmlArrayItem("Node")]
         public List<VisualTreeNode> Nodes = new List<VisualTreeNode>();
-
-        //private Dictionary<string, VisualTreeNode> _nodeIndex = new Dictionary<string, VisualTreeNode>();
 
         #endregion
 

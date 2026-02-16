@@ -23,18 +23,67 @@ namespace TestCentric.Gui.Model
 
         public TestPackage TopLevelPackage { get; private set; }
 
-        public IList<String> TestFiles { get; }
+        public IList<String> TestFiles { get; } = new List<String>();
 
-        public TestCentricProject(GuiOptions options = null)
+        #region Construction and Loading
+
+        // NOTE: Originally, it was possible to construct a project in memory without specifying
+        // the ProjectPath. The selection of a location was postponed until the project was saved.
+        // Because of our decision to save the project and visual state with behind the scenes,
+        // with as little user intervention as possible, we now require a valid ProjectPath for
+        // every project. This allows us to save the project whenever an event occurs that 
+        // could otherwise cause the loss of data. The VisualState is saved in the same directory
+        // whenever the project is saved. With this approach, it must not be possible to create
+        // a new project without specifying a ProjectPath.
+
+        /// <summary>
+        /// Construct a new project, specifying the ProjectPath and TestFiles.
+        /// </summary>
+        /// <param name="projectPath"></param>
+        /// <param name="testFiles"></param>
+        public TestCentricProject(string projectPath, params string[] testFiles)
         {
-            if (options is null)
-                options = new GuiOptions();
+            Guard.ArgumentNotNullOrEmpty(projectPath, nameof(projectPath));
 
+            ProjectPath = projectPath;
+            TestFiles = [.. testFiles];
+            TopLevelPackage = new TestPackage(testFiles);
+
+            // TODO: This should not be in the constructor. Move elsewhere.
+            ////Turn on shadow copy in new TestCentric project by default
+            //AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
+
+            // TODO: Policy decisions should be at a higher level. Handling
+            // setting definition for .sln files is definitely a policy decision
+            // but it's not clear where the check for .tcproj belongs, so it
+            // is kept here for the time being.
+            foreach (var subpackage in TopLevelPackage.SubPackages)
+                switch (Path.GetExtension(subpackage.Name))
+                {
+                    //case ".sln":
+                    //    subpackage.AddSetting(SettingDefinitions.SkipNonTestAssemblies.WithValue(true));
+                    //    break;
+                    case ".tcproj":
+                        throw new InvalidOperationException("A TestCentric project may not contain another TestCentric project.");
+                }
+        }
+
+        /// <summary>
+        /// Construct a new project, specifying the ProjectPath and GuiOptions.
+        /// </summary>
+        /// <param name="projectPath"></param>
+        /// <param name="options"></param>
+        public TestCentricProject(string projectPath, GuiOptions options)
+        {
+            Guard.ArgumentNotNullOrEmpty(projectPath, nameof(projectPath));
+
+            ProjectPath = projectPath;
             TestFiles = [.. options.InputFiles];
             TopLevelPackage = new TestPackage(TestFiles);
 
-            // Turn on shadow copy in new TestCentric project by default
-            AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
+            // TODO: Default setting needs to be moved elsewhere
+            //// Turn on shadow copy in new TestCentric project by default
+            //AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
 
             if (options != null) // Happens when we test
             {
@@ -62,7 +111,22 @@ namespace TestCentric.Gui.Model
                 }
         }
 
-        public void Load(string path)
+        // Empty project used by some tests
+        // TODO: Phase this out?
+        public TestCentricProject()
+        {
+            TestFiles = [];
+            TopLevelPackage = new TestPackage();
+        }
+
+        public static TestCentricProject LoadFrom(string path)
+        {
+            var project = new TestCentricProject();
+            project.Load(path);
+            return project;
+        }
+
+        private void Load(string path)
         {
             ProjectPath = path;
 
@@ -116,6 +180,8 @@ namespace TestCentric.Gui.Model
                 throw new Exception($"Unable to load TestProject from {path}", ex);
             }
         }
+
+        #endregion
 
         public void SaveAs(string projectPath)
         {
