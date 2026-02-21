@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using NUnit;
 using NUnit.Engine;
 using TestCentric.Gui.Dialogs;
 using TestCentric.Gui.Elements;

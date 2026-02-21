@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Drawing;
 using System.Windows.Forms;
+using NUnit;
 using NUnit.UiException.Controls;
 
 namespace TestCentric.Gui.Views
