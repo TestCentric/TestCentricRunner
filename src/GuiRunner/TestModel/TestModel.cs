@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
 using NUnit.Engine.Services;
