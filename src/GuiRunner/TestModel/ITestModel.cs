@@ -112,8 +112,6 @@ namespace TestCentric.Gui.Model
 
         bool TryLoadVisualState(out VisualState visualState);
 
-        void SaveVisualState(VisualState visualState);
-
         /// <summary>
         /// Add the test files to the current test project
         /// </summary>

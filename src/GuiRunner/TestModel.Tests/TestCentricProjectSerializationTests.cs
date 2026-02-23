@@ -50,11 +50,11 @@ namespace TestCentric.Gui.Model
                 <?xml version = "1.0" encoding="utf-8"?>
                 <TestCentricProject>
                 <TestPackage id="{package.ID}">
-                <Settings foo="bar" num="42" critical="True" />
+                <Settings ShadowCopyFiles="True" foo="bar" num="42" critical="True" />
                 <TestPackage id="{subPackages[0].ID}" fullname="{Path.GetFullPath("test1.dll")}">
-                <Settings foo="bar" num="42" critical="True" cpu="x86" /></TestPackage>
+                <Settings ShadowCopyFiles="True" foo="bar" num="42" critical="True" cpu="x86" /></TestPackage>
                 <TestPackage id="{subPackages[1].ID}" fullname="{Path.GetFullPath("test2.dll")}">
-                <Settings foo="bar" num="42" critical="True" /></TestPackage></TestPackage>
+                <Settings ShadowCopyFiles="True" foo="bar" num="42" critical="True" /></TestPackage></TestPackage>
                 </TestCentricProject>
                 """.Replace(CR, string.Empty).Replace(LF, string.Empty);
 
@@ -88,7 +88,9 @@ namespace TestCentric.Gui.Model
             string expectedXml = $"""
                 <?xml version="1.0" encoding="utf-8"?>
                 <TestCentricProject>
-                <TestPackage id="{project.TopLevelPackage.ID}" />
+                <TestPackage id="{project.TopLevelPackage.ID}">
+                <Settings ShadowCopyFiles="True" />
+                </TestPackage>
                 </TestCentricProject>
                 """.Replace(CR, string.Empty).Replace(LF, string.Empty);
 

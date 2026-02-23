@@ -50,8 +50,8 @@ namespace TestCentric.Gui.Model
             TopLevelPackage = new TestPackage(testFiles);
 
             // TODO: This should not be in the constructor. Move elsewhere.
-            ////Turn on shadow copy in new TestCentric project by default
-            //AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
+            //Turn on shadow copy in new TestCentric project by default
+            AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
 
             // TODO: Policy decisions should be at a higher level. Handling
             // setting definition for .sln files is definitely a policy decision

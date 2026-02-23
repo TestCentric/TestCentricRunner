@@ -35,21 +35,18 @@ namespace TestCentric.Gui.Views
                 : null;
         }
 
-        // TODO: Can we remove tcproj option?
-        public string CreateOpenFileFilter(bool nunit = false, bool vs = false, bool tcproj = false)
+        public string CreateOpenTestFileFilter(bool nunit = false, bool vs = false)
         {
             StringBuilder sb = new StringBuilder();
 
             // If any project types are supported, build Projects & Assemblies entry
-            if (nunit || vs || tcproj)
+            if (nunit || vs)
             {
                 List<string> supportedSuffix = new List<string>();
                 if (nunit)
                     supportedSuffix.Add("*.nunit");
                 if (vs)
                     supportedSuffix.AddRange(new[] { "*.csproj", "*.fsproj", "*.vbproj", "*.vjsproj", "*.vcproj", "*.sln" });
-                if (tcproj)
-                    supportedSuffix.Add("*.tcproj");
 
                 supportedSuffix.AddRange(new[] { "*.dll", "*.exe" });
 
@@ -65,9 +62,6 @@ namespace TestCentric.Gui.Views
 
                 if (vs)
                     sb.Append("Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|");
-
-                if (tcproj)
-                    sb.Append("TestCentric Projects (*.tcproj)|*.tcproj|");
             }
 
             sb.Append("Assemblies (*.dll,*.exe)|*.dll;*.exe|");

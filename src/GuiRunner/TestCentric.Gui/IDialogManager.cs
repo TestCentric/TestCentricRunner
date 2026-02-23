@@ -16,7 +16,7 @@ namespace TestCentric.Gui.Views
 
         string GetFileOpenPath(string title, string filter);
 
-        string CreateOpenFileFilter(bool nunit = false, bool vs = false, bool tcproj = false);
+        string CreateOpenTestFileFilter(bool nunit = false, bool vs = false);
 
         string GetFileSavePath(string title, string filter, string initialDirectory, string suggestedName);
 

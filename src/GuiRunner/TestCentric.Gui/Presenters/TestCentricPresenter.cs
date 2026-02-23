@@ -169,6 +169,7 @@ namespace TestCentric.Gui.Presenters
 
             };
 
+            // TODO: Verify that this is not needed any longer and remove code
             //_model.Events.TestLoadFailure += (TestLoadFailureEventArgs e) =>
             //{
             //    OnLongRunningOperationComplete();
@@ -372,8 +373,9 @@ namespace TestCentric.Gui.Presenters
                     _model.OpenExistingProject(file);
             };
 
-            // TODO: FIX this so it works
-            //_view.OpenTestAssemblyCommand.Execute += () =>
+            // TODO: FIX this so it works (separate PR)
+            _view.OpenTestAssemblyCommand.Execute += () =>
+                _view.MessageDisplay.Error("Not Yet Implemented");
             //{
             //    string[] files = _view.DialogManager.SelectMultipleFiles("New Project", _view.DialogManager.CreateOpenFileFilter());
             //    var nFiles = files.Length;
@@ -664,7 +666,7 @@ namespace TestCentric.Gui.Presenters
 
         public void AddTestFiles()
         {
-            string[] filesToAdd = _view.DialogManager.SelectMultipleFiles("Add Test Files", _view.DialogManager.CreateOpenFileFilter());
+            string[] filesToAdd = _view.DialogManager.SelectMultipleFiles("Add Test Files", _view.DialogManager.CreateOpenTestFileFilter());
 
             if (filesToAdd.Length > 0)
                 _model.AddTests(filesToAdd);

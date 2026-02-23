@@ -335,11 +335,6 @@ namespace TestCentric.Gui.Model
             return visualState != null;
         }
 
-        public void SaveVisualState(VisualState visualState)
-        {
-
-        }
-
         public void AddTests(IEnumerable<string> fileNames)
         {
             if (!IsProjectLoaded)

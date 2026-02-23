@@ -11,6 +11,8 @@ using System.Xml.Serialization;
 using System.Xml.Schema;
 using System.Xml;
 
+// TODO: Consider splitting this class so that the model does not deal
+// with a windows tree control.
 namespace TestCentric.Gui.Model
 {
     /// <summary>

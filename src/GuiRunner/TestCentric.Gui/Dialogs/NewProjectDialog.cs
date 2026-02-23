@@ -49,7 +49,7 @@ namespace TestCentric.Gui.Dialogs
         {
             var filesToAdd = _view.DialogManager.SelectMultipleFiles(
                 "Select Test Files for New Project",
-                _view.DialogManager.CreateOpenFileFilter(_model.NUnitProjectSupport, _model.VisualStudioSupport));
+                _view.DialogManager.CreateOpenTestFileFilter(_model.NUnitProjectSupport, _model.VisualStudioSupport));
 
             if (filesToAdd.Length > 0)
             {

@@ -92,19 +92,12 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestsUnloading += ea =>
             {
-                _model.SaveVisualState(Strategy.CreateVisualState());
                 ClosePropertiesDisplay();
                 CloseXmlDisplay();
             };
 
-            _model.Events.TestsReloading += ea => _model.SaveVisualState(Strategy.CreateVisualState());
-
             _model.Events.RunStarting += (ea) =>
             {
-                // Save the visual state in case test run causes an exception
-                // or user terminates cancels the run.
-                _model.SaveVisualState(Strategy.CreateVisualState());
-
                 Strategy.OnTestRunStarting();
                 CheckPropertiesDisplay();
                 CheckXmlDisplay();
@@ -268,6 +261,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.ResetFilterCommand.Execute += () => ResetTestFilter();
 
+            // TODO: Verify that this is no longer needed and remove code
             // Node selected in tree
             //_treeView.SelectedNodesChanged += (nodes) =>
             //{
@@ -296,11 +290,6 @@ namespace TestCentric.Gui.Presenters
             //            CloseXmlDisplay();
             //    }
             //};
-        }
-
-        public void SaveVisualState()
-        {
-            _model.SaveVisualState(Strategy.CreateVisualState());
         }
 
         private void OnSettingsChanged(object sender, SettingsEventArgs e)
