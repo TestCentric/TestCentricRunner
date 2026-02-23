@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Xml.Schema;
 using System.Xml;
+using NUnit;
 
 // TODO: Consider splitting this class so that the model does not deal
 // with a windows tree control.
@@ -19,16 +20,16 @@ namespace TestCentric.Gui.Model
     /// The VisualState class holds the latest visual state for a project.
     /// </summary>
     //[Serializable]
-    public class VisualState : IXmlSerializable
+    public class VisualState : IVisualState, IXmlSerializable
     {
         // Default constructor is required for serialization
         public VisualState() : this("NUNIT_TREE") { }
 
-        public VisualState(string strategyID, string groupID, bool showNamespace)
+        public VisualState(string strategyID, string groupID, bool showNamespaces)
         {
             DisplayStrategy = strategyID;
             GroupBy = groupID;
-            ShowNamespace = showNamespace;
+            ShowNamespaces = showNamespaces;
         }
 
         public VisualState(string strategyID, string groupID = null)
@@ -40,17 +41,15 @@ namespace TestCentric.Gui.Model
             GroupBy = groupID;
         }
 
-        #region Fields
+        #region Properties
 
-        public string DisplayStrategy;
+        public string DisplayStrategy { get; private set; }
 
-        public string GroupBy;
+        public string GroupBy { get; private set; }
 
-        public bool GroupBySpecified => GroupBy != null;
+        public bool ShowCheckBoxes { get; private set; }
 
-        public bool ShowCheckBoxes;
-
-        public bool ShowNamespace;
+        public bool ShowNamespaces { get; private set; }
 
         // TODO: Categories not yet supported
         //public List<string> SelectedCategories;
@@ -262,7 +261,7 @@ namespace TestCentric.Gui.Model
             // GroupBy is null for NUnitTree strategy, otherwise required
             if (GroupBy == null && strategy != "NUNIT_TREE") GroupBy = "ASSEMBLY";
             ShowCheckBoxes = reader.GetAttribute("ShowCheckBoxes") == "True";
-            ShowNamespace = reader.GetAttribute("ShowNamespace") != "False";
+            ShowNamespaces = reader.GetAttribute("ShowNamespace") != "False";
 
             while (reader.Read())
             {
@@ -377,7 +376,7 @@ namespace TestCentric.Gui.Model
                 writer.WriteAttributeString("GroupBy", GroupBy);
             if (ShowCheckBoxes)
                 writer.WriteAttributeString("ShowCheckBoxes", "True");
-            if (!ShowNamespace)
+            if (!ShowNamespaces)
                 writer.WriteAttributeString("ShowNamespace", "False");
 
             WriteVisualTreeNodes(Nodes);
@@ -465,5 +464,13 @@ namespace TestCentric.Gui.Model
         {
             return Name.GetHashCode();
         }
+    }
+
+    public interface IVisualState
+    {
+        string DisplayStrategy { get; }
+        string GroupBy { get; }
+        bool ShowNamespaces { get; }
+        bool ShowCheckBoxes { get; }
     }
 }

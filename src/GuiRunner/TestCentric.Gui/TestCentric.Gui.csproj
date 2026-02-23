@@ -14,6 +14,10 @@
         <ProjectReference Include="..\TestModel\TestCentric.Gui.Model.csproj" />
         <ProjectReference Include="..\NUnit.UiException\NUnit.UiException.csproj" />
     </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />
+	</ItemGroup>
   
 	<ItemGroup>
         <Content Include="..\..\..\testcentric.ico">
