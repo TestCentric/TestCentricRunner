@@ -108,12 +108,12 @@ namespace TestCentric.Gui.Presenters.TestTree
         [Ignore("Must be rewritten")]
         [TestCase(true)]
         [TestCase(false)]
-        public void WithVisualState_ShowNamespaceIsAppliedFromVisualState(bool showNamespace)
+        public void WithVisualState_ShowNamespaceIsAppliedFromVisualState(bool showNamespaces)
         {
             // Arrange: Create and save VisualState file
             VisualState visualState = new VisualState()
             {
-                ShowNamespace = showNamespace
+                ShowNamespaces = showNamespaces
             };
             visualState.Save(VISUAL_STATE_FILE_NAME);
 
@@ -121,7 +121,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             FireTestLoadedEvent(TEST_NODE);
 
             // Assert
-            Assert.That(_model.TreeConfiguration.ShowNamespaces, Is.EqualTo(showNamespace));
+            Assert.That(_model.TreeConfiguration.ShowNamespaces, Is.EqualTo(showNamespaces));
         }
 
         [TestCase("NUNIT_TREE", typeof(NUnitTreeDisplayStrategy))]

@@ -39,7 +39,7 @@ namespace TestCentric.Gui.Model
 
             Assert.That(vs.DisplayStrategy, Is.EqualTo("NUNIT_TREE"));
             Assert.That(vs.ShowCheckBoxes, Is.EqualTo(false));
-            Assert.That(vs.ShowNamespace, Is.EqualTo(true));
+            Assert.That(vs.ShowNamespaces, Is.EqualTo(true));
         }
 
         [TestCaseSource(typeof(VisualStateSerializationData))]
@@ -63,7 +63,7 @@ namespace TestCentric.Gui.Model
                 Assert.That(docElement.Name, Is.EqualTo("VisualState"));
                 Assert.That(docElement.GetAttribute("DisplayStrategy"), Is.EqualTo(vs.DisplayStrategy));
                 Assert.That(docElement.GetAttribute("ShowCheckBoxes"), Is.EqualTo(vs.ShowCheckBoxes ? "True" : ""));
-                Assert.That(docElement.GetAttribute("ShowNamespace"), Is.EqualTo(!vs.ShowNamespace ? "False" : ""));
+                Assert.That(docElement.GetAttribute("ShowNamespaces"), Is.EqualTo(!vs.ShowNamespaces ? "False" : ""));
                 Assert.That(firstChild.Name, Is.EqualTo("Nodes"));
                 Assert.That(topNodes.Count, Is.EqualTo(vs.Nodes.Count));
                 for (int i = 0; i < topNodes.Count; i++)

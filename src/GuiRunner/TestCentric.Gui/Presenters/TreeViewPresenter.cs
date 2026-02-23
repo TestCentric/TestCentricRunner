@@ -364,7 +364,7 @@ namespace TestCentric.Gui.Presenters
                 // Update from VisualState
                 TreeConfiguration.ShowCheckBoxes = visualState.ShowCheckBoxes;
                 TreeConfiguration.DisplayFormat = visualState.DisplayStrategy;
-                TreeConfiguration.ShowNamespaces = visualState.ShowNamespace;
+                TreeConfiguration.ShowNamespaces = visualState.ShowNamespaces;
                 TreeConfiguration.NUnitGroupBy = TreeConfiguration.DisplayFormat == "NUNIT_TREE" ? visualState.GroupBy : "UNGROUPED";
                 TreeConfiguration.TestListGroupBy = TreeConfiguration.DisplayFormat == "TEST_LIST" ? visualState.GroupBy : "UNGROUPED";
             }
