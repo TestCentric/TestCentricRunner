@@ -76,6 +76,12 @@ namespace TestCentric.Gui.Presenters
             TreeViewBuilder.OnShowTestDurationChanged();
         }
 
+        public override void OnTestStarting(TestNode testNode)
+        {
+            TestNode node = _model.GetTestById(testNode.Id);
+            TreeNodeViewModel viewModel = _treeViewModel.GetTreeNodeViewModel(node);
+            TreeViewBuilder?.OnTestStarting(viewModel);
+        }
 
         public override void OnTestFinished(ResultNode result)
         {

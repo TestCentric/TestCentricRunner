@@ -32,13 +32,16 @@
         <Content Include="Images\Tree\Circles\Inconclusive_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="Images\Tree\Circles\Running.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="Images\Tree\Circles\Success_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Images\Tree\Circles\Warning_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="Images\Tree\Circles\Running.png">
+        <Content Include="Images\Tree\Circles\InTestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 		<!--
@@ -82,13 +85,16 @@
         <Content Include="Images\Tree\Classic\Inconclusive_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="Images\Tree\Classic\Running.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="Images\Tree\Classic\Success_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Images\Tree\Classic\Warning_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="Images\Tree\Classic\Running.png">
+        <Content Include="Images\Tree\Classic\InTestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Images\Tree\Classic\Failure.png">
@@ -118,13 +124,16 @@
         <Content Include="Images\Tree\Visual Studio\Inconclusive_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="Images\Tree\Visual Studio\Running.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="Images\Tree\Visual Studio\Success_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Images\Tree\Visual Studio\Warning_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="Images\Tree\Visual Studio\Running.png">
+        <Content Include="Images\Tree\Visual Studio\InTestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Images\Tree\Visual Studio\Failure.png">

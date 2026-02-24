@@ -227,6 +227,12 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
 
         }
 
+        public void OnTestStarting(TreeNodeViewModel viewModel)
+        {
+            if (_viewModelToTreeNodeMap.TryGetValue(viewModel, out TreeNode treeNode))
+                TreeView.SetImageIndex(treeNode, TestTreeView.RunningIndex, true);
+        }
+
         public void OnTestFinished(IList<TreeNodeViewModel> viewModels)
         {
             foreach (TreeNodeViewModel viewModel in viewModels)
@@ -268,7 +274,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                 }
 
                 if (node.IsInTestRun)
-                    TreeView.SetImageIndex(treeNode, TestTreeView.RunningIndex);
+                    TreeView.SetImageIndex(treeNode, TestTreeView.InTestRunIndex);
                 else
                 {
                     if (node.ResultState != null)
