@@ -56,7 +56,7 @@ namespace TestCentric.Gui.Presenters.Main
             _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowNamespaces)));
 
             // 2. Assert
-            Assert.That(_view.ShowNamespace.Checked, Is.EqualTo(showNamespace));
+            Assert.That(_view.ShowNamespaces.Checked, Is.EqualTo(showNamespace));
         }
 
         [TestCase("NUNIT_TREE", true)]

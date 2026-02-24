@@ -67,7 +67,7 @@ namespace TestCentric.Gui.Presenters.Main
 
             _view.OpenTestCentricProjectCommand.Execute += Raise.Event<CommandHandler>();
 
-            _view.DialogManager.Received().GetFileOpenPath("Existing Project", "TestCentric Projects (*.tcproj)|*.tcproj");
+            _view.DialogManager.Received().GetFileOpenPath("Open TestCentric Project", "TestCentric Projects (*.tcproj)|*.tcproj");
         }
 
         [TestCase("TestCentricProject.tcproj")]
@@ -421,10 +421,10 @@ namespace TestCentric.Gui.Presenters.Main
         public void ShowNamespaceChanged_Changes_TreeConfiguration(bool showNamespace)
         {
             // Arrange
-            _view.ShowNamespace.Checked .Returns(showNamespace);
+            _view.ShowNamespaces.Checked .Returns(showNamespace);
 
             // Act
-            _view.ShowNamespace.CheckedChanged += Raise.Event<CommandHandler>();
+            _view.ShowNamespaces.CheckedChanged += Raise.Event<CommandHandler>();
 
             // Assert
             Assert.That(_model.TreeConfiguration.ShowNamespaces, Is.EqualTo(showNamespace));

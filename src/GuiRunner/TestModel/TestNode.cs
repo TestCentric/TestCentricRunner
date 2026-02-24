@@ -67,6 +67,8 @@ namespace TestCentric.Gui.Model
         public string Type => IsSuite ? GetAttribute("type") : "TestCase";
         public bool IsAssembly => Type == "Assembly";
         public bool IsProject => Type == "Project";
+        public bool IsNamespace =>
+            IsSuite && (Type == "TestSuite" || Type == "SetUpFixture");
 
         /// <summary>
         /// Controls if the TestNode should be visible or hidden in the TestTree

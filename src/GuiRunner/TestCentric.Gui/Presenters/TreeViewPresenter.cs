@@ -86,8 +86,8 @@ namespace TestCentric.Gui.Presenters
             _model.Events.TestUnloaded += (ea) =>
             {
                 Strategy.OnTestUnloaded();
-                _view.CategoryFilter.Close();
                 ResetTestFilterUIElements();
+                _view.CategoryFilter.Close();
             };
 
             _model.Events.TestsUnloading += ea =>
@@ -304,6 +304,10 @@ namespace TestCentric.Gui.Presenters
 
                 case "TestCentric.Gui.TestTree.ShowFilter":
                     _view.SetTestFilterVisibility(_model.Settings.Gui.TestTree.ShowFilter);
+                    break;
+
+                case "TestCentric.Gui.TestTree.ShowNamespaces":
+                    Strategy?.Reload();
                     break;
             }
         }

@@ -270,7 +270,7 @@ namespace TestCentric.Gui.Presenters
                         UpdateTreeDisplayMenuItem();
                         break;
                     case nameof(Model.TreeConfiguration.ShowNamespaces):
-                        _view.ShowNamespace.Checked = TreeConfiguration.ShowNamespaces;
+                        UpdateTreeDisplayMenuItem();
                         break;
                 }
             };
@@ -301,14 +301,15 @@ namespace TestCentric.Gui.Presenters
 
                 // Load Project and Tests
                 var testFiles = _options.InputFiles.ToArray();
-                if (_options.Unattended)
-                    _model.CreateNewProject("TestProject", testFiles);
-                else if (testFiles.Length == 1 && TestCentricProject.IsProjectFile(testFiles[0]))
-                    _model.OpenExistingProject(testFiles[0]);
-                else if (testFiles.Length > 1)
-                    using (var dlg = new ProjectNameDialog(_view, _model))
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                            _model.CreateNewProject(dlg.ProjectPath, testFiles);
+                if (testFiles.Length > 0)
+                {
+                    if (_options.Unattended)
+                        _model.CreateNewProject("TestProject", testFiles);
+                    else if (testFiles.Length == 1 && TestCentricProject.IsProjectFile(testFiles[0]))
+                        _model.OpenExistingProject(testFiles[0]);
+                    else // TODO: Do we want to handle a single file differently on the command-line?
+                        CreateNewProject(testFiles);
+                }
                 else if (_settings.Gui.LoadLastProject && !_options.NoLoad)
                     _model.OpenMostRecentFile();
 
@@ -364,26 +365,20 @@ namespace TestCentric.Gui.Presenters
 
             _view.NewProjectCommand.Execute += () => CreateNewProject();
 
-            _view.OpenTestCentricProjectCommand.Execute += () =>
-            {
-                var filter = "TestCentric Projects (*.tcproj)|*.tcproj";
+            _view.OpenTestCentricProjectCommand.Execute += () => OpenExistingProject();
 
-                string file = _view.DialogManager.GetFileOpenPath("Existing Project", filter);
-                if (!string.IsNullOrEmpty(file))
-                    _model.OpenExistingProject(file);
-            };
-
-            // TODO: FIX this so it works (separate PR)
+            // TODO: Decide how we want this to work
             _view.OpenTestAssemblyCommand.Execute += () =>
-                _view.MessageDisplay.Error("Not Yet Implemented");
-            //{
-            //    string[] files = _view.DialogManager.SelectMultipleFiles("New Project", _view.DialogManager.CreateOpenFileFilter());
-            //    var nFiles = files.Length;
-            //    if (nFiles > 1)    
-            //        _model.CreateNewProject(files);
-            //    else if (nFiles == 1)
-            //        _model.CreateNewProject(Path.GetFileName(files[0]) + ".tcproj", files);
-            //};
+            {
+                string[] files = _view.DialogManager.SelectMultipleFiles("New Project", _view.DialogManager.CreateOpenTestFileFilter());
+                if (files.Length > 0)
+                {
+                    var projectName = files.Length == 1
+                        ? Path.GetFileName(files[0]) + ".tcproj"
+                        : "Project1";
+                    _model.CreateNewProject(projectName, files);
+                }
+            };
 
             _view.SaveProjectCommand.Execute += () =>
             {
@@ -511,9 +506,9 @@ namespace TestCentric.Gui.Presenters
                 TreeConfiguration.DisplayFormat = _view.DisplayFormat.SelectedItem;
             };
 
-            _view.ShowNamespace.CheckedChanged += () =>
+            _view.ShowNamespaces.CheckedChanged += () =>
             {
-                TreeConfiguration.ShowNamespaces = _view.ShowNamespace.Checked;
+                TreeConfiguration.ShowNamespaces = _view.ShowNamespaces.Checked;
             };
 
             _view.ShowHideFilterButton.CheckedChanged += () =>
@@ -582,6 +577,9 @@ namespace TestCentric.Gui.Presenters
             #endregion
         }
 
+        /// <summary>
+        /// Create a new project using information from user
+        /// </summary>
         private void CreateNewProject()
         {
             var dlg = new NewProjectDialog(_view, _model);
@@ -592,6 +590,25 @@ namespace TestCentric.Gui.Presenters
                 var testFiles = dlg.TestFiles;
                 _model.CreateNewProject(projectPath, dlg.TestFiles);
             }
+        }
+
+        /// <summary>
+        /// Create a new project for a set of files already provided
+        /// </summary>
+        /// <param name="testFiles">The test files to be used for the project</param>
+        private void CreateNewProject(string[] testFiles)
+        {
+            using (var dlg = new ProjectNameDialog(_view, _model))
+                if (dlg.ShowDialog() == DialogResult.OK)
+                    _model.CreateNewProject(dlg.ProjectPath, testFiles);
+        }
+
+        private void OpenExistingProject()
+        {
+            string file = _view.DialogManager.GetFileOpenPath(
+                "Open TestCentric Project", "TestCentric Projects (*.tcproj)|*.tcproj");
+            if (!string.IsNullOrEmpty(file))
+                _model.OpenExistingProject(file);
         }
 
         private void SaveFormLocationAndSize(string guiLayout)
@@ -916,8 +933,8 @@ namespace TestCentric.Gui.Presenters
             if (displayFormat == "TEST_LIST")
                 _view.TestListGroupBy.SelectedItem = TreeConfiguration.TestListGroupBy;
 
-            _view.ShowNamespace.Checked = TreeConfiguration.ShowNamespaces;
-            _view.ShowNamespace.Enabled = displayFormat == "NUNIT_TREE";
+            _view.ShowNamespaces.Checked = TreeConfiguration.ShowNamespaces;
+            _view.ShowNamespaces.Enabled = displayFormat == "NUNIT_TREE";
         }
 
         private void RunAllTests()
