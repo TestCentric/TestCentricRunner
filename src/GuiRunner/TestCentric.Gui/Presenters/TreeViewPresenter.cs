@@ -113,6 +113,7 @@ namespace TestCentric.Gui.Presenters
                 Strategy?.Reload(true);
             };
 
+            // Use specific strategy to determine which tree nodes need to be updated.
             _model.Events.TestStarting += (args) => Strategy.OnTestStarting(args.Test);
             _model.Events.TestFinished += OnTestFinished;
             _model.Events.SuiteFinished += OnTestFinished;
