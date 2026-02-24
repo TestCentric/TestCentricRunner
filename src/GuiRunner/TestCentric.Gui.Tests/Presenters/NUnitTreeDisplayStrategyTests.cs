@@ -26,7 +26,6 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model = Substitute.For<ITestModel>();
             _model.TreeConfiguration.ShowNamespaces = true;
             _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
-            _model.TreeConfiguration.NUnitGroupBy = "UNGROUPED";
 
             // We can't construct a TreeNodeCollection, so we fake it
             var nodes = new TreeNode().Nodes;

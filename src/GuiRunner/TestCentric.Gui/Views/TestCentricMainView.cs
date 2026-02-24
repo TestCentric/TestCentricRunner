@@ -82,13 +82,10 @@ namespace TestCentric.Gui.Views
             DisplayFormat = new CheckedToolStripMenuGroup(
                 "displayFormat",
                 nunitTreeMenuItem, testListMenuItem);
-            NUnitGroupBy = new CheckedToolStripMenuGroup(
-                "NUnitGroupBy",
-                nunitTreeUngroupedMenuItem, nunitTreeByCategoryMenuItem, nunitTreeByOutcomeMenuItem, nunitTreeByDurationMenuItem);
             TestListGroupBy = new CheckedToolStripMenuGroup(
                 "TestListGroupBy",
                 testListUngroupedMenuItem, testListByAssemblyMenuItem, testListByFixtureMenuItem, testListByCategoryMenuItem, testListByOutcomeMenuItem, testListByDurationMenuItem);
-            ShowNamespace = new CheckedMenuElement(nunitTreeShowNamespaceMenuItem);
+            ShowNamespace = new CheckedMenuElement(nunitTreeShowNamespacesMenuItem);
             ShowHideFilterButton = new ToolStripButtonElement(showFilterButton);
             RunParametersButton = new ToolStripButtonElement(runParametersButton);
 
@@ -180,7 +177,6 @@ namespace TestCentric.Gui.Views
 
         public IPopup DisplayFormatButton { get; private set; }
         public ISelection DisplayFormat { get; private set; }
-        public ISelection NUnitGroupBy { get; private set; }
         public ISelection TestListGroupBy { get; private set; }
 
         public IChecked ShowNamespace { get; private set; }
@@ -250,6 +246,5 @@ namespace TestCentric.Gui.Views
         }
 
         #endregion
-
     }
 }

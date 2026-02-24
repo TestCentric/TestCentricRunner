@@ -316,7 +316,6 @@ namespace TestCentric.Gui.Presenters
                     Strategy = _treeDisplayStrategyFactory.Create(TreeConfiguration.DisplayFormat, _view, _model);
                     Strategy.Reload();
                     break;
-                case nameof(TreeConfiguration.NUnitGroupBy):
                 case nameof(TreeConfiguration.TestListGroupBy):
                 case nameof(TreeConfiguration.ShowNamespaces):
                     Strategy?.Reload();
@@ -365,7 +364,6 @@ namespace TestCentric.Gui.Presenters
                 TreeConfiguration.ShowCheckBoxes = visualState.ShowCheckBoxes;
                 TreeConfiguration.DisplayFormat = visualState.DisplayStrategy;
                 TreeConfiguration.ShowNamespaces = visualState.ShowNamespaces;
-                TreeConfiguration.NUnitGroupBy = TreeConfiguration.DisplayFormat == "NUNIT_TREE" ? visualState.GroupBy : "UNGROUPED";
                 TreeConfiguration.TestListGroupBy = TreeConfiguration.DisplayFormat == "TEST_LIST" ? visualState.GroupBy : "UNGROUPED";
             }
             else
@@ -374,7 +372,6 @@ namespace TestCentric.Gui.Presenters
                 ITestTreeSettings treeSettings = _model.Settings.Gui.TestTree;
                 TreeConfiguration.ShowCheckBoxes = treeSettings.ShowCheckBoxes;
                 TreeConfiguration.DisplayFormat = treeSettings.DisplayFormat;
-                TreeConfiguration.NUnitGroupBy = "UNGROUPED";
                 TreeConfiguration.TestListGroupBy = "UNGROUPED";
                 TreeConfiguration.ShowNamespaces = true;
                 TreeConfiguration.ShowTestDuration = false;
