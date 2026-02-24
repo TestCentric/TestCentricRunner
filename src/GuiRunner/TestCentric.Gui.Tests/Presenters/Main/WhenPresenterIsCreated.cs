@@ -58,23 +58,6 @@ namespace TestCentric.Gui.Presenters.Main
             _view.DisplayFormat.Received().SelectedItem = displayFormat;
         }
 
-        [TestCase("UNGROUPED")]
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
-        [TestCase("DURATION")]
-        public void CheckMenu_NUnitTreeGroupBy_SelectedItem_IsInitializedFromTreeConfiguration(string groupBy)
-        {
-            // 1. Arrange
-            _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
-            _model.TreeConfiguration.NUnitGroupBy = groupBy;
-
-            // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model);
-
-            // 3. Assert
-            _view.NUnitGroupBy.Received().SelectedItem = groupBy;
-        }
-
         [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]

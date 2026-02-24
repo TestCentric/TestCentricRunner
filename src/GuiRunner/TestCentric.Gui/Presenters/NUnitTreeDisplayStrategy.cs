@@ -48,14 +48,7 @@ namespace TestCentric.Gui.Presenters
             ClearTree();
 
             // 1. Create tree view model
-            switch (TreeConfiguration.NUnitGroupBy)
-            {
-                case "CATEGORY": _treeViewModel = new TreeViewModelCategoryGrouping(_model); break;
-                case "OUTCOME": _treeViewModel = new TreeViewModelOutcomeGrouping(_model); break;
-                case "DURATION": _treeViewModel = new TreeViewModelDurationGrouping(_model); break;
-                default: _treeViewModel = new TreeViewModelNoGrouping(_model); break;
-            }
-
+            _treeViewModel = new TreeViewModelNoGrouping(_model);
             _treeViewModel.CreateTreeModel(testNode);
 
             // 2. Create tree view control
@@ -119,7 +112,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.InvokeIfRequired(() =>
             {
-                visualState = new VisualState("NUNIT_TREE", _model.TreeConfiguration.NUnitGroupBy, _model.TreeConfiguration.ShowNamespaces).LoadFrom(_view.TreeView);
+                visualState = new VisualState("NUNIT_TREE", null, _model.TreeConfiguration.ShowNamespaces).LoadFrom(_view.TreeView);
             });
 
             return visualState;

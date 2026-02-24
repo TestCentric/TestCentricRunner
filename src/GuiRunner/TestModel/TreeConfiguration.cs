@@ -19,8 +19,6 @@ namespace TestCentric.Gui.Model
 
         string DisplayFormat { get; set; }
 
-        string NUnitGroupBy { get; set; }
-
         string TestListGroupBy { get; set; }
     }
 
@@ -34,7 +32,6 @@ namespace TestCentric.Gui.Model
         private bool _showNamespaces = true;
         private bool _showTestDuration = false;
         private string _displayFormat = "NUNIT_TREE";
-        private string _nunitGroupBy = "UNGROUPED";
         private string _testListGroupBy = "UNGROUPED";
 
         public bool ShowCheckBoxes
@@ -74,16 +71,6 @@ namespace TestCentric.Gui.Model
             {
                 _displayFormat = value;
                 OnPropertyChanged(nameof(DisplayFormat));
-            }
-        }
-
-        public string NUnitGroupBy
-        {
-            get => _nunitGroupBy;
-            set
-            {
-                _nunitGroupBy = value;
-                OnPropertyChanged(nameof(NUnitGroupBy));
             }
         }
 

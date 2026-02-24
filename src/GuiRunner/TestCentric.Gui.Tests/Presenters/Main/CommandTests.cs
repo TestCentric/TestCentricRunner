@@ -362,17 +362,6 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [Test]
-        public void NUnitTreeGroupByChange_Changes_TreeConfiguration()
-        {
-            _view.DisplayFormat.SelectedItem.Returns("NUNIT_TREE");
-            _view.NUnitGroupBy.SelectedItem.Returns("CATEGORY");
-            _view.NUnitGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
-
-            // Assert
-            Assert.That(_model.TreeConfiguration.NUnitGroupBy, Is.EqualTo("CATEGORY"));
-        }
-
-        [Test]
         public void StopRunButton_StopsTests()
         {
             _view.StopRunButton.ClearReceivedCalls();

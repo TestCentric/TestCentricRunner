@@ -165,43 +165,6 @@ namespace TestCentric.Gui.Presenters.TestTree
             Assert.That(_model.TreeConfiguration.DisplayFormat, Is.EqualTo(displayFormat));
         }
 
-        [TestCase("UNGROUPED")]
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
-        [TestCase("DURATION")]
-        public void WithVisualState_NUnitTreeGroupBySettingIsUpdatedFromVisualState(string groupBy)
-        {
-            // Arrange: Create and save VisualState file
-            VisualState visualState = new VisualState()
-            {
-                DisplayStrategy = "NUNIT_TREE",
-                GroupBy = groupBy
-            };
-            //visualState.Save(VISUAL_STATE_FILE_NAME);
-            _model.TryLoadVisualState(out Arg.Any<VisualState>()).Returns(x =>
-            {
-                x[0] = visualState;
-                return true;
-            });
-
-            var treeConfig = new TreeConfiguration()
-            {
-                DisplayFormat = "NUNIT_TREE",
-                NUnitGroupBy = groupBy,
-                TestListGroupBy = groupBy
-            };
-            _model.TreeConfiguration.Returns(treeConfig);
-            //var tv = new TreeView();
-            //_view.TreeView.Returns(tv);
-
-            // Act: Load tests
-            FireTestLoadedEvent(TEST_NODE);
-
-            // Assert
-            Assert.That(_model.TreeConfiguration.NUnitGroupBy, Is.EqualTo(groupBy));
-            //Assert.That(_model.TreeConfiguration.TestListGroupBy, Is.EqualTo("UNGROUPED"));     // Assert that testList groupBy is reset
-        }
-
         [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
@@ -218,7 +181,6 @@ namespace TestCentric.Gui.Presenters.TestTree
             var treeConfig = new TreeConfiguration()
             {
                 DisplayFormat = "TEST_LIST",
-                NUnitGroupBy = groupBy,
                 TestListGroupBy = groupBy
             };
             _model.TreeConfiguration.Returns(treeConfig);
