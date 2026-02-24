@@ -21,7 +21,7 @@ namespace TestCentric.Gui.Elements.ToolStripElements
                 item.DropDown.Opening += (s, e) => e.Cancel = !item.Checked;
                 item.CheckedChanged += (s, e) =>
                 {
-                    if (item.Checked)
+                    if (item.Checked && item.Visible)
                         item.DropDown.Show();
                 };
             }
