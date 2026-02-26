@@ -21,13 +21,13 @@ namespace TestCentric.Gui.Views
         /// indices are correct. These are ordered so that the higher values 
         /// are those that propagate upwards in the tree.
         /// </summary>
-        private static readonly string[] IMAGE_NAMES = { "Skipped", "InTestRun", "Running",
+        private static readonly string[] IMAGE_NAMES = { "Skipped", "Pending", "Running",
             "Inconclusive_NotLatestRun", "Success_NotLatestRun", "Ignored_NotLatestRun", "Warning_NotLatestRun", "Failure_NotLatestRun", 
             "Inconclusive", "Success", "Ignored", "Warning", "Failure" };
 
         public const int InitIndex = 0;
         public const int SkippedIndex = 0;
-        public const int InTestRunIndex = 1;
+        public const int PendingIndex = 1;
         public const int RunningIndex = 2;
         public const int InconclusiveIndex_NotLatestRun = 3;
         public const int SuccessIndex_NotLatestRun = 4;

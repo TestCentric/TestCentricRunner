@@ -274,7 +274,7 @@ namespace TestCentric.Gui.Presenters.NUnitGrouping
                 }
 
                 if (node.IsInTestRun)
-                    TreeView.SetImageIndex(treeNode, TestTreeView.InTestRunIndex);
+                    TreeView.SetImageIndex(treeNode, TestTreeView.PendingIndex);
                 else
                 {
                     if (node.ResultState != null)

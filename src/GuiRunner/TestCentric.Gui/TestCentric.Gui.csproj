@@ -41,7 +41,7 @@
         <Content Include="Images\Tree\Circles\Warning_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="Images\Tree\Circles\InTestRun.png">
+        <Content Include="Images\Tree\Circles\Pending.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
 		<!--
@@ -94,7 +94,7 @@
         <Content Include="Images\Tree\Classic\Warning_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="Images\Tree\Classic\InTestRun.png">
+        <Content Include="Images\Tree\Classic\Pending.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Images\Tree\Classic\Failure.png">
@@ -133,7 +133,7 @@
         <Content Include="Images\Tree\Visual Studio\Warning_NotLatestRun.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="Images\Tree\Visual Studio\InTestRun.png">
+        <Content Include="Images\Tree\Visual Studio\Pending.png">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Images\Tree\Visual Studio\Failure.png">

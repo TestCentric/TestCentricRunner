@@ -322,11 +322,11 @@ namespace TestCentric.Gui.Presenters
             {
                 UpdateTreeIconsOnRunStart(treeNode.Nodes);
 
-                bool anyChildNodeRunning = treeNode.Nodes.OfType<TreeNode>().Any(t => t.ImageIndex == TestTreeView.InTestRunIndex);
+                bool anyChildNodeRunning = treeNode.Nodes.OfType<TreeNode>().Any(t => t.ImageIndex == TestTreeView.PendingIndex);
                 int imageIndex = treeNode.ImageIndex;
 
                 if (anyChildNodeRunning || treeNode.Tag is TestNode testNode && _model.IsInTestRun(testNode))
-                    imageIndex = TestTreeView.InTestRunIndex;
+                    imageIndex = TestTreeView.PendingIndex;
                 else
                 {
                     imageIndex = UpdateTreeIconToPreviousRun(treeNode.ImageIndex);
@@ -361,7 +361,7 @@ namespace TestCentric.Gui.Presenters
             // Only required for exceptional use case 'force stop test run'
             foreach (TreeNode treeNode in treeNodes)
             {
-                if (treeNode.ImageIndex == TestTreeView.InTestRunIndex || treeNode.ImageIndex == TestTreeView.RunningIndex)
+                if (treeNode.ImageIndex == TestTreeView.PendingIndex || treeNode.ImageIndex == TestTreeView.RunningIndex)
                     _view.SetImageIndex(treeNode, TestTreeView.SkippedIndex);
 
                 ResetTestRunningIcons(treeNode.Nodes);
