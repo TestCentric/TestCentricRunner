@@ -26,7 +26,7 @@ static readonly FilePath[] GUI_FILES = {
         "testcentric.exe", "testcentric.exe.config", "nunit.uiexception.dll",
         "TestCentric.Gui.Runner.dll", "TestCentric.Gui.Model.dll" };
 static readonly FilePath[] TREE_ICONS_PNG = {
-        "Success.png", "Failure.png", "Warning.png", "Ignored.png", "Inconclusive.png", "Running.png", "Success_NotLatestRun.png", "Failure_NotLatestRun.png", "Warning_NotLatestRun.png", "Ignored_NotLatestRun.png", "Inconclusive_NotLatestRun.png", "Skipped.png" };
+        "Success.png", "Failure.png", "Warning.png", "Ignored.png", "Inconclusive.png", "Pending.png", "Running.png", "Success_NotLatestRun.png", "Failure_NotLatestRun.png", "Warning_NotLatestRun.png", "Ignored_NotLatestRun.png", "Inconclusive_NotLatestRun.png", "Skipped.png" };
 
 private const string GUI_DESCRIPTION =
 	"The TestCentric Runner for NUnit (**TestCentric**) is a GUI runner aimed at eventually supporting a range of .NET testing frameworks. In the 1.x release series, we are concentrating on support of NUnit tests. The user interface is based on the layout and feature set of the of the original NUnit GUI, with the internals modified so as to run NUnit 3 tests." +
@@ -57,15 +57,15 @@ var NuGetGuiPackage = new NuGetPackage(
 			new DirectoryContent("tools/Images/Tree/Circles").WithFiles(
 				"Images/Tree/Circles/Success.png", "Images/Tree/Circles/Failure.png", "Images/Tree/Circles/Warning.png", "Images/Tree/Circles/Ignored.png", "Images/Tree/Circles/Inconclusive.png", 
 				"Images/Tree/Circles/Success_NotLatestRun.png", "Images/Tree/Circles/Failure_NotLatestRun.png", "Images/Tree/Circles/Warning_NotLatestRun.png", "Images/Tree/Circles/Ignored_NotLatestRun.png", "Images/Tree/Circles/Inconclusive_NotLatestRun.png", 
-				"Images/Tree/Circles/Running.png", "Images/Tree/Circles/Skipped.png"),
+				"Images/Tree/Circles/Running.png", "Images/Tree/Circles/Pending.png", "Images/Tree/Circles/Skipped.png"),
 			new DirectoryContent("tools/Images/Tree/Classic").WithFiles(
 				"Images/Tree/Classic/Success.png", "Images/Tree/Classic/Failure.png", "Images/Tree/Classic/Warning.png", "Images/Tree/Classic/Ignored.png", "Images/Tree/Classic/Inconclusive.png",
 				"Images/Tree/Classic/Success_NotLatestRun.png", "Images/Tree/Classic/Failure_NotLatestRun.png", "Images/Tree/Classic/Warning_NotLatestRun.png", "Images/Tree/Classic/Ignored_NotLatestRun.png", "Images/Tree/Classic/Inconclusive_NotLatestRun.png",
-				"Images/Tree/Classic/Running.png", "Images/Tree/Classic/Skipped.png"),
+				"Images/Tree/Classic/Running.png", "Images/Tree/Classic/Pending.png", "Images/Tree/Classic/Skipped.png"),
 			new DirectoryContent("tools/Images/Tree/Visual Studio").WithFiles(
 				"Images/Tree/Visual Studio/Success.png", "Images/Tree/Visual Studio/Failure.png", "Images/Tree/Visual Studio/Warning.png", "Images/Tree/Visual Studio/Ignored.png", "Images/Tree/Visual Studio/Inconclusive.png", 
 				"Images/Tree/Visual Studio/Success_NotLatestRun.png", "Images/Tree/Visual Studio/Failure_NotLatestRun.png", "Images/Tree/Visual Studio/Warning_NotLatestRun.png", "Images/Tree/Visual Studio/Ignored_NotLatestRun.png", "Images/Tree/Visual Studio/Inconclusive_NotLatestRun.png", 
-				"Images/Tree/Visual Studio/Running.png",  "Images/Tree/Visual Studio/Skipped.png") )
+				"Images/Tree/Visual Studio/Running.png", "Images/Tree/Visual Studio/Pending.png", "Images/Tree/Visual Studio/Skipped.png") )
 		.WithDependencies( KnownExtensions.BundledNuGetAgents ),
     testRunner: new GuiSelfTester(BuildSettings.PackageTestDirectory + "TestCentric.GuiRunner/TestCentric.GuiRunner." + BuildSettings.PackageVersion + "/tools/testcentric.exe"),
 	checks: new PackageCheck[] {
@@ -93,15 +93,15 @@ var ChocolateyGuiPackage = new ChocolateyPackage(
             new DirectoryContent("tools/Images/Tree/Circles").WithFiles(
                 "Images/Tree/Circles/Success.png", "Images/Tree/Circles/Failure.png", "Images/Tree/Circles/Warning.png", "Images/Tree/Circles/Ignored.png", "Images/Tree/Circles/Inconclusive.png", 
 				"Images/Tree/Circles/Success_NotLatestRun.png", "Images/Tree/Circles/Failure_NotLatestRun.png", "Images/Tree/Circles/Warning_NotLatestRun.png", "Images/Tree/Circles/Ignored_NotLatestRun.png", "Images/Tree/Circles/Inconclusive_NotLatestRun.png", 
-				"Images/Tree/Circles/Running.png", "Images/Tree/Circles/Skipped.png"),
+				"Images/Tree/Circles/Running.png", "Images/Tree/Circles/Pending.png", "Images/Tree/Circles/Skipped.png"),
             new DirectoryContent("tools/Images/Tree/Classic").WithFiles(
                 "Images/Tree/Classic/Success.png", "Images/Tree/Classic/Failure.png", "Images/Tree/Classic/Warning.png", "Images/Tree/Classic/Ignored.png", "Images/Tree/Classic/Inconclusive.png", 
 				"Images/Tree/Classic/Success_NotLatestRun.png", "Images/Tree/Classic/Failure_NotLatestRun.png", "Images/Tree/Classic/Warning_NotLatestRun.png", "Images/Tree/Classic/Ignored_NotLatestRun.png", "Images/Tree/Classic/Inconclusive_NotLatestRun.png",
-				"Images/Tree/Classic/Running.png", "Images/Tree/Classic/Skipped.png"),
+				"Images/Tree/Classic/Running.png", "Images/Tree/Classic/Pending.png", "Images/Tree/Classic/Skipped.png"),
             new DirectoryContent("tools/Images/Tree/Visual Studio").WithFiles(
                 "Images/Tree/Visual Studio/Success.png", "Images/Tree/Visual Studio/Failure.png", "Images/Tree/Visual Studio/Warning.png", "Images/Tree/Visual Studio/Ignored.png", "Images/Tree/Visual Studio/Inconclusive.png", 
 				"Images/Tree/Visual Studio/Success_NotLatestRun.png", "Images/Tree/Visual Studio/Failure_NotLatestRun.png", "Images/Tree/Visual Studio/Warning_NotLatestRun.png", "Images/Tree/Visual Studio/Ignored_NotLatestRun.png", "Images/Tree/Visual Studio/Inconclusive_NotLatestRun.png", 
-				"Images/Tree/Visual Studio/Running.png", "Images/Tree/Visual Studio/Skipped.png"))
+				"Images/Tree/Visual Studio/Running.png", "Images/Tree/Visual Studio/Pending.png", "Images/Tree/Visual Studio/Skipped.png"))
         .WithDependencies( KnownExtensions.BundledChocolateyAgents ),
     testRunner: new GuiSelfTester(BuildSettings.PackageTestDirectory + "testcentric-gui/testcentric-gui." + BuildSettings.PackageVersion + "/tools/testcentric.exe"),
 	checks: new PackageCheck[] {

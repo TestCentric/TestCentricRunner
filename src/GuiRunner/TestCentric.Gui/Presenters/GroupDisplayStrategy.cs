@@ -135,7 +135,7 @@ namespace TestCentric.Gui.Presenters
                 if (newGroup.Count() == 1)
                 {
                     _view.Clear();
-                    newParent.ImageIndex = newParent.SelectedImageIndex = TestTreeView.RunningIndex;
+                    newParent.ImageIndex = newParent.SelectedImageIndex = TestTreeView.PendingIndex;
 
                     TreeNode topNode = null;
                     foreach (var group in _grouping.Groups)

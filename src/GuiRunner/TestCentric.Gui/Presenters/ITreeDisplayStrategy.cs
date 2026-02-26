@@ -33,6 +33,11 @@ namespace TestCentric.Gui.Presenters
         VisualState CreateVisualState();
 
         /// <summary>
+        /// Called when one test is starting
+        /// </summary>
+        void OnTestStarting(TestNode testNode);
+
+        /// <summary>
         /// Called when one test is finished: update tree node according to test result
         /// </summary>
         void OnTestFinished(ResultNode result);
