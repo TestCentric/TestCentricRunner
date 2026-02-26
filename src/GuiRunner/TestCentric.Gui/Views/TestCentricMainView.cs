@@ -33,17 +33,19 @@ namespace TestCentric.Gui.Views
             // Initialize File Menu Commands
             FileMenu = new PopupMenuElement(fileMenu);
             NewProjectCommand = new CommandMenuElement(newProjectMenuItem);
-            OpenProjectCommand = new CommandMenuElement(openProjectMenuItem);
-            OpenTestCentricProjectCommand = new CommandMenuElement(openTestCentricProjectMenuItem);
-            OpenTestAssemblyCommand = new CommandMenuElement(openTestAssemblyMenuItem);
+            OpenProjectCommand = new CommandMenuElement(openTestCentricProjectMenuItem);
+            OpenTestFileCommand = new CommandMenuElement(openTestAssemblyMenuItem);
 
             SaveProjectCommand = new CommandMenuElement(saveProjectMenuItem);
+            SaveAsCommand = new CommandMenuElement(saveAsMenuItem);
             CloseProjectCommand = new CommandMenuElement(closeMenuItem);
             AddTestFilesCommand = new CommandMenuElement(addTestFileMenuItem);
+            EditProjectCommand = new CommandMenuElement(editProjectMenuItem);
             ReloadTestsCommand = new CommandMenuElement(reloadTestsMenuItem);
             TestRunSettingsCommand = new CommandMenuElement(testRunSettingsMenuItem);
             SelectAgentMenu = new PopupMenuElement(selectAgentMenu);
             RunAsX86 = new CheckedMenuElement(runAsX86MenuItem);
+            RecentProjectsMenu = new PopupMenuElement(recentProjectsMenu);
             RecentFilesMenu = new PopupMenuElement(recentFilesMenu);
             ExitCommand = new CommandMenuElement(exitMenuItem);
 
@@ -130,14 +132,16 @@ namespace TestCentric.Gui.Views
         public IPopup FileMenu { get; }
         public ICommand NewProjectCommand { get; }
         public ICommand OpenProjectCommand { get; }
-        public ICommand OpenTestCentricProjectCommand { get; }
-        public ICommand OpenTestAssemblyCommand { get; }
+        public ICommand OpenTestFileCommand { get; }
         public ICommand SaveProjectCommand { get; }
+        public ICommand SaveAsCommand { get; }
         public ICommand CloseProjectCommand { get; }
         public ICommand AddTestFilesCommand { get; }
+        public ICommand EditProjectCommand { get; }
         public ICommand ReloadTestsCommand { get; }
         public IPopup SelectAgentMenu { get; }
         public IChecked RunAsX86 { get; private set; }
+        public IPopup RecentProjectsMenu { get; }
         public IPopup RecentFilesMenu { get; }
         public ICommand ExitCommand { get; }
 

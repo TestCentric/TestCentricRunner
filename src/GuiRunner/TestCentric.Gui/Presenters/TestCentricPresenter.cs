@@ -351,7 +351,7 @@ namespace TestCentric.Gui.Presenters
                 bool isPackageLoaded = _model.IsProjectLoaded;
                 bool isTestRunning = _model.IsTestRunning;
 
-                _view.OpenProjectCommand.Enabled = _view.OpenTestCentricProjectCommand.Enabled = _view.OpenTestAssemblyCommand.Enabled = !isTestRunning;
+                _view.OpenProjectCommand.Enabled = _view.OpenProjectCommand.Enabled = _view.OpenTestFileCommand.Enabled = !isTestRunning;
                 _view.CloseProjectCommand.Enabled = isPackageLoaded && !isTestRunning;
 
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
@@ -360,15 +360,14 @@ namespace TestCentric.Gui.Presenters
 
                 _view.RunAsX86.Enabled = isPackageLoaded && !isTestRunning;
 
-                _view.RecentFilesMenu.Enabled = !isTestRunning;
+                _view.RecentProjectsMenu.Enabled = _view.RecentFilesMenu.Enabled = !isTestRunning;
             };
 
             _view.NewProjectCommand.Execute += () => CreateNewProject();
 
-            _view.OpenTestCentricProjectCommand.Execute += () => OpenExistingProject();
+            _view.OpenProjectCommand.Execute += () => OpenExistingProject();
 
-            // TODO: Decide how we want this to work
-            _view.OpenTestAssemblyCommand.Execute += () =>
+            _view.OpenTestFileCommand.Execute += () =>
             {
                 string[] files = _view.DialogManager.SelectMultipleFiles("New Project", _view.DialogManager.CreateOpenTestFileFilter());
                 if (files.Length == 1)
@@ -393,15 +392,15 @@ namespace TestCentric.Gui.Presenters
                     _model.SaveProject(projectPath);
             };
 
+            _view.SaveAsCommand.Execute += () =>
+                _view.MessageDisplay.Error("Not Yet Implemented!");
+
             _view.CloseProjectCommand.Execute += () => _model.CloseProject();
 
             _view.AddTestFilesCommand.Execute += AddTestFiles;
+            _view.EditProjectCommand.Execute += () =>
+                _view.MessageDisplay.Error("Not Yet Implemented!");
             _view.ReloadTestsCommand.Execute += ReloadTests;
-
-            //_view.SelectAgentMenu.Popup += () =>
-            //{
-            //    _agentSelectionController.PopulateMenu();
-            //};
 
             _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
 
@@ -778,8 +777,9 @@ namespace TestCentric.Gui.Presenters
             _view.StopRunButton.Visible = !displayForcedStop;
             _view.StopRunButton.Enabled = testRunning && !_stopRequested;
 
-            _view.OpenProjectCommand.Enabled = _view.OpenTestCentricProjectCommand.Enabled = _view.OpenTestAssemblyCommand.Enabled = !testLoading && !testRunning;
+            _view.OpenProjectCommand.Enabled = _view.OpenProjectCommand.Enabled = _view.OpenTestFileCommand.Enabled = !testLoading && !testRunning;
             _view.SaveProjectCommand.Enabled = testLoaded && !testRunning;
+            _view.SaveAsCommand.Enabled = testLoaded && !testRunning;
 
             _view.CloseProjectCommand.Enabled = testLoaded & !testRunning;
             _view.AddTestFilesCommand.Enabled = testLoaded && !testRunning;

@@ -495,7 +495,9 @@ namespace TestCentric.Gui.Model
             if (TestCentricProject.ProjectPath == null)
                 foreach (var subPackage in TopLevelPackage.SubPackages)
                     RecentFiles.Latest = subPackage.FullName;
-            else 
+            else if (TestCentricProject.ProjectPath.EndsWith(".dll.tcproj"))
+                RecentFiles.Latest = Path.GetFileNameWithoutExtension(TestCentricProject.ProjectPath);
+            else
                 RecentFiles.Latest = TestCentricProject.ProjectPath;
         }
 
