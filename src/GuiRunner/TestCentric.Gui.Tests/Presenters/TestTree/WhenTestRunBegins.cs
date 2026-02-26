@@ -88,9 +88,9 @@ namespace TestCentric.Gui.Presenters.TestTree
             FireRunStartingEvent(1234);
 
             // Assert
-            _view.Received().SetImageIndex(treeNodes[0], TestTreeView.RunningIndex);
-            _view.Received().SetImageIndex(treeNodes[1], TestTreeView.RunningIndex);
-            _view.Received().SetImageIndex(treeNodes[0].Nodes[0], TestTreeView.RunningIndex);
+            _view.Received().SetImageIndex(treeNodes[0], TestTreeView.PendingIndex);
+            _view.Received().SetImageIndex(treeNodes[1], TestTreeView.PendingIndex);
+            _view.Received().SetImageIndex(treeNodes[0].Nodes[0], TestTreeView.PendingIndex);
         }
 
         // TODO: FIX
@@ -147,7 +147,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             FireRunStartingEvent(1234);
 
             // Assert
-            _view.Received().SetImageIndex(treeNodes[0], TestTreeView.RunningIndex);
+            _view.Received().SetImageIndex(treeNodes[0], TestTreeView.PendingIndex);
             _view.Received().SetImageIndex(treeNodes[1], expectedImageIndex);
             _view.Received().SetImageIndex(treeNodes[2], expectedImageIndex);
             _view.Received().SetImageIndex(treeNodes[3], expectedImageIndex);
