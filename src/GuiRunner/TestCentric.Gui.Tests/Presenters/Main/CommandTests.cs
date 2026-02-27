@@ -33,7 +33,7 @@ namespace TestCentric.Gui.Presenters.Main
             _model.NUnitProjectSupport.Returns(nunitSupport);
             _model.VisualStudioSupport.Returns(vsSupport);
 
-            _view.OpenTestAssemblyCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenTestFileCommand.Execute += Raise.Event<CommandHandler>();
 
             _view.DialogManager.Received().SelectMultipleFiles("New Project", filter);
         }
@@ -55,7 +55,7 @@ namespace TestCentric.Gui.Presenters.Main
         {
             _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(NO_FILES_SELECTED);
 
-            _view.OpenTestAssemblyCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenTestFileCommand.Execute += Raise.Event<CommandHandler>();
 
             _model.DidNotReceiveWithAnyArgs().CreateNewProject("name");
         }
@@ -65,7 +65,7 @@ namespace TestCentric.Gui.Presenters.Main
         {
             _view.DialogManager.GetFileOpenPath(null, null).ReturnsForAnyArgs("");
 
-            _view.OpenTestCentricProjectCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenProjectCommand.Execute += Raise.Event<CommandHandler>();
 
             _view.DialogManager.Received().GetFileOpenPath("Open TestCentric Project", "TestCentric Projects (*.tcproj)|*.tcproj");
         }
@@ -77,7 +77,7 @@ namespace TestCentric.Gui.Presenters.Main
             var file = Path.GetFullPath(projectname);
             _view.DialogManager.GetFileOpenPath(null, null).ReturnsForAnyArgs(file);
 
-            _view.OpenTestCentricProjectCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenProjectCommand.Execute += Raise.Event<CommandHandler>();
 
             _model.Received().OpenExistingProject(file);
         }
@@ -88,7 +88,7 @@ namespace TestCentric.Gui.Presenters.Main
         {
             _view.DialogManager.GetFileOpenPath(null, null).ReturnsForAnyArgs(fileName);
 
-            _view.OpenTestCentricProjectCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenProjectCommand.Execute += Raise.Event<CommandHandler>();
 
             _model.DidNotReceiveWithAnyArgs().OpenExistingProject(null);
         }
@@ -99,7 +99,7 @@ namespace TestCentric.Gui.Presenters.Main
             _view.DialogManager.GetFileOpenPath(null, null).ReturnsForAnyArgs("Test.tcproj");
             _model.When(m => m.OpenExistingProject("Test.tcproj")).Do(x => throw new IOException("Disk error"));
 
-            _view.OpenTestCentricProjectCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenProjectCommand.Execute += Raise.Event<CommandHandler>();
 
             _view.MessageDisplay.Received().Error(Arg.Any<string>());
         }
@@ -107,7 +107,7 @@ namespace TestCentric.Gui.Presenters.Main
         [Test]
         public void OpenTestCentricProjectCommand_IsEnabled()
         {
-            bool isEnabled = _view.OpenTestCentricProjectCommand.Enabled;
+            bool isEnabled = _view.OpenProjectCommand.Enabled;
 
             Assert.That(isEnabled, Is.True);
         }
@@ -115,7 +115,7 @@ namespace TestCentric.Gui.Presenters.Main
         [Test]
         public void OpenTestAssemblyCommand_IsEnabled()
         {
-            bool isEnabled = _view.OpenTestAssemblyCommand.Enabled;
+            bool isEnabled = _view.OpenTestFileCommand.Enabled;
 
             Assert.That(isEnabled, Is.True);
         }

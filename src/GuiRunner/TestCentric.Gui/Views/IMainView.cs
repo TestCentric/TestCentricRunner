@@ -30,19 +30,21 @@ namespace TestCentric.Gui.Views
         // File Menu Items
         IPopup FileMenu { get; }
         ICommand NewProjectCommand { get; }
+
         ICommand OpenProjectCommand { get; }
 
-        ICommand OpenTestCentricProjectCommand { get; }
-
-        ICommand OpenTestAssemblyCommand { get; }
+        ICommand OpenTestFileCommand { get; }
 
         ICommand SaveProjectCommand { get; }
+        ICommand SaveAsCommand { get; }
 
         ICommand CloseProjectCommand { get; }
         ICommand AddTestFilesCommand { get; }
+        ICommand EditProjectCommand { get; }
         ICommand ReloadTestsCommand { get; }
         IPopup SelectAgentMenu { get; }
         IChecked RunAsX86 { get; }
+        IPopup RecentProjectsMenu { get; }
         IPopup RecentFilesMenu { get; }
         ICommand ExitCommand { get; }
 
