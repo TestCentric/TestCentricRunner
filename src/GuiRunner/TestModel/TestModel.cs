@@ -4,11 +4,13 @@
 // ***********************************************************************
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
@@ -383,14 +385,42 @@ namespace TestCentric.Gui.Model
             }   
         }
 
+        /// <summary>
+        /// Open an existing file, which may be a TestCentric project
+        /// or an individual test file, to be wrapped as a project.
+        /// </summary>
+        /// <param name="filename"></param>
         public void OpenExistingFile(string filename)
         {
             if (TestCentricProject.IsProjectFile(filename))
                 OpenExistingProject(filename);
+            else if (IsSupportedTestFile(filename))
+                CreateNewProject(filename + ".tcproj", new[] { filename });
             else
-                CreateNewProject(Path.GetFileName(filename), new[] { filename });
+                throw new Exception("Invalid Test File type: {filename}");
         }
 
+        // TODO: Use project service?
+        private bool IsSupportedTestFile(string filename)
+        {
+            switch (Path.GetExtension(filename))
+            {
+                case ".dll":
+                case ".exe":
+                    return true;
+                case ".nunit":
+                    return NUnitProjectSupport;
+                case ".csproj":
+                case ".fsproj":
+                case ".vbproj":
+                case ".vjsproj":
+                case ".vcproj":
+                case ".sln":
+                    return VisualStudioSupport;
+                default:
+                    return false;
+            }
+        }
 
         public void SaveProject(string filename = null)
         {

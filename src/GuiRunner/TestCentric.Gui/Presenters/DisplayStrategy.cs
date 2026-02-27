@@ -12,7 +12,6 @@ namespace TestCentric.Gui.Presenters
     using Model.Settings;
     using Views;
     using System.Linq;
-    using TestCentric.Gui.Presenters.NUnitGrouping;
 
     /// <summary>
     /// DisplayStrategy is the abstract base for the various
@@ -94,6 +93,7 @@ namespace TestCentric.Gui.Presenters
             int imageIndex = CalcImageIndex(result);
             foreach (TreeNode treeNode in GetTreeNodesForTest(result))
             {
+                treeNode.Text = GetTreeNodeDisplayName(result);
                 _view.SetImageIndex(treeNode, imageIndex);
             }
         }
@@ -189,6 +189,18 @@ namespace TestCentric.Gui.Presenters
             return treeNode;
         }
 
+        /// <summary>
+        /// Check if a tree node type should be shown or omitted
+        /// Currently we support only omitting the namespace nodes
+        /// </summary>
+        protected bool ShowTreeNodeType(TestNode testNode)
+        {
+            if (testNode.IsNamespace)
+                return TreeConfiguration.ShowNamespaces;
+
+            return true;
+        }
+
         protected void AddTestNodeMapping(TestNode testNode, TreeNode treeNode)
         {
             string id = testNode.Id;
@@ -213,7 +225,7 @@ namespace TestCentric.Gui.Presenters
             string treeNodeName = GetTreeNodeName(testNode);
 
             // Check if test result is available for this node
-            ResultNode result = _model.TestResultManager.GetResultForTest(testNode.Id);
+            ResultNode result = testNode as ResultNode ?? _model.TestResultManager.GetResultForTest(testNode.Id);
             if (TreeConfiguration.ShowTestDuration && result != null)
                 treeNodeName += $" [{result.Duration:0.000}s]";
 
@@ -382,8 +394,6 @@ namespace TestCentric.Gui.Presenters
         protected void CollapseToFixtures(TreeNode treeNode)
         {
             TestNode testNode = treeNode.Tag as TestNode;
-            if (testNode == null && treeNode.Tag is GroupingTestGroup group)
-                testNode = group.AssociatedTestNode;
 
             if (testNode != null && testNode.Type == "TestFixture")
                 treeNode.Collapse();

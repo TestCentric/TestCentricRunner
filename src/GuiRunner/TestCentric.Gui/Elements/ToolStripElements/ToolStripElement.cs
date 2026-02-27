@@ -47,10 +47,11 @@ namespace TestCentric.Gui.Elements
         {
             var toolStrip = _toolStripItem.GetCurrentParent();
 
-            if (toolStrip != null && toolStrip.InvokeRequired)
-                toolStrip.BeginInvoke(del, new object[0]);
-            else
-                del();
+            if (toolStrip != null)
+                if (toolStrip.InvokeRequired)
+                    toolStrip.BeginInvoke(del, new object[0]);
+                else
+                    del();
         }
     }
 }

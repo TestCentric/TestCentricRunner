@@ -8,9 +8,7 @@ using System.Windows.Forms;
 
 namespace TestCentric.Gui.Presenters
 {
-    using System.Collections.Generic;
     using Model;
-    using TestCentric.Gui.Presenters.NUnitGrouping;
     using Views;
 
     /// <summary>
@@ -19,8 +17,6 @@ namespace TestCentric.Gui.Presenters
     /// </summary>
     public class NUnitTreeDisplayStrategy : DisplayStrategy
     {
-        private ITreeViewModel _treeViewModel;
-
         public NUnitTreeDisplayStrategy(ITestTreeView view, ITestModel model)
             : base(view, model) 
         {
@@ -28,88 +24,43 @@ namespace TestCentric.Gui.Presenters
             _view.CollapseToFixturesCommand.Enabled = true;
         }
 
-        /// <summary>
-        /// Intended for testing purpose only
-        /// </summary>
-        public NUnitTreeDisplayStrategy(ITestTreeView view, ITestModel model, ITreeViewModel treeViewModel)
-            : this(view, model)
-        {
-            _treeViewModel = treeViewModel;
-        }
-
         public override string StrategyID => "NUNIT_TREE";
 
         public override string Description => "NUnit Tree";
-
-        private TreeViewBuilder TreeViewBuilder { get; set; }
 
         public override void OnTestLoaded(TestNode testNode, VisualState visualState)
         {
             ClearTree();
 
-            // 1. Create tree view model
-            _treeViewModel = new TreeViewModelNoGrouping(_model);
-            _treeViewModel.CreateTreeModel(testNode);
+            foreach (var topLevelTestNode in testNode.Children)
+                AddTreeNodeToCollection(topLevelTestNode, _view.Nodes);
 
-            // 2. Create tree view control
-            TreeViewBuilder = new TreeViewBuilder(_model, _treeViewModel, _view);
-            _treeViewModel.OnUpdateTree += TreeViewBuilder.OnUpdateTree;
-            _treeViewModel.OnNodeChanged += TreeViewBuilder.OnNodeChanged;
-
-            TreeViewBuilder.Rebuild();
-
-            // 3. Update tree state
-            _view.TreeView?.BeginUpdate();
+            // Update tree state
             if (visualState != null)
-                visualState.ApplyTo(_view.TreeView);
-            else
-                SetDefaultInitialExpansion();
+                    visualState.ApplyTo(_view.TreeView);
+                else
+                    SetDefaultInitialExpansion();
 
             ApplyResultsToTree();
-            _view.TreeView?.EndUpdate();
 
             _view.EnableTestFilter(true);
         }
 
-        public override void UpdateTreeNodeNames()
+        private void AddTreeNodeToCollection(TestNode testNode, TreeNodeCollection treeNodes)
         {
-            TreeViewBuilder.OnShowTestDurationChanged();
-        }
+            if (ShowTreeNodeType(testNode))
+            {
+                var treeNode = MakeTreeNode(testNode, false);
+                treeNodes.Add(treeNode);
 
-        public override void OnTestStarting(TestNode testNode)
-        {
-            TestNode node = _model.GetTestById(testNode.Id);
-            TreeNodeViewModel viewModel = _treeViewModel.GetTreeNodeViewModel(node);
-            TreeViewBuilder?.OnTestStarting(viewModel);
-        }
-
-        public override void OnTestFinished(ResultNode result)
-        {
-            IList<TreeNodeViewModel> viewModels = _treeViewModel?.OnTestFinished(result);
-            TreeViewBuilder?.OnTestFinished(viewModels);
-        }
-
-        /// <summary>
-        /// Method is intended to be called only from test code, so that the test code doesn't need to deal with the regroup Timer
-        /// </summary>
-        public void OnTestFinishedWithoutRegroupTimer(ResultNode result)
-        {
-            _treeViewModel?.OnTestFinishedWithoutRegroupTimer(result);
-        }
-
-        public override void OnTestRunStarting()
-        {
-            _treeViewModel?.OnTestRunStarting();
-            TreeViewBuilder?.OnTestRunStarting(() => _treeViewModel.GetAllViewModelsInTestRun());
-        }
-
-        public override void OnTestRunFinished()
-        {
-            var nodesInRun = _treeViewModel?.GetAllViewModelsInTestRun();
-            _treeViewModel?.OnTestRunFinished();
-
-            // The images of the root group tree nodes (for example 'CategoryA' or 'Slow') cannot be set during a test run
-            TreeViewBuilder?.OnTestRunFinished(nodesInRun);
+                foreach (var childNode in testNode.Children)
+                    AddTreeNodeToCollection(childNode, treeNode.Nodes);
+            }
+            else
+            {
+                foreach (var childNode in testNode.Children)
+                    AddTreeNodeToCollection(childNode, treeNodes);
+            }
         }
 
         public override VisualState CreateVisualState()
