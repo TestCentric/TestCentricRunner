@@ -118,6 +118,9 @@ TestResult.xml
 *.VisualState.xml
 !TestResultSubView*
 
+# TestCentric projects
+*.tcproj
+
 # Package Directory
 package
 

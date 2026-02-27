@@ -371,13 +371,10 @@ namespace TestCentric.Gui.Presenters
             _view.OpenTestAssemblyCommand.Execute += () =>
             {
                 string[] files = _view.DialogManager.SelectMultipleFiles("New Project", _view.DialogManager.CreateOpenTestFileFilter());
-                if (files.Length > 0)
-                {
-                    var projectName = files.Length == 1
-                        ? Path.GetFileName(files[0]) + ".tcproj"
-                        : "Project1";
-                    _model.CreateNewProject(projectName, files);
-                }
+                if (files.Length == 1)
+                    _model.OpenExistingFile(files[0]);
+                else if (files.Length > 1)
+                    CreateNewProject(files);
             };
 
             _view.SaveProjectCommand.Execute += () =>
