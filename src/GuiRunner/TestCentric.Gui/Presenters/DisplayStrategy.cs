@@ -198,8 +198,12 @@ namespace TestCentric.Gui.Presenters
         /// </summary>
         protected bool ShowTreeNodeType(TestNode testNode)
         {
+            if (testNode.IsAssembly)
+                return TreeConfiguration.ShowAssemblies;
             if (testNode.IsNamespace)
                 return TreeConfiguration.ShowNamespaces;
+            if (testNode.IsFixture)
+                return TreeConfiguration.ShowFixtures;
 
             return true;
         }

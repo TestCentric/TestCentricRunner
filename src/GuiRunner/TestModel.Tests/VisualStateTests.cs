@@ -141,6 +141,8 @@ namespace TestCentric.Gui.Model
             {
                 Assert.That(restoredState.ShowCheckBoxes, Is.EqualTo(visualState.ShowCheckBoxes));
                 Assert.That(restoredState.ShowNamespaces, Is.EqualTo(visualState.ShowNamespaces));
+                Assert.That(restoredState.ShowAssemblies, Is.EqualTo(visualState.ShowAssemblies));
+                Assert.That(restoredState.ShowFixtures, Is.EqualTo(visualState.ShowFixtures));
                 // TODO: Categories not yet supported
                 //Assert.AreEqual(ExpectedVisualState.SelectedCategories, restoredState.SelectedCategories);
                 //Assert.AreEqual(ExpectedVisualState.ExcludeCategories, restoredState.ExcludeCategories);

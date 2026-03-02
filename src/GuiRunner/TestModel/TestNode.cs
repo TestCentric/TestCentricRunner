@@ -69,6 +69,9 @@ namespace TestCentric.Gui.Model
         public bool IsProject => Type == "Project";
         public bool IsNamespace =>
             IsSuite && (Type == "TestSuite" || Type == "SetUpFixture");
+        public bool IsFixture => IsSuite && 
+            (Type == "TestFixture" || Type == "GenericFixture" || Type == "ParameterizedFixture" || Type == "Theory");
+
 
         /// <summary>
         /// Controls if the TestNode should be visible or hidden in the TestTree

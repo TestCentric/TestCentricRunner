@@ -69,7 +69,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.InvokeIfRequired(() =>
             {
-                visualState = new VisualState("NUNIT_TREE", null, _model.TreeConfiguration.ShowNamespaces).LoadFrom(_view.TreeView);
+                visualState = new VisualState("NUNIT_TREE", null, _model.TreeConfiguration).LoadFrom(_view.TreeView);
             });
 
             return visualState;

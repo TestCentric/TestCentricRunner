@@ -88,6 +88,8 @@ namespace TestCentric.Gui.Views
                 "TestListGroupBy",
                 testListUngroupedMenuItem, testListByAssemblyMenuItem, testListByFixtureMenuItem, testListByCategoryMenuItem, testListByOutcomeMenuItem, testListByDurationMenuItem);
             ShowNamespaces = new CheckedMenuElement(nunitTreeShowNamespacesMenuItem);
+            ShowAssemblies = new CheckedMenuElement(nunitTreeShowAssembliesMenuItem);
+            ShowFixtures = new CheckedMenuElement(nunitTreeShowFixturesMenuItem);
             ShowHideFilterButton = new ToolStripButtonElement(showFilterButton);
             RunParametersButton = new ToolStripButtonElement(runParametersButton);
 
@@ -184,6 +186,8 @@ namespace TestCentric.Gui.Views
         public ISelection TestListGroupBy { get; private set; }
 
         public IChecked ShowNamespaces { get; private set; }
+        public IChecked ShowAssemblies { get; private set; }
+        public IChecked ShowFixtures { get; private set; }
 
         public IChecked ShowHideFilterButton { get; private set; }
         public ICommand RunParametersButton { get; private set; }

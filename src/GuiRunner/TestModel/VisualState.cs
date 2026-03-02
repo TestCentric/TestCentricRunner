@@ -25,11 +25,13 @@ namespace TestCentric.Gui.Model
         // Default constructor is required for serialization
         public VisualState() : this("NUNIT_TREE") { }
 
-        public VisualState(string strategyID, string groupID, bool showNamespaces)
+        public VisualState(string strategyID, string groupID, ITreeConfiguration treeConfiguration)
         {
             DisplayStrategy = strategyID;
             GroupBy = groupID;
-            ShowNamespaces = showNamespaces;
+            ShowAssemblies = treeConfiguration.ShowAssemblies;
+            ShowNamespaces = treeConfiguration.ShowNamespaces;
+            ShowFixtures = treeConfiguration.ShowFixtures;
         }
 
         public VisualState(string strategyID, string groupID = null)
@@ -50,6 +52,10 @@ namespace TestCentric.Gui.Model
         public bool ShowCheckBoxes { get; set; }
 
         public bool ShowNamespaces { get; set; }
+
+        public bool ShowAssemblies { get; set; }
+
+        public bool ShowFixtures { get; set; }
 
         // TODO: Categories not yet supported
         //public List<string> SelectedCategories;
@@ -261,7 +267,9 @@ namespace TestCentric.Gui.Model
             // GroupBy is null for NUnitTree strategy, otherwise required
             if (GroupBy == null && strategy != "NUNIT_TREE") GroupBy = "ASSEMBLY";
             ShowCheckBoxes = reader.GetAttribute("ShowCheckBoxes") == "True";
+            ShowAssemblies = reader.GetAttribute("ShowAssemblies") != "False";
             ShowNamespaces = reader.GetAttribute("ShowNamespaces") != "False";
+            ShowFixtures = reader.GetAttribute("ShowFixtures") != "False";
 
             while (reader.Read())
             {
@@ -376,9 +384,12 @@ namespace TestCentric.Gui.Model
                 writer.WriteAttributeString("GroupBy", GroupBy);
             if (ShowCheckBoxes)
                 writer.WriteAttributeString("ShowCheckBoxes", "True");
+            if (!ShowAssemblies)
+                writer.WriteAttributeString("ShowAssemblies", "False");
             if (!ShowNamespaces)
                 writer.WriteAttributeString("ShowNamespaces", "False");
-
+            if (!ShowFixtures)
+                writer.WriteAttributeString("ShowFixtures", "False");
             WriteVisualTreeNodes(Nodes);
 
             void WriteVisualTreeNodes(List<VisualTreeNode> nodes)

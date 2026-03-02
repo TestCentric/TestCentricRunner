@@ -270,6 +270,8 @@ namespace TestCentric.Gui.Presenters
                         UpdateTreeDisplayMenuItem();
                         break;
                     case nameof(Model.TreeConfiguration.ShowNamespaces):
+                    case nameof(Model.TreeConfiguration.ShowAssemblies):
+                    case nameof(Model.TreeConfiguration.ShowFixtures):
                         UpdateTreeDisplayMenuItem();
                         break;
                 }
@@ -505,6 +507,16 @@ namespace TestCentric.Gui.Presenters
             _view.ShowNamespaces.CheckedChanged += () =>
             {
                 TreeConfiguration.ShowNamespaces = _view.ShowNamespaces.Checked;
+            };
+
+            _view.ShowAssemblies.CheckedChanged += () =>
+            {
+                TreeConfiguration.ShowAssemblies = _view.ShowAssemblies.Checked;
+            };
+
+            _view.ShowFixtures.CheckedChanged += () =>
+            {
+                TreeConfiguration.ShowFixtures = _view.ShowFixtures.Checked;
             };
 
             _view.ShowHideFilterButton.CheckedChanged += () =>
@@ -931,7 +943,10 @@ namespace TestCentric.Gui.Presenters
                 _view.TestListGroupBy.SelectedItem = TreeConfiguration.TestListGroupBy;
 
             _view.ShowNamespaces.Checked = TreeConfiguration.ShowNamespaces;
-            _view.ShowNamespaces.Enabled = displayFormat == "NUNIT_TREE";
+            _view.ShowAssemblies.Checked = TreeConfiguration.ShowAssemblies;
+            _view.ShowFixtures.Checked = TreeConfiguration.ShowFixtures;
+            _view.ShowNamespaces.Enabled = _view.ShowAssemblies.Enabled = _view.ShowFixtures.Enabled =
+                displayFormat == "NUNIT_TREE";
         }
 
         private void RunAllTests()

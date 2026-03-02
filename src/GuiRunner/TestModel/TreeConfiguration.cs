@@ -15,6 +15,10 @@ namespace TestCentric.Gui.Model
 
         bool ShowNamespaces {  get; set; }
 
+        bool ShowAssemblies { get; set; }
+
+        bool ShowFixtures { get; set; }
+
         bool ShowTestDuration { get; set; }
 
         string DisplayFormat { get; set; }
@@ -30,6 +34,8 @@ namespace TestCentric.Gui.Model
         public event SettingsEventHandler Changed;
         private bool _showCheckBoxes = false;
         private bool _showNamespaces = true;
+        private bool _showAssemblies = true;
+        private bool _showFixtures = true;
         private bool _showTestDuration = false;
         private string _displayFormat = "NUNIT_TREE";
         private string _testListGroupBy = "UNGROUPED";
@@ -51,6 +57,26 @@ namespace TestCentric.Gui.Model
             {
                 _showNamespaces = value;
                 OnPropertyChanged(nameof(ShowNamespaces));
+            }
+        }
+
+        public bool ShowAssemblies
+        {
+            get => _showAssemblies;
+            set
+            {
+                _showAssemblies = value;
+                OnPropertyChanged(nameof(ShowAssemblies));
+            }
+        }
+
+        public bool ShowFixtures
+        {
+            get => _showFixtures;
+            set
+            {
+                _showFixtures = value;
+                OnPropertyChanged(nameof(ShowFixtures));
             }
         }
 
