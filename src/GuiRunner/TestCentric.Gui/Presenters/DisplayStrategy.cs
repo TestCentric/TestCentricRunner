@@ -90,12 +90,15 @@ namespace TestCentric.Gui.Presenters
 
         public virtual void OnTestFinished(ResultNode result)
         {
-            int imageIndex = CalcImageIndex(result);
-            foreach (TreeNode treeNode in GetTreeNodesForTest(result))
+            _view.InvokeIfRequired(() =>
             {
-                treeNode.Text = GetTreeNodeDisplayName(result);
-                _view.SetImageIndex(treeNode, imageIndex);
-            }
+                int imageIndex = CalcImageIndex(result);
+                foreach (TreeNode treeNode in GetTreeNodesForTest(result))
+                {
+                    treeNode.Text = GetTreeNodeDisplayName(result);
+                    _view.SetImageIndex(treeNode, imageIndex);
+                }
+            });
         }
 
         public virtual void OnTestRunStarting()

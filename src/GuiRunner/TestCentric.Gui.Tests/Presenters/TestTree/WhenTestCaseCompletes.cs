@@ -32,6 +32,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void Setup()
         {
             _presenter = new TreeViewPresenter(_view, _model, new TreeDisplayStrategyFactory());
+            _view.InvokeIfRequired(Arg.Do<MethodInvoker>(x => x.Invoke()));
         }
 
         [TestCaseSource("resultData")]
