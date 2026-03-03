@@ -25,6 +25,9 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model = Substitute.For<ITestModel>();
             _model.TreeConfiguration.ShowNamespaces = true;
             _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
+            _model.TreeConfiguration.ShowFixtures = true;
+            _model.TreeConfiguration.ShowNamespaces = true;
+            _model.TreeConfiguration.ShowAssemblies = true;
 
             // We can't construct a TreeNodeCollection, so we fake it
             var nodes = new TreeNode().Nodes;
@@ -121,7 +124,66 @@ namespace TestCentric.Gui.Presenters.TestTree
             _strategy.OnTestLoaded(new TestNode(xml), null);
 
             // Assert
-            _view.DidNotReceive().Add(Arg.Is<TreeNode>(tn => (tn.Tag as TestNode).Id == "1-1031"));
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1030"), Is.True);
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1031"), Is.False);
+        }
+
+        [Test]
+        public void OnTestLoaded_Assemblies_AreNotShown_AssemblyNode_IsNotCreated()
+        {
+            // Arrange
+            _model.TreeConfiguration.ShowAssemblies = false;
+            string xml =
+                "<test-run> <test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
+                    "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
+                    "</test-suite>" +
+                "</test-suite> </test-run>";
+
+            // Act
+            _strategy.OnTestLoaded(new TestNode(xml), null);
+
+            // Assert
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1031"), Is.True);
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1030"), Is.False);
+        }
+
+        [Test]
+        public void OnTestLoaded_Fixtures_AreNotShown_FixtureNode_IsNotCreated()
+        {
+            // Arrange
+            _model.TreeConfiguration.ShowFixtures = false;
+
+            string xml =
+                "<test-run> <test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
+                    "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
+                        "<test-suite type='TestFixture' id='1-1032' name='FixtureA'/>" +
+                        "<test-suite type='TestFixture' id='1-1033' name='FixtureB'/>" +
+                    "</test-suite>" +
+                "</test-suite> </test-run>";
+
+            // Act
+            _strategy.OnTestLoaded(new TestNode(xml), null);
+
+            // Assert
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1032"), Is.False);
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1033"), Is.False);
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1031"), Is.True);
+            Assert.That(NodeCollectionContainsTestNode(_view.Nodes, "1-1030"), Is.True);
+        }
+
+        private bool NodeCollectionContainsTestNode(TreeNodeCollection nodes, string testNodeId)
+        {
+            foreach (TreeNode treeNode in nodes)
+            {
+                TestNode testNode = treeNode.Tag as TestNode;
+                if (testNode != null && testNode.Id == testNodeId)
+                    return true;
+
+                if (NodeCollectionContainsTestNode(treeNode.Nodes, testNodeId))
+                    return true;
+            }
+
+            return false;
         }
 
         // TODO: FIX

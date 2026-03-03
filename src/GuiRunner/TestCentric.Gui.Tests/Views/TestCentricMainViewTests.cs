@@ -49,6 +49,12 @@ namespace TestCentric.Gui.Views
             menuItem.Checked = checkState;
             var subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "nunitTreeShowNamespacesMenuItem");
             Assert.That(subMenuItem, Is.Not.Null);
+
+            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "nunitTreeShowFixturesMenuItem");
+            Assert.That(subMenuItem, Is.Not.Null);
+
+            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "nunitTreeShowAssembliesMenuItem");
+            Assert.That(subMenuItem, Is.Not.Null);
         }
 
         [TestCase(true)]

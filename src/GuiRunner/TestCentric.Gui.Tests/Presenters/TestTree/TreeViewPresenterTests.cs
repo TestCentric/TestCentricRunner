@@ -43,6 +43,39 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TreeConfiguration.ShowNamespaces = showNamespace;
             _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowNamespaces)));
 
+            // Assert
+            strategy.Received(2).Reload();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void WhenTreeConfigurationIsChanged_ShowAssemblies_StrategyIsReloaded(bool showAssemblies)
+        {
+            ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
+            _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
+            _model.TreeConfiguration.DisplayFormat.Returns("NUNIT_TREE");
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
+
+            // Act
+            _model.TreeConfiguration.ShowAssemblies = showAssemblies;
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowAssemblies)));
+
+            // Assert
+            strategy.Received(2).Reload();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void WhenTreeConfigurationIsChanged_ShowFixtures_StrategyIsReloaded(bool showFixtures)
+        {
+            ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
+            _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
+            _model.TreeConfiguration.DisplayFormat.Returns("NUNIT_TREE");
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
+
+            // Act
+            _model.TreeConfiguration.ShowFixtures = showFixtures;
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowFixtures)));
 
             // Assert
             strategy.Received(2).Reload();

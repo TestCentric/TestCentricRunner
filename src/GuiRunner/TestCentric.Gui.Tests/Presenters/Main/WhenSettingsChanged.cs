@@ -59,6 +59,34 @@ namespace TestCentric.Gui.Presenters.Main
             Assert.That(_view.ShowNamespaces.Checked, Is.EqualTo(showNamespace));
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ShowAssemblies_TreeConfigurationChanged_MenuItemIsUpdated(bool showAssemblies)
+        {
+            // 1. Arrange
+            _model.TreeConfiguration.ShowAssemblies.Returns(showAssemblies);
+
+            // 2. Act
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowAssemblies)));
+
+            // 2. Assert
+            Assert.That(_view.ShowAssemblies.Checked, Is.EqualTo(showAssemblies));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ShowFixtures_TreeConfigurationChanged_MenuItemIsUpdated(bool showFixtures)
+        {
+            // 1. Arrange
+            _model.TreeConfiguration.ShowFixtures.Returns(showFixtures);
+
+            // 2. Act
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowFixtures)));
+
+            // 2. Assert
+            Assert.That(_view.ShowFixtures.Checked, Is.EqualTo(showFixtures));
+        }
+
         [TestCase("NUNIT_TREE", true)]
         [TestCase("TEST_LIST", false)]
         public void DisplayFormat_TreeConfigurationChanged_ShowHideFilterButton_IsUpdated(string displayFormat, bool expectedState)

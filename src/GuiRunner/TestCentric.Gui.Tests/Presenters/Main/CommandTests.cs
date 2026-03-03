@@ -432,6 +432,34 @@ namespace TestCentric.Gui.Presenters.Main
 
         [TestCase(true)]
         [TestCase(false)]
+        public void ShowAssembliesChanged_Changes_TreeConfiguration(bool showAssemblies)
+        {
+            // Arrange
+            _view.ShowAssemblies.Checked.Returns(showAssemblies);
+
+            // Act
+            _view.ShowAssemblies.CheckedChanged += Raise.Event<CommandHandler>();
+
+            // Assert
+            Assert.That(_model.TreeConfiguration.ShowAssemblies, Is.EqualTo(showAssemblies));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ShowFixturesChanged_Changes_TreeConfiguration(bool showFixtures)
+        {
+            // Arrange
+            _view.ShowFixtures.Checked.Returns(showFixtures);
+
+            // Act
+            _view.ShowFixtures.CheckedChanged += Raise.Event<CommandHandler>();
+
+            // Assert
+            Assert.That(_model.TreeConfiguration.ShowFixtures, Is.EqualTo(showFixtures));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
         public void ShowFilterChanged_ChangesModelSetting(bool show)
         {
             // Arrange

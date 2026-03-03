@@ -68,7 +68,11 @@ namespace TestCentric.Gui.Presenters.TestTree
             Assert.That(_presenter.TreeConfiguration.DisplayFormat, Is.EqualTo(displayFormat));
             Assert.That(_presenter.Strategy, Is.TypeOf(expectedStrategy));
             if (displayFormat == "NUnit_TREE")
+            {
                 Assert.That(_presenter.TreeConfiguration.ShowNamespaces, Is.True);
+                Assert.That(_presenter.TreeConfiguration.ShowFixtures, Is.True);
+                Assert.That(_presenter.TreeConfiguration.ShowAssemblies, Is.True);
+            }
         }
 
         [TestCase(true)]

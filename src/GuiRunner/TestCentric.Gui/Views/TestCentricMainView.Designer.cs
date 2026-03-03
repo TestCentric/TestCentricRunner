@@ -48,6 +48,8 @@ namespace TestCentric.Gui.Views
             this.displayFormatButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.nunitTreeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nunitTreeShowNamespacesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nunitTreeShowAssembliesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nunitTreeShowFixturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testListMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testListUngroupedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testListByAssemblyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -242,7 +244,7 @@ namespace TestCentric.Gui.Views
             // nunitTreeMenuItem
             // 
             this.nunitTreeMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.nunitTreeShowNamespacesMenuItem});
+                this.nunitTreeShowAssembliesMenuItem, this.nunitTreeShowNamespacesMenuItem, this.nunitTreeShowFixturesMenuItem});
             this.nunitTreeMenuItem.Name = "nunitTreeMenuItem";
             this.nunitTreeMenuItem.Size = new System.Drawing.Size(129, 22);
             this.nunitTreeMenuItem.Tag = "NUNIT_TREE";
@@ -254,6 +256,20 @@ namespace TestCentric.Gui.Views
             this.nunitTreeShowNamespacesMenuItem.Size = new System.Drawing.Size(173, 22);
             this.nunitTreeShowNamespacesMenuItem.Tag = "NUNIT_TREE_SHOW_NAMESPACE";
             this.nunitTreeShowNamespacesMenuItem.Text = "Show Namespaces";
+            // 
+            // nunitTreeShowAssembliesMenuItem
+            // 
+            this.nunitTreeShowAssembliesMenuItem.Name = "nunitTreeShowAssembliesMenuItem";
+            this.nunitTreeShowAssembliesMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.nunitTreeShowAssembliesMenuItem.Tag = "NUNIT_TREE_SHOW_ASSEMBLIES";
+            this.nunitTreeShowAssembliesMenuItem.Text = "Show Assemblies";
+            // 
+            // nunitTreeShowFixturesMenuItem
+            // 
+            this.nunitTreeShowFixturesMenuItem.Name = "nunitTreeShowFixturesMenuItem";
+            this.nunitTreeShowFixturesMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.nunitTreeShowFixturesMenuItem.Tag = "NUNIT_TREE_SHOW_FIXTURES";
+            this.nunitTreeShowFixturesMenuItem.Text = "Show Fixtures";
             // 
             // testListMenuItem
             // 
@@ -994,6 +1010,8 @@ namespace TestCentric.Gui.Views
         private ToolStripMenuItem nunitTreeMenuItem;
         private ToolStripMenuItem testListMenuItem;
         private ToolStripMenuItem nunitTreeShowNamespacesMenuItem;
+        private ToolStripMenuItem nunitTreeShowAssembliesMenuItem;
+        private ToolStripMenuItem nunitTreeShowFixturesMenuItem;
         private ToolStripMenuItem testListUngroupedMenuItem;
         private ToolStripMenuItem testListByAssemblyMenuItem;
         private ToolStripMenuItem testListByFixtureMenuItem;
