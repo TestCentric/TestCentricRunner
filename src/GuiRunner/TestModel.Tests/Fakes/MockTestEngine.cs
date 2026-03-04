@@ -93,7 +93,6 @@ namespace TestCentric.Gui.Model.Fakes
 
             void IDisposable.Dispose()
             {
-                throw new NotImplementedException();
             }
 
             XmlNode ITestRunner.Explore(NUnit.Engine.TestFilter filter)
