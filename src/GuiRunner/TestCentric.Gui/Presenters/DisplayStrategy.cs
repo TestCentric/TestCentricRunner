@@ -4,6 +4,8 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 using System.Windows.Forms;
 
 namespace TestCentric.Gui.Presenters
@@ -11,7 +13,6 @@ namespace TestCentric.Gui.Presenters
     using Model;
     using Model.Settings;
     using Views;
-    using System.Linq;
 
     /// <summary>
     /// DisplayStrategy is the abstract base for the various
@@ -32,6 +33,7 @@ namespace TestCentric.Gui.Presenters
         protected ITestTreeView _view;
         protected ITestModel _model;
         protected IUserSettings _settings;
+        protected TreeView _treeView;
 
         protected Dictionary<string, List<TreeNode>> _nodeIndex = new Dictionary<string, List<TreeNode>>();
 
@@ -40,6 +42,7 @@ namespace TestCentric.Gui.Presenters
         public DisplayStrategy(ITestTreeView view, ITestModel model)
         {
             _view = view;
+            _treeView = view.TreeView;
             _model = model;
             _settings = _model.Settings;
         }
@@ -71,7 +74,10 @@ namespace TestCentric.Gui.Presenters
         public void SaveVisualState()
         {
             VisualState visualState = CreateVisualState();
-            visualState.Save(VisualState.GetVisualStateFileName(_model.TestCentricProject.TestFiles[0]));
+            string projectPath = _model.TestCentricProject.ProjectPath;
+            string visualStatePath = Path.ChangeExtension(projectPath, ".VisualState.xml");
+
+            visualState.Save(visualStatePath);
         }
 
         public abstract VisualState CreateVisualState();
@@ -103,6 +109,10 @@ namespace TestCentric.Gui.Presenters
 
         public virtual void OnTestRunStarting()
         {
+            // Save the visual state in case test run causes an exception
+            // or user terminates cancels the run.
+            SaveVisualState();
+
             _view.InvokeIfRequired(() =>
             {
                 UpdateTreeIconsOnRunStart(_view.Nodes);
@@ -250,13 +260,13 @@ namespace TestCentric.Gui.Presenters
 
         private void UpdateTreeNodeNames(TreeNodeCollection nodes)
         {
-            _view.TreeView.BeginUpdate();
+            _treeView.BeginUpdate();
             foreach (TreeNode treeNode in nodes)
             {
                 UpdateTreeNodeName(treeNode);
                 UpdateTreeNodeNames(treeNode.Nodes);
             }
-            _view.TreeView.EndUpdate();
+            _treeView.EndUpdate();
         }
 
         public void UpdateTreeNodeNames(IEnumerable<TestGroup> groups)
@@ -389,13 +399,13 @@ namespace TestCentric.Gui.Presenters
 
         public void CollapseToFixtures()
         {
-            _view.TreeView.BeginUpdate();
+            _treeView.BeginUpdate();
 
             if (_view.Nodes != null) // TODO: Null when mocked
                 foreach (TreeNode treeNode in _view.Nodes)
                     CollapseToFixtures(treeNode);
 
-            _view.TreeView.EndUpdate();
+            _treeView.EndUpdate();
         }
 
         protected void CollapseToFixtures(TreeNode treeNode)

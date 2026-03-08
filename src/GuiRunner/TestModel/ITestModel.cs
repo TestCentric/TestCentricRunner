@@ -105,32 +105,72 @@ namespace TestCentric.Gui.Model
 
         #region Methods
 
-        // Create a new project containing the provided test files
-        TestCentricProject CreateNewProject(string projectName, params string[] filenames);
+        /// <summary>
+        /// Create a new project containing the provided test files
+        /// </summary>
+        /// <param name="path">Path where the project will be stored</param>
+        /// <param name="testFiles">Array of top level test files to be included</param>
+        TestCentricProject CreateNewProject(string path, params string[] testFiles);
 
-        void CreateNewProject(string projectName, GuiOptions options);
-
-        bool TryLoadVisualState(out VisualState visualState);
+        /// <summary>
+        /// Create a new project based on command-line parameters.
+        /// Test files may be included in the options
+        /// </summary>
+        /// <param name="path">Path where the project will be stored</param>
+        /// <param name="options">The command-line options</param>
+        void CreateNewProject(string path, GuiOptions options);
 
         /// <summary>
         /// Add the test files to the current test project
         /// </summary>
-        void AddTests(IEnumerable<string> fileNames);
+        /// <param name="testFiles">Additional top-level test files to be added</param>
+        void AddTests(IEnumerable<string> testFiles);
 
         /// <summary>
-        /// Remove a test package from the current test project
+        /// Remove a top-level TestPackage from the current test project
         /// </summary>
+        /// <param name="subPackage">The top-level package to remove</param>
         void RemoveTestPackage(NUnit.Engine.TestPackage subPackage);
 
+        /// <summary>
+        /// Open an existing TestCentricProject file.
+        /// </summary>
+        /// <param name="filePath">Path to the project file</param>
+        void OpenExistingProject(string filePath);
 
-        void OpenExistingProject(string filename);
-
+        /// <summary>
+        /// Open the most recently opened file that still exists, which may be
+        /// a TestCentricProject, an assembly or a supported project type.
+        /// </summary>
         void OpenMostRecentFile();
 
-        void OpenExistingFile(string filename);
+        /// <summary>
+        /// Open an existing file, which may be a TestCentricProject, an assembly
+        /// or a supported project type such as an NUnit or Visual Studio project.
+        /// </summary>
+        /// <remarks>
+        /// If the file is not a TestCentricProject, it will be wrapped in one
+        /// with the '.tcproj' extension appended to the filePath. For example,
+        /// 'mock-assembly.dll.tcproj'. This project is loaded if found or created
+        /// automatically if not found.
+        /// </remarks>
+        /// <param name="filePath">Path to the file to be opened</param>
+        void OpenExistingFile(string filePath);
 
-        void SaveProject(string filename = null);
+        /// <summary>
+        /// Save the currently open TestCentricProject to the specified path,
+        /// if provided. If not provided, save to the path already stored in 
+        /// the project, which must not be null.
+        /// </summary>
+        /// <remarks>
+        /// This method is called by both the 'Save' and 'SaveAs' functions of the GUI.
+        /// </remarks>
+        /// <param name="filePath">The path where the project will be saved</param>
+        void SaveProject(string filePath = null);
 
+        /// <summary>
+        /// Close the currently open TestCentricProject.
+        /// </summary>
         void CloseProject();
 
         #region Loading and Unloading Tests
@@ -157,7 +197,7 @@ namespace TestCentric.Gui.Model
         // Save the results of the last run in the specified format
         void SaveResults(string fileName, string format="nunit3");
 
-        // Use xslt file to transform the results of the last run into target file
+        // Use '.xslt' file to transform the results of the last run into target file
         void TransformResults(string targetFile, string xsltFile);
 
         // Get a specific test given its id

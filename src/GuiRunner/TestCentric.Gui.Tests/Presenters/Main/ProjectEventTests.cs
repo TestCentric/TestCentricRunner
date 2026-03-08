@@ -45,6 +45,9 @@ namespace TestCentric.Gui.Presenters.Main
         [Test]
         public void WhenProjectIsClosed_TitleBarIsSetToDefault()
         {
+            // Simulate closed project
+            _model.TestCentricProject.Returns((TestCentricProject)null);
+
             FireProjectUnloadedEvent();
 
             _view.Received().Title = DEFAULT_TITLE_BAR; 
