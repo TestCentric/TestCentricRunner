@@ -19,7 +19,7 @@ namespace TestCentric.Gui.Model
     {
         public static bool IsProjectFile(string path) => Path.GetExtension(path).ToLower() == ".tcproj";
 
-        public string ProjectPath { get; private set; }
+        public string ProjectPath { get; internal set; }
 
         public TestPackage TopLevelPackage { get; private set; }
 
@@ -27,14 +27,10 @@ namespace TestCentric.Gui.Model
 
         #region Construction and Loading
 
-        // NOTE: Originally, it was possible to construct a project in memory without specifying
-        // the ProjectPath. The selection of a location was postponed until the project was saved.
-        // Because of our decision to save the project and visual state with behind the scenes,
-        // with as little user intervention as possible, we now require a valid ProjectPath for
-        // every project. This allows us to save the project whenever an event occurs that 
-        // could otherwise cause the loss of data. The VisualState is saved in the same directory
-        // whenever the project is saved. With this approach, it must not be possible to create
-        // a new project without specifying a ProjectPath.
+        // NOTE: Because of our decision to save the project and visual state behind the scenes,
+        // with as little user intervention as possible, we normally provide a valid ProjectPath
+        // when creating a project. This allows us to save the project whenever an event occurs
+        // that might otherwise cause the loss of data.
 
         /// <summary>
         /// Construct a new project, specifying the ProjectPath and TestFiles.
@@ -111,9 +107,7 @@ namespace TestCentric.Gui.Model
                 }
         }
 
-        // Empty project used by some tests
-        // TODO: Phase this out?
-        public TestCentricProject()
+        internal TestCentricProject()
         {
             TestFiles = [];
             TopLevelPackage = new TestPackage();

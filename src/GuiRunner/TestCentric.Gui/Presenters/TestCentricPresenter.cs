@@ -102,15 +102,12 @@ namespace TestCentric.Gui.Presenters
                 _view.RunAsX86.Checked = _model.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86);
                 _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
 
-                UpdateTitlebar();
+                UpdateTitleBar();
             };
 
-            _model.Events.TestCentricProjectUnloaded += (TestEventArgs e) =>
-            {
-                _view.Title = "TestCentric Runner for NUnit";
-            };
+            _model.Events.TestCentricProjectUnloaded += (TestEventArgs e) => UpdateTitleBar();
 
-            void UpdateTitlebar()
+            void UpdateTitleBar()
             {
                 var projectPath = _model.TestCentricProject?.ProjectPath;
                 _view.Title = projectPath is not null
@@ -344,8 +341,9 @@ namespace TestCentric.Gui.Presenters
                     _model.StopTestRun(true);
                 }
 
-                if (!e.Cancel)
-                    SaveFormLocationAndSize(_guiLayout);
+                _model.CloseProject();
+
+                SaveFormLocationAndSize(_guiLayout);
             };
 
             _view.FileMenu.Popup += () =>

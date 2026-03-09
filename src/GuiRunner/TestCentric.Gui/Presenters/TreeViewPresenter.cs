@@ -55,9 +55,9 @@ namespace TestCentric.Gui.Presenters
             {
                 EnsureNonRunnableFilesAreVisible(ea.Test);
 
-                bool visualStateLoaded = _model.TryLoadVisualState(out VisualState visualState);
+                bool visualStateLoaded = TryLoadVisualState(out VisualState visualState);
                 if (visualStateLoaded)
-                    this.UpdateTreeConfiguration(visualState);
+                    UpdateTreeConfiguration(visualState);
                 Strategy = _treeDisplayStrategyFactory.Create(TreeConfiguration.DisplayFormat, _view, _model);
 
                 _view.CategoryFilter.Init(_model);
@@ -77,7 +77,7 @@ namespace TestCentric.Gui.Presenters
                     _view.CategoryFilter.Close();
                     _view.CategoryFilter.Init(_model);
 
-                    _model.TryLoadVisualState(out VisualState visualState);
+                    TryLoadVisualState(out VisualState visualState);
                     Strategy.OnTestLoaded(ea.Test, visualState);
                     _view.CheckBoxes = _view.ShowCheckBoxes.Checked; // TODO: View should handle this
                 });
@@ -92,10 +92,12 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestsUnloading += ea =>
             {
+                Strategy.SaveVisualState();
                 ClosePropertiesDisplay();
                 CloseXmlDisplay();
             };
 
+            _model.Events.TestsReloading += ea => Strategy.SaveVisualState();
             _model.Events.RunStarting += (ea) =>
             {
                 Strategy.OnTestRunStarting();
@@ -413,6 +415,20 @@ namespace TestCentric.Gui.Presenters
 
             _propertiesDisplay?.OnTestFinished(args.Result);
             _xmlDisplay?.OnTestFinished(args.Result);
+        }
+
+        private bool TryLoadVisualState(out VisualState visualState)
+        {
+            visualState = null;
+
+            if (_model.TestCentricProject?.TestFiles.Count > 0)
+            {
+                var filename = Path.ChangeExtension(_model.TestCentricProject.ProjectPath, ".VisualState.xml");
+                if (File.Exists(filename))
+                    visualState = VisualState.LoadFrom(filename);
+            }
+
+            return visualState != null;
         }
 
         TestPropertiesDialog _propertiesDisplay;
