@@ -5,7 +5,7 @@
 
 using System.Windows.Forms;
 
-namespace TestCentric.Gui.Model
+namespace TestCentric.Gui
 {
     public class VisualStateTestBase
     {

@@ -10,7 +10,7 @@ using NUnit.Framework;
 using System.Xml;
 using System.Collections;
 
-namespace TestCentric.Gui.Model
+namespace TestCentric.Gui
 {
     public class VisualStateSerializationTests : VisualStateTestBase
     {
