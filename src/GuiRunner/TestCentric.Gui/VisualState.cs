@@ -11,10 +11,9 @@ using System.Xml.Serialization;
 using System.Xml.Schema;
 using System.Xml;
 using NUnit;
+using TestCentric.Gui.Model;
 
-// TODO: Consider splitting this class so that the model does not deal
-// with a windows tree control.
-namespace TestCentric.Gui.Model
+namespace TestCentric.Gui
 {
     /// <summary>
     /// The VisualState class holds the latest visual state for a project.

@@ -120,11 +120,6 @@ namespace TestCentric.Gui.Presenters
             _model.Events.TestFinished += OnTestFinished;
             _model.Events.SuiteFinished += OnTestFinished;
 
-            _model.Events.VisualStateRequest += (ea) =>
-            {
-                ea.VisualState = Strategy.CreateVisualState();
-            };
-
             _model.Settings.Changed += OnSettingsChanged;
             TreeConfiguration.Changed += OnTreeConfigurationChanged;
 
