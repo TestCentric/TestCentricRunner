@@ -25,11 +25,6 @@ namespace TestCentric.Gui.Presenters
         /// </summary>
         void Reload(bool applyVisualState=false);
 
-        /// <summary>
-        /// Save the visual state of the tree display strategy into a file
-        /// </summary>
-        void SaveVisualState();
-
         VisualState CreateVisualState();
 
         /// <summary>

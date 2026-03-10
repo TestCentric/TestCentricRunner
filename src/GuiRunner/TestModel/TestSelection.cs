@@ -10,6 +10,7 @@ using System.Linq;
 
 namespace TestCentric.Gui.Model
 {
+    using NUnit;
     using TestCentric.Gui.Model.Filter;
 
     /// <summary>
@@ -63,8 +64,7 @@ namespace TestCentric.Gui.Model
         /// </summary>
         public void Add(ITestItem item)
         {
-            if (item == null) 
-                throw new ArgumentNullException("item");
+            Guard.ArgumentNotNull(item, nameof(item));
 
             if (item is TestNode testNode)
                 _nodes.Add(testNode);

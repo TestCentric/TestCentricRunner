@@ -242,8 +242,6 @@ namespace TestCentric.Gui
             new VisualStateTestData("NUNIT_TREE"),
             new VisualStateTestData("TEST_LIST"),
             new VisualStateTestData("TEST_LIST", "UNGROUPED"),
-            new VisualStateTestData("TEST_LIST", "ASSEMBLY"),
-            new VisualStateTestData("TEST_LIST", "FIXTURE"),
             new VisualStateTestData("TEST_LIST", "CATEGORY"),
             new VisualStateTestData("TEST_LIST", "OUTCOME"),
             new VisualStateTestData("TEST_LIST", "DURATION")

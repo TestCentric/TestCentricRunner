@@ -17,6 +17,8 @@ namespace TestCentric.Gui.Presenters
     /// </summary>
     public class NUnitTreeDisplayStrategy : DisplayStrategy
     {
+        #region Construction and Initialization
+
         public NUnitTreeDisplayStrategy(ITestTreeView view, ITestModel model)
             : base(view, model) 
         {
@@ -24,44 +26,17 @@ namespace TestCentric.Gui.Presenters
             _view.CollapseToFixturesCommand.Enabled = true;
         }
 
+        #endregion
+
+        #region Properties
+
         public override string StrategyID => "NUNIT_TREE";
 
         public override string Description => "NUnit Tree";
 
-        public override void OnTestLoaded(TestNode testNode, VisualState visualState)
-        {
-            ClearTree();
+        #endregion
 
-            foreach (var topLevelTestNode in testNode.Children)
-                AddTreeNodeToCollection(topLevelTestNode, _view.Nodes);
-
-            // Update tree state
-            if (visualState != null)
-                    visualState.ApplyTo(_view.TreeView);
-                else
-                    SetDefaultInitialExpansion();
-
-            ApplyResultsToTree();
-
-            _view.EnableTestFilter(true);
-        }
-
-        private void AddTreeNodeToCollection(TestNode testNode, TreeNodeCollection treeNodes)
-        {
-            if (ShowTreeNodeType(testNode))
-            {
-                var treeNode = MakeTreeNode(testNode, false);
-                treeNodes.Add(treeNode);
-
-                foreach (var childNode in testNode.Children)
-                    AddTreeNodeToCollection(childNode, treeNode.Nodes);
-            }
-            else
-            {
-                foreach (var childNode in testNode.Children)
-                    AddTreeNodeToCollection(childNode, treeNodes);
-            }
-        }
+        #region Methods
 
         public override VisualState CreateVisualState()
         {
@@ -69,13 +44,28 @@ namespace TestCentric.Gui.Presenters
 
             _view.InvokeIfRequired(() =>
             {
-                visualState = new VisualState("NUNIT_TREE", null, _model.TreeConfiguration).LoadFrom(_view.TreeView);
+                visualState = new VisualState("NUNIT_TREE", null, TreeConfiguration).LoadFrom(_view.TreeView);
             });
 
             return visualState;
         }
 
-        private void SetDefaultInitialExpansion()
+        /// <summary>
+        /// Check if a tree node type should be shown or omitted.
+        /// </summary>
+        protected override bool ShowTreeNodeType(TestNode testNode)
+        {
+            if (testNode.IsAssembly)
+                return TreeConfiguration.NUnitTreeShowAssemblies;
+            if (testNode.IsNamespace)
+                return TreeConfiguration.NUnitTreeShowNamespaces;
+            if (testNode.IsFixture)
+                return TreeConfiguration.NUnitTreeShowFixtures;
+
+            return true;
+        }
+
+        protected override void SetInitialExpansion()
         {
             TreeNode firstNode = null;
             foreach (TreeNode node in _view.Nodes)
@@ -91,5 +81,7 @@ namespace TestCentric.Gui.Presenters
 
             firstNode?.EnsureVisible();
         }
+
+        #endregion
     }
 }

@@ -41,7 +41,7 @@ namespace TestCentric.Gui.Model
         {
             Guard.ArgumentNotNullOrEmpty(projectPath, nameof(projectPath));
 
-            ProjectPath = projectPath;
+            ProjectPath = Path.GetFullPath(projectPath);
             TestFiles = [.. testFiles];
             TopLevelPackage = new TestPackage(testFiles);
 
@@ -73,7 +73,7 @@ namespace TestCentric.Gui.Model
         {
             Guard.ArgumentNotNullOrEmpty(projectPath, nameof(projectPath));
 
-            ProjectPath = projectPath;
+            ProjectPath = Path.GetFullPath(projectPath);
             TestFiles = [.. options.InputFiles];
             TopLevelPackage = new TestPackage(TestFiles);
 

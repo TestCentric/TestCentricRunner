@@ -36,12 +36,12 @@ namespace TestCentric.Gui.Presenters
 
         public override string ID => "OUTCOME";
 
-        public override void Load(IEnumerable<TestNode> tests)
+        public override void LoadGroups(IEnumerable<TestNode> tests)
         {
             foreach (TestGroup group in Groups)
                 group.Clear();
 
-            base.Load(tests);
+            base.LoadGroups(tests);
         }
 
         /// <summary>
@@ -57,6 +57,7 @@ namespace TestCentric.Gui.Presenters
 
         public override TestGroup[] SelectGroups(TestNode testNode)
         {
+            // Only a single group is possible for this node
             return new TestGroup[] { SelectGroup(testNode) };
         }
 

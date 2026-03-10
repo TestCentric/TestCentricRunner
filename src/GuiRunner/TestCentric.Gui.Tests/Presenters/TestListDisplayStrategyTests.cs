@@ -7,7 +7,6 @@ namespace TestCentric.Gui.Presenters
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices;
     using System.Windows.Forms;
     using NSubstitute;
     using NUnit.Framework;
@@ -17,21 +16,49 @@ namespace TestCentric.Gui.Presenters
     [TestFixture]
     internal class TestListDisplayStrategyTests
     {
-        [Test]
-        public void OnStrategyCreated_OutcomeFilter_IsInvisible()
+        ITestTreeView _view;
+        ITestModel _model;
+
+        TreeView _treeView;
+        List<TreeNode> _treeNodes;
+        private List<TreeNode> TreeNodes
         {
-            // 1. Arrange
-            ITestTreeView view = Substitute.For<ITestTreeView>();
-            ITestModel model = Substitute.For<ITestModel>();
+            get
+            {
+                if (_treeNodes == null)
+                {
+                    _treeNodes = new List<TreeNode>();
+                    foreach (TreeNode treeNode in _treeView.Nodes)
+                        _treeNodes.Add(treeNode);
+                }
 
-            // 2. Act           
-            TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
+                return _treeNodes;
+            }
+        }
 
-            // 3. Assert
-            view.Received().SetTestFilterVisibility(false);
+        [SetUp]
+        public void SetUp()
+        {
+            _view = Substitute.For<ITestTreeView>();
+            _model = Substitute.For<ITestModel>();
+
+            _treeView = new TreeView();
+            _view.TreeView.Returns(_treeView);
+            _view.Nodes.Returns(_treeView.Nodes);
+
+            _treeNodes = null;
         }
 
         [Test]
+        public void OnStrategyCreated_OutcomeFilter_IsInvisible()
+        {
+            // 2. Act           
+            TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
+
+            // 3. Assert
+            _view.Received().SetTestFilterVisibility(false);
+        }
+
         [TestCase("", "", "", 1, 3, 0, 0, 0)]
         [TestCase("Category_1", "", "", 2, 2, 1, 0, 0)]
         [TestCase("Category_1", "Category_1", "", 2, 1, 2, 0, 0)]
@@ -44,13 +71,7 @@ namespace TestCentric.Gui.Presenters
         public void OnTestLoaded_CategoryGrouping_AllGroupNodesAreCreated(string categoryTestcase1, string categoryTestcase2, string categoryTestcase3, int expectedNodes, int expectedInNonCategory, int expectedInCategory1, int expectedInCategory2, int expectedInCategory3)
         {
             // 1. Arrange
-            ITestTreeView view = Substitute.For<ITestTreeView>();
-            ITestModel model = Substitute.For<ITestModel>();
-
-            List<TreeNode> treeNodes = new List<TreeNode>();
-            view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
-
-            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
+            _model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +
@@ -62,18 +83,17 @@ namespace TestCentric.Gui.Presenters
                 "</test-suite>");
 
             // 2. Act           
-            TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
+            TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
             strategy.OnTestLoaded(testNode, null);
 
             // 3. Assert
-            Assert.That(treeNodes.Count, Is.EqualTo(expectedNodes));
-            AssertTreeNodeAndTestGroup(treeNodes, "None", expectedInNonCategory);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_1", expectedInCategory1);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_2", expectedInCategory2);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_3", expectedInCategory3);
+            Assert.That(TreeNodes.Count, Is.EqualTo(expectedNodes));
+            AssertTreeNodeAndTestGroup(TreeNodes, "None", expectedInNonCategory);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_1", expectedInCategory1);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_2", expectedInCategory2);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_3", expectedInCategory3);
         }
 
-        [Test]
         [TestCase("Category_1", "", "", "", 1, 0, 3, 0, 0)]
         [TestCase("Category_1", "Category_1", "", "", 1, 0, 3, 0, 0)]
         [TestCase("Category_1", "Category_1", "Category_1", "Category_1", 1, 0, 3, 0, 0)]
@@ -82,13 +102,7 @@ namespace TestCentric.Gui.Presenters
         public void OnTestLoaded_CategoryGrouping_CategoryAtTestFixture_AllGroupNodesAreCreated(string categoryTestFixture, string categoryTestcase1, string categoryTestcase2, string categoryTestcase3, int expectedNodes, int expectedInNonCategory, int expectedInCategory1, int expectedInCategory2, int expectedInCategory3)
         {
             // 1. Arrange
-            ITestTreeView view = Substitute.For<ITestTreeView>();
-            ITestModel model = Substitute.For<ITestModel>();
-
-            List<TreeNode> treeNodes = new List<TreeNode>();
-            view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
-
-            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
+            _model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             string xmlText = "<test-suite type='TestSuite'> " + $"<properties> <property name='Category' value='{categoryTestFixture}' /> </properties> " +
                                 "<test-suite type='TestFixture'>" +
@@ -100,28 +114,22 @@ namespace TestCentric.Gui.Presenters
             TestNode testNode = new TestNode(XmlHelper.CreateXmlNode(xmlText));
             
             // 2. Act           
-            TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
+            TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
             strategy.OnTestLoaded(testNode, null);
 
             // 3. Assert
-            Assert.That(treeNodes.Count, Is.EqualTo(expectedNodes));
-            AssertTreeNodeAndTestGroup(treeNodes, "None", expectedInNonCategory);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_1", expectedInCategory1);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_2", expectedInCategory2);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_3", expectedInCategory3);
+            Assert.That(TreeNodes.Count, Is.EqualTo(expectedNodes));
+            AssertTreeNodeAndTestGroup(TreeNodes, "None", expectedInNonCategory);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_1", expectedInCategory1);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_2", expectedInCategory2);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_3", expectedInCategory3);
         }
 
         [Test]
         public void OnTestLoaded_CategoryGrouping_MultipleCategoriesAtOneFixture_AllGroupNodesAreCreated()
         {
             // 1. Arrange
-            ITestTreeView view = Substitute.For<ITestTreeView>();
-            ITestModel model = Substitute.For<ITestModel>();
-
-            List<TreeNode> treeNodes = new List<TreeNode>();
-            view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
-
-            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
+            _model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             TestNode testNode = new TestNode(
                         "<test-suite type='TestFixture' id='3-1000'> " +
@@ -135,27 +143,21 @@ namespace TestCentric.Gui.Presenters
                         "</test-suite>");
 
             // 2. Act           
-            TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
+            TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
             strategy.OnTestLoaded(testNode, null);
 
             // 3. Assert
-            Assert.That(treeNodes.Count, Is.EqualTo(2));
-            AssertTreeNodeAndTestGroup(treeNodes, "None", 0);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_1", 3);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_2", 3);
+            Assert.That(TreeNodes.Count, Is.EqualTo(2));
+            AssertTreeNodeAndTestGroup(TreeNodes, "None", 0);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_1", 3);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_2", 3);
         }
 
         [Test]
         public void OnTestLoaded_CategoryGrouping_MultipleCategoriesAtOneTestcase_AllGroupNodesAreCreated()
         {
             // 1. Arrange
-            ITestTreeView view = Substitute.For<ITestTreeView>();
-            ITestModel model = Substitute.For<ITestModel>();
-
-            List<TreeNode> treeNodes = new List<TreeNode>();
-            view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
-
-            model.TreeConfiguration.TestListGroupBy = "CATEGORY";
+            _model.TreeConfiguration.TestListGroupBy = "CATEGORY";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestFixture'> " +
@@ -168,14 +170,14 @@ namespace TestCentric.Gui.Presenters
                 "</test-suite>");
 
             // 2. Act           
-            TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
+            TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
             strategy.OnTestLoaded(testNode, null);
 
             // 3. Assert
-            Assert.That(treeNodes.Count, Is.EqualTo(2));
-            AssertTreeNodeAndTestGroup(treeNodes, "None", 0);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_1", 1);
-            AssertTreeNodeAndTestGroup(treeNodes, "Category_2", 1);
+            Assert.That(TreeNodes.Count, Is.EqualTo(2));
+            AssertTreeNodeAndTestGroup(TreeNodes, "None", 0);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_1", 1);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Category_2", 1);
         }
 
         [Test]
@@ -189,13 +191,7 @@ namespace TestCentric.Gui.Presenters
         public void OnTestLoaded_DurationGrouping_AllGroupNodesAreCreated(string duration1, string duration2, string duration3, int expectedNodes, int expectedInSlow, int expectedInMedium, int expectedInFast, int expectedNotRun)
         {
             // 1. Arrange
-            ITestTreeView view = Substitute.For<ITestTreeView>();
-            ITestModel model = Substitute.For<ITestModel>();
-
-            List<TreeNode> treeNodes = new List<TreeNode>();
-            view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
-
-            model.TreeConfiguration.TestListGroupBy = "DURATION";
+            _model.TreeConfiguration.TestListGroupBy = "DURATION";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +
@@ -206,20 +202,20 @@ namespace TestCentric.Gui.Presenters
                     "</test-suite>" +
                 "</test-suite>");
 
-            model.TestResultManager.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(duration1) ? null : new ResultNode($"<test-case id='3-1000' duration='{duration1}' />"));
-            model.TestResultManager.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(duration2) ? null : new ResultNode($"<test-case id='3-1001' duration='{duration2}' />"));
-            model.TestResultManager.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(duration3) ? null : new ResultNode($"<test-case id='3-1002' duration='{duration3}' />"));
+            _model.TestResultManager.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(duration1) ? null : new ResultNode($"<test-case id='3-1000' duration='{duration1}' />"));
+            _model.TestResultManager.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(duration2) ? null : new ResultNode($"<test-case id='3-1001' duration='{duration2}' />"));
+            _model.TestResultManager.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(duration3) ? null : new ResultNode($"<test-case id='3-1002' duration='{duration3}' />"));
 
             // 2. Act           
-            TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
+            TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
             strategy.OnTestLoaded(testNode, null);
 
             // 3. Assert
-            Assert.That(treeNodes.Count, Is.EqualTo(expectedNodes));
-            AssertTreeNodeAndTestGroup(treeNodes, "Slow > 1 sec", expectedInSlow);
-            AssertTreeNodeAndTestGroup(treeNodes, "Medium > 100 ms", expectedInMedium);
-            AssertTreeNodeAndTestGroup(treeNodes, "Fast < 100 ms", expectedInFast);
-            AssertTreeNodeAndTestGroup(treeNodes, "Not Run", expectedNotRun);
+            Assert.That(TreeNodes.Count, Is.EqualTo(expectedNodes));
+            AssertTreeNodeAndTestGroup(TreeNodes, "Slow > 1 sec", expectedInSlow);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Medium > 100 ms", expectedInMedium);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Fast < 100 ms", expectedInFast);
+            AssertTreeNodeAndTestGroup(TreeNodes, "Not Run", expectedNotRun);
         }
 
         private static object[] TestCaseSourceOutcomeGrouping =
@@ -236,13 +232,7 @@ namespace TestCentric.Gui.Presenters
         public void OnTestLoaded_OutcomeGrouping_AllGroupNodesAreCreated(string resultState1, string resultState2, string resultState3, int expectedNodes, Dictionary<string, int> expectedInGroup)
         {
             // 1. Arrange
-            ITestTreeView view = Substitute.For<ITestTreeView>();
-            ITestModel model = Substitute.For<ITestModel>();
-
-            List<TreeNode> treeNodes = new List<TreeNode>();
-            view.Add(Arg.Do<TreeNode>(x => treeNodes.Add(x)));
-
-            model.TreeConfiguration.TestListGroupBy = "OUTCOME";
+            _model.TreeConfiguration.TestListGroupBy = "OUTCOME";
 
             TestNode testNode = new TestNode(
                 "<test-suite type='TestSuite'> " +
@@ -253,20 +243,20 @@ namespace TestCentric.Gui.Presenters
                     "</test-suite>" +
                 "</test-suite>");
 
-            model.TestResultManager.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(resultState1) ? null : new ResultNode($"<test-case id='3-1000' result='{resultState1}' />"));
-            model.TestResultManager.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(resultState2) ? null : new ResultNode($"<test-case id='3-1001' result='{resultState2}' />"));
-            model.TestResultManager.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(resultState3) ? null : new ResultNode($"<test-case id='3-1002' result='{resultState3}' />"));
+            _model.TestResultManager.GetResultForTest("3-1000").Returns(string.IsNullOrEmpty(resultState1) ? null : new ResultNode($"<test-case id='3-1000' result='{resultState1}' />"));
+            _model.TestResultManager.GetResultForTest("3-1001").Returns(string.IsNullOrEmpty(resultState2) ? null : new ResultNode($"<test-case id='3-1001' result='{resultState2}' />"));
+            _model.TestResultManager.GetResultForTest("3-1002").Returns(string.IsNullOrEmpty(resultState3) ? null : new ResultNode($"<test-case id='3-1002' result='{resultState3}' />"));
 
             // 2. Act           
-            TestListDisplayStrategy strategy = new TestListDisplayStrategy(view, model);
+            TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
             strategy.OnTestLoaded(testNode, null);
 
             // 3. Assert
-            Assert.That(treeNodes.Count, Is.EqualTo(expectedNodes));
+            Assert.That(TreeNodes.Count, Is.EqualTo(expectedNodes));
 
             foreach (var exp in expectedInGroup)
             {
-                AssertTreeNodeAndTestGroup(treeNodes, exp.Key, exp.Value);
+                AssertTreeNodeAndTestGroup(TreeNodes, exp.Key, exp.Value);
             }
         }
 

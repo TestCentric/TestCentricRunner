@@ -65,12 +65,13 @@ namespace TestCentric.Gui.Model
         public string Id => GetAttribute("id");
         public string FullName => GetAttribute("fullname") ?? Name;
         public string Type => IsSuite ? GetAttribute("type") : "TestCase";
-        public bool IsAssembly => Type == "Assembly";
-        public bool IsProject => Type == "Project";
+        public bool IsAssembly => IsSuite && Type == "Assembly";
+        public bool IsFixture => IsSuite && Type == "TestFixture";
+        public bool IsProject => IsSuite && Type == "Project";
         public bool IsNamespace =>
             IsSuite && (Type == "TestSuite" || Type == "SetUpFixture");
-        public bool IsFixture => IsSuite && 
-            (Type == "TestFixture" || Type == "GenericFixture" || Type == "ParameterizedFixture" || Type == "Theory");
+        //public bool IsFixture => IsSuite && 
+        //    (Type == "TestFixture" || Type == "GenericFixture" || Type == "ParameterizedFixture" || Type == "Theory");
 
 
         /// <summary>

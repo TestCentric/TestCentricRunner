@@ -95,6 +95,9 @@ namespace TestCentric.Gui
             new ErrorsAndFailuresPresenter(view.ErrorsAndFailuresView, model);
             new TextOutputPresenter(view.TextOutputView, model);
             new TreeViewPresenter(view.TreeView, model, new TreeDisplayStrategyFactory());
+            // NOTE: Some events are dependent on the main presenter 
+            // being initialized after other presenters, so that its
+            // handlers are invoked last.
             new TestCentricPresenter(view, model);
 
             try
