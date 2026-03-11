@@ -8,6 +8,7 @@ namespace TestCentric.Gui.Model
     using System;
     using System.Threading.Tasks;
     using NUnit;
+    using NUnit.Common;
     using NUnit.Engine;
 
     internal class TestCentricRunner : IDisposable
@@ -30,11 +31,18 @@ namespace TestCentric.Gui.Model
 
         private ITestRunner ActiveTestRun { get; set; }
 
+        private int RandomSeed { get; set; }
+
         public bool IsTestRunning => ActiveTestRun != null && ActiveTestRun.IsTestRunning;
 
         public void Dispose()
         {
             ResetActiveTestRun();
+        }
+
+        public void InitRandomSeed()
+        {
+            RandomSeed = new Random().Next();
         }
 
         /// <summary>
@@ -69,13 +77,14 @@ namespace TestCentric.Gui.Model
             return loadedTests;
         }
 
-        public void RunAsync(TestPackage package, NUnit.Engine.TestFilter filter)
+        public void RunAsync(TestCentricProject project, NUnit.Engine.TestFilter filter)
         {
-            Guard.ArgumentNotNull(package, nameof(package));
+            Guard.ArgumentNotNull(project, nameof(project));
             Guard.ArgumentNotNull(filter, nameof(filter));
 
             log.Debug("Executing RunAsync");
-            ActiveTestRun = TestEngine.GetRunner(package);
+            project.ApplySetting(SettingDefinitions.RandomSeed.WithValue(RandomSeed));
+            ActiveTestRun = TestEngine.GetRunner(project.TopLevelPackage);
             ActiveTestRun.Load();
             ActiveTestRun.RunAsync(TestEvents, filter);
         }
