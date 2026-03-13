@@ -11,18 +11,20 @@ namespace TestCentric.Gui.Model
     {
         public event SettingsEventHandler Changed;
 
-        bool ShowCheckBoxes { get; set; }
-
-        bool ShowNamespaces {  get; set; }
-
-        bool ShowAssemblies { get; set; }
-
-        bool ShowFixtures { get; set; }
-
-        bool ShowTestDuration { get; set; }
-
         string DisplayFormat { get; set; }
 
+        // Properties used by all strategies
+        bool ShowCheckBoxes { get; set; }
+
+        // Properties used by NUnitTreeDisplayStrategy
+        bool NUnitTreeShowTestDuration { get; set; }
+        bool NUnitTreeShowAssemblies { get; set; }
+        bool NUnitTreeShowNamespaces { get; set; }
+        bool NUnitTreeShowFixtures { get; set; }
+
+        // Properties used by TestListDisplayStrategy
+        bool TestListShowAssemblies { get; set; }
+        bool TestListShowFixtures { get; set; }
         string TestListGroupBy { get; set; }
     }
 
@@ -32,64 +34,8 @@ namespace TestCentric.Gui.Model
     public class TreeConfiguration : ITreeConfiguration
     {
         public event SettingsEventHandler Changed;
-        private bool _showCheckBoxes = false;
-        private bool _showNamespaces = true;
-        private bool _showAssemblies = true;
-        private bool _showFixtures = true;
-        private bool _showTestDuration = false;
+
         private string _displayFormat = "NUNIT_TREE";
-        private string _testListGroupBy = "UNGROUPED";
-
-        public bool ShowCheckBoxes
-        {
-            get => _showCheckBoxes;
-            set
-            {
-                _showCheckBoxes = value;
-                OnPropertyChanged(nameof(ShowCheckBoxes));
-            }
-        }
-
-        public bool ShowNamespaces
-        {
-            get => _showNamespaces;
-            set
-            {
-                _showNamespaces = value;
-                OnPropertyChanged(nameof(ShowNamespaces));
-            }
-        }
-
-        public bool ShowAssemblies
-        {
-            get => _showAssemblies;
-            set
-            {
-                _showAssemblies = value;
-                OnPropertyChanged(nameof(ShowAssemblies));
-            }
-        }
-
-        public bool ShowFixtures
-        {
-            get => _showFixtures;
-            set
-            {
-                _showFixtures = value;
-                OnPropertyChanged(nameof(ShowFixtures));
-            }
-        }
-
-        public bool ShowTestDuration
-        {
-            get => _showTestDuration;
-            set
-            {
-                _showTestDuration = value;
-                OnPropertyChanged(nameof(ShowTestDuration));
-            }
-        }
-
         public string DisplayFormat
         {
             get => _displayFormat;
@@ -100,6 +46,90 @@ namespace TestCentric.Gui.Model
             }
         }
 
+        // Properties used by all strategies
+
+        private bool _showCheckBoxes = false;
+        public bool ShowCheckBoxes
+        {
+            get => _showCheckBoxes;
+            set
+            {
+                _showCheckBoxes = value;
+                OnPropertyChanged(nameof(ShowCheckBoxes));
+            }
+        }
+
+        private bool _nunitTreeShowTestDuration = false;
+        public bool NUnitTreeShowTestDuration
+        {
+            get => _nunitTreeShowTestDuration;
+            set
+            {
+                _nunitTreeShowTestDuration = value;
+                OnPropertyChanged(nameof(NUnitTreeShowTestDuration));
+            }
+        }
+
+        // Properties used by NUnitTreeDisplayStrategy
+
+        private bool _nunitTreeShowAssemblies = true;
+        public bool NUnitTreeShowAssemblies
+        {
+            get => _nunitTreeShowAssemblies;
+            set
+            {
+                _nunitTreeShowAssemblies = value;
+                OnPropertyChanged(nameof(NUnitTreeShowAssemblies));
+            }
+        }
+
+        private bool _nunitTreeShowNamespaces = true;
+        public bool NUnitTreeShowNamespaces
+        {
+            get => _nunitTreeShowNamespaces;
+            set
+            {
+                _nunitTreeShowNamespaces = value;
+                OnPropertyChanged(nameof(NUnitTreeShowNamespaces));
+            }
+        }
+
+        private bool _nunitTreeShowFixtures = true;
+        public bool NUnitTreeShowFixtures
+        {
+            get => _nunitTreeShowFixtures;
+            set
+            {
+                _nunitTreeShowFixtures = value;
+                OnPropertyChanged(nameof(NUnitTreeShowFixtures));
+            }
+        }
+
+        // Properties used by TestListDisplayStrategy
+
+        private bool _testListShowAssemblies = false;
+        public bool TestListShowAssemblies
+        {
+            get => _testListShowAssemblies;
+            set
+            {
+                _testListShowAssemblies = value;
+                OnPropertyChanged(nameof(TestListShowAssemblies));
+            }
+        }
+
+        private bool _testListShowFixtures = false;
+        public bool TestListShowFixtures
+        {
+            get => _testListShowFixtures;
+            set
+            {
+                _testListShowFixtures = value;
+                OnPropertyChanged(nameof(TestListShowFixtures));
+            }
+        }
+
+        private string _testListGroupBy = "UNGROUPED";
         public string TestListGroupBy
         {
             get => _testListGroupBy;

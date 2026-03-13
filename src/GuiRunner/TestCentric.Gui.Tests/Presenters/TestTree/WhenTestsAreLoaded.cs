@@ -70,9 +70,9 @@ namespace TestCentric.Gui.Presenters.TestTree
             Assert.That(_presenter.Strategy, Is.TypeOf(expectedStrategy));
             if (displayFormat == "NUnit_TREE")
             {
-                Assert.That(_presenter.TreeConfiguration.ShowNamespaces, Is.True);
-                Assert.That(_presenter.TreeConfiguration.ShowFixtures, Is.True);
-                Assert.That(_presenter.TreeConfiguration.ShowAssemblies, Is.True);
+                Assert.That(_presenter.TreeConfiguration.NUnitTreeShowNamespaces, Is.True);
+                Assert.That(_presenter.TreeConfiguration.NUnitTreeShowFixtures, Is.True);
+                Assert.That(_presenter.TreeConfiguration.NUnitTreeShowAssemblies, Is.True);
             }
         }
 
@@ -173,19 +173,17 @@ namespace TestCentric.Gui.Presenters.TestTree
         //    Assert.That(_model.TreeConfiguration.DisplayFormat, Is.EqualTo(displayFormat));
         //}
 
-        // TODO: Move to TreeViewPresenter tests
-        //[TestCase("ASSEMBLY")]
-        //[TestCase("CATEGORY")]
-        //[TestCase("OUTCOME")]
-        //public void WithVisualState_TestListGroupBySettingIsUpdatedFromVisualState(string groupBy)
-        //{
-        //    // Arrange: Create and save VisualState file
-        //    VisualState visualState = new VisualState()
-        //    {
-        //        DisplayStrategy = "TEST_LIST",
-        //        GroupBy = groupBy
-        //    };
-        //    visualState.Save(VISUAL_STATE_FILE_NAME);
+        [TestCase("CATEGORY")]
+        [TestCase("OUTCOME")]
+        public void WithVisualState_TestListGroupBySettingIsUpdatedFromVisualState(string groupBy)
+        {
+            // Arrange: Create and save VisualState file
+            VisualState visualState = new VisualState()
+            {
+                DisplayStrategy = "TEST_LIST",
+                GroupBy = groupBy
+            };
+            visualState.Save(VISUAL_STATE_FILE_NAME);
 
         //    var treeConfig = new TreeConfiguration()
         //    {
@@ -202,7 +200,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         //    // Assert
         //    Assert.That(_model.TreeConfiguration.TestListGroupBy, Is.EqualTo(groupBy));
         //    //Assert.That(_model.TreeConfiguration.NUnitGroupBy, Is.EqualTo("UNGROUPED"));     // Assert that NUnit groupBy is reset
-        //}
+        }
 
         [Test]
         public void CategoryFilterIsInitialized()

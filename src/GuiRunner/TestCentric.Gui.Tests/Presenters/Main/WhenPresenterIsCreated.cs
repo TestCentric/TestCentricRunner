@@ -58,7 +58,6 @@ namespace TestCentric.Gui.Presenters.Main
             _view.DisplayFormat.Received().SelectedItem = displayFormat;
         }
 
-        [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
         public void CheckMenu_TestListGroupBy_SelectedItem_TestList_IsInitializedFromTreeConfiguration(string groupBy)

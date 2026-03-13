@@ -57,7 +57,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             DurationGrouping grouping = new DurationGrouping(strategy);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             Assert.That(grouping.Groups.Count, Is.EqualTo(4));
@@ -83,7 +83,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             DurationGrouping grouping = new DurationGrouping(strategy);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == expectedGroupName);
@@ -105,7 +105,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             DurationGrouping grouping = new DurationGrouping(strategy);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == "Not Run");
@@ -153,7 +153,7 @@ namespace TestCentric.Gui.Presenters
 
             // Create grouping and initialize all groups
             DurationGrouping grouping = new DurationGrouping(strategy);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             foreach (TestGroup testGroup in grouping.Groups)
             {

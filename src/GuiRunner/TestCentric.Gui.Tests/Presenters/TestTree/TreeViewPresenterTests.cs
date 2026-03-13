@@ -40,8 +40,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // Act
-            _model.TreeConfiguration.ShowNamespaces = showNamespace;
-            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowNamespaces)));
+            _model.TreeConfiguration.NUnitTreeShowNamespaces = showNamespace;
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.NUnitTreeShowNamespaces)));
 
             // Assert
             strategy.Received(2).Reload();
@@ -57,8 +57,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // Act
-            _model.TreeConfiguration.ShowAssemblies = showAssemblies;
-            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowAssemblies)));
+            _model.TreeConfiguration.NUnitTreeShowAssemblies = showAssemblies;
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.NUnitTreeShowAssemblies)));
 
             // Assert
             strategy.Received(2).Reload();
@@ -74,8 +74,8 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.DisplayFormat)));
 
             // Act
-            _model.TreeConfiguration.ShowFixtures = showFixtures;
-            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.ShowFixtures)));
+            _model.TreeConfiguration.NUnitTreeShowFixtures = showFixtures;
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(this, new SettingsEventArgs(nameof(TreeConfiguration.NUnitTreeShowFixtures)));
 
             // Assert
             strategy.Received(2).Reload();
@@ -105,7 +105,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _view.ShowTestDuration.CheckedChanged += Raise.Event<CommandHandler>();
 
             // 3. Assert
-            Assert.That(_model.TreeConfiguration.ShowTestDuration, Is.EqualTo(showTestDuration));
+            Assert.That(_model.TreeConfiguration.NUnitTreeShowTestDuration, Is.EqualTo(showTestDuration));
         }
 
         [Test]

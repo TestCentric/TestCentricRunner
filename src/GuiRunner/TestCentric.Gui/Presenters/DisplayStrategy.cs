@@ -27,9 +27,6 @@ namespace TestCentric.Gui.Presenters
     /// </summary>
     public abstract class DisplayStrategy : ITreeDisplayStrategy
     {
-        // TODO: This class is temporarily using image index values
-        // from TestSuiteTreeNode rather than TestTreeView.
-
         protected ITestTreeView _view;
         protected ITestModel _model;
         protected IUserSettings _settings;
@@ -56,11 +53,11 @@ namespace TestCentric.Gui.Presenters
             get { return _model.HasResults; }
         }
 
-        protected ITreeConfiguration TreeConfiguration => _model.TreeConfiguration;
-
         public abstract string StrategyID { get; }
 
         public abstract string Description { get; }
+
+        internal ITreeConfiguration TreeConfiguration => _model.TreeConfiguration;
 
         #endregion
 
@@ -69,16 +66,42 @@ namespace TestCentric.Gui.Presenters
         /// <summary>
         /// Load all tests into the tree, starting from a root TestNode.
         /// </summary>
-        public abstract void OnTestLoaded(TestNode testNode, VisualState visualState);
-
-        public void SaveVisualState()
+        public virtual void OnTestLoaded(TestNode rootNode, VisualState visualState)
         {
-            VisualState visualState = CreateVisualState();
-            string projectPath = _model.TestCentricProject.ProjectPath;
-            string visualStatePath = Path.ChangeExtension(projectPath, ".VisualState.xml");
+            ClearTree();
 
-            visualState.Save(visualStatePath);
+            AddTreeNodesToCollection(rootNode.Children, _view.Nodes);
+
+            // Update tree state
+            if (visualState != null)
+                visualState.ApplyTo(_view.TreeView);
+            else
+                SetInitialExpansion();
+
+            ApplyResultsToTree();
+
+            _view.EnableTestFilter(true);
         }
+
+        protected void AddTreeNodesToCollection(IEnumerable<TestNode> testNodes, TreeNodeCollection treeNodes)
+        {
+            foreach (var testNode in testNodes)
+                AddTreeNodeToCollection(testNode, treeNodes);
+        }
+
+        protected void AddTreeNodeToCollection(TestNode testNode, TreeNodeCollection treeNodes)
+        {
+            if (ShowTreeNodeType(testNode))
+            {
+                var treeNode = MakeTreeNode(testNode, false);
+                treeNodes.Add(treeNode);
+                treeNodes = treeNode.Nodes;
+            }
+
+            AddTreeNodesToCollection(testNode.Children, treeNodes);
+        }
+
+        protected virtual void SetInitialExpansion() { }
 
         public abstract VisualState CreateVisualState();
 
@@ -102,37 +125,32 @@ namespace TestCentric.Gui.Presenters
                 foreach (TreeNode treeNode in GetTreeNodesForTest(result))
                 {
                     treeNode.Text = GetTreeNodeDisplayName(result);
-                    _view.SetImageIndex(treeNode, imageIndex);
+                    _view.SetImageIndex(treeNode, imageIndex, true);
                 }
             });
         }
 
         public virtual void OnTestRunStarting()
         {
-            // Save the visual state in case test run causes an exception
-            // or user terminates cancels the run.
-            SaveVisualState();
-
             _view.InvokeIfRequired(() =>
             {
                 UpdateTreeIconsOnRunStart(_view.Nodes);
-            });
 
-            if (TreeConfiguration.ShowTestDuration)
-                _view.InvokeIfRequired(() => UpdateTreeNodeNames());
+                if (TreeConfiguration.NUnitTreeShowTestDuration)
+                    UpdateTreeNodeNames();
+            });
         }
 
         public virtual void OnTestRunFinished()
         {
-            if (_view.SortCommand.SelectedItem == TreeViewNodeComparer.Duration)
-            {
-                _view.InvokeIfRequired(() => _view.Sort());
-            }
-            if (TreeConfiguration.ShowTestDuration)
-                _view.InvokeIfRequired(() => UpdateTreeNodeNames());
-
             _view.InvokeIfRequired(() =>
             {
+                if (_view.SortCommand.SelectedItem == TreeViewNodeComparer.Duration)
+                    _view.Sort();
+
+                if (TreeConfiguration.NUnitTreeShowTestDuration)
+                    UpdateTreeNodeNames();
+
                 ResetTestRunningIcons(_view.Nodes);
             });
         }
@@ -168,7 +186,7 @@ namespace TestCentric.Gui.Presenters
 
             if (recursive)
                 foreach (TestNode test in group)
-                    treeNode.Nodes.Add(MakeTreeNode(test, true));
+                    AddTreeNodeToCollection(test, treeNode.Nodes);
 
             return treeNode;
         }
@@ -203,20 +221,9 @@ namespace TestCentric.Gui.Presenters
         }
 
         /// <summary>
-        /// Check if a tree node type should be shown or omitted
-        /// Currently we support only omitting the namespace nodes
+        /// Check if a tree node type should be shown or omitted.
         /// </summary>
-        protected bool ShowTreeNodeType(TestNode testNode)
-        {
-            if (testNode.IsAssembly)
-                return TreeConfiguration.ShowAssemblies;
-            if (testNode.IsNamespace)
-                return TreeConfiguration.ShowNamespaces;
-            if (testNode.IsFixture)
-                return TreeConfiguration.ShowFixtures;
-
-            return true;
-        }
+        protected abstract bool ShowTreeNodeType(TestNode testNode);
 
         protected void AddTestNodeMapping(TestNode testNode, TreeNode treeNode)
         {
@@ -243,7 +250,7 @@ namespace TestCentric.Gui.Presenters
 
             // Check if test result is available for this node
             ResultNode result = testNode as ResultNode ?? _model.TestResultManager.GetResultForTest(testNode.Id);
-            if (TreeConfiguration.ShowTestDuration && result != null)
+            if (TreeConfiguration.NUnitTreeShowTestDuration && result != null)
                 treeNodeName += $" [{result.Duration:0.000}s]";
 
             return treeNodeName;
@@ -284,7 +291,7 @@ namespace TestCentric.Gui.Presenters
             else if (treeNode.Tag is TestGroup testGroup)
             {
                 treeNodeName = GroupDisplayName(testGroup);
-                if (TreeConfiguration.ShowTestDuration && testGroup.Duration.HasValue)
+                if (TreeConfiguration.NUnitTreeShowTestDuration && testGroup.Duration.HasValue)
                     treeNodeName += $" [{testGroup.Duration.Value:0.000}s]";
             }
 

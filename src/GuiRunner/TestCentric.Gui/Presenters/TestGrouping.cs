@@ -44,13 +44,14 @@ namespace TestCentric.Gui.Presenters
         /// <summary>
         /// Load tests into the grouping
         /// </summary>
-        /// <param name="tests">Tests to be loaded</param>
-        public virtual void Load(IEnumerable<TestNode> tests)
+        /// <param name="tests">The TestNodes to be loaded</param>
+        public virtual void LoadGroups(IEnumerable<TestNode> tests)
         {
             foreach (TestNode testNode in tests)
                 foreach (var group in SelectGroups(testNode))
                     group.Add(testNode);
 
+            // If there are test results, show the result for the group
             if (_displayStrategy.HasResults)
                 foreach (var group in Groups)
                     group.ImageIndex = _displayStrategy.CalcImageIndexForGroup(group);
@@ -78,7 +79,7 @@ namespace TestCentric.Gui.Presenters
         }
 
         /// <summary>
-        /// Returns an array of groups in which a TestNode is categorized.
+        /// Returns an array of groups in which the TestNode is included.
         /// </summary>
         public abstract TestGroup[] SelectGroups(TestNode testNode);
 

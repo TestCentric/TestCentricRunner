@@ -29,7 +29,6 @@ namespace TestCentric.Gui.Presenters.Main
             Assert.That(_view.DisplayFormat.SelectedItem, Is.EqualTo(displayFormat));
         }
 
-        [TestCase("ASSEMBLY")]
         [TestCase("CATEGORY")]
         [TestCase("OUTCOME")]
         public void TestListGroupBy_TreeConfigurationChanged_MenuItemIsUpdated(string groupBy)
@@ -47,16 +46,16 @@ namespace TestCentric.Gui.Presenters.Main
 
         [TestCase(true)]
         [TestCase(false)]
-        public void ShowNamespace_TreeConfigurationChanged_MenuItemIsUpdated(bool showNamespace)
+        public void ShowNamespaces_TreeConfigurationChanged_MenuItemIsUpdated(bool showNamespaces)
         {
             // 1. Arrange
-            _model.TreeConfiguration.ShowNamespaces.Returns(showNamespace);
+            _model.TreeConfiguration.NUnitTreeShowNamespaces.Returns(showNamespaces);
 
             // 2. Act
-            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowNamespaces)));
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.NUnitTreeShowNamespaces)));
 
             // 2. Assert
-            Assert.That(_view.ShowNamespaces.Checked, Is.EqualTo(showNamespace));
+            Assert.That(_view.NUnitTreeShowNamespaces.Checked, Is.EqualTo(showNamespaces));
         }
 
         [TestCase(true)]
@@ -64,13 +63,13 @@ namespace TestCentric.Gui.Presenters.Main
         public void ShowAssemblies_TreeConfigurationChanged_MenuItemIsUpdated(bool showAssemblies)
         {
             // 1. Arrange
-            _model.TreeConfiguration.ShowAssemblies.Returns(showAssemblies);
+            _model.TreeConfiguration.NUnitTreeShowAssemblies.Returns(showAssemblies);
 
             // 2. Act
-            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowAssemblies)));
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.NUnitTreeShowAssemblies)));
 
             // 2. Assert
-            Assert.That(_view.ShowAssemblies.Checked, Is.EqualTo(showAssemblies));
+            Assert.That(_view.NUnitTreeShowAssemblies.Checked, Is.EqualTo(showAssemblies));
         }
 
         [TestCase(true)]
@@ -78,14 +77,43 @@ namespace TestCentric.Gui.Presenters.Main
         public void ShowFixtures_TreeConfigurationChanged_MenuItemIsUpdated(bool showFixtures)
         {
             // 1. Arrange
-            _model.TreeConfiguration.ShowFixtures.Returns(showFixtures);
+            _model.TreeConfiguration.NUnitTreeShowFixtures.Returns(showFixtures);
 
             // 2. Act
-            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowFixtures)));
+            _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.NUnitTreeShowFixtures)));
 
             // 2. Assert
-            Assert.That(_view.ShowFixtures.Checked, Is.EqualTo(showFixtures));
+            Assert.That(_view.NUnitTreeShowFixtures.Checked, Is.EqualTo(showFixtures));
         }
+
+        // TODO: FIX
+        //[TestCase(true)]
+        //[TestCase(false)]
+        //public void ShowAssemblies_TreeConfigurationChanged_MenuItemIsUpdated(bool showAssemblies)
+        //{
+        //    // 1. Arrange
+        //    _model.TreeConfiguration.ShowAssemblies.Returns(showAssemblies);
+
+        //    // 2. Act
+        //    _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowAssemblies)));
+
+        //    // 2. Assert
+        //    Assert.That(_view.ShowAssemblies.Checked, Is.EqualTo(showAssemblies));
+        //}
+
+        //[TestCase(true)]
+        //[TestCase(false)]
+        //public void ShowFixtures_TreeConfigurationChanged_MenuItemIsUpdated(bool showFixtures)
+        //{
+        //    // 1. Arrange
+        //    _model.TreeConfiguration.ShowFixtures.Returns(showFixtures);
+
+        //    // 2. Act
+        //    _model.TreeConfiguration.Changed += Raise.Event<SettingsEventHandler>(null, new SettingsEventArgs(nameof(TreeConfiguration.ShowFixtures)));
+
+        //    // 2. Assert
+        //    Assert.That(_view.ShowFixtures.Checked, Is.EqualTo(showFixtures));
+        //}
 
         [TestCase("NUNIT_TREE", true)]
         [TestCase("TEST_LIST", false)]

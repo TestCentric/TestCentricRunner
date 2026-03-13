@@ -30,13 +30,13 @@ namespace TestCentric.Gui.Presenters
 
         public override string ID => "CATEGORY";
 
-        public override void Load(IEnumerable<TestNode> tests)
+        public override void LoadGroups(IEnumerable<TestNode> tests)
         {
             Groups.Clear();
             Groups.Add(new TestGroup("None"));
-            // Additional groups are added dynamically.
+            // Additional groups are added dynamically by SelectGroups.
 
-            base.Load(tests);
+            base.LoadGroups(tests);
         }
 
         public override TestGroup[] SelectGroups(TestNode testNode)

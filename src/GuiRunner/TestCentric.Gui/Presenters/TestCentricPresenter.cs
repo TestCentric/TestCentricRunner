@@ -78,7 +78,7 @@ namespace TestCentric.Gui.Presenters
             _view.Font = _settings.Gui.Font;
 
             UpdateViewCommands();
-            UpdateTreeDisplayMenuItem();
+            UpdateTreeDisplayMenuItems();
             UpdateRunSelectedTestsTooltip();
             UpdateSaveResultFormatsMenuItem();
 
@@ -111,7 +111,7 @@ namespace TestCentric.Gui.Presenters
             {
                 var projectPath = _model.TestCentricProject?.ProjectPath;
                 _view.Title = projectPath is not null
-                    ? $"TestCentric - {_model.TestCentricProject.ProjectPath}"
+                    ? $"TestCentric - {Path.GetFileNameWithoutExtension(projectPath)}"
                     : "TestCentric Runner for NUnit";
             }
 
@@ -138,9 +138,9 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestsUnloading += (TestEventArgs e) =>
             {
-                _model.SaveProject();
-
                 UpdateViewCommands();
+
+                _model.SaveProject();
 
                 BeginLongRunningOperation("Unloading...");
             };
@@ -260,16 +260,19 @@ namespace TestCentric.Gui.Presenters
                 {
                     case nameof(Model.TreeConfiguration.DisplayFormat):
                         _view.DisplayFormat.SelectedItem = TreeConfiguration.DisplayFormat;
-                        UpdateTreeDisplayMenuItem();
+                        UpdateTreeDisplayMenuItems();
                         UpdateViewCommands();
                         break;
+                    case nameof(Model.TreeConfiguration.TestListShowAssemblies):
+                    case nameof(Model.TreeConfiguration.TestListShowFixtures):
                     case nameof(Model.TreeConfiguration.TestListGroupBy):
-                        UpdateTreeDisplayMenuItem();
+                        UpdateTreeDisplayMenuItems();
                         break;
-                    case nameof(Model.TreeConfiguration.ShowNamespaces):
-                    case nameof(Model.TreeConfiguration.ShowAssemblies):
-                    case nameof(Model.TreeConfiguration.ShowFixtures):
-                        UpdateTreeDisplayMenuItem();
+                    case nameof(Model.TreeConfiguration.NUnitTreeShowNamespaces):
+                    case nameof(Model.TreeConfiguration.NUnitTreeShowAssemblies):
+                    case nameof(Model.TreeConfiguration.NUnitTreeShowFixtures):
+                    default:
+                        UpdateTreeDisplayMenuItems();
                         break;
                 }
             };
@@ -502,29 +505,39 @@ namespace TestCentric.Gui.Presenters
                 TreeConfiguration.DisplayFormat = _view.DisplayFormat.SelectedItem;
             };
 
-            _view.ShowNamespaces.CheckedChanged += () =>
+            _view.NUnitTreeShowAssemblies.CheckedChanged += () =>
             {
-                TreeConfiguration.ShowNamespaces = _view.ShowNamespaces.Checked;
+                TreeConfiguration.NUnitTreeShowAssemblies = _view.NUnitTreeShowAssemblies.Checked;
             };
 
-            _view.ShowAssemblies.CheckedChanged += () =>
+            _view.NUnitTreeShowNamespaces.CheckedChanged += () =>
             {
-                TreeConfiguration.ShowAssemblies = _view.ShowAssemblies.Checked;
+                TreeConfiguration.NUnitTreeShowNamespaces = _view.NUnitTreeShowNamespaces.Checked;
             };
 
-            _view.ShowFixtures.CheckedChanged += () =>
+            _view.NUnitTreeShowFixtures.CheckedChanged += () =>
             {
-                TreeConfiguration.ShowFixtures = _view.ShowFixtures.Checked;
+                TreeConfiguration.NUnitTreeShowFixtures = _view.NUnitTreeShowFixtures.Checked;
             };
 
-            _view.ShowHideFilterButton.CheckedChanged += () =>
+            _view.TestListShowAssemblies.CheckedChanged += () =>
             {
-                _settings.Gui.TestTree.ShowFilter = _view.ShowHideFilterButton.Checked;
+                TreeConfiguration.TestListShowAssemblies = _view.TestListShowAssemblies.Checked;
+            };
+
+            _view.TestListShowFixtures.CheckedChanged += () =>
+            {
+                TreeConfiguration.TestListShowFixtures = _view.TestListShowFixtures.Checked;
             };
 
             _view.TestListGroupBy.SelectionChanged += () =>
             {
                 TreeConfiguration.TestListGroupBy = _view.TestListGroupBy.SelectedItem;
+            };
+
+            _view.ShowHideFilterButton.CheckedChanged += () =>
+            {
+                _settings.Gui.TestTree.ShowFilter = _view.ShowHideFilterButton.Checked;
             };
 
             _view.StopRunButton.Execute += ExecuteNormalStop;
@@ -930,21 +943,19 @@ namespace TestCentric.Gui.Presenters
             }
         }
 
-        private void UpdateTreeDisplayMenuItem()
+        private void UpdateTreeDisplayMenuItems()
         {
             // Use case: project was loaded and TreeConfiguration was updated from VisualState file
             // => Update UI elements from tree configuration
             string displayFormat = TreeConfiguration.DisplayFormat;
             _view.DisplayFormat.SelectedItem = displayFormat;
 
-            if (displayFormat == "TEST_LIST")
-                _view.TestListGroupBy.SelectedItem = TreeConfiguration.TestListGroupBy;
-
-            _view.ShowNamespaces.Checked = TreeConfiguration.ShowNamespaces;
-            _view.ShowAssemblies.Checked = TreeConfiguration.ShowAssemblies;
-            _view.ShowFixtures.Checked = TreeConfiguration.ShowFixtures;
-            _view.ShowNamespaces.Enabled = _view.ShowAssemblies.Enabled = _view.ShowFixtures.Enabled =
-                displayFormat == "NUNIT_TREE";
+            _view.NUnitTreeShowNamespaces.Checked = TreeConfiguration.NUnitTreeShowNamespaces;
+            _view.NUnitTreeShowAssemblies.Checked = TreeConfiguration.NUnitTreeShowAssemblies;
+            _view.NUnitTreeShowFixtures.Checked = TreeConfiguration.NUnitTreeShowFixtures;
+            _view.TestListShowAssemblies.Checked = TreeConfiguration.TestListShowAssemblies;
+            _view.TestListShowFixtures.Checked = TreeConfiguration.TestListShowFixtures;
+            _view.TestListGroupBy.SelectedItem = TreeConfiguration.TestListGroupBy;
         }
 
         private void RunAllTests()

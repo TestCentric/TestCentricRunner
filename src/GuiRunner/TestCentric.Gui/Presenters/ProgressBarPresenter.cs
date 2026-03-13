@@ -1,10 +1,12 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) Charlie Poole and TestCentric contributors.
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
 namespace TestCentric.Gui.Presenters
 {
+    using System.Linq;
+    using System.Threading.Tasks;
     using Model;
     using Views;
 
@@ -46,6 +48,13 @@ namespace TestCentric.Gui.Presenters
             _model.Events.TestFinished += (ea) =>
             {
                 _view.Progress++;
+
+                // Uncomment and modify to observe appearance when
+                // when some tests run slowly.
+                //int[] pausePoints = [10, 20, 30];
+                //int pauseLength = 10000;
+                //if (pausePoints.Contains(_view.Progress))
+                //    Task.Delay(pauseLength).Wait();
 
                 CheckStatus(ea.Result.Outcome);
             };

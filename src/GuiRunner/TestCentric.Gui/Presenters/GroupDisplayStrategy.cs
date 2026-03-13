@@ -43,14 +43,17 @@ namespace TestCentric.Gui.Presenters
             _view.InvokeIfRequired(() => _grouping?.OnTestFinished(result));
         }
 
-        public override void OnTestRunFinished()
-        {
-            _view.InvokeIfRequired(() =>
-            {
-                _grouping?.OnTestRunFinished();
-                ResetTestRunningIcons(_view.Nodes);
-            });
-        }
+        // TODO: Determine if we want to reinstate this based on whether we want
+        // groups to change their display as soon as the first test completes
+        // (present implementation) or wait until the last test completes.
+        //public override void OnTestRunFinished()
+        //{
+        //    _view.InvokeIfRequired(() =>
+        //    {
+        //        _grouping?.OnTestRunFinished();
+        //        ResetTestRunningIcons(_view.Nodes);
+        //    });
+        //}
 
         // TODO: Move this to TestGroup? Would need access to results.
         public int CalcImageIndexForGroup(TestGroup group)
@@ -169,7 +172,7 @@ namespace TestCentric.Gui.Presenters
             {
                 default:
                 case "UNGROUPED":
-                    return null;
+                    return new UngroupedGrouping(this);
                 case "OUTCOME":
                     return new OutcomeGrouping(this);
                 case "DURATION":

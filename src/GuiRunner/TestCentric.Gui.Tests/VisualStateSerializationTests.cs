@@ -64,7 +64,7 @@ namespace TestCentric.Gui
             {
                 Assert.That(docElement.Name, Is.EqualTo("VisualState"));
                 Assert.That(docElement.GetAttribute("DisplayStrategy"), Is.EqualTo(vs.DisplayStrategy));
-                Assert.That(docElement.GetAttribute("ShowCheckBoxes"), Is.EqualTo(vs.ShowCheckBoxes ? "True" : ""));
+                Assert.That(docElement.GetAttribute("ShowCheckBoxes"), Is.EqualTo(vs.ShowCheckBoxes ? "True" : "False"));
                 Assert.That(docElement.GetAttribute("ShowNamespaces"), Is.EqualTo(!vs.ShowNamespaces ? "False" : ""));
                 Assert.That(docElement.GetAttribute("ShowFixtures"), Is.EqualTo(!vs.ShowFixtures ? "False" : ""));
                 Assert.That(docElement.GetAttribute("ShowAssemblies"), Is.EqualTo(!vs.ShowAssemblies ? "False" : ""));

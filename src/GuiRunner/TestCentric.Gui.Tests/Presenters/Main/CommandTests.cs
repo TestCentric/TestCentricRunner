@@ -179,15 +179,16 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("test1.dll", "test2.dll", "test3.dll")]
         public void SaveCommand_CallsSaveProject(params string[] files)
         {
-            var project = new TestCentricProject("MyProject", files);
+            var projectPath = Path.GetFullPath("MyProject.tcproj");
+            var project = new TestCentricProject(projectPath, files);
             _model.TestCentricProject.Returns(project);
 
             if(files.Length > 0)
-                _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs("MyProject.tcproj");
+                _view.DialogManager.GetFileSavePath(null, null, null, null).ReturnsForAnyArgs(projectPath);
 
             _view.SaveProjectCommand.Execute += Raise.Event<CommandHandler>();
 
-            _model.Received().SaveProject("MyProject");
+            _model.Received().SaveProject(projectPath);
         }
 
         //[Test]
@@ -421,13 +422,13 @@ namespace TestCentric.Gui.Presenters.Main
         public void ShowNamespaceChanged_Changes_TreeConfiguration(bool showNamespace)
         {
             // Arrange
-            _view.ShowNamespaces.Checked .Returns(showNamespace);
+            _view.NUnitTreeShowNamespaces.Checked .Returns(showNamespace);
 
             // Act
-            _view.ShowNamespaces.CheckedChanged += Raise.Event<CommandHandler>();
+            _view.NUnitTreeShowNamespaces.CheckedChanged += Raise.Event<CommandHandler>();
 
             // Assert
-            Assert.That(_model.TreeConfiguration.ShowNamespaces, Is.EqualTo(showNamespace));
+            Assert.That(_model.TreeConfiguration.NUnitTreeShowNamespaces, Is.EqualTo(showNamespace));
         }
 
         [TestCase(true)]
@@ -435,13 +436,13 @@ namespace TestCentric.Gui.Presenters.Main
         public void ShowAssembliesChanged_Changes_TreeConfiguration(bool showAssemblies)
         {
             // Arrange
-            _view.ShowAssemblies.Checked.Returns(showAssemblies);
+            _view.NUnitTreeShowAssemblies.Checked.Returns(showAssemblies);
 
             // Act
-            _view.ShowAssemblies.CheckedChanged += Raise.Event<CommandHandler>();
+            _view.NUnitTreeShowAssemblies.CheckedChanged += Raise.Event<CommandHandler>();
 
             // Assert
-            Assert.That(_model.TreeConfiguration.ShowAssemblies, Is.EqualTo(showAssemblies));
+            Assert.That(_model.TreeConfiguration.NUnitTreeShowAssemblies, Is.EqualTo(showAssemblies));
         }
 
         [TestCase(true)]
@@ -449,13 +450,13 @@ namespace TestCentric.Gui.Presenters.Main
         public void ShowFixturesChanged_Changes_TreeConfiguration(bool showFixtures)
         {
             // Arrange
-            _view.ShowFixtures.Checked.Returns(showFixtures);
+            _view.NUnitTreeShowFixtures.Checked.Returns(showFixtures);
 
             // Act
-            _view.ShowFixtures.CheckedChanged += Raise.Event<CommandHandler>();
+            _view.NUnitTreeShowFixtures.CheckedChanged += Raise.Event<CommandHandler>();
 
             // Assert
-            Assert.That(_model.TreeConfiguration.ShowFixtures, Is.EqualTo(showFixtures));
+            Assert.That(_model.TreeConfiguration.NUnitTreeShowFixtures, Is.EqualTo(showFixtures));
         }
 
         [TestCase(true)]
