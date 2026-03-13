@@ -462,7 +462,7 @@ namespace TestCentric.Gui.Model
             _lastTestRun = TestRunSpecification.Empty;
 
             LoadedTests = TestCentricRunner.Explore(TopLevelPackage);
-            TestCentricRunner.InitRandomSeed();
+            TestCentricProject.InitRandomSeed();
 
             if (LoadedTests == null)
             {
@@ -560,7 +560,7 @@ namespace TestCentric.Gui.Model
             // has some problems, so we simulate Unload+Load. See issue #328.
             // Discover tests
             LoadedTests = TestCentricRunner.Explore(TopLevelPackage);
-            TestCentricRunner.InitRandomSeed();
+            TestCentricProject.InitRandomSeed();
 
             AvailableCategories = GetAvailableCategories();
             BuildTestIndex();
@@ -817,7 +817,7 @@ namespace TestCentric.Gui.Model
 
             _lastTestRun = runSpec;
             TestResultManager.TestRunStarting();
-            TestCentricRunner.RunAsync(TestCentricProject, filter.AsNUnitFilter());
+            TestCentricRunner.RunAsync(TopLevelPackage, filter.AsNUnitFilter());
         }
 
         public IList<string> GetAvailableCategories()
