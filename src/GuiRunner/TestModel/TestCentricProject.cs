@@ -237,6 +237,11 @@ namespace TestCentric.Gui.Model
 
         public void SetTopLevelSetting(PackageSetting setting) => TopLevelPackage.Settings.Set(setting);
 
+        public void InitRandomSeed()
+        {
+            ApplySetting(SettingDefinitions.RandomSeed.WithValue(new Random().Next()));
+        }
+
         #region NUnit TestPackage Load Helpers
 
         // These two methods are private in NUnit and have been extracted for temporary use.

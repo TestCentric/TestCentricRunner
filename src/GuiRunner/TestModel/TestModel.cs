@@ -38,8 +38,6 @@ namespace TestCentric.Gui.Model
 
         private TestRunSpecification _lastTestRun = TestRunSpecification.Empty;
 
-        private bool _lastRunWasDebugRun;
-
         #region Constructor and Creation
 
         public TestModel(ITestEngine testEngine, GuiOptions options = null)
@@ -52,6 +50,7 @@ namespace TestCentric.Gui.Model
 
             Settings = new UserSettings();
 
+            TestCentricRunner = new TestCentricRunner(testEngine, _events);
             TestCentricTestFilter = new TestCentricTestFilter(this, () => _events.FireTestFilterChanged());
             TestResultManager = new TestResultManager(this);
 
@@ -171,7 +170,7 @@ namespace TestCentric.Gui.Model
 
         public IList<string> AvailableCategories { get; private set; }
 
-        public bool IsTestRunning => Runner != null && Runner.IsTestRunning;
+        public bool IsTestRunning => TestCentricRunner.IsTestRunning;
 
         public ITestResultManager TestResultManager { get; }
 
@@ -448,21 +447,12 @@ namespace TestCentric.Gui.Model
             _events.FireTestsLoading(files);
 
             _lastTestRun = TestRunSpecification.Empty;
-            _lastRunWasDebugRun = false;
 
-            Runner = TestEngine.GetRunner(TopLevelPackage);
-            log.Debug($"Got {Runner.GetType().Name} for package");
+            LoadedTests = TestCentricRunner.Explore(TopLevelPackage);
+            TestCentricProject.InitRandomSeed();
 
-            try
+            if (LoadedTests == null)
             {
-                log.Debug("Loading tests");
-                LoadedTests = new TestNode(Runner.Explore(NUnit.Engine.TestFilter.Empty));
-                log.Debug($"Loaded {LoadedTests.Xml.GetAttribute("TestCaseCount")} tests");
-            }
-            catch(Exception ex)
-            {
-                _events.FireTestLoadFailure(ex);
-                log.Error("Failed to load tests", ex);
                 return;
             }
 
@@ -537,9 +527,6 @@ namespace TestCentric.Gui.Model
         {
             _events.FireTestsUnloading();
 
-            UnloadTestsIgnoringErrors();
-            Runner.Dispose();
-            
             TestCentricTestFilter.ResetAll(true);
             LoadedTests = null;
             AvailableCategories = null;
@@ -547,18 +534,6 @@ namespace TestCentric.Gui.Model
             _assemblyWatcher.Stop();
 
             _events.FireTestUnloaded();
-        }
-
-        private void UnloadTestsIgnoringErrors()
-        {
-            try
-            {
-                Runner.Unload();
-            }
-            catch (NUnitEngineUnloadException)
-            {
-
-            }
         }
 
         public void ReloadTests()
@@ -570,14 +545,10 @@ namespace TestCentric.Gui.Model
 #else
             // NOTE: The `ITestRunner.Reload` method supported by the engine
             // has some problems, so we simulate Unload+Load. See issue #328.
-
-            // Replace Runner in case settings changed
-            UnloadTestsIgnoringErrors();
-            Runner.Dispose();
-            Runner = TestEngine.GetRunner(TopLevelPackage);
-
             // Discover tests
-            LoadedTests = new TestNode(Runner.Explore(NUnit.Engine.TestFilter.Empty));
+            LoadedTests = TestCentricRunner.Explore(TopLevelPackage);
+            TestCentricProject.InitRandomSeed();
+
             AvailableCategories = GetAvailableCategories();
             BuildTestIndex();
             TestCentricTestFilter.Init();
@@ -649,8 +620,7 @@ namespace TestCentric.Gui.Model
 
         public void StopTestRun(bool force)
         {
-            // Async to avoid blocking the main thread for incoming test events in between
-            Task.Run(() => Runner.StopRun(force));
+            TestCentricRunner.StopRun(force);
         }
 
         public void SaveResults(string filePath, string format = "nunit3")
@@ -745,8 +715,8 @@ namespace TestCentric.Gui.Model
         {
             try
             {
-                if (Runner != null)
-                    Runner.Dispose();
+                if (TestCentricRunner != null)
+                    TestCentricRunner.Dispose();
 
                 if (TestEngine != null)
                     TestEngine.Dispose();
@@ -768,7 +738,7 @@ namespace TestCentric.Gui.Model
 
         private ITestEngine TestEngine { get; }
 
-        private ITestRunner Runner { get; set; }
+        private TestCentricRunner TestCentricRunner { get; set; }
 
         #endregion
 
@@ -824,33 +794,14 @@ namespace TestCentric.Gui.Model
             // and the UI tree filter (category, outcome or duration)
             TestFilter filter = runSpec.SelectedTests.GetTestFilter(TestCentricTestFilter);
 
-            // We need to re-create the test runner because settings such
-            // as debugging have already been passed to the test runner.
-            // For performance reasons, we only do this if we did run
-            // in a different mode than last time.
-            if (_lastRunWasDebugRun != runSpec.DebuggingRequested)
+            foreach (var subPackage in TopLevelPackage.SubPackages)
             {
-                foreach (var subPackage in TopLevelPackage.SubPackages)
-                {
-                    subPackage.Settings.Set(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
-                }
-
-                Runner?.Dispose();
-                Runner = TestEngine.GetRunner(TopLevelPackage);
-
-                // It is not strictly necessary to load the tests
-                // because the runner will do that automatically, however,
-                // the initial test count will be incorrect causing UI crashes.
-                Runner.Load();
-
-                _lastRunWasDebugRun = runSpec.DebuggingRequested;
+                subPackage.Settings.Set(SettingDefinitions.DebugTests.WithValue(runSpec.DebuggingRequested));
             }
 
             _lastTestRun = runSpec;
             TestResultManager.TestRunStarting();
-
-            log.Debug("Executing RunAsync");
-            Runner.RunAsync(_events, filter.AsNUnitFilter());
+            TestCentricRunner.RunAsync(TopLevelPackage, filter.AsNUnitFilter());
         }
 
         public IList<string> GetAvailableCategories()
