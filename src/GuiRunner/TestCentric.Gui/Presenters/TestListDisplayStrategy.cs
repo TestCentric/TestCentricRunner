@@ -8,6 +8,7 @@ using System.Windows.Forms;
 
 namespace TestCentric.Gui.Presenters
 {
+    using System.Collections.Generic;
     using Model;
     using Views;
 
@@ -27,7 +28,7 @@ namespace TestCentric.Gui.Presenters
 
         #endregion
 
-        #region Public Members
+        #region Properties
 
         public override string StrategyID => "TEST_LIST";
 
@@ -36,64 +37,98 @@ namespace TestCentric.Gui.Presenters
             get { return "Tests By " + DefaultGroupSetting; }
         }
 
-        public override void OnTestLoaded(TestNode testNode, VisualState visualState)
+        protected override string DefaultGroupSetting
+        {
+            get { return TreeConfiguration.TestListGroupBy; }
+        }
+
+        #endregion
+
+        #region Methods
+
+        public override void OnTestLoaded(TestNode rootNode, VisualState visualState)
         {
             ClearTree();
 
-            string groupBy = DefaultGroupSetting;
-            if (_grouping == null || _grouping.ID != groupBy)
-            {
-                _grouping = CreateTestGrouping(groupBy);
-            }
+            var testGroups = GroupTestCases(rootNode);
 
-            switch (groupBy)
-            {
-                default:
-                case "UNGROUPED":
-                    foreach (TestNode testCase in GetTestCases(testNode))
-                        _view.Add(MakeTreeNode(testCase, false));
-                    break;
+            foreach (var group in testGroups)
+                if (group.Count() > 0)
+                    _view.Nodes.Add(BuildTreeForGroup(group));
 
-                case "ASSEMBLY":
-                    foreach (TestNode assembly in testNode
-                        .Select((node) => node.IsSuite && node.Type == "Assembly"))
-                    {
-                        TreeNode treeNode = MakeTreeNode(assembly, false);
-
-                        foreach (TestNode test in GetTestCases(assembly))
-                            treeNode.Nodes.Add(MakeTreeNode(test, true));
-
-                        _view.Add(treeNode);
-                        treeNode.ExpandAll();
-                    }
-                    break;
-
-                case "FIXTURE":
-                    foreach (TestNode fixture in testNode
-                        .Select((node) => node.IsSuite && node.Type == "TestFixture"))
-                    {
-                        TreeNode treeNode = MakeTreeNode(fixture, false);
-
-                        foreach (TestNode test in GetTestCases(fixture))
-                            treeNode.Nodes.Add(MakeTreeNode(test, true));
-
-                        _view.Add(treeNode);
-                        treeNode.ExpandAll();
-                    }
-                    break;
-
-                case "CATEGORY":
-                case "OUTCOME":
-                case "DURATION":
-                    _grouping.Load(GetTestCases(testNode));
-
-                    UpdateDisplay();
-
-                    break;
-            }
+            _view.TreeView.ExpandAll();
 
             visualState?.ApplyTo(_view.TreeView);
             ApplyResultsToTree();
+
+            _model.SaveProject();
+        }
+
+        private List<TestGroup> GroupTestCases(TestNode testNode)
+        {
+            string groupBy = DefaultGroupSetting;
+            if (_grouping == null || _grouping.ID != groupBy)
+                _grouping = CreateTestGrouping(groupBy);
+
+            _grouping.LoadGroups(GetTestCases(testNode));
+
+            return _grouping.Groups;
+        }
+
+        private TreeNode BuildTreeForGroup(TestGroup group)
+        {
+            bool showAssemblies = TreeConfiguration.TestListShowAssemblies;
+            bool showFixtures = TreeConfiguration.TestListShowFixtures;
+
+            if (showAssemblies || showFixtures)
+            {
+                var groupNode = MakeTreeNode(group, false);
+
+                foreach (TestNode testNode in group)
+                {
+                    string assemblyName = null;
+                    string fixtureName = null;
+
+                    for (TestNode parent = testNode.Parent; parent != null; parent = parent.Parent)
+                    {
+                        if (showAssemblies && parent.IsAssembly)
+                            assemblyName = parent.Name;
+                        if (showFixtures && parent.IsFixture)
+                            fixtureName = parent.Name;
+                    }
+
+                    TreeNode searchNode = groupNode;
+
+                    if (showAssemblies && assemblyName != null)
+                    {
+                        if (groupNode.Nodes.ContainsKey(assemblyName))
+                            searchNode = searchNode.Nodes[assemblyName];
+                        else
+                        {
+                            searchNode = new TreeNode(assemblyName) { Name = assemblyName };
+                            groupNode.Nodes.Add(searchNode);
+                        }
+                    }
+
+                    if (showFixtures && fixtureName != null)
+                    {
+                        if (searchNode.Nodes.ContainsKey(fixtureName))
+                            searchNode = searchNode.Nodes[fixtureName];
+                        else
+                        {
+                            var fixtureNode = new TreeNode(fixtureName) { Name = fixtureName };
+                            searchNode.Nodes.Add(fixtureNode);
+                            searchNode = fixtureNode;
+                        }
+                    }
+
+                    searchNode.Nodes.Add(MakeTreeNode(testNode, false));
+                }
+
+                return group.TreeNode = groupNode;
+            }
+            else
+                return group.TreeNode = MakeTreeNode(group, true);
         }
 
         public override VisualState CreateVisualState()
@@ -102,24 +137,29 @@ namespace TestCentric.Gui.Presenters
 
             _view.InvokeIfRequired(() =>
             {
-                visualState = new VisualState("TEST_LIST", _grouping?.ID).LoadFrom(_view.TreeView);
+                visualState = new VisualState("TEST_LIST", _grouping?.ID)
+                {
+                    ShowAssemblies = TreeConfiguration.TestListShowAssemblies,
+                    ShowFixtures = TreeConfiguration.TestListShowFixtures
+                }.LoadFrom(_view.TreeView);
             });
 
             return visualState;
         }
 
-        #endregion
-
-        #region Protected Members
-
-        protected override string DefaultGroupSetting
+        /// <summary>
+        /// Check if a tree node type should be shown or omitted.
+        /// </summary>
+        protected override bool ShowTreeNodeType(TestNode testNode)
         {
-            get { return TreeConfiguration.TestListGroupBy; }
+            if (testNode.IsAssembly)
+                return TreeConfiguration.TestListShowAssemblies;
+
+            if (testNode.IsFixture)
+                return TreeConfiguration.TestListShowFixtures;
+
+            return !testNode.IsSuite;
         }
-
-        #endregion
-
-        #region Private Members
 
         private TestSelection GetTestCases(TestNode testNode)
         {

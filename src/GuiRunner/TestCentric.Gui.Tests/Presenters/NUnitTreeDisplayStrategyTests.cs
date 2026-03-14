@@ -23,11 +23,11 @@ namespace TestCentric.Gui.Presenters.TestTree
         {
             _view = Substitute.For<ITestTreeView>();
             _model = Substitute.For<ITestModel>();
-            _model.TreeConfiguration.ShowNamespaces = true;
+            _model.TreeConfiguration.NUnitTreeShowNamespaces = true;
             _model.TreeConfiguration.DisplayFormat = "NUNIT_TREE";
-            _model.TreeConfiguration.ShowFixtures = true;
-            _model.TreeConfiguration.ShowNamespaces = true;
-            _model.TreeConfiguration.ShowAssemblies = true;
+            _model.TreeConfiguration.NUnitTreeShowFixtures = true;
+            _model.TreeConfiguration.NUnitTreeShowNamespaces = true;
+            _model.TreeConfiguration.NUnitTreeShowAssemblies = true;
 
             // We can't construct a TreeNodeCollection, so we fake it
             var nodes = new TreeNode().Nodes;
@@ -95,7 +95,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Namespaces_AreShown_NamespaceNodes_AreCreated()
         {
             // Arrange
-            _model.TreeConfiguration.ShowNamespaces = true;
+            _model.TreeConfiguration.NUnitTreeShowNamespaces = true;
             string xml = 
                 "<test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
@@ -113,7 +113,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Namespaces_AreNotShown_NamespaceNodes_AreNotCreated()
         {
             // Arrange
-            _model.TreeConfiguration.ShowNamespaces = false;
+            _model.TreeConfiguration.NUnitTreeShowNamespaces = false;
             string xml =
                 "<test-run> <test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
@@ -132,7 +132,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Assemblies_AreNotShown_AssemblyNode_IsNotCreated()
         {
             // Arrange
-            _model.TreeConfiguration.ShowAssemblies = false;
+            _model.TreeConfiguration.NUnitTreeShowAssemblies = false;
             string xml =
                 "<test-run> <test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +
                     "<test-suite type='TestSuite' id='1-1031' name='Library'>" +
@@ -151,7 +151,7 @@ namespace TestCentric.Gui.Presenters.TestTree
         public void OnTestLoaded_Fixtures_AreNotShown_FixtureNode_IsNotCreated()
         {
             // Arrange
-            _model.TreeConfiguration.ShowFixtures = false;
+            _model.TreeConfiguration.NUnitTreeShowFixtures = false;
 
             string xml =
                 "<test-run> <test-suite type='Assembly' id='1-1030' name='Library.Test.dll'>" +

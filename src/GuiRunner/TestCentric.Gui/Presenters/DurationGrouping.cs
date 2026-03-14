@@ -24,7 +24,7 @@ namespace TestCentric.Gui.Presenters
 
         public override string ID => "DURATION";
 
-        public override void Load(IEnumerable<TestNode> tests)
+        public override void LoadGroups(IEnumerable<TestNode> tests)
         {
             Groups.Clear();
 
@@ -34,7 +34,7 @@ namespace TestCentric.Gui.Presenters
             Groups.Add(new TestGroup("Fast < 100 ms"));
             Groups.Add(new TestGroup("Not Run"));
 
-            base.Load(tests);
+            base.LoadGroups(tests);
         }
 
         /// <summary>
@@ -50,6 +50,7 @@ namespace TestCentric.Gui.Presenters
 
         public override TestGroup[] SelectGroups(TestNode testNode)
         {
+            // Only a single group is possible for this grouping.
             return new TestGroup[] { SelectGroup(testNode) };
         }
 

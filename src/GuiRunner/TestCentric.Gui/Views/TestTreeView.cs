@@ -11,6 +11,7 @@ namespace TestCentric.Gui.Views
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Threading.Tasks;
     using Elements;
 
     public partial class TestTreeView : UserControl, ITestTreeView
@@ -231,8 +232,11 @@ namespace TestCentric.Gui.Views
         public void SetImageIndex(TreeNode treeNode, int imageIndex, bool applyToParent = false) 
         {
             InvokeIfRequired(() => treeNode.ImageIndex = treeNode.SelectedImageIndex = imageIndex);
-            if (applyToParent && treeNode.Parent != null)
-                SetImageIndex(treeNode.Parent, imageIndex, true);
+
+            TreeNode parent = treeNode.Parent;
+            if (applyToParent && parent is not null)
+                if (imageIndex > parent.ImageIndex)
+                    SetImageIndex(parent, imageIndex, true);
         }
 
         public void InvokeIfRequired(MethodInvoker _delegate)

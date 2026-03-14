@@ -56,9 +56,9 @@ namespace TestCentric.Gui.Model
         [Test]
         public void Constructor_WithProjectName_NoFiles()
         {
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject("MyProject.tcproj");
 
-            Assert.That(project.ProjectPath, Is.EqualTo("MyProject"));
+            Assert.That(project.ProjectPath, Is.EqualTo(Path.GetFullPath("MyProject.tcproj")));
             Assert.That(project.TestFiles, Is.Not.Null);
             Assert.That(project.TestFiles.Count, Is.EqualTo(0));
         }
@@ -67,10 +67,10 @@ namespace TestCentric.Gui.Model
         public void Constructor_WithSingleFilename_AddsFileToTestFiles()
         {
             // 1. Arrange & Act
-            TestCentricProject project = new TestCentricProject("MyProject", "TestAssembly.dll");
+            TestCentricProject project = new TestCentricProject("MyProject.tcproj", "TestAssembly.dll");
 
             // 2. Assert
-            Assert.That(project.ProjectPath, Is.EqualTo("MyProject"));
+            Assert.That(project.ProjectPath, Is.EqualTo(Path.GetFullPath("MyProject.tcproj")));
             Assert.That(project.TestFiles.Count, Is.EqualTo(1));
             Assert.That(project.TestFiles[0], Is.EqualTo("TestAssembly.dll"));
         }
@@ -82,10 +82,10 @@ namespace TestCentric.Gui.Model
             string[] filenames = ["Test1.dll", "Test2.dll", "Test3.dll"];
 
             // 2. Act
-            TestCentricProject project = new TestCentricProject("MyProject", filenames);
+            TestCentricProject project = new TestCentricProject("MyProject.tcproj", filenames);
 
             // 3. Assert
-            Assert.That(project.ProjectPath, Is.EqualTo("MyProject"));
+            Assert.That(project.ProjectPath, Is.EqualTo(Path.GetFullPath("MyProject.tcproj")));
             Assert.That(project.TestFiles.Count, Is.EqualTo(3));
             Assert.That(project.TestFiles, Is.EquivalentTo(filenames));
         }

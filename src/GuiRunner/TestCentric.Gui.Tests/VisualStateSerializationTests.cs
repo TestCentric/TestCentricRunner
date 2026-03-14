@@ -10,7 +10,7 @@ using NUnit.Framework;
 using System.Xml;
 using System.Collections;
 
-namespace TestCentric.Gui.Model
+namespace TestCentric.Gui
 {
     public class VisualStateSerializationTests : VisualStateTestBase
     {
@@ -64,7 +64,7 @@ namespace TestCentric.Gui.Model
             {
                 Assert.That(docElement.Name, Is.EqualTo("VisualState"));
                 Assert.That(docElement.GetAttribute("DisplayStrategy"), Is.EqualTo(vs.DisplayStrategy));
-                Assert.That(docElement.GetAttribute("ShowCheckBoxes"), Is.EqualTo(vs.ShowCheckBoxes ? "True" : ""));
+                Assert.That(docElement.GetAttribute("ShowCheckBoxes"), Is.EqualTo(vs.ShowCheckBoxes ? "True" : "False"));
                 Assert.That(docElement.GetAttribute("ShowNamespaces"), Is.EqualTo(!vs.ShowNamespaces ? "False" : ""));
                 Assert.That(docElement.GetAttribute("ShowFixtures"), Is.EqualTo(!vs.ShowFixtures ? "False" : ""));
                 Assert.That(docElement.GetAttribute("ShowAssemblies"), Is.EqualTo(!vs.ShowAssemblies ? "False" : ""));

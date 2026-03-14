@@ -75,24 +75,25 @@ namespace TestCentric.Gui.Presenters.TestTree
             strategy.Received().OnTestLoaded(testNode, null);
         }
 
+        // TODO: Rewrite or move
         //[Test]
-        public void Reloading_VisualState_IsSaved()
-        {
-            // Arrange
-            ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
-            _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
+        //public void Reloading_VisualState_IsSaved()
+        //{
+        //    // Arrange
+        //    ITreeDisplayStrategy strategy = Substitute.For<ITreeDisplayStrategy>();
+        //    _treeDisplayStrategyFactory.Create(null, null, null).ReturnsForAnyArgs(strategy);
 
-            var project = new TestCentricProject("MyProject", "dummy.dll");
-            TestNode testNode = new TestNode("<test-suite id='1'/>");
-            _model.LoadedTests.Returns(testNode);
-            _model.TestCentricProject.Returns(project);
-            FireTestLoadedEvent(testNode);
+        //    var project = new TestCentricProject("MyProject", "dummy.dll");
+        //    TestNode testNode = new TestNode("<test-suite id='1'/>");
+        //    _model.LoadedTests.Returns(testNode);
+        //    _model.TestCentricProject.Returns(project);
+        //    FireTestLoadedEvent(testNode);
 
-            // Act
-            FireTestsReloadingEvent();
+        //    // Act
+        //    FireTestsReloadingEvent();
 
-            // Assert
-            strategy.Received().SaveVisualState();
-        }
+        //    // Assert
+        //    strategy.Received().SaveVisualState();
+        //}
     }
 }

@@ -13,5 +13,9 @@
 	    <PackageReference Include="NUnit.Engine" Version="$(NUnitEngineVersion)" />
 	    <PackageReference Include="NUnit.Extensibility" Version="$(NUnitEngineVersion)" />
     </ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="TestCentric.Gui.Model.Tests, PublicKey=$(TestCentricPublicKey)"/>
+	</ItemGroup>
 	
 </Project>

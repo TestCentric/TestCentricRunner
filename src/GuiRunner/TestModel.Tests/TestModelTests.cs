@@ -60,10 +60,6 @@ namespace TestCentric.Gui.Model
             var engine = new MockTestEngine();
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
-            model.Events.VisualStateRequest += (ea) =>
-            {
-                ea.VisualState = new VisualState();
-            };
 
             // Act
             model.CreateNewProject("TestCentric");

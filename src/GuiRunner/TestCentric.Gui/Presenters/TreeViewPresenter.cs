@@ -50,14 +50,15 @@ namespace TestCentric.Gui.Presenters
 
         private void WireUpEvents()
         {
-            // Model actions
+            #region Model Events
+            
             _model.Events.TestLoaded += (ea) =>
             {
                 EnsureNonRunnableFilesAreVisible(ea.Test);
 
-                bool visualStateLoaded = _model.TryLoadVisualState(out VisualState visualState);
+                bool visualStateLoaded = TryLoadVisualState(out VisualState visualState);
                 if (visualStateLoaded)
-                    this.UpdateTreeConfiguration(visualState);
+                    UpdateTreeConfiguration(visualState);
                 Strategy = _treeDisplayStrategyFactory.Create(TreeConfiguration.DisplayFormat, _view, _model);
 
                 _view.CategoryFilter.Init(_model);
@@ -77,7 +78,8 @@ namespace TestCentric.Gui.Presenters
                     _view.CategoryFilter.Close();
                     _view.CategoryFilter.Init(_model);
 
-                    _model.TryLoadVisualState(out VisualState visualState);
+                    TryLoadVisualState(out VisualState visualState);
+
                     Strategy.OnTestLoaded(ea.Test, visualState);
                     _view.CheckBoxes = _view.ShowCheckBoxes.Checked; // TODO: View should handle this
                 });
@@ -92,12 +94,18 @@ namespace TestCentric.Gui.Presenters
 
             _model.Events.TestsUnloading += ea =>
             {
+                SaveVisualState();
+
                 ClosePropertiesDisplay();
                 CloseXmlDisplay();
             };
 
+            _model.Events.TestsReloading += ea => SaveVisualState();
+
             _model.Events.RunStarting += (ea) =>
             {
+                SaveVisualState();
+
                 Strategy.OnTestRunStarting();
                 CheckPropertiesDisplay();
                 CheckXmlDisplay();
@@ -118,13 +126,12 @@ namespace TestCentric.Gui.Presenters
             _model.Events.TestFinished += OnTestFinished;
             _model.Events.SuiteFinished += OnTestFinished;
 
-            _model.Events.VisualStateRequest += (ea) =>
-            {
-                ea.VisualState = Strategy.CreateVisualState();
-            };
-
             _model.Settings.Changed += OnSettingsChanged;
             TreeConfiguration.Changed += OnTreeConfigurationChanged;
+
+            #endregion
+
+            #region View Events
 
             // View context commands
 
@@ -147,7 +154,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.ShowTestDuration.CheckedChanged += () =>
             {
-                TreeConfiguration.ShowTestDuration = _view.ShowTestDuration.Checked;
+                TreeConfiguration.NUnitTreeShowTestDuration = _view.ShowTestDuration.Checked;
                 Strategy?.UpdateTreeNodeNames();
             };
 
@@ -292,6 +299,8 @@ namespace TestCentric.Gui.Presenters
             //            CloseXmlDisplay();
             //    }
             //};
+
+            #endregion
         }
 
         private void OnSettingsChanged(object sender, SettingsEventArgs e)
@@ -322,10 +331,12 @@ namespace TestCentric.Gui.Presenters
                     Strategy = _treeDisplayStrategyFactory.Create(TreeConfiguration.DisplayFormat, _view, _model);
                     Strategy.Reload();
                     break;
+                case nameof(TreeConfiguration.NUnitTreeShowNamespaces):
+                case nameof(TreeConfiguration.NUnitTreeShowAssemblies):
+                case nameof(TreeConfiguration.NUnitTreeShowFixtures):
+                case nameof(TreeConfiguration.TestListShowAssemblies):
+                case nameof(TreeConfiguration.TestListShowFixtures):
                 case nameof(TreeConfiguration.TestListGroupBy):
-                case nameof(TreeConfiguration.ShowNamespaces):
-                case nameof(TreeConfiguration.ShowAssemblies):
-                case nameof(TreeConfiguration.ShowFixtures):
                     Strategy?.Reload();
                     break;
                 case nameof(TreeConfiguration.ShowCheckBoxes):
@@ -371,10 +382,21 @@ namespace TestCentric.Gui.Presenters
                 // Update from VisualState
                 TreeConfiguration.ShowCheckBoxes = visualState.ShowCheckBoxes;
                 TreeConfiguration.DisplayFormat = visualState.DisplayStrategy;
-                TreeConfiguration.ShowNamespaces = visualState.ShowNamespaces;
-                TreeConfiguration.ShowAssemblies = visualState.ShowAssemblies;
-                TreeConfiguration.ShowFixtures = visualState.ShowFixtures;
-                TreeConfiguration.TestListGroupBy = TreeConfiguration.DisplayFormat == "TEST_LIST" ? visualState.GroupBy : "UNGROUPED";
+                switch (visualState.DisplayStrategy)
+                {
+                    case "NUNIT_TREE":
+                        TreeConfiguration.NUnitTreeShowNamespaces = visualState.ShowNamespaces;
+                        TreeConfiguration.NUnitTreeShowAssemblies = visualState.ShowAssemblies;
+                        TreeConfiguration.NUnitTreeShowFixtures = visualState.ShowFixtures;
+                        break;
+                    case "TEST_LIST":
+                        TreeConfiguration.TestListShowAssemblies = visualState.ShowAssemblies;
+                        TreeConfiguration.TestListShowFixtures = visualState.ShowFixtures;
+                        TreeConfiguration.TestListGroupBy = visualState.GroupBy;
+                        break;
+                    default:
+                        throw new ArgumentException($"Invalid DisplayStrategy: '{visualState.DisplayStrategy}'", nameof(visualState));
+                }
             }
             else
             {
@@ -382,16 +404,18 @@ namespace TestCentric.Gui.Presenters
                 ITestTreeSettings treeSettings = _model.Settings.Gui.TestTree;
                 TreeConfiguration.ShowCheckBoxes = treeSettings.ShowCheckBoxes;
                 TreeConfiguration.DisplayFormat = treeSettings.DisplayFormat;
+                TreeConfiguration.NUnitTreeShowNamespaces = true;
+                TreeConfiguration.NUnitTreeShowAssemblies = true;
+                TreeConfiguration.NUnitTreeShowFixtures = true;
+                TreeConfiguration.NUnitTreeShowTestDuration = false;
+                TreeConfiguration.TestListShowAssemblies = false;
+                TreeConfiguration.TestListShowFixtures = false;
                 TreeConfiguration.TestListGroupBy = "UNGROUPED";
-                TreeConfiguration.ShowNamespaces = true;
-                TreeConfiguration.ShowAssemblies = true;
-                TreeConfiguration.ShowFixtures = true;
-                TreeConfiguration.ShowTestDuration = false;
             }
 
             // Update UI elements according to latest values
             _view.ShowCheckBoxes.Checked = TreeConfiguration.ShowCheckBoxes;
-            _view.ShowTestDuration.Checked = TreeConfiguration.ShowTestDuration;
+            _view.ShowTestDuration.Checked = TreeConfiguration.NUnitTreeShowTestDuration;
 
             // 3. Subscribe again to setting changed events
             _model.Settings.Changed += OnSettingsChanged;
@@ -413,6 +437,29 @@ namespace TestCentric.Gui.Presenters
 
             _propertiesDisplay?.OnTestFinished(args.Result);
             _xmlDisplay?.OnTestFinished(args.Result);
+        }
+
+        private bool TryLoadVisualState(out VisualState visualState)
+        {
+            visualState = null;
+
+            if (_model.TestCentricProject?.TestFiles.Count > 0)
+            {
+                var filename = Path.ChangeExtension(_model.TestCentricProject.ProjectPath, ".VisualState.xml");
+                if (File.Exists(filename))
+                    visualState = VisualState.LoadFrom(filename);
+            }
+
+            return visualState != null;
+        }
+
+        public void SaveVisualState()
+        {
+            VisualState visualState = Strategy.CreateVisualState();
+            string projectPath = _model.TestCentricProject.ProjectPath;
+            string visualStatePath = Path.ChangeExtension(projectPath, ".VisualState.xml");
+
+            visualState.Save(visualStatePath);
         }
 
         TestPropertiesDialog _propertiesDisplay;

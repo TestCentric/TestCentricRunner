@@ -4,13 +4,11 @@
 // ***********************************************************************
 
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
 using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
@@ -322,20 +320,6 @@ namespace TestCentric.Gui.Model
             LoadTests(options.InputFiles);
         }
 
-        public bool TryLoadVisualState(out VisualState visualState)
-        {
-            visualState = null;
-
-            if (Options.InputFiles.Count > 0)
-            {
-                var filename = VisualState.GetVisualStateFileName(Options.InputFiles[0]);
-                if (File.Exists(filename))
-                    visualState = VisualState.LoadFrom(filename);
-            }
-
-            return visualState != null;
-        }
-
         public void AddTests(IEnumerable<string> fileNames)
         {
             if (!IsProjectLoaded)
@@ -384,17 +368,24 @@ namespace TestCentric.Gui.Model
             }   
         }
 
+        // TODO: This is not yet fully implemented. Need to locate and open existing .tcproj file
         /// <summary>
-        /// Open an existing file, which may be a TestCentric project
-        /// or an individual test file, to be wrapped as a project.
+        /// Open an existing file, which may be a TestCentricProject, an assembly
+        /// or a supported project type such as an NUnit or Visual Studio project.
         /// </summary>
-        /// <param name="filename"></param>
-        public void OpenExistingFile(string filename)
+        /// <remarks>
+        /// If the file is not a TestCentricProject, it will be wrapped in one
+        /// with the '.tcproj' extension appended to the filePath. For example,
+        /// 'mock-assembly.dll.tcproj'. This project is loaded if found or created
+        /// automatically if not found.
+        /// </remarks>
+        /// <param name="filePath">Path to the file to be opened</param>
+        public void OpenExistingFile(string filePath)
         {
-            if (TestCentricProject.IsProjectFile(filename))
-                OpenExistingProject(filename);
-            else if (IsSupportedTestFile(filename))
-                CreateNewProject(filename + ".tcproj", new[] { filename });
+            if (TestCentricProject.IsProjectFile(filePath))
+                OpenExistingProject(filePath);
+            else if (IsSupportedTestFile(filePath))
+                CreateNewProject(filePath + ".tcproj", new[] { filePath });
             else
                 throw new Exception("Invalid Test File type: {filename}");
         }
@@ -430,10 +421,6 @@ namespace TestCentric.Gui.Model
                 TestCentricProject.SaveAs(filename);
             else
                 TestCentricProject.Save();
-
-            // Save VisualState in the same directory as the project
-            _events.RequestVisualState().ShouldNotBeNull().Save(
-                Path.ChangeExtension(TestCentricProject.ProjectPath, ".VisualState.xml"));
 
             RecentFiles.Latest = TestCentricProject.ProjectPath;
         }
@@ -728,9 +715,6 @@ namespace TestCentric.Gui.Model
         {
             try
             {
-                if (IsProjectLoaded)
-                    UnloadTests();
-
                 if (TestCentricRunner != null)
                     TestCentricRunner.Dispose();
 
@@ -742,9 +726,9 @@ namespace TestCentric.Gui.Model
 
                 Settings?.SaveSettings();
             }
-            catch (NUnitEngineUnloadException)
+            catch (NUnitEngineUnloadException ex)
             {
-                // TODO: Figure out what to do about this
+                log.Warning($"Engine failed to unload assembly. Exception ignored:\r\n{ex.ToString()}");
             }
         }
 

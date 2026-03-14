@@ -60,7 +60,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             CategoryGrouping grouping = new CategoryGrouping(strategy, false);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             Assert.That(grouping.Groups.Count, Is.EqualTo(1));
@@ -79,7 +79,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             CategoryGrouping grouping = new CategoryGrouping(strategy, false);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             Assert.That(grouping.Groups.Count, Is.EqualTo(1));
@@ -99,7 +99,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             CategoryGrouping grouping = new CategoryGrouping(strategy, false);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             Assert.That(grouping.Groups.Count, Is.EqualTo(2));
@@ -125,7 +125,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             CategoryGrouping grouping = new CategoryGrouping(strategy, false);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             Assert.That(grouping.Groups.Count, Is.EqualTo(3));

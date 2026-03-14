@@ -6,7 +6,7 @@
 using System;
 using System.Windows.Forms; 
 
-namespace TestCentric.Gui.Model
+namespace TestCentric.Gui
 {
     public class VisualStateTestData
     {
@@ -43,19 +43,6 @@ namespace TestCentric.Gui.Model
                                 true,
                                 TN("Test1"), TN("Test2"), TN("Test3"), TN("Test4"), TN("Test5"), TN("Test6"));
 
-                        case "ASSEMBLY":
-                            return CreateTreeView(
-                                true,
-                                TN("Assembly1", TN("Test1"), TN("Test2"), TN("Test3")),
-                                TN("Assembly2", TN("Test4"), TN("Test5"), TN("Test6")));
-
-                        case "FIXTURE":
-                            return CreateTreeView(
-                                true,
-                                TN("MyFixture", TN("Test1"), TN("Test2"), TN("Test3")),
-                                TN("FixtureA", TN("Test4"), TN("Test5")),
-                                TN("FixtureB", TN("Test6")));
-
                         case "CATEGORY":
                             return CreateTreeView(
                                 true,
@@ -83,7 +70,7 @@ namespace TestCentric.Gui.Model
             tv.Expand("Assembly1", "None", "Not Run", "NUnit", "Tests", "MyFixture", "Assembly2", "Tests", "FixtureA");
             tv.Check("Test1", "Test3", "FixtureA");
             tv.SelectedNode = tv.Search("Test2");
-            if (DisplayStrategy == "NUNIT_TREE" || Grouping == "ASSEMBLY")
+            if (DisplayStrategy == "NUNIT_TREE")
                 tv.TopNode = tv.Search("Assembly1");
             //else if (Grouping == "UNGROUPED")
             //    tv.TopNode = tv.Nodes[0];
@@ -129,26 +116,6 @@ namespace TestCentric.Gui.Model
                                 VTN("Test2", SEL),
                                 VTN("Test3", CHK));
 
-                        case "ASSEMBLY":
-                            return CreateVisualState(
-                                DisplayStrategy,
-                                true,
-                                VTN("Assembly1", EXP + TOP,
-                                    VTN("Test1", CHK),
-                                    VTN("Test2", SEL),
-                                    VTN("Test3", CHK)),
-                                VTN("Assembly2", EXP));
-
-                        case "FIXTURE":
-                            return CreateVisualState(
-                                DisplayStrategy,
-                                true,
-                                VTN("MyFixture", EXP + TOP,
-                                    VTN("Test1", CHK),
-                                    VTN("Test2", SEL),
-                                    VTN("Test3", CHK)),
-                                VTN("FixtureA", EXP + CHK));
-
                         case "CATEGORY":
                             return CreateVisualState(
                                 DisplayStrategy,
@@ -187,8 +154,6 @@ namespace TestCentric.Gui.Model
                     switch (ExpectedGrouping)
                     {
                         case "UNGROUPED":
-                        case "ASSEMBLY":
-                        case "FIXTURE":
                         case "CATEGORY":
                             return GetExpectedVisualState();
                         case "OUTCOME":

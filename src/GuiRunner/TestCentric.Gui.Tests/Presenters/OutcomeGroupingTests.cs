@@ -67,7 +67,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             OutcomeGrouping grouping = new OutcomeGrouping(strategy);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == expectedGroupName);
@@ -101,7 +101,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             OutcomeGrouping grouping = new OutcomeGrouping(strategy);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == expectedGroupName);
@@ -123,7 +123,7 @@ namespace TestCentric.Gui.Presenters
 
             // 2. Act
             OutcomeGrouping grouping = new OutcomeGrouping(strategy);
-            grouping.Load(tests);
+            grouping.LoadGroups(tests);
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == "Not Run");
