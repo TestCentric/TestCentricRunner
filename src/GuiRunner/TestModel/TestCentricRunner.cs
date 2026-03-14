@@ -8,9 +8,14 @@ namespace TestCentric.Gui.Model
     using System;
     using System.Threading.Tasks;
     using NUnit;
-    using NUnit.Common;
     using NUnit.Engine;
 
+    /// <summary>
+    /// The TestCentricRunner class wraps the NUnit Engine's ITestRunner interface to explore and run tests.
+    /// While an assembly is loaded by the NUnit ITestRunner, it's blocked by the file system and the assembly cannot be modified by the user.
+    /// However, the user should be able to continue developing their tests while the tests are already shown in the GUI runner.
+    /// Therefore, the TestCentricRunner minimizes the time that the ITestRunner is active by creating and disposing it as needed for each test run.
+    /// </summary>
     internal class TestCentricRunner : IDisposable
     {
         static Logger log = InternalTrace.GetLogger(typeof(TestModel));
@@ -70,6 +75,9 @@ namespace TestCentric.Gui.Model
             return loadedTests;
         }
 
+        /// <summary>
+        /// Runs the tests in the specified package.
+        /// </summary>
         public void RunAsync(TestPackage package, NUnit.Engine.TestFilter filter)
         {
             Guard.ArgumentNotNull(package, nameof(package));
