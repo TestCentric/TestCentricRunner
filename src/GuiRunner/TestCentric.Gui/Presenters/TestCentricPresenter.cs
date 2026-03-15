@@ -677,7 +677,7 @@ namespace TestCentric.Gui.Presenters
                 }
 
                 if (dlg.ShowDialog(_view as IWin32Window) == DialogResult.OK)
-                    SetPackageSettingAndReload(SettingDefinitions.TestParametersDictionary.WithValue(dlg.Parameters));
+                    _model.TestCentricProject.SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(dlg.Parameters));
             }
         }
 
@@ -845,18 +845,7 @@ namespace TestCentric.Gui.Presenters
 
         private void OnRunAsX86Changed()
         {
-            SetPackageSettingAndReload(SettingDefinitions.RunAsX86.WithValue(_view.RunAsX86.Checked));
-        }
-
-        private void SetPackageSettingAndReload(PackageSetting setting)
-        {
-            _model.TestCentricProject.SetTopLevelSetting(setting);
-
-            // Even though the _model has a Reload method, we cannot use it because Reload
-            // does not re-create the Engine.  Since we just changed a setting, we must
-            // re-create the Engine by unloading/reloading the tests. We make a copy of
-            // __model.TestFiles because the method does an unload before it loads.
-            _model.LoadTests(_model.TestCentricProject.TestFiles);
+            _model.TestCentricProject.SetTopLevelSetting(SettingDefinitions.RunAsX86.WithValue(_view.RunAsX86.Checked));
         }
 
         private void applyFont(Font font)

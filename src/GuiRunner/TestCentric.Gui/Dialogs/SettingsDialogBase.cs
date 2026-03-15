@@ -31,9 +31,6 @@ namespace TestCentric.Gui.Dialogs
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.Container components = null;
-
-        private bool _reloadProjectOnClose;
-
         #endregion
 
         #region Construction and Disposal
@@ -132,7 +129,6 @@ namespace TestCentric.Gui.Dialogs
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
-            this.Closed += new System.EventHandler(this.SettingsDialogBase_Closed);
             this.ResumeLayout(false);
 
         }
@@ -174,26 +170,10 @@ namespace TestCentric.Gui.Dialogs
 
         #region Event Handlers
 
-        private void SettingsDialogBase_Closed(object sender, System.EventArgs e)
-        {
-            if (_reloadProjectOnClose)
-                Presenter.ReloadTests();
-        }
-
         private void okButton_Click(object sender, System.EventArgs e)
         {
             ApplySettings();
-
-            // NOTE: Currently, all changes require reload. If this changes
-            // we will need to add some filtering here.
-            if (Model.IsProjectLoaded && (SubPackageSettingChanges.Count > 0 || TopLevelPackageSettingChanges.Count > 0))
-            {
-                if (MessageDisplay.YesNo("Some changes will only take effect when you reload the test project. Do you want to reload now?"))
-                    _reloadProjectOnClose = true;
-            }
-
             DialogResult = DialogResult.OK;
-
             Close();
         }
 

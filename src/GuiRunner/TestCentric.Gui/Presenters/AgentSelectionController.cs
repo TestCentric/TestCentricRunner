@@ -99,12 +99,6 @@ namespace TestCentric.Gui.Presenters
                     _model.TestCentricProject.AddSetting(SettingDefinitions.SelectedAgentName.WithValue(itemTag));
                     _model.TestCentricProject.AddSetting(SettingDefinitions.RequestedAgentName.WithValue(itemTag));
                 }
-
-                // Even though the _model has a Reload method, we cannot use it because Reload
-                // does not re-create the Engine.  Since we just changed a setting, we must
-                // re-create the Engine by unloading/reloading the tests. We make a copy of
-                // __model.TestFiles because the method does an unload before it loads.
-                _model.LoadTests(_model.TestCentricProject.TestFiles);
             }
 
             void EnsureSingleItemChecked(ToolStripMenuItem itemToCheck)
