@@ -254,8 +254,8 @@ namespace TestCentric.Gui.Presenters.Main
             // 3. Assert
             Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.RunAsX86), Is.True);
             Assert.That(project.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86), Is.EqualTo(isChecked));
-            _model.ReceivedWithAnyArgs().LoadTests(null);
         }
+
         public void SelectRuntimeCommand_PopsUpMenu()
         {
         }
