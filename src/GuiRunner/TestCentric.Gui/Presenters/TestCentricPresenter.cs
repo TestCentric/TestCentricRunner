@@ -420,16 +420,11 @@ namespace TestCentric.Gui.Presenters
                         entries.RemoveAt(index);
 
                 menuItems.Clear();
-                int num = 0;
-                foreach (string entry in entries)
+
+                for (int i=0; i<entries.Count; i++)
                 {
-                    var menuText = string.Format("{0} {1}", ++num, entry);
-                    var menuItem = new ToolStripMenuItem(menuText);
-                    menuItem.Click += (sender, ea) =>
-                    {
-                        string path = ((ToolStripMenuItem)sender).Text.Substring(2);
-                        _model.OpenExistingFile(path);
-                    };
+                    string menuItemText = $"{i + 1} {entries[i]}";
+                    ToolStripMenuItem menuItem = CreateRecentFileMenuItem(menuItemText, i, (index) => _model.OpenExistingFile(entries[index]), RemoveRecentFileEntry);
                     menuItems.Add(menuItem);
                 }
             };
@@ -678,6 +673,57 @@ namespace TestCentric.Gui.Presenters
 
                 if (dlg.ShowDialog(_view as IWin32Window) == DialogResult.OK)
                     SetPackageSettingAndReload(SettingDefinitions.TestParametersDictionary.WithValue(dlg.Parameters));
+            }
+        }
+
+        private ToolStripMenuItem CreateRecentFileMenuItem(string menuText, int tag, Action<int> recentFileClickedAction, Action<int> contextMenuAction)
+        {
+            var menuItem = new ToolStripMenuItem(menuText);
+            menuItem.Tag = tag;
+            menuItem.Click += (sender, ea) =>
+            {
+                int index = (int)((ToolStripMenuItem)sender).Tag;
+                recentFileClickedAction(index);
+            };
+            menuItem.MouseUp += (sender, ea) =>
+            {
+                if (ea.Button == MouseButtons.Right)
+                {
+                    var ctxMenuItem = new MenuItem("Remove item from list");
+                    ctxMenuItem.Click += (s, e) =>
+                    {
+                        int index = (int)((ToolStripMenuItem)sender).Tag;
+                        contextMenuAction(index);
+                    };
+
+                    var menuItem = sender as ToolStripMenuItem;
+                    Control ctrl = menuItem.Owner as Control;
+                    ContextMenu ctx = new ContextMenu(new[] { ctxMenuItem });
+                    ctx.Show(ctrl, ctrl.PointToClient(Cursor.Position));
+                }
+            };
+
+            return menuItem;
+        }
+
+        private void RemoveRecentFileEntry(int index)
+        {
+            // Remove entry from settings
+            var entries = _model.Settings.Gui.RecentFiles.Entries;
+            if (index >= 0 && index < entries.Count)
+                entries.RemoveAt(index);
+
+            // Remove entry from menu
+            var menuItems = _view.RecentFilesMenu.MenuItems;
+            if (index >= 0 && index < menuItems.Count)
+                menuItems.RemoveAt(index);
+
+            // Update menu item (tag and text) of all remaining menu items
+            for (int i=0; i < entries.Count; i++)
+            {
+                var menuItem = menuItems[i] as ToolStripMenuItem;
+                menuItem.Tag = i;
+                menuItem.Text = $"{i + 1} {entries[i]}";
             }
         }
 
