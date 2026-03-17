@@ -3,13 +3,15 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using System.Collections;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Xml.Linq;
+using TestCentric.Gui.Model;
+using TestCentric.Gui.Model.Filter;
 
 namespace TestCentric.Gui.Presenters
 {
-    using System.Windows.Forms;
-    using Model;
-    using TestCentric.Gui.Model.Filter;
-
     /// <summary>
     /// A TestGroup is essentially a TestSelection with a
     /// name and image index for use in the tree display.
@@ -17,11 +19,10 @@ namespace TestCentric.Gui.Presenters
     /// It can create a filter for running all the tests
     /// in the group.
     /// </summary>
-    public class TestGroup : TestSelection, ITestItem
+    public class TestGroup : ITestItem
     {
         private ResultState _groupResultState;
         private bool _isResultFromLatestRun;
-
 
         #region Constructors
 
@@ -37,17 +38,26 @@ namespace TestCentric.Gui.Presenters
 
         #region Properties
 
-        public override string Name { get; }
+        public string Name { get; }
 
         public int ImageIndex { get; set; }
 
         public virtual double? Duration { get; set; }
 
+        public TestSelection Items { get; } = new TestSelection();
+
         public TreeNode TreeNode { get; set; }
 
         #endregion
 
-        public override TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
+        public virtual IEnumerator<TestNode> GetEnumerator()
+        {
+            return Items.GetEnumerator();
+        }
+
+        public void Clear() => Items.Clear();
+
+        public TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
         {
             TestFilterBuilder builder = new TestFilterBuilder(guiFilter);
 
@@ -61,9 +71,9 @@ namespace TestCentric.Gui.Presenters
         /// <summary>
         /// Add a testNode to the TestGroup and apply the testNode result to the result state of the group
         /// </summary>
-        public void Add(TestNode testNode, ResultNode resultNode)
+        public void Add(TestNode testNode, ResultNode resultNode = null)
         {
-            Add(testNode);
+            Items.Add(testNode);
             if (resultNode != null)
             {
                 if (_groupResultState == null || TestResultManager.GetOutcome(_groupResultState) < TestResultManager.GetOutcome(resultNode.Outcome))
@@ -74,5 +84,7 @@ namespace TestCentric.Gui.Presenters
                 ImageIndex = DisplayStrategy.CalcImageIndex(_groupResultState, _isResultFromLatestRun);
             }
         }
+
+        public void RemoveId(string id) => Items.RemoveId(id);
     }
 }

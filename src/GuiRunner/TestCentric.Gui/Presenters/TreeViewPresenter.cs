@@ -169,7 +169,7 @@ namespace TestCentric.Gui.Presenters
                     if (_view.ContextNode.Tag is TestNode testNode)
                         _model.RunTests(testNode);
                     else if (_view.ContextNode.Tag is TestGroup groupNode)
-                        _model.RunTests(groupNode);
+                        _model.RunTests(groupNode.Items);
                 }
             };
 
@@ -187,7 +187,7 @@ namespace TestCentric.Gui.Presenters
                     if (_view.ContextNode.Tag is TestNode testNode)
                         _model.DebugTests(testNode);
                     else if (_view.ContextNode.Tag is TestGroup groupNode)
-                        _model.DebugTests(groupNode);
+                        _model.DebugTests(groupNode.Items);
                 }
             };
 

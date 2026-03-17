@@ -53,7 +53,7 @@ namespace TestCentric.Gui.Presenters
             var testGroups = GroupTestCases(rootNode);
 
             foreach (var group in testGroups)
-                if (group.Count() > 0)
+                if (group.Items.Count() > 0)
                     _view.Nodes.Add(BuildTreeForGroup(group));
 
             _view.TreeView.ExpandAll();

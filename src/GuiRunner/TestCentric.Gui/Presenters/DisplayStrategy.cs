@@ -236,7 +236,7 @@ namespace TestCentric.Gui.Presenters
 
         public string GroupDisplayName(TestGroup group)
         {
-            return string.Format("{0} ({1})", group.Name, group.Count());
+            return string.Format("{0} ({1})", group.Name, group.Items.Count());
         }
 
         protected virtual string GetTreeNodeName(TestNode testNode)

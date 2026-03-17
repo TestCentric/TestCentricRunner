@@ -71,7 +71,7 @@ namespace TestCentric.Gui.Presenters
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == expectedGroupName);
-            Assert.That(expectedGroup, Contains.Item(testNode));
+            Assert.That(expectedGroup.Items, Contains.Item(testNode));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace TestCentric.Gui.Presenters
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == "Not Run");
-            Assert.That(expectedGroup, Contains.Item(testNode));
+            Assert.That(expectedGroup.Items, Contains.Item(testNode));
         }
 
         [Test]

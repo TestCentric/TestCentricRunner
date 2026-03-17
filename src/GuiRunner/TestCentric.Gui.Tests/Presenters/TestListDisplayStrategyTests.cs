@@ -278,7 +278,7 @@ namespace TestCentric.Gui.Presenters
             // Assert testGroup
             TestGroup testGroup = treeNode.Tag as TestGroup;
             Assert.That(testGroup, Is.Not.Null);
-            Assert.That(testGroup.Count(), Is.EqualTo(expectedInGroup));
+            Assert.That(testGroup.Items.Count(), Is.EqualTo(expectedInGroup));
         }
 
         private string CreateTestcaseXml(string testId, string category)

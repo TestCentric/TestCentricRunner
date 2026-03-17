@@ -60,7 +60,7 @@ namespace TestCentric.Gui.Presenters
         {
             var groupIndex = -1;
 
-            bool isLatestRun = group.Any(t => _model.IsInTestRun(t));
+            bool isLatestRun = group.Items.Any(t => _model.IsInTestRun(t));
             foreach (var testNode in group)
             {
                 var result = GetResultForTest(testNode);
@@ -114,7 +114,7 @@ namespace TestCentric.Gui.Presenters
 
             _view.InvokeIfRequired(() =>
             {
-                oldGroup.RemoveId(result.Id);
+                oldGroup.Items.RemoveId(result.Id);
                 // TODO: Insert in order
 
                 TestNode testNode = _model.GetTestById(result.Id);
@@ -124,7 +124,7 @@ namespace TestCentric.Gui.Presenters
                 treeNode.Remove();
 
                 // If it was last test in group, remove group
-                if (oldGroup.Count() == 0)
+                if (oldGroup.Items.Count() == 0)
                     oldParent.Remove();
                 else // update old group
                 {
@@ -135,14 +135,14 @@ namespace TestCentric.Gui.Presenters
                 newParent.Text = GroupDisplayName(newGroup);
                 newParent.Expand();
 
-                if (newGroup.Count() == 1)
+                if (newGroup.Items.Count() == 1)
                 {
                     _view.Clear();
                     newParent.ImageIndex = newParent.SelectedImageIndex = TestTreeView.PendingIndex;
 
                     TreeNode topNode = null;
                     foreach (var group in _grouping.Groups)
-                        if (group.Count() > 0)
+                        if (group.Items.Count() > 0)
                         {
                             Add(group.TreeNode);
                             if (topNode == null)
@@ -194,7 +194,7 @@ namespace TestCentric.Gui.Presenters
                     var treeNode = MakeTreeNode(group, true);
                     group.TreeNode = treeNode;
                     treeNode.Expand();
-                    if (group.Count() > 0)
+                    if (group.Items.Count() > 0)
                     {
                         _view.Add(treeNode);
                         if (topNode == null)

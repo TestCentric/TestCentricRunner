@@ -83,7 +83,7 @@ namespace TestCentric.Gui.Presenters
 
             // 3. Assert
             Assert.That(grouping.Groups.Count, Is.EqualTo(1));
-            Assert.That(grouping.Groups[0], Contains.Item(testNode));
+            Assert.That(grouping.Groups[0].Items, Contains.Item(testNode));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace TestCentric.Gui.Presenters
             Assert.That(grouping.Groups.Count, Is.EqualTo(2));
             var categoryGroup = grouping.Groups[1];
             Assert.That(categoryGroup.Name, Is.EqualTo("Feature_1"));
-            Assert.That(categoryGroup, Contains.Item(testNode));
+            Assert.That(categoryGroup.Items, Contains.Item(testNode));
         }
 
         [Test]
@@ -132,17 +132,17 @@ namespace TestCentric.Gui.Presenters
 
             var categoryGroup = grouping.Groups[1];
             Assert.That(categoryGroup.Name, Is.EqualTo("Feature_1"));
-            Assert.That(categoryGroup, Contains.Item(testNode1));
-            Assert.That(categoryGroup, Contains.Item(testNode2));
+            Assert.That(categoryGroup.Items, Contains.Item(testNode1));
+            Assert.That(categoryGroup.Items, Contains.Item(testNode2));
 
             categoryGroup = grouping.Groups[2];
             Assert.That(categoryGroup.Name, Is.EqualTo("Feature_2"));
-            Assert.That(categoryGroup, Contains.Item(testNode3));
-            Assert.That(categoryGroup, Contains.Item(testNode4));
+            Assert.That(categoryGroup.Items, Contains.Item(testNode3));
+            Assert.That(categoryGroup.Items, Contains.Item(testNode4));
 
             categoryGroup = grouping.Groups[0];
             Assert.That(categoryGroup.Name, Is.EqualTo("None"));
-            Assert.That(categoryGroup, Contains.Item(testNode5));
+            Assert.That(categoryGroup.Items, Contains.Item(testNode5));
         }
 
         [Test]
