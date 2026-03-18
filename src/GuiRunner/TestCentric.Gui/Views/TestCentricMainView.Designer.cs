@@ -80,9 +80,7 @@ namespace TestCentric.Gui.Views
             this.runAsX86MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.recentProjectsMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.recentProjectsDummyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentFilesMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.recentFilesDummyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -502,32 +500,14 @@ namespace TestCentric.Gui.Views
             // 
             // recentProjectsMenu
             // 
-            this.recentProjectsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.recentProjectsDummyMenuItem});
             this.recentProjectsMenu.Name = "recentProjectsMenu";
             this.recentProjectsMenu.Size = new System.Drawing.Size(179, 22);
             this.recentProjectsMenu.Text = "Recent Projects";
-            this.recentProjectsMenu.ToolTipText = "NOT YET IMPLEMENTED";
-            // 
-            // recentProjectsDummyMenuItem
-            // 
-            this.recentProjectsDummyMenuItem.Name = "recentProjectsDummyMenuItem";
-            this.recentProjectsDummyMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.recentProjectsDummyMenuItem.Text = "NOT YET IMPLEMENTED";
-            // 
             // recentFilesMenu
             // 
-            this.recentFilesMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.recentFilesDummyMenuItem});
             this.recentFilesMenu.Name = "recentFilesMenu";
             this.recentFilesMenu.Size = new System.Drawing.Size(179, 22);
             this.recentFilesMenu.Text = "Recent &Files";
-            // 
-            // recentFilesDummyMenuItem
-            // 
-            this.recentFilesDummyMenuItem.Name = "recentFilesDummyMenuItem";
-            this.recentFilesDummyMenuItem.Size = new System.Drawing.Size(271, 22);
-            this.recentFilesDummyMenuItem.Text = "Dummy Entry to force PopUp initially";
             // 
             // toolStripSeparator4
             // 
@@ -1003,7 +983,6 @@ namespace TestCentric.Gui.Views
         private TabPage outputTab;
         private TabPage propertiesTab;
         private ErrorsAndFailuresView errorsAndFailuresView1;
-        private ToolStripMenuItem recentFilesDummyMenuItem;
         private ToolStripMenuItem openWorkDirectoryMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
@@ -1048,7 +1027,6 @@ namespace TestCentric.Gui.Views
         private ToolStripMenuItem saveAsMenuItem;
         private ToolStripMenuItem editProjectMenuItem;
         private ToolStripMenuItem recentProjectsMenu;
-        private ToolStripMenuItem recentProjectsDummyMenuItem;
         private ToolStripSeparator toolStripSeparator9;
     }
 }

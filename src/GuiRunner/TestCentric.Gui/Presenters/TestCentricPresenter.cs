@@ -364,6 +364,8 @@ namespace TestCentric.Gui.Presenters
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
 
                 _agentSelectionController.UpdateMenuItems();
+                _recentFileController.PopulateMenu();
+                _recentProjectController.PopulateMenu();
 
                 _view.RunAsX86.Enabled = isPackageLoaded && !isTestRunning;
 
@@ -410,9 +412,6 @@ namespace TestCentric.Gui.Presenters
             _view.ReloadTestsCommand.Execute += ReloadTests;
 
             _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
-
-            _view.RecentFilesMenu.Popup += _recentFileController.PopulateMenu;
-            _view.RecentProjectsMenu.Popup += _recentProjectController.PopulateMenu;
 
             _view.ExitCommand.Execute += () => _view.Close();
 
