@@ -53,7 +53,8 @@ namespace TestCentric.Gui.Presenters
 
 
         private AgentSelectionController _agentSelectionController;
-
+        private RecentFileMenuController _recentProjectController;
+        private RecentFileMenuController _recentFileController;
         private string[] _lastFilesLoaded = null;
 
         private bool _stopRequested;
@@ -73,6 +74,9 @@ namespace TestCentric.Gui.Presenters
             _settings = _model.Settings;
 
             _agentSelectionController = new AgentSelectionController(_model, _view);
+            _recentProjectController = new RecentFileMenuController(_model, _view.RecentProjectsMenu, true);
+            _recentFileController = new RecentFileMenuController(_model, _view.RecentFilesMenu, false);
+
             ImageSetManager = new ImageSetManager(_model, _view);
 
             _view.Font = _settings.Gui.Font;
@@ -360,6 +364,8 @@ namespace TestCentric.Gui.Presenters
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
 
                 _agentSelectionController.UpdateMenuItems();
+                _recentFileController.PopulateMenu();
+                _recentProjectController.PopulateMenu();
 
                 _view.RunAsX86.Enabled = isPackageLoaded && !isTestRunning;
 
@@ -406,28 +412,6 @@ namespace TestCentric.Gui.Presenters
             _view.ReloadTestsCommand.Execute += ReloadTests;
 
             _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
-
-            _view.RecentFilesMenu.Popup += () =>
-            {
-                var menuItems = _view.RecentFilesMenu.MenuItems;
-                // Test for null, in case we are running tests with a mock
-                if (menuItems == null)
-                    return;
-
-                var entries = _model.Settings.Gui.RecentFiles.Entries;
-                for (int index = entries.Count; --index >= 0;)
-                    if (!File.Exists(entries[index]))
-                        entries.RemoveAt(index);
-
-                menuItems.Clear();
-
-                for (int i=0; i<entries.Count; i++)
-                {
-                    string menuItemText = $"{i + 1} {entries[i]}";
-                    ToolStripMenuItem menuItem = CreateRecentFileMenuItem(menuItemText, i, (index) => _model.OpenExistingFile(entries[index]), RemoveRecentFileEntry);
-                    menuItems.Add(menuItem);
-                }
-            };
 
             _view.ExitCommand.Execute += () => _view.Close();
 
@@ -673,57 +657,6 @@ namespace TestCentric.Gui.Presenters
 
                 if (dlg.ShowDialog(_view as IWin32Window) == DialogResult.OK)
                     _model.TestCentricProject.SetTopLevelSetting(SettingDefinitions.TestParametersDictionary.WithValue(dlg.Parameters));
-            }
-        }
-
-        private ToolStripMenuItem CreateRecentFileMenuItem(string menuText, int tag, Action<int> recentFileClickedAction, Action<int> contextMenuAction)
-        {
-            var menuItem = new ToolStripMenuItem(menuText);
-            menuItem.Tag = tag;
-            menuItem.Click += (sender, ea) =>
-            {
-                int index = (int)((ToolStripMenuItem)sender).Tag;
-                recentFileClickedAction(index);
-            };
-            menuItem.MouseUp += (sender, ea) =>
-            {
-                if (ea.Button == MouseButtons.Right)
-                {
-                    var ctxMenuItem = new MenuItem("Remove item from list");
-                    ctxMenuItem.Click += (s, e) =>
-                    {
-                        int index = (int)((ToolStripMenuItem)sender).Tag;
-                        contextMenuAction(index);
-                    };
-
-                    var menuItem = sender as ToolStripMenuItem;
-                    Control ctrl = menuItem.Owner as Control;
-                    ContextMenu ctx = new ContextMenu(new[] { ctxMenuItem });
-                    ctx.Show(ctrl, ctrl.PointToClient(Cursor.Position));
-                }
-            };
-
-            return menuItem;
-        }
-
-        private void RemoveRecentFileEntry(int index)
-        {
-            // Remove entry from settings
-            var entries = _model.Settings.Gui.RecentFiles.Entries;
-            if (index >= 0 && index < entries.Count)
-                entries.RemoveAt(index);
-
-            // Remove entry from menu
-            var menuItems = _view.RecentFilesMenu.MenuItems;
-            if (index >= 0 && index < menuItems.Count)
-                menuItems.RemoveAt(index);
-
-            // Update menu item (tag and text) of all remaining menu items
-            for (int i=0; i < entries.Count; i++)
-            {
-                var menuItem = menuItems[i] as ToolStripMenuItem;
-                menuItem.Tag = i;
-                menuItem.Text = $"{i + 1} {entries[i]}";
             }
         }
 
