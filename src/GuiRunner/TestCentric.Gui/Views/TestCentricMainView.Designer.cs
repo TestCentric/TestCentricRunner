@@ -506,7 +506,7 @@ namespace TestCentric.Gui.Views
             this.recentProjectsDummyMenuItem});
             this.recentProjectsMenu.Name = "recentProjectsMenu";
             this.recentProjectsMenu.Size = new System.Drawing.Size(179, 22);
-            this.recentProjectsMenu.Text = "RecentProjects";
+            this.recentProjectsMenu.Text = "Recent Projects";
             this.recentProjectsMenu.ToolTipText = "NOT YET IMPLEMENTED";
             // 
             // recentProjectsDummyMenuItem
