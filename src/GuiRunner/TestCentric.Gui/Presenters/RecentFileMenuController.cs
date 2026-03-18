@@ -39,7 +39,7 @@ namespace TestCentric.Gui.Presenters
 
         public void PopulateMenu()
         {
-            // Remove all non-existing files from recent file list
+            // Remove all non-existing files from recent file list (includes null entries)
             var entries = Model.Settings.Gui.RecentFiles.Entries;
             for (int index = entries.Count; --index >= 0;)
                 if (!File.Exists(entries[index]))
@@ -66,7 +66,7 @@ namespace TestCentric.Gui.Presenters
 
         private bool IsProjectFile(string fileName)
         {
-            return fileName != null && fileName.EndsWith("tcproj", StringComparison.InvariantCultureIgnoreCase);
+            return fileName.EndsWith("tcproj", StringComparison.InvariantCultureIgnoreCase);
         }
 
         private ToolStripMenuItem CreateRecentFileMenuItem(string menuText, string tag)
