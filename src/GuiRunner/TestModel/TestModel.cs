@@ -430,7 +430,7 @@ namespace TestCentric.Gui.Model
             if (HasTests)
                 UnloadTests();
 
-            if (TestCentricProject.ProjectPath is not null)
+            if (TestCentricProject?.ProjectPath is not null)
                 SaveProject();
 
             TestCentricProject = null;
