@@ -232,5 +232,36 @@ namespace TestCentric.Gui.Model
             runner.Received().Dispose();
             Assert.That(project.TopLevelPackage.SubPackages[0].Settings.GetValueOrDefault(SettingDefinitions.DebugTests), Is.False);
         }
+
+        [Test]
+        public void CloseProject_LastProject_IsSet_AsRecentFileLatest()
+        {
+            // Arrange
+            var engine = new MockTestEngine();
+            var options = new GuiOptions("dummy.dll");
+            var model = TestModel.CreateTestModel(engine, options);
+            model.CreateNewProject("CloseProject_LastProjectTest");
+
+            // Act
+            model.CloseProject();
+
+            // Assert
+            Assert.That(model.Settings.Gui.RecentFiles.Latest, Contains.Substring("CloseProject_LastProjectTest"));
+        }
+
+        [Test]
+        public void CloseProject_NoProjectOpen_RecentFileLatest_IsEmpty()
+        {
+            // Arrange
+            var engine = new MockTestEngine();
+            var options = new GuiOptions("dummy.dll");
+            var model = TestModel.CreateTestModel(engine, options);
+
+            // Act
+            model.CloseProject();
+
+            // Assert
+            Assert.That(model.Settings.Gui.RecentFiles.Latest, Is.Null.Or.Empty);
+        }
     }
 }
