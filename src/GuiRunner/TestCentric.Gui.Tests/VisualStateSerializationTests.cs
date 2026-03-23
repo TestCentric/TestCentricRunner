@@ -131,6 +131,36 @@ namespace TestCentric.Gui
             }
         }
 
+        [Test]
+        public void LoadFrom_NonExistingFile_ReturnsNull()
+        {
+            var visualState = VisualState.LoadFrom("NotExistingFile.xml");
+
+            Assert.That(visualState, Is.Null);
+        }
+
+        [Test]
+        public void LoadFrom_EmptyFile_ReturnsNull()
+        {
+            File.WriteAllText("EmptyFile.xml", String.Empty);
+
+            var visualState = VisualState.LoadFrom("EmptyFile.xml");
+
+            Assert.That(visualState, Is.Null);
+        }
+
+        [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?>")]
+        [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><VisualState>")]
+        [TestCase("<?xml version=\"1.0\" encoding=\"utf-8\"?><VisualState> <Nodes> </VisualState>")]
+        public void LoadFrom_InvalidXmlContent_ReturnsNull(string content)
+        {
+            File.WriteAllText("InvalidXmlContent.xml", content);
+
+            var visualState = VisualState.LoadFrom("InvalidXmlContent.xml");
+
+            Assert.That(visualState, Is.Null);
+        }
+
         public class VisualStateSerializationData : VisualStateTestBase, IEnumerable<TestCaseData>
         {
             public IEnumerator<TestCaseData> GetEnumerator()

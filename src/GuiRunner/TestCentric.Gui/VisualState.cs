@@ -189,9 +189,19 @@ namespace TestCentric.Gui
 
         public static VisualState LoadFrom(string fileName)
         {
-            using (StreamReader reader = new StreamReader(fileName))
+            try
             {
-                return LoadFrom(reader);
+                using (StreamReader reader = new StreamReader(fileName))
+                {
+                    return LoadFrom(reader);
+                }
+            }
+            catch (Exception e)
+            {
+                // Catch all kind of exceptions while reading file (FileNotFound, XmlException, Security, IO-Exception, ...)
+                Logger log = InternalTrace.GetLogger(nameof(VisualState));
+                log.Error($"Failed to read VisualState file: {fileName}; {e.Message}");
+                return null;
             }
         }
 
