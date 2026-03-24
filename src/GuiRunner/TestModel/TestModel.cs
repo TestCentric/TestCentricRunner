@@ -385,7 +385,13 @@ namespace TestCentric.Gui.Model
             if (TestCentricProject.IsProjectFile(filePath))
                 OpenExistingProject(filePath);
             else if (IsSupportedTestFile(filePath))
-                CreateNewProject(filePath + ".tcproj", new[] { filePath });
+            {
+                string projectFilePath = filePath + ".tcproj";
+                if (File.Exists(projectFilePath))
+                    OpenExistingProject(projectFilePath);
+                else
+                    CreateNewProject(projectFilePath, new[] { filePath });
+            }
             else
                 throw new Exception("Invalid Test File type: {filename}");
         }
