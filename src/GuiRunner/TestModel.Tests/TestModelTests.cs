@@ -70,6 +70,24 @@ namespace TestCentric.Gui.Model
         }
 
         [Test]
+        public void OpenExistingFile_TestCentricProjectFile_IsLoaded()
+        {
+            // Arrange
+            var engine = new MockTestEngine();
+            var options = new GuiOptions("dummy.dll");
+            var model = TestModel.CreateTestModel(engine, options);
+
+            // Act: Closing project will save tcproj file; Opening the test file again should load tcproj file
+            model.OpenExistingFile("dummy.dll");
+            model.TestCentricProject.ApplySetting(SettingDefinitions.RunAsX86.WithValue(true));
+            model.CloseProject();
+            model.OpenExistingFile("dummy.dll");
+
+            // Assert
+            Assert.That(model.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86), Is.True);
+        }
+
+        [Test]
         public void IsInTestRun_TestNode_ReturnsTrue()
         {
             // Arrange
