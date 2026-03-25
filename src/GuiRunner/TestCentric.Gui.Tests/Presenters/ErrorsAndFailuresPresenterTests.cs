@@ -307,7 +307,7 @@ namespace TestCentric.Gui.Presenters
             _model.TestResultManager.GetResultForTest("1").Returns(resultNode);
 
             TestGroup testGroup = new TestGroup("TestGroup");
-            testGroup.Items.Add(testItem);
+            testGroup.TestNodes.Add(testItem);
             _model.Events.SelectedItemChanged += Raise.Event<TestItemEventHandler>(new TestItemEventArgs(testGroup));
             _testResultPresenter.ClearReceivedCalls();
 

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 namespace TestCentric.Gui.Presenters
 {
     using System.Linq;
+    using System.Security.Cryptography;
     using Model;
     using Views;
 
@@ -18,13 +19,14 @@ namespace TestCentric.Gui.Presenters
     /// </summary>
     public abstract class GroupDisplayStrategy : DisplayStrategy
     {
-        protected TestGrouping _grouping;
+        protected TestGrouping _topLevelGrouping;
 
         #region Construction and Initialization
 
         public GroupDisplayStrategy(ITestTreeView view, ITestModel model)
             : base(view, model)
         {
+            _topLevelGrouping = CreateTestGrouping(GroupBy);
             _view.SetTestFilterVisibility(false);
         }
 
@@ -40,27 +42,15 @@ namespace TestCentric.Gui.Presenters
         public override void OnTestFinished(ResultNode result)
         {
             base.OnTestFinished(result);
-            _view.InvokeIfRequired(() => _grouping?.OnTestFinished(result));
+            _view.InvokeIfRequired(() => _topLevelGrouping?.OnTestFinished(result));
         }
-
-        // TODO: Determine if we want to reinstate this based on whether we want
-        // groups to change their display as soon as the first test completes
-        // (present implementation) or wait until the last test completes.
-        //public override void OnTestRunFinished()
-        //{
-        //    _view.InvokeIfRequired(() =>
-        //    {
-        //        _grouping?.OnTestRunFinished();
-        //        ResetTestRunningIcons(_view.Nodes);
-        //    });
-        //}
 
         // TODO: Move this to TestGroup? Would need access to results.
         public int CalcImageIndexForGroup(TestGroup group)
         {
             var groupIndex = -1;
 
-            bool isLatestRun = group.Items.Any(t => _model.IsInTestRun(t));
+            bool isLatestRun = group.TestNodes.Any(t => _model.IsInTestRun(t));
             foreach (var testNode in group)
             {
                 var result = GetResultForTest(testNode);
@@ -84,93 +74,25 @@ namespace TestCentric.Gui.Presenters
             _view.Add(treeNode);
         }
 
-        public void ApplyResultToGroup(ResultNode result)
-        {
-            var treeNodes = GetTreeNodesForTest(result);
-
-            // Result may be for a TestNode not shown in the tree
-            if (treeNodes.Count == 0)
-                return;
-
-            // This implementation ignores any but the first node
-            // since changing of groups is currently only needed
-            // for groupings that display each node once.
-            var treeNode = treeNodes[0];
-            var oldParent = treeNode.Parent;
-            var oldGroup = oldParent?.Tag as TestGroup;
-
-            // We only have to proceed for tests that are direct
-            // descendants of a group node.
-            if (oldGroup == null)
-                return;
-
-            var newGroup = _grouping.SelectGroups(result)[0];
-
-            // If the group didn't change, we can get out of here
-            if (oldGroup == newGroup)
-                return;
-
-            var newParent = newGroup.TreeNode;
-
-            _view.InvokeIfRequired(() =>
-            {
-                oldGroup.Items.RemoveId(result.Id);
-                // TODO: Insert in order
-
-                TestNode testNode = _model.GetTestById(result.Id);
-                newGroup.Add(testNode);
-
-                // Remove test from tree
-                treeNode.Remove();
-
-                // If it was last test in group, remove group
-                if (oldGroup.Items.Count() == 0)
-                    oldParent.Remove();
-                else // update old group
-                {
-                    oldParent.Text = GroupDisplayName(oldGroup);
-                }
-
-                newParent.Nodes.Add(treeNode);
-                newParent.Text = GroupDisplayName(newGroup);
-                newParent.Expand();
-
-                if (newGroup.Items.Count() == 1)
-                {
-                    _view.Clear();
-                    newParent.ImageIndex = newParent.SelectedImageIndex = TestTreeView.PendingIndex;
-
-                    TreeNode topNode = null;
-                    foreach (var group in _grouping.Groups)
-                        if (group.Items.Count() > 0)
-                        {
-                            Add(group.TreeNode);
-                            if (topNode == null)
-                                topNode = group.TreeNode;
-                        }
-
-                    if (topNode != null)
-                        topNode.EnsureVisible();
-                }
-            });
-        }
+        /// <summary>
+        /// ApplyResultToGroup takes no action in the base GroupDisplayStrategyClass.
+        /// It should be overridden in derived strategies with categories based
+        /// on the result of the test, which may change upon execution.
+        /// </summary>
+        /// <param name="result">A ResultNode</param>
+        public virtual void ApplyResultToGroup(ResultNode result) { }
 
         #endregion
 
         #region Protected Members
 
-        protected void SetDefaultTestGrouping()
-        {
-            _grouping = CreateTestGrouping(DefaultGroupSetting);
-        }
-
-        protected abstract string DefaultGroupSetting { get; }
+        protected abstract string GroupBy { get; }
 
         protected TestGrouping CreateTestGrouping(string groupBy)
         {
             switch (groupBy)
             {
-                default:
+                case null: // Needed by tests that use NSubstitute
                 case "UNGROUPED":
                     return new UngroupedGrouping(this);
                 case "OUTCOME":
@@ -178,23 +100,28 @@ namespace TestCentric.Gui.Presenters
                 case "DURATION":
                     return new DurationGrouping(this);
                 case "CATEGORY":
-                    // Tree display format 'Test_List' should consider categories on test fixtures and test cases
-                    return new CategoryGrouping(this, StrategyID == "TEST_LIST");
+                    return new CategoryGrouping(this, true);
+                case "ASSEMBLY":
+                    return new AssemblyGrouping(this);
+                case "FIXTURE":
+                    return new TestFixtureGrouping(this);
+                default:
+                    throw new ArgumentException($"Unknown grouping ID: {groupBy}");
             }
         }
 
         protected void UpdateDisplay()
         {
-            if (_grouping != null)
+            if (_topLevelGrouping != null)
             {
                 this.ClearTree();
                 TreeNode topNode = null;
-                foreach (var group in _grouping.Groups)
+                foreach (var group in _topLevelGrouping.Groups)
                 {
                     var treeNode = MakeTreeNode(group, true);
                     group.TreeNode = treeNode;
                     treeNode.Expand();
-                    if (group.Items.Count() > 0)
+                    if (group.TestNodes.Count() > 0)
                     {
                         _view.Add(treeNode);
                         if (topNode == null)

@@ -63,7 +63,7 @@ namespace TestCentric.Gui
         public bool ShowNamespaces { get; set; }
         public bool ShowFixtures { get; set; }
 
-        // TODO: Categories not yet supported
+        // TODO: Categories not yet supported in Visual State
         //public List<string> SelectedCategories;
         //public bool ExcludeCategories;
 

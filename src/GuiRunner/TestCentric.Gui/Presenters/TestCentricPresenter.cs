@@ -167,35 +167,6 @@ namespace TestCentric.Gui.Presenters
 
             };
 
-            // TODO: Verify that this is not needed any longer and remove code
-            //_model.Events.TestLoadFailure += (TestLoadFailureEventArgs e) =>
-            //{
-            //    OnLongRunningOperationComplete();
-
-            //    // HACK: Engine should recognize .NET Standard and give the
-            //    // appropriate error message. For now, we compensate for its
-            //    // failure by issuing the message ourselves and reloading the
-            //    // previously loaded  test.
-            //    var msg = e.Exception.Message;
-            //    bool isNetStandardError =
-            //        e.Exception.Message == "Unrecognized Target Framework Identifier: .NETStandard";
-
-            //    if (!isNetStandardError)
-            //    {
-            //        _view.MessageDisplay.Error(e.Exception.Message);
-            //        return;
-            //    }
-
-            //    _view.MessageDisplay.Error("Test assemblies must target a specific platform, rather than .NETStandard.");
-            //    if (_lastFilesLoaded == null)
-            //        _view.Close();
-            //    else
-            //    {
-            //        _model.UnloadTests();
-            //        _model.CreateNewProject(_lastFilesLoaded);
-            //    }
-            //};
-
             _model.Events.TestChanged += (e) =>
             {
                 _model.ReloadTests();
@@ -309,7 +280,7 @@ namespace TestCentric.Gui.Presenters
                         _model.CreateNewProject("TestProject", testFiles);
                     else if (testFiles.Length == 1 && TestCentricProject.IsProjectFile(testFiles[0]))
                         _model.OpenExistingProject(testFiles[0]);
-                    else // TODO: Do we want to handle a single file differently on the command-line?
+                    else 
                         CreateNewProject(testFiles);
                 }
                 else if (_settings.Gui.LoadLastProject && !_options.NoLoad)

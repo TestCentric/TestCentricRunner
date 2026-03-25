@@ -68,7 +68,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _view.DebugContextCommand.Execute += Raise.Event<CommandHandler>();
 
             // Assert
-            _model.Received().DebugTests(Arg.Is(testGroup.Items));
+            _model.Received().DebugTests(Arg.Is(testGroup.TestNodes));
         }
 
         [Test]

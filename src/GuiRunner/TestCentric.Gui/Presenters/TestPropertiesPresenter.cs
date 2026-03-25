@@ -57,17 +57,20 @@ namespace TestCentric.Gui.Presenters
             {
                 _view.Header = _selectedItem.Name;
 
-                var testNode = _selectedItem as TestNode;
-                if (testNode != null)
+                switch (_selectedItem)
                 {
-                    //_treeView.SuspendLayout();
+                    case TestNode testNode:
+                        _view.TestPropertiesSubView.Show();
+                        InitializeTestPackageSubView(testNode);
+                        InitializeTestPropertiesSubView(testNode);
 
-                    InitializeTestPackageSubView(testNode);
-                    InitializeTestPropertiesSubView(testNode);                    
+                        AdjustSubViewHeights();
 
-                    AdjustSubViewHeights();
-
-                    //_treeView.ResumeLayout();
+                        break;
+                    case TestGroup testGroup:
+                        _view.TestPackageSubView.Hide();
+                        _view.TestPropertiesSubView.Hide();
+                        break;
                 }
             }
 
@@ -104,7 +107,6 @@ namespace TestCentric.Gui.Presenters
 
         private void InitializeTestPropertiesSubView(TestNode testNode)
         {
-            // TestPropertiesSubView is always visible
             _view.TestType = GetTestType(testNode);
             _view.FullName = testNode.FullName;
             _view.Description = testNode.GetProperty("Description");
@@ -113,6 +115,8 @@ namespace TestCentric.Gui.Presenters
             _view.RunState = testNode.RunState.ToString();
             _view.SkipReason = GetSkipReason(testNode);
             _view.Properties = GetTestProperties(testNode);
+
+            _view.TestPropertiesSubView.Visible = true;
         }
 
         private void AdjustSubViewHeights()

@@ -8,8 +8,12 @@ using System.Windows.Forms;
 
 namespace TestCentric.Gui.Presenters
 {
+    using System;
     using System.Collections.Generic;
+    using System.Data.SqlTypes;
     using Model;
+    using NUnit;
+    using NUnit.UiException.CodeFormatters;
     using Views;
 
     /// <summary>
@@ -22,7 +26,6 @@ namespace TestCentric.Gui.Presenters
 
         public TestListDisplayStrategy(ITestTreeView view, ITestModel model) : base(view, model)
         {
-            SetDefaultTestGrouping();
             _view.CollapseToFixturesCommand.Enabled = false;
         }
 
@@ -34,17 +37,16 @@ namespace TestCentric.Gui.Presenters
 
         public override string Description
         {
-            get { return "Tests By " + DefaultGroupSetting; }
+            get { return "Tests By " + GroupBy; }
         }
 
-        protected override string DefaultGroupSetting
-        {
-            get { return TreeConfiguration.TestListGroupBy; }
-        }
+        protected override string GroupBy => TreeConfiguration.TestListGroupBy;
+        private bool ShowAssemblies => TreeConfiguration.TestListShowAssemblies;
+        private bool ShowFixtures => TreeConfiguration.TestListShowFixtures;
 
         #endregion
 
-        #region Methods
+        #region Method Overrides
 
         public override void OnTestLoaded(TestNode rootNode, VisualState visualState)
         {
@@ -53,8 +55,8 @@ namespace TestCentric.Gui.Presenters
             var testGroups = GroupTestCases(rootNode);
 
             foreach (var group in testGroups)
-                if (group.Items.Count() > 0)
-                    _view.Nodes.Add(BuildTreeForGroup(group));
+                if (group.TestNodes.Count() > 0)
+                    _view.Nodes.Add(group.TreeNode = MakeTreeNode(group, true));
 
             _view.TreeView.ExpandAll();
 
@@ -64,80 +66,13 @@ namespace TestCentric.Gui.Presenters
             _model.SaveProject();
         }
 
-        private List<TestGroup> GroupTestCases(TestNode testNode)
-        {
-            string groupBy = DefaultGroupSetting;
-            if (_grouping == null || _grouping.ID != groupBy)
-                _grouping = CreateTestGrouping(groupBy);
-
-            _grouping.LoadGroups(GetTestCases(testNode));
-
-            return _grouping.Groups;
-        }
-
-        private TreeNode BuildTreeForGroup(TestGroup group)
-        {
-            bool showAssemblies = TreeConfiguration.TestListShowAssemblies;
-            bool showFixtures = TreeConfiguration.TestListShowFixtures;
-
-            if (showAssemblies || showFixtures)
-            {
-                var groupNode = MakeTreeNode(group, false);
-
-                foreach (TestNode testNode in group)
-                {
-                    string assemblyName = null;
-                    string fixtureName = null;
-
-                    for (TestNode parent = testNode.Parent; parent != null; parent = parent.Parent)
-                    {
-                        if (showAssemblies && parent.IsAssembly)
-                            assemblyName = parent.Name;
-                        if (showFixtures && parent.IsFixture)
-                            fixtureName = parent.Name;
-                    }
-
-                    TreeNode searchNode = groupNode;
-
-                    if (showAssemblies && assemblyName != null)
-                    {
-                        if (groupNode.Nodes.ContainsKey(assemblyName))
-                            searchNode = searchNode.Nodes[assemblyName];
-                        else
-                        {
-                            searchNode = new TreeNode(assemblyName) { Name = assemblyName };
-                            groupNode.Nodes.Add(searchNode);
-                        }
-                    }
-
-                    if (showFixtures && fixtureName != null)
-                    {
-                        if (searchNode.Nodes.ContainsKey(fixtureName))
-                            searchNode = searchNode.Nodes[fixtureName];
-                        else
-                        {
-                            var fixtureNode = new TreeNode(fixtureName) { Name = fixtureName };
-                            searchNode.Nodes.Add(fixtureNode);
-                            searchNode = fixtureNode;
-                        }
-                    }
-
-                    searchNode.Nodes.Add(MakeTreeNode(testNode, false));
-                }
-
-                return group.TreeNode = groupNode;
-            }
-            else
-                return group.TreeNode = MakeTreeNode(group, true);
-        }
-
         public override VisualState CreateVisualState()
         {
             VisualState visualState = null;
 
             _view.InvokeIfRequired(() =>
             {
-                visualState = new VisualState("TEST_LIST", _grouping?.ID)
+                visualState = new VisualState("TEST_LIST", _topLevelGrouping?.ID)
                 {
                     ShowAssemblies = TreeConfiguration.TestListShowAssemblies,
                     ShowFixtures = TreeConfiguration.TestListShowFixtures
@@ -159,6 +94,161 @@ namespace TestCentric.Gui.Presenters
                 return TreeConfiguration.TestListShowFixtures;
 
             return !testNode.IsSuite;
+        }
+
+        /// <summary>
+        /// ApplyResultToGroup is called for groupings that can change on execution
+        /// </summary>
+        /// <param name="result">A ResultNode</param>
+        public override void ApplyResultToGroup(ResultNode result)
+        {
+            // The result of a test does not have any connection to it's Parent,
+            // so we use the TreeNodes to make the connection.
+            var treeNodes = GetTreeNodesForTest(result);
+
+            // Result may be for a TestNode not shown in the TestListStrategy,
+            // e.g. a namespace or a parameterized suite.
+            if (treeNodes.Count == 0)
+                return;
+
+            // Since changing of groups is currently only needed for groupings that
+            // display each node only once, we can ignore all but the first node.
+            var treeNode = treeNodes[0];
+            
+            var oldParent = treeNode.Parent;
+            var oldGroup = oldParent?.Tag as TestGroup;
+
+            // We only have to proceed for tests that are direct
+            // descendants of a group node.
+            if (oldGroup == null)
+                return;
+
+            var topLevelGroup = _topLevelGrouping.SelectGroups(result)[0];
+            var newGroup = topLevelGroup;
+
+            if (topLevelGroup.TreeNode == null)
+            {
+                topLevelGroup.TreeNode = MakeTreeNode(topLevelGroup, false);
+                if (!_view.Nodes.Contains(topLevelGroup.TreeNode))
+                    _view.Nodes.Add(topLevelGroup.TreeNode);
+            }
+
+            if (ShowAssemblies || ShowFixtures)
+            {
+                string assemblyName = null;
+                string fixtureName = null;
+
+                // Find assembly and fixture names for this node
+                for (TestNode parent = _model.GetTestById(result.Id).Parent; parent != null; parent = parent.Parent)
+                {
+                    if (ShowAssemblies && parent.IsAssembly)
+                        assemblyName = parent.Name;
+                    if (ShowFixtures && parent.IsFixture)
+                        fixtureName = parent.Name;
+                }
+
+                // Create the subGroups
+                if (ShowAssemblies)
+                {
+                    newGroup = topLevelGroup.GetOrAddSubGroup(assemblyName);
+                    if (ShowFixtures)
+                        newGroup = newGroup.GetOrAddSubGroup(fixtureName);
+                }
+                else // ShowFixtures only
+                {
+                    newGroup = topLevelGroup.GetOrAddSubGroup(fixtureName);
+                }
+            }
+
+            // If the group didn't change, we can get out of here
+            if (oldGroup == newGroup)
+                return;
+
+            newGroup.Add(result);
+            oldGroup.TestNodes.RemoveId(result.Id);
+            var newParent = newGroup.TreeNode;
+
+            _view.InvokeIfRequired(() =>
+            {
+                // Remove test from the tree.
+                treeNode.Remove();
+                RemoveEmptyParentNodes(oldParent);
+
+                // Add the test back to the tree in it's new position
+                newParent.Nodes.Add(treeNode);
+                newParent.Text = GroupDisplayName(newGroup);
+                ExpandNewParentNodes(newParent);
+            });
+        }
+
+        public override void OnTestRunFinished()
+        {
+            base.OnTestRunFinished();
+
+            foreach (var group in _topLevelGrouping.Groups)
+                foreach (var subGroup in group.SubGroups)
+                {
+                    subGroup.TreeNode.ImageIndex = subGroup.TreeNode.SelectedImageIndex = group.TreeNode.ImageIndex;
+                    foreach (var subGroup2 in subGroup.SubGroups)
+                        subGroup2.TreeNode.ImageIndex = subGroup2.TreeNode.SelectedImageIndex = group.TreeNode.ImageIndex;
+                }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private List<TestGroup> GroupTestCases(TestNode testNode)
+        {
+            if (_topLevelGrouping == null || _topLevelGrouping.ID != GroupBy)
+                _topLevelGrouping = CreateTestGrouping(GroupBy);
+
+            _topLevelGrouping.LoadGroups(GetTestCases(testNode));
+
+            if (ShowAssemblies)
+            {
+                CreateSubGroups(_topLevelGrouping.Groups, "ASSEMBLY");
+                if (ShowFixtures)
+                    foreach (var topLevelGroup in _topLevelGrouping.Groups)
+                        CreateSubGroups(topLevelGroup.SubGroups, "FIXTURE");
+            }
+            else if (ShowFixtures)
+            {
+                CreateSubGroups(_topLevelGrouping.Groups, "FIXTURE");
+            }
+
+            return _topLevelGrouping.Groups;
+        }
+
+        private void CreateSubGroups(IList<TestGroup> groupsToSubGroup, string groupBy)
+        {
+            foreach (var group in groupsToSubGroup)
+                CreateSubGroups(group, groupBy);
+        }
+
+        private void CreateSubGroups(TestGroup group, string groupBy)
+        {
+            Guard.ArgumentValid(groupBy == "ASSEMBLY" || groupBy == "FIXTURE",
+                "Invalid argument. Only 'ASSEMBLY' and 'FIXTURE' are accepted for subgroups", nameof(groupBy));
+
+            var grouping = CreateTestGrouping(groupBy);
+            grouping.LoadGroups(group.TestNodes);
+            foreach (var subGroup in grouping.Groups)
+                group.SubGroups.Add(subGroup);
+        }
+
+        private void RemoveEmptyParentNodes(TreeNode parentNode)
+        {
+            if (parentNode.Parent != null)
+                RemoveEmptyParentNodes(parentNode.Parent);
+            parentNode.Remove();
+        }
+
+        private void ExpandNewParentNodes(TreeNode parentNode)
+        {
+            parentNode.Expand();
+            if (parentNode.Parent != null)
+                ExpandNewParentNodes(parentNode.Parent);
         }
 
         private TestSelection GetTestCases(TestNode testNode)

@@ -160,7 +160,7 @@ namespace TestCentric.Gui.Presenters
             // 1. Arrange
             TestNode testNode = new TestNode("<test-case id='1' />");
             TestGroup testGroup = new TestGroup("TestGroup");
-            testGroup.Items.Add(testNode);
+            testGroup.TestNodes.Add(testNode);
             ITestModel model = Substitute.For<ITestModel>();
             model.TestResultManager.GetResultForTest("1").Returns((ResultNode)null);
 
@@ -220,8 +220,8 @@ namespace TestCentric.Gui.Presenters
             model.TestResultManager.GetResultForTest("2").Returns(resultNode2);
 
             TestGroup testGroup = new TestGroup("TestGroup");
-            testGroup.Items.Add(testNode1);
-            testGroup.Items.Add(testNode2);
+            testGroup.TestNodes.Add(testNode1);
+            testGroup.TestNodes.Add(testNode2);
 
             // 2. Act
             TestResultCounts resultCounts = TestResultCounts.GetResultCounts(model, testGroup);

@@ -25,12 +25,9 @@ namespace TestCentric.Gui.Presenters
         {
             get
             {
-                if (_treeNodes == null)
-                {
-                    _treeNodes = new List<TreeNode>();
-                    foreach (TreeNode treeNode in _treeView.Nodes)
-                        _treeNodes.Add(treeNode);
-                }
+                _treeNodes = new List<TreeNode>();
+                foreach (TreeNode treeNode in _treeView.Nodes)
+                    _treeNodes.Add(treeNode);
 
                 return _treeNodes;
             }
@@ -52,6 +49,9 @@ namespace TestCentric.Gui.Presenters
         [Test]
         public void OnStrategyCreated_OutcomeFilter_IsInvisible()
         {
+            // 1. Arrange
+            _model.TreeConfiguration.TestListGroupBy = "UNGROUPED";
+
             // 2. Act           
             TestListDisplayStrategy strategy = new TestListDisplayStrategy(_view, _model);
 
@@ -278,7 +278,7 @@ namespace TestCentric.Gui.Presenters
             // Assert testGroup
             TestGroup testGroup = treeNode.Tag as TestGroup;
             Assert.That(testGroup, Is.Not.Null);
-            Assert.That(testGroup.Items.Count(), Is.EqualTo(expectedInGroup));
+            Assert.That(testGroup.TestNodes.Count(), Is.EqualTo(expectedInGroup));
         }
 
         private string CreateTestcaseXml(string testId, string category)

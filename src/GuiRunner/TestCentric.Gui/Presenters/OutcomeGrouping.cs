@@ -21,13 +21,6 @@ namespace TestCentric.Gui.Presenters
 
         public OutcomeGrouping(GroupDisplayStrategy display) : base(display)
         {
-            // Predefine all TestGroups and TreeNodes
-            Groups.Add(new TestGroup("Failed", TestTreeView.FailureIndex));
-            Groups.Add(new TestGroup("Passed", TestTreeView.SuccessIndex));
-            Groups.Add(new TestGroup("Ignored", TestTreeView.IgnoredIndex));
-            Groups.Add(new TestGroup("Inconclusive", TestTreeView.InconclusiveIndex));
-            Groups.Add(new TestGroup("Skipped", TestTreeView.SkippedIndex));
-            Groups.Add(new TestGroup("Not Run", TestTreeView.InitIndex));
         }
 
         #endregion
@@ -38,8 +31,16 @@ namespace TestCentric.Gui.Presenters
 
         public override void LoadGroups(IEnumerable<TestNode> tests)
         {
-            foreach (TestGroup group in Groups)
-                group.Clear();
+            Groups.Clear();
+
+            // Predefine all TestGroups and TreeNodes
+            Groups.Add(new TestGroup("Failed", TestTreeView.FailureIndex));
+            Groups.Add(new TestGroup("Warning", TestTreeView.WarningIndex));
+            Groups.Add(new TestGroup("Passed", TestTreeView.SuccessIndex));
+            Groups.Add(new TestGroup("Ignored", TestTreeView.IgnoredIndex));
+            Groups.Add(new TestGroup("Inconclusive", TestTreeView.InconclusiveIndex));
+            Groups.Add(new TestGroup("Skipped", TestTreeView.SkippedIndex));
+            Groups.Add(new TestGroup("Not Run", TestTreeView.InitIndex));
 
             base.LoadGroups(tests);
         }
@@ -71,20 +72,23 @@ namespace TestCentric.Gui.Presenters
             if (result == null)
                 result = _displayStrategy.GetResultForTest(testNode);
 
+            // TODO: Eliminate reliance on constant indices
             if (result != null)
                 switch (result.Outcome.Status)
                 {
                     case TestStatus.Failed:
                         return Groups[0];
-                    case TestStatus.Passed:
+                    case TestStatus.Warning:
                         return Groups[1];
+                    case TestStatus.Passed:
+                        return Groups[2];
                     case TestStatus.Skipped:
-                        return result.Outcome.Label == "Ignored" ? Groups[2] : Groups[4];
+                        return result.Outcome.Label == "Ignored" ? Groups[3] : Groups[5];
                     case TestStatus.Inconclusive:
-                        return Groups[3];
+                        return Groups[4];
                 }
 
-            return Groups[5]; // Not Run
+            return Groups[6]; // Not Run
         }
 
         #endregion

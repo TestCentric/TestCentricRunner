@@ -26,11 +26,23 @@ namespace TestCentric.Gui.Presenters
 
         #region Constructors
 
-        public TestGroup(string name) : this(name, -1) { }
-
-        public TestGroup(string name, int imageIndex)
+        public TestGroup(string name, int imageIndex = -1)
         {
             Name = name;
+            ImageIndex = imageIndex;
+        }
+
+        public TestGroup(string name, IEnumerable<TestNode> tests, int imageIndex = -1)
+        {
+            Name = name;
+            TestNodes = new TestSelection(tests);
+            ImageIndex = imageIndex;
+        }
+
+        public TestGroup(string name, IEnumerable<TestGroup> subGroups, int imageIndex = -1)
+        {
+            Name = name;
+            SubGroups = [.. subGroups];
             ImageIndex = imageIndex;
         }
 
@@ -44,7 +56,11 @@ namespace TestCentric.Gui.Presenters
 
         public virtual double? Duration { get; set; }
 
-        public TestSelection Items { get; } = new TestSelection();
+        public TestSelection TestNodes { get; } = new TestSelection();
+
+        public TestGroup ParentGroup { get; }
+
+        public IList<TestGroup> SubGroups { get; } = new List<TestGroup>();
 
         public TreeNode TreeNode { get; set; }
 
@@ -52,10 +68,10 @@ namespace TestCentric.Gui.Presenters
 
         public virtual IEnumerator<TestNode> GetEnumerator()
         {
-            return Items.GetEnumerator();
+            return TestNodes.GetEnumerator();
         }
 
-        public void Clear() => Items.Clear();
+        public void Clear() => TestNodes.Clear();
 
         public TestFilter GetTestFilter(ITestCentricTestFilter guiFilter)
         {
@@ -73,7 +89,10 @@ namespace TestCentric.Gui.Presenters
         /// </summary>
         public void Add(TestNode testNode, ResultNode resultNode = null)
         {
-            Items.Add(testNode);
+            if (resultNode == null)
+                resultNode = testNode as ResultNode;
+
+            TestNodes.Add(testNode);
             if (resultNode != null)
             {
                 if (_groupResultState == null || TestResultManager.GetOutcome(_groupResultState) < TestResultManager.GetOutcome(resultNode.Outcome))
@@ -85,6 +104,28 @@ namespace TestCentric.Gui.Presenters
             }
         }
 
-        public void RemoveId(string id) => Items.RemoveId(id);
+        public TestGroup GetOrAddSubGroup(string name)
+        {
+            TestGroup subGroup = null;
+
+            foreach (TestGroup group in SubGroups)
+                if (group.Name == name)
+                {
+                    subGroup = group;
+                    break;
+                }
+
+            if (subGroup == null)
+            {
+                subGroup = new TestGroup(name);
+                subGroup.TreeNode = new TreeNode(name) { Tag = subGroup, Name = name };
+                SubGroups.Add(subGroup);
+                TreeNode.Nodes.Add(subGroup.TreeNode);
+            }
+
+            return subGroup;
+        }
+
+        public void RemoveId(string id) => TestNodes.RemoveId(id);
     }
 }
