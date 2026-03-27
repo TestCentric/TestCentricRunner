@@ -56,6 +56,17 @@ namespace TestCentric.Gui.Presenters
 
         public virtual double? Duration { get; set; }
 
+        /// <summary>
+        /// The selection of test cases included in this group.
+        /// </summary>
+        /// <remarks>
+        /// A `TestGroup` always has a `TestSelection` associated with it, which
+        /// includes all the test cases contained in the group. This is true
+        /// even if there are sub-groups. Any sub-groups will have a selection
+        /// that includes a subset of the parent group's test cases. This approach
+        /// allows us to execute the tests for a group directly, by providing the
+        /// group's `TestSelection` as an argument.
+        /// </remarks>
         public TestSelection TestNodes { get; } = new TestSelection();
 
         public TestGroup ParentGroup { get; }

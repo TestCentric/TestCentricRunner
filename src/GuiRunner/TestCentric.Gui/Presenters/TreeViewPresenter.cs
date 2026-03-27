@@ -568,7 +568,6 @@ namespace TestCentric.Gui.Presenters
             // If a test is already running, no new test run should be started.
             _view.RunContextCommand.Enabled = _model.HasTests && !_model.IsTestRunning;
             _view.DebugContextCommand.Enabled = _model.HasTests && !_model.IsTestRunning;
-            _view.DebugContextCommand.Enabled = _model.HasTests && !_model.IsTestRunning;
             _view.ClearResultsContextCommand.Enabled = _model.HasResults && !_model.IsTestRunning;
         }
 
