@@ -45,7 +45,7 @@ namespace TestCentric.Gui.Presenters
 
             foreach (var agentFullName in _model.AvailableAgents)
             {
-                // TODO: The full name is not always provided in AvailableAgents
+                // The full name is not always provided in AvailableAgents
                 int lastDot = agentFullName.LastIndexOf('.');
                 string agentName = lastDot == -1
                     ? agentFullName

@@ -180,15 +180,23 @@ namespace TestCentric.Gui.Presenters
 
         protected TreeNode MakeTreeNode(TestGroup group, bool recursive)
         {
-            TreeNode treeNode = new TreeNode(GroupDisplayName(group), group.ImageIndex, group.ImageIndex);
-            treeNode.Tag = group;
-            group.TreeNode = treeNode;
+            TreeNode treeNode = new TreeNode(group.Name, group.ImageIndex, group.ImageIndex)
+            {
+                Name = group.Name,
+                Tag = group
+            };
 
             if (recursive)
-                foreach (TestNode test in group)
-                    AddTreeNodeToCollection(test, treeNode.Nodes);
+            {
+                if (group.SubGroups.Count > 0)
+                    foreach (var subGroup in group.SubGroups)
+                        treeNode.Nodes.Add(MakeTreeNode(subGroup, recursive));
+                else
+                    foreach (TestNode test in group)
+                        AddTreeNodeToCollection(test, treeNode.Nodes);
+            }
 
-            return treeNode;
+            return group.TreeNode = treeNode;
         }
 
         public TreeNode MakeTreeNode(TestNode testNode, bool recursive)
@@ -236,7 +244,7 @@ namespace TestCentric.Gui.Presenters
 
         public string GroupDisplayName(TestGroup group)
         {
-            return string.Format("{0} ({1})", group.Name, group.Count());
+            return string.Format("{0} ({1})", group.Name, group.TestNodes.Count());
         }
 
         protected virtual string GetTreeNodeName(TestNode testNode)
@@ -408,7 +416,7 @@ namespace TestCentric.Gui.Presenters
         {
             _treeView.BeginUpdate();
 
-            if (_view.Nodes != null) // TODO: Null when mocked
+            if (_view.Nodes != null) // Null when mocked
                 foreach (TreeNode treeNode in _view.Nodes)
                     CollapseToFixtures(treeNode);
 

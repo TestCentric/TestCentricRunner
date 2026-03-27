@@ -169,7 +169,9 @@ namespace TestCentric.Gui.Presenters
                     if (_view.ContextNode.Tag is TestNode testNode)
                         _model.RunTests(testNode);
                     else if (_view.ContextNode.Tag is TestGroup groupNode)
-                        _model.RunTests(groupNode);
+                        _model.RunTests(groupNode.TestNodes);
+                    else
+                        throw new Exception($"Internal Error: TreeNode Tag is of Type {_view.ContextNode.Tag.GetType().Name}");
                 }
             };
 
@@ -187,7 +189,7 @@ namespace TestCentric.Gui.Presenters
                     if (_view.ContextNode.Tag is TestNode testNode)
                         _model.DebugTests(testNode);
                     else if (_view.ContextNode.Tag is TestGroup groupNode)
-                        _model.DebugTests(groupNode);
+                        _model.DebugTests(groupNode.TestNodes);
                 }
             };
 
@@ -269,36 +271,6 @@ namespace TestCentric.Gui.Presenters
             };
 
             _view.ResetFilterCommand.Execute += () => ResetTestFilter();
-
-            // TODO: Verify that this is no longer needed and remove code
-            // Node selected in tree
-            //_treeView.SelectedNodesChanged += (nodes) =>
-            //{
-            //    var selection = new TestSelection();
-            //    foreach (TreeNode tn in nodes)
-            //    {
-            //        var test = tn.Tag as TestNode;
-            //        if (test != null)
-            //            selection.Add(test);
-            //        _model.NotifyTestSelectionChanged(selection);
-            //    }
-
-            //    if (_propertiesDisplay != null)
-            //    {
-            //        if (_propertiesDisplay.Pinned && nodes.Count == 1)
-            //            _propertiesDisplay.Display(nodes[0]);
-            //        else
-            //            ClosePropertiesDisplay();
-            //    }
-
-            //    if (_xmlDisplay != null)
-            //    {
-            //        if (_xmlDisplay.Pinned && nodes.Count == 1)
-            //            _xmlDisplay.Display(nodes[0]);
-            //        else
-            //            CloseXmlDisplay();
-            //    }
-            //};
 
             #endregion
         }
@@ -595,7 +567,7 @@ namespace TestCentric.Gui.Presenters
 
             // If a test is already running, no new test run should be started.
             _view.RunContextCommand.Enabled = _model.HasTests && !_model.IsTestRunning;
-            _view.DebugContextCommand.Enabled = _model.HasTests && !_model.IsTestRunning;            _view.DebugContextCommand.Enabled = _model.HasTests && !_model.IsTestRunning;
+            _view.DebugContextCommand.Enabled = _model.HasTests && !_model.IsTestRunning;
             _view.ClearResultsContextCommand.Enabled = _model.HasResults && !_model.IsTestRunning;
         }
 

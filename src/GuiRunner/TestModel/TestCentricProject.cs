@@ -77,10 +77,6 @@ namespace TestCentric.Gui.Model
             TestFiles = [.. options.InputFiles];
             TopLevelPackage = new TestPackage(TestFiles);
 
-            // TODO: Default setting needs to be moved elsewhere
-            //// Turn on shadow copy in new TestCentric project by default
-            //AddSetting(SettingDefinitions.ShadowCopyFiles.WithValue(true));
-
             if (options != null) // Happens when we test
             {
                 AddSetting(SettingDefinitions.InternalTraceLevel.WithValue(options.InternalTraceLevel ?? "Off"));

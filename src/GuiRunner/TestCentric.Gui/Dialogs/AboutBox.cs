@@ -34,9 +34,6 @@ namespace TestCentric.Gui.Dialogs
             //
             InitializeComponent();
 
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             string versionText = $"Version {executingAssembly.GetName().Version}";
 

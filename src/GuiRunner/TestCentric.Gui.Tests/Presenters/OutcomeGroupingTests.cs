@@ -16,7 +16,7 @@ namespace TestCentric.Gui.Presenters
     public class OutcomeGroupingTests
     {
         [Test]
-        public void Constructor_DefaultGroups_AreCreated()
+        public void Constructor_Groups_IsEmptyList()
         {
             // 1. Arrange
             ITestTreeView treeView = Substitute.For<ITestTreeView>();
@@ -27,7 +27,7 @@ namespace TestCentric.Gui.Presenters
             OutcomeGrouping grouping = new OutcomeGrouping(strategy);
 
             // 3. Assert
-            Assert.That(grouping.Groups.Count, Is.EqualTo(6));
+            Assert.That(grouping.Groups.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -46,6 +46,22 @@ namespace TestCentric.Gui.Presenters
         }
 
         [Test]
+        public void Load_OutcomeGroups_AreCreated()
+        {
+            // 1. Arrange
+            ITestTreeView treeView = Substitute.For<ITestTreeView>();
+            ITestModel model = Substitute.For<ITestModel>();
+            GroupDisplayStrategy strategy = Substitute.For<GroupDisplayStrategy>(treeView, model);
+            IEnumerable<TestNode> tests = new List<TestNode>();
+
+            // 2. Act
+            OutcomeGrouping grouping = new OutcomeGrouping(strategy);
+            grouping.LoadGroups(tests);
+
+            // 3. Assert
+            Assert.That(grouping.Groups.Count, Is.EqualTo(7));
+        }
+
         [TestCase("Passed", "", "Passed")]
         [TestCase("Failed", "", "Failed")]
         [TestCase("Skipped", "", "Skipped")]
@@ -71,7 +87,7 @@ namespace TestCentric.Gui.Presenters
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == expectedGroupName);
-            Assert.That(expectedGroup, Contains.Item(testNode));
+            Assert.That(expectedGroup.TestNodes, Contains.Item(testNode));
         }
 
         [Test]
@@ -127,7 +143,7 @@ namespace TestCentric.Gui.Presenters
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == "Not Run");
-            Assert.That(expectedGroup, Contains.Item(testNode));
+            Assert.That(expectedGroup.TestNodes, Contains.Item(testNode));
         }
 
         [Test]

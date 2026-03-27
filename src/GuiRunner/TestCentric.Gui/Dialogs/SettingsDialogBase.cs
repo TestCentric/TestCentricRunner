@@ -60,9 +60,6 @@ namespace TestCentric.Gui.Dialogs
             //
             InitializeComponent();
 
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
             pageList = new SettingsPageCollection();
         }
 

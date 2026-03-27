@@ -63,7 +63,6 @@ namespace TestCentric.Gui.Presenters
             Assert.That(grouping.Groups.Count, Is.EqualTo(4));
         }
 
-        [Test]
         [TestCase("2.0", "Slow > 1 sec")]
         [TestCase("0.9", "Medium > 100 ms")]
         [TestCase("0.01", "Fast < 100 ms")]
@@ -87,7 +86,7 @@ namespace TestCentric.Gui.Presenters
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == expectedGroupName);
-            Assert.That(expectedGroup, Contains.Item(testNode));
+            Assert.That(expectedGroup.TestNodes, Contains.Item(testNode));
         }
 
         [Test]
@@ -109,7 +108,7 @@ namespace TestCentric.Gui.Presenters
 
             // 3. Assert
             var expectedGroup = grouping.Groups.FirstOrDefault(g => g.Name == "Not Run");
-            Assert.That(expectedGroup, Contains.Item(testNode));
+            Assert.That(expectedGroup.TestNodes, Contains.Item(testNode));
         }
 
         [Test]
