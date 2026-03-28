@@ -3,6 +3,7 @@
 // Licensed under the MIT License. See LICENSE file in root directory.
 // ***********************************************************************
 
+using System.Drawing;
 using System.Windows.Forms;
 using TestCentric.Gui.Dialogs;
 
@@ -47,10 +48,10 @@ namespace TestCentric.Gui
         private readonly string _caption;
         private MessageDisplayForm _myDialog;
 
-        public MessageDisplay(string caption = DEFAULT_CAPTION)
+        public MessageDisplay(string caption = DEFAULT_CAPTION, Font font = null)
         {
             _caption = caption;
-            _myDialog = new MessageDisplayForm(caption);
+            _myDialog = new MessageDisplayForm(caption, font);
         }
 
         void IMessageDisplay.Error(string text, string caption) =>

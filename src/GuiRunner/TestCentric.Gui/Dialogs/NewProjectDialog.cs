@@ -4,14 +4,8 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Views;
@@ -29,6 +23,8 @@ namespace TestCentric.Gui.Dialogs
             _model = model;
 
             InitializeComponent();
+
+            Font = _model.Settings.Gui.Font;
         }
 
         public string ProjectName => projectNameTextBox.Text;
@@ -91,6 +87,15 @@ namespace TestCentric.Gui.Dialogs
 
         private void createProjectButton_Click(object sender, EventArgs e)
         {
+            string[] disallowed = [".dll", ".exe", ".nunit", ".sln", ".csproj", ".vbproj"];
+            // Validate the project name
+            var ext = Path.GetExtension(ProjectName).ToLower();
+            if (disallowed.Contains(ext))
+            {
+                _view.MessageDisplay.Error($"Project names ending in {ext}.tcproj are reserved for internal use.");
+                return;
+            }
+
             DialogResult = DialogResult.OK;
             Close();
         }

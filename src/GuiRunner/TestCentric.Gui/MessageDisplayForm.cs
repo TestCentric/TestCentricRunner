@@ -32,11 +32,14 @@ namespace TestCentric.Gui
 
         private string _defaultCaption;
 
-        public MessageDisplayForm(string defaultCaption)
+        public MessageDisplayForm(string defaultCaption, Font font = null)
         {
             InitializeComponent();
 
             _defaultCaption = defaultCaption;
+
+            if (font != null)
+                Font = font;
         }
 
         public void Error(string text, string caption = null) =>

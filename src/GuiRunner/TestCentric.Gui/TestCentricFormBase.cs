@@ -26,7 +26,7 @@ namespace TestCentric.Gui
             get
             {
                 if (_messageDisplay == null)
-                    _messageDisplay = new MessageDisplay(_caption ?? Text);
+                    _messageDisplay = new MessageDisplay(_caption ?? Text, Font);
 
                 return _messageDisplay;
             }
