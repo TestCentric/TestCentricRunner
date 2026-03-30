@@ -282,6 +282,32 @@ namespace TestCentric.Gui.Model
         }
 
         [Test]
+
+        public void OpenExistingFile_TestCentricProject_IsSet_AsRecentFileLatest()
+        {
+            // Arrange
+            var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' name='TestA' />");
+
+            var runner = Substitute.For<ITestRunner>();
+            runner.Explore(null).ReturnsForAnyArgs(xmlNode);
+            var engine = Substitute.For<ITestEngine>();
+            engine.GetRunner(null).ReturnsForAnyArgs(runner);
+            var options = new GuiOptions();
+
+            // Arrange a project file on disc for opening
+            var model = TestModel.CreateTestModel(engine, options);
+            model.CreateNewProject("OpenExistingFile_TestCentricProject.tcproj", "dummy.dll");
+            model.CloseProject();
+            model.Settings.Gui.RecentFiles.Entries.Clear();
+
+            // Act
+            model.OpenExistingFile("OpenExistingFile_TestCentricProject.tcproj");
+
+            // Assert
+            Assert.That(model.Settings.Gui.RecentFiles.Latest, Contains.Substring("OpenExistingFile_TestCentricProject.tcproj"));
+        }
+
+        [Test]
         public void CloseProject_NoProjectOpen_RecentFileLatest_IsEmpty()
         {
             // Arrange
