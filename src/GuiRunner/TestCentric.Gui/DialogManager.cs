@@ -5,8 +5,10 @@
 
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using TestCentric.Gui.Dialogs;
 
 namespace TestCentric.Gui.Views
 {
@@ -34,6 +36,18 @@ namespace TestCentric.Gui.Views
                 ? dlg.FileName
                 : null;
         }
+
+        //public void EditProject()
+        //{
+        //    var dlg = new ProjectEditor(_view, _model);
+
+        //    if (dlg.ShowDialog() == DialogResult.OK)
+        //    {
+        //        var projectPath = dlg.ProjectPath;
+        //        var testFiles = dlg.TestFiles;
+        //        _model.CreateNewProject(projectPath, dlg.TestFiles);
+        //    }
+        //}
 
         public string CreateOpenTestFileFilter(bool nunit = false, bool vs = false)
         {

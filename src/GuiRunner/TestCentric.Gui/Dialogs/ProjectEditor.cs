@@ -6,21 +6,46 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Views;
 
 namespace TestCentric.Gui.Dialogs
 {
-    public partial class NewProjectDialog : Form
+    public partial class ProjectEditor : Form
     {
         private IMainView _view;
         private ITestModel _model;
+        bool _newProject;
 
-        public NewProjectDialog(IMainView view, ITestModel model) 
+        /// <summary>
+        /// Constructor used to edit an existing project
+        /// </summary>
+        public ProjectEditor(IMainView view, ITestModel model, TestCentricProject project) 
+            : this(view, model)
+        {
+            _newProject = false;
+
+            var projectPath = project?.ProjectPath;
+
+            if (projectPath is not null )
+            {
+                if (!_model.IsWrapperProjectPath(projectPath))
+                    projectNameTextBox.Text = Path.GetFileNameWithoutExtension(projectPath);
+                projectDirectoryTextBox.Text = Path.GetDirectoryName(projectPath);
+                testFilesListBox.Items.AddRange(project.TestFiles.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Constructor used for creating a new project
+        /// </summary>
+        public ProjectEditor(IMainView view, ITestModel model)
         {
             _view = view;
             _model = model;
+            _newProject = true;
 
             InitializeComponent();
 
@@ -31,6 +56,13 @@ namespace TestCentric.Gui.Dialogs
         public string ProjectDirectory => projectDirectoryTextBox.Text;
         public string ProjectPath => Path.Combine(ProjectDirectory, ProjectName + ".tcproj");
         public string[] TestFiles => testFilesListBox.Items.Cast<string>().ToArray();
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            createProjectButton.Text = _newProject ? "Create Project" : "Save Project";
+        }
 
         private void browseButton_Click(object sender, EventArgs e)
         {
@@ -87,12 +119,11 @@ namespace TestCentric.Gui.Dialogs
 
         private void createProjectButton_Click(object sender, EventArgs e)
         {
-            string[] disallowed = [".dll", ".exe", ".nunit", ".sln", ".csproj", ".vbproj"];
             // Validate the project name
-            var ext = Path.GetExtension(ProjectName).ToLower();
-            if (disallowed.Contains(ext))
+            if (_model.IsWrapperProjectPath(ProjectPath))
             {
-                _view.MessageDisplay.Error($"Project names ending in {ext}.tcproj are reserved for internal use.");
+                var ext = Path.GetExtension(ProjectName);
+                _view.MessageDisplay.Error($"Project names ending in {ext} are reserved for internal use.");
                 return;
             }
 

@@ -14,7 +14,7 @@ namespace TestCentric.Gui.Presenters.Main
         [Test]
         public void TestCentricProjectIsSaved()
         {
-            var project = Substitute.For<TestCentricProject>("MyProject", "test.dll");
+            var project = Substitute.For<TestCentricProject>(_model, "MyProject", "test.dll");
             _model.TestCentricProject.Returns(project);
 
             FireTestsReloadingEvent();

@@ -24,7 +24,7 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("OpenProjectCommand", false)]
         [TestCase("SaveProjectCommand", false)]
         [TestCase("CloseProjectCommand", false)]
-        [TestCase("AddTestFilesCommand", false)]
+        [TestCase("EditProjectCommand", false)]
         [TestCase("ReloadTestsCommand", false)]
         [TestCase("RecentFilesMenu", false)]
         [TestCase("ExitCommand", true)]
@@ -53,7 +53,7 @@ namespace TestCentric.Gui.Presenters.Main
         [Test]
         public void TestCentricProjectIsSaved()
         {
-            var project = Substitute.For<TestCentricProject>("MyProject", "test.dll");
+            var project = Substitute.For<TestCentricProject>(_model, "MyProject", "test.dll");
             _model.TestCentricProject.Returns(project);
 
             this.FireRunStartingEvent(123);

@@ -39,7 +39,6 @@ namespace TestCentric.Gui.Views
             SaveProjectCommand = new CommandMenuElement(saveProjectMenuItem);
             SaveAsCommand = new CommandMenuElement(saveAsMenuItem);
             CloseProjectCommand = new CommandMenuElement(closeMenuItem);
-            AddTestFilesCommand = new CommandMenuElement(addTestFileMenuItem);
             EditProjectCommand = new CommandMenuElement(editProjectMenuItem);
             ReloadTestsCommand = new CommandMenuElement(reloadTestsMenuItem);
             TestRunSettingsCommand = new CommandMenuElement(testRunSettingsMenuItem);
@@ -142,7 +141,6 @@ namespace TestCentric.Gui.Views
         public ICommand SaveProjectCommand { get; }
         public ICommand SaveAsCommand { get; }
         public ICommand CloseProjectCommand { get; }
-        public ICommand AddTestFilesCommand { get; }
         public ICommand EditProjectCommand { get; }
         public ICommand ReloadTestsCommand { get; }
         public IPopup SelectAgentMenu { get; }
