@@ -38,7 +38,7 @@ namespace TestCentric.Gui.Presenters
             _model.Events.TestLoaded += (ea) => _view.Visible = true;
             _model.Events.TestReloaded += (ea) => _view.TestPackageSubView.InvokeIfRequired(() => _view.Visible = true);
             _model.Events.TestUnloaded += (ea) => _view.Visible = false;
-            _model.Events.RunFinished += (ea) => DisplaySelectedItem();
+            _model.Events.RunFinished += (ea) => _view.TestPackageSubView.InvokeIfRequired(() => DisplaySelectedItem());
             _model.Events.SelectedItemChanged += (ea) => OnSelectedItemChanged(ea.TestItem);
             _view.DisplayHiddenPropertiesChanged += () => DisplaySelectedItem();
             _view.Resize += (s, e) => DisplaySelectedItem();
@@ -60,6 +60,7 @@ namespace TestCentric.Gui.Presenters
                 switch (_selectedItem)
                 {
                     case TestNode testNode:
+                        _view.TestGroupPropertiesSubView.Hide();
                         _view.TestPropertiesSubView.Show();
                         InitializeTestPackageSubView(testNode);
                         InitializeTestPropertiesSubView(testNode);
@@ -68,8 +69,10 @@ namespace TestCentric.Gui.Presenters
 
                         break;
                     case TestGroup testGroup:
+                        _view.TestGroupPropertiesSubView.Show();
                         _view.TestPackageSubView.Hide();
                         _view.TestPropertiesSubView.Hide();
+                        InitializeTestGroupPropertiesSubView(testGroup);
                         break;
                 }
             }
@@ -117,6 +120,12 @@ namespace TestCentric.Gui.Presenters
             _view.Properties = GetTestProperties(testNode);
 
             _view.TestPropertiesSubView.Visible = true;
+        }
+
+        private void InitializeTestGroupPropertiesSubView(TestGroup testGroup)
+        {
+            _view.TestGroupPropertiesSubView.FullName = testGroup.Name;
+            _view.TestGroupPropertiesSubView.TestCount = testGroup.TestNodes.Count().ToString();
         }
 
         private void AdjustSubViewHeights()

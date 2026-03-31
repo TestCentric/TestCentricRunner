@@ -32,6 +32,7 @@ namespace TestCentric.Gui.Views
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.testPackageSubView = new TestCentric.Gui.Views.TestPackageSubView();
             this.testPropertiesSubView = new TestCentric.Gui.Views.TestPropertiesSubView();
+            this.testGroupPropertiesSubView = new TestCentric.Gui.Views.TestGroupPropertiesSubView();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,6 +53,7 @@ namespace TestCentric.Gui.Views
             this.flowLayoutPanel1.Controls.Add(this.header);
             this.flowLayoutPanel1.Controls.Add(this.testPackageSubView);
             this.flowLayoutPanel1.Controls.Add(this.testPropertiesSubView);
+            this.flowLayoutPanel1.Controls.Add(this.testGroupPropertiesSubView);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -88,6 +90,18 @@ namespace TestCentric.Gui.Views
             this.testPropertiesSubView.TestCount = "";
             this.testPropertiesSubView.TestType = "";
             // 
+            // testGroupPropertiesSubView
+            // 
+            this.testGroupPropertiesSubView.BackColor = System.Drawing.SystemColors.Control;
+            this.testGroupPropertiesSubView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.testGroupPropertiesSubView.Location = new System.Drawing.Point(3, 98);
+            this.testGroupPropertiesSubView.MinimumSize = new System.Drawing.Size(2, 62);
+            this.testGroupPropertiesSubView.Name = "testGroupPropertiesSubView";
+            this.testGroupPropertiesSubView.Size = new System.Drawing.Size(516, 65);
+            this.testGroupPropertiesSubView.TabIndex = 31;
+            this.testGroupPropertiesSubView.FullName = "";
+            this.testGroupPropertiesSubView.TestCount = "";
+            // 
             // TestPropertiesView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -106,6 +120,7 @@ namespace TestCentric.Gui.Views
         private System.Windows.Forms.Label header;
         private TestPackageSubView testPackageSubView;
         private TestCentric.Gui.Views.TestPropertiesSubView testPropertiesSubView;
+        private TestCentric.Gui.Views.TestGroupPropertiesSubView testGroupPropertiesSubView;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

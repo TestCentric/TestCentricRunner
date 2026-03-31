@@ -30,6 +30,9 @@ namespace TestCentric.Gui.Views
 
         TestPackageSubView TestPackageSubView { get; }
         TestPropertiesSubView TestPropertiesSubView { get; }
+
+        TestGroupPropertiesSubView TestGroupPropertiesSubView { get; }
+
         TestPropertiesView.SubView[] SubViews { get; }
     }
 }

@@ -35,6 +35,7 @@ namespace TestCentric.Gui.Views
             header.Width = subViewWidth;
             testPackageSubView.Width = subViewWidth;
             testPropertiesSubView.Width = subViewWidth;
+            testGroupPropertiesSubView.Width = subViewWidth;
         }
 
         public int ClientHeight => ClientRectangle.Height - TestPackageSubView.Top - 40; // Value of 40 allows for non-client areas and spacing
@@ -49,7 +50,10 @@ namespace TestCentric.Gui.Views
 
         public TestPropertiesSubView TestPropertiesSubView => testPropertiesSubView;
 
-        public SubView[] SubViews => new SubView[] { TestPackageSubView, TestPropertiesSubView }; 
+        public TestGroupPropertiesSubView TestGroupPropertiesSubView => testGroupPropertiesSubView;
+
+
+        public SubView[] SubViews => new SubView[] { TestPackageSubView, TestPropertiesSubView, TestGroupPropertiesSubView }; 
 
         public string TestType
         {
