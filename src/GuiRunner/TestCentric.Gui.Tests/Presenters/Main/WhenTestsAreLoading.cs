@@ -23,7 +23,7 @@ namespace TestCentric.Gui.Presenters.Main
         [TestCase("SaveProjectCommand", false)]
 
         [TestCase("CloseProjectCommand", false)]
-        [TestCase("AddTestFilesCommand", false)]
+        [TestCase("EditProjectCommand", false)]
         [TestCase("ReloadTestsCommand", false)]
         [TestCase("RecentFilesMenu", false)]
         [TestCase("ExitCommand", false)]

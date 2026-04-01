@@ -19,7 +19,7 @@ namespace TestCentric.Gui.Dialogs
         {
             // 1. Arrange
             ITestModel model = Substitute.For<ITestModel>();
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(model, "MyProject");
             model.TestCentricProject.Returns(project);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);
@@ -37,7 +37,7 @@ namespace TestCentric.Gui.Dialogs
         {
             // 1. Arrange
             ITestModel model = Substitute.For<ITestModel>();
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(model, "MyProject");
             project.AddSetting(SettingDefinitions.DebugTests.WithValue(false));
             model.TestCentricProject.Returns(project);
 
@@ -56,7 +56,7 @@ namespace TestCentric.Gui.Dialogs
         {
             // 1. Arrange
             ITestModel model = Substitute.For<ITestModel>();
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(model, "MyProject");
             model.TestCentricProject.Returns(project);
 
             SettingsDialogBase settingsDialog = new SettingsDialogBase(null, model);

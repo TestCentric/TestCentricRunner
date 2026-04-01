@@ -73,7 +73,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             IList<TreeNode> treeNodes = new List<TreeNode>();
             _view.When(v => v.Add(Arg.Any<TreeNode>())).Do(t => treeNodes.Add(t[0] as TreeNode));
 
-            var project = new TestCentricProject("MyProject", TestFileName);
+            var project = new TestCentricProject(_model, "MyProject", TestFileName);
             _model.TestCentricProject.Returns(project);
             _model.LoadedTests.Returns(testNode);
 
@@ -136,7 +136,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _model.TestResultManager.GetResultForTest("3").Returns(resultNode3);
             _model.TestResultManager.GetResultForTest("4").Returns(resultNode4);
 
-            var project = new TestCentricProject("MyProject", TestFileName);
+            var project = new TestCentricProject(_model, "MyProject", TestFileName);
             _model.TestCentricProject.Returns(project);
             _model.LoadedTests.Returns(testNode);
             _model.TestsInRun.Returns(new TestSelection() { testNode.Children[0] });

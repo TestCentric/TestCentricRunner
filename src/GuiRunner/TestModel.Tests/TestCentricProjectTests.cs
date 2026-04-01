@@ -56,7 +56,7 @@ namespace TestCentric.Gui.Model
         [Test]
         public void Constructor_WithProjectName_NoFiles()
         {
-            TestCentricProject project = new TestCentricProject("MyProject.tcproj");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject.tcproj");
 
             Assert.That(project.ProjectPath, Is.EqualTo(Path.GetFullPath("MyProject.tcproj")));
             Assert.That(project.TestFiles, Is.Not.Null);
@@ -67,7 +67,7 @@ namespace TestCentric.Gui.Model
         public void Constructor_WithSingleFilename_AddsFileToTestFiles()
         {
             // 1. Arrange & Act
-            TestCentricProject project = new TestCentricProject("MyProject.tcproj", "TestAssembly.dll");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject.tcproj", "TestAssembly.dll");
 
             // 2. Assert
             Assert.That(project.ProjectPath, Is.EqualTo(Path.GetFullPath("MyProject.tcproj")));
@@ -82,7 +82,7 @@ namespace TestCentric.Gui.Model
             string[] filenames = ["Test1.dll", "Test2.dll", "Test3.dll"];
 
             // 2. Act
-            TestCentricProject project = new TestCentricProject("MyProject.tcproj", filenames);
+            TestCentricProject project = new TestCentricProject(_model, "MyProject.tcproj", filenames);
 
             // 3. Assert
             Assert.That(project.ProjectPath, Is.EqualTo(Path.GetFullPath("MyProject.tcproj")));
@@ -94,7 +94,7 @@ namespace TestCentric.Gui.Model
         public void Constructor_WithSolutionFile_SetsSkipNonTestAssemblies()
         {
             // 1. Arrange & Act
-            TestCentricProject project = new TestCentricProject("MyProject", "Solution.sln");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", "Solution.sln");
 
             // 2. Assert
             Assert.That(project.TopLevelPackage.SubPackages.Count, Is.EqualTo(1));
@@ -107,7 +107,7 @@ namespace TestCentric.Gui.Model
         {
             // 1. Arrange & Act & Assert
             Assert.Throws<InvalidOperationException>(() =>
-                new TestCentricProject("MyProject", "NestedProject.tcproj"));
+                new TestCentricProject(_model, "MyProject", "NestedProject.tcproj"));
         }
 
         #endregion
@@ -138,7 +138,7 @@ namespace TestCentric.Gui.Model
         public void AddSetting_AddsSettingToProject()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
 
             // 2. Act
             project.AddSetting(SettingDefinitions.DebugTests.Name, true);
@@ -152,7 +152,7 @@ namespace TestCentric.Gui.Model
         public void SetTopLevelSetting_Setting_IsSetInProject()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
 
             // 2. Act
             project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
@@ -166,7 +166,7 @@ namespace TestCentric.Gui.Model
         public void SetSubPackageSetting_Setting_IsSetInProject()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
 
             // 2. Act
             project.AddSetting(SettingDefinitions.DebugTests.WithValue(true));
@@ -180,7 +180,7 @@ namespace TestCentric.Gui.Model
         public void AddSetting_WithVariousTypes_StoresCorrectly()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
 
             // 2. Act
             project.AddSetting("BoolSetting", true);
@@ -197,7 +197,7 @@ namespace TestCentric.Gui.Model
         public void ApplySetting_Setting_IsStore()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
 
             // 2. Act
             project.ApplySetting(SettingDefinitions.PrincipalPolicy.WithValue(PrincipalPolicy.WindowsPrincipal.ToString()));
@@ -210,7 +210,7 @@ namespace TestCentric.Gui.Model
         public void ApplySetting_SettingWasSetPreviouslySet_SettingsIsUpdated()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
 
             // 2. Act
             project.ApplySetting(SettingDefinitions.DebugTests.WithValue(true));
@@ -224,7 +224,7 @@ namespace TestCentric.Gui.Model
         public void RemoveSetting_ByName_RemovesSettingFromProject()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
             project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
             Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
 
@@ -239,7 +239,7 @@ namespace TestCentric.Gui.Model
         public void RemoveSetting_ByDefinition_RemovesSettingFromProject()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
             project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
             Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.DebugTests.Name), Is.True);
 
@@ -258,7 +258,7 @@ namespace TestCentric.Gui.Model
         public void AddSubPackage_ByFilename_AddsToSubPackagesAndTestFiles()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
 
             // 2. Act
             project.AddSubPackage("NewTest.dll");
@@ -273,7 +273,7 @@ namespace TestCentric.Gui.Model
         public void AddSubPackage_ByTestPackage_AddsToSubPackages()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
             var subPackage = new NUnit.Engine.TestPackage("SubTest.dll");
 
             // 2. Act
@@ -292,7 +292,7 @@ namespace TestCentric.Gui.Model
             string fullPath2 = Path.GetFullPath("Test2.dll");
             string fullPath3 = Path.GetFullPath("Test3.dll");
 
-            TestCentricProject project = new TestCentricProject("MyProject", fullPath1, fullPath2, fullPath3);
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", fullPath1, fullPath2, fullPath3);
             var subPackageToRemove = project.TopLevelPackage.SubPackages[1];
             Assert.That(project.TopLevelPackage.SubPackages.Count, Is.EqualTo(3));
             Assert.That(project.TestFiles.Count, Is.EqualTo(3));
@@ -311,7 +311,7 @@ namespace TestCentric.Gui.Model
         public void RemoveSubPackage_WithNullPackage_DoesNothing()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject", "Test1.dll", "Test2.dll" );
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", "Test1.dll", "Test2.dll" );
             var originalCount = project.TopLevelPackage.SubPackages.Count;
 
             // 2. Act
@@ -329,7 +329,7 @@ namespace TestCentric.Gui.Model
         public void SaveAs_CreatesFileWithProjectPath()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
             project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
 
             // 2. Act
@@ -344,7 +344,7 @@ namespace TestCentric.Gui.Model
         public void Save_UpdatesExistingFile()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
             project.SaveAs("TestCentricTestProject.tcproj");
             
             // 2. Act
@@ -359,7 +359,7 @@ namespace TestCentric.Gui.Model
         public void Load_SavedProject_SettingsAreRestored()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
             project.SetTopLevelSetting(SettingDefinitions.DebugTests.WithValue(true));
             project.SaveAs("TestCentricTestProject.tcproj");
 
@@ -376,7 +376,7 @@ namespace TestCentric.Gui.Model
         public void Load_SavedProjectWithSubPackages_RestoresSubPackages()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject", "Test1.dll", "Test2.dll");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", "Test1.dll", "Test2.dll");
             project.SaveAs("TestCentricTestProject.tcproj");
 
             // 2. Act
@@ -390,7 +390,7 @@ namespace TestCentric.Gui.Model
         public void Load_SetsProjectPath()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject");
             project.SaveAs("TestCentricTestProject.tcproj");
 
             // 2. Act
@@ -404,7 +404,7 @@ namespace TestCentric.Gui.Model
         public void Load_SetsTestFiles()
         {
             // 1. Arrange
-            TestCentricProject project = new TestCentricProject("MyProject", "Test1.dll", "Test2.dll");
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", "Test1.dll", "Test2.dll");
             project.SaveAs("TestCentricTestProject.tcproj");
 
             // 2. Act
@@ -428,7 +428,7 @@ namespace TestCentric.Gui.Model
             _model.Options.Returns(options);
 
             // 2. Act
-            TestCentricProject project = new TestCentricProject("MyProject", options);
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", options);
 
             // 3. Assert
             Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.WorkDirectory.Name), Is.True);
@@ -443,7 +443,7 @@ namespace TestCentric.Gui.Model
             _model.Options.Returns(options);
 
             // 2. Act
-            TestCentricProject project = new TestCentricProject("MyProject", options);
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", options);
 
             // 3. Assert
             Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.MaxAgents.Name), Is.True);
@@ -458,7 +458,7 @@ namespace TestCentric.Gui.Model
             _model.Options.Returns(options);
 
             // 2. Act
-            TestCentricProject project = new TestCentricProject("MyProject", options);
+            TestCentricProject project = new TestCentricProject(_model, "MyProject", options);
 
             // 3. Assert
             Assert.That(project.TopLevelPackage.Settings.HasSetting(SettingDefinitions.RunAsX86.Name), Is.True);

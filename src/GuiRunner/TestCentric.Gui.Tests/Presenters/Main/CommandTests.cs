@@ -21,44 +21,7 @@ namespace TestCentric.Gui.Presenters.Main
         private static string[] NO_FILES_SELECTED = new string[0];
         private static string NO_FILE_PATH = null;
 
-        // TODO: FIX
-        //[TestCase(false, false, "Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
-        //[TestCase(true, false, "Projects & Assemblies (*.nunit,*.dll,*.exe)|*.nunit;*.dll;*.exe|NUnit Projects (*.nunit)|*.nunit|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
-        //[TestCase(false, true, "Projects & Assemblies (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln,*.dll,*.exe)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln;*.dll;*.exe|Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
-        //[TestCase(true, true, "Projects & Assemblies (*.nunit,*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln,*.dll,*.exe)|*.nunit;*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln;*.dll;*.exe|NUnit Projects (*.nunit)|*.nunit|Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
-        public void OpenTestAssemblyCommand_DisplaysDialogCorrectly(bool nunitSupport, bool vsSupport, string filter)
-        {
-            // Return no files so model is not called
-            _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(NO_FILES_SELECTED);
-            _model.NUnitProjectSupport.Returns(nunitSupport);
-            _model.VisualStudioSupport.Returns(vsSupport);
-
-            _view.OpenTestFileCommand.Execute += Raise.Event<CommandHandler>();
-
-            _view.DialogManager.Received().SelectMultipleFiles("New Project", filter);
-        }
-
-        // TODO: FIX or rewrite
-        //[Test]
-        //public void OpenTestAssemblyCommand_FileSelected_CreatesNewProject()
-        //{
-        //    var files = new string[] { Path.GetFullPath("/path/to/test.dll") };
-        //    _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(files);
-
-        //    _view.OpenTestAssemblyCommand.Execute += Raise.Event<CommandHandler>();
-
-        //    _model.Received().CreateNewProject(files);
-        //}
-
-        [Test]
-        public void OpenTestAssemblyCommand_NoFileSelected_DoesNotCreateProject()
-        {
-            _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(NO_FILES_SELECTED);
-
-            _view.OpenTestFileCommand.Execute += Raise.Event<CommandHandler>();
-
-            _model.DidNotReceiveWithAnyArgs().CreateNewProject("name");
-        }
+        #region OpenTestCentricProject
 
         [Test]
         public void OpenTestCentricProjectCommand_DisplaysDialogCorrectly()
@@ -112,59 +75,112 @@ namespace TestCentric.Gui.Presenters.Main
             Assert.That(isEnabled, Is.True);
         }
 
-        [Test]
-        public void OpenTestAssemblyCommand_IsEnabled()
-        {
-            bool isEnabled = _view.OpenTestFileCommand.Enabled;
+        #endregion
 
-            Assert.That(isEnabled, Is.True);
-        }
+        #region OpenTestFile
+
         // TODO: FIX
         //[TestCase(false, false, "Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
         //[TestCase(true, false, "Projects & Assemblies (*.nunit,*.dll,*.exe)|*.nunit;*.dll;*.exe|NUnit Projects (*.nunit)|*.nunit|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
         //[TestCase(false, true, "Projects & Assemblies (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln,*.dll,*.exe)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln;*.dll;*.exe|Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
         //[TestCase(true, true, "Projects & Assemblies (*.nunit,*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln,*.dll,*.exe)|*.nunit;*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln;*.dll;*.exe|NUnit Projects (*.nunit)|*.nunit|Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
-        public void AddTestFilesCommand_DisplaysDialogCorrectly(bool nunitSupport, bool vsSupport, string filter)
+        public void OpenTestFileCommand_DisplaysDialogCorrectly(bool nunitSupport, bool vsSupport, string filter)
         {
             // Return no files so model is not called
             _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(NO_FILES_SELECTED);
             _model.NUnitProjectSupport.Returns(nunitSupport);
             _model.VisualStudioSupport.Returns(vsSupport);
 
-            _view.AddTestFilesCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenTestFileCommand.Execute += Raise.Event<CommandHandler>();
 
-            _view.DialogManager.Received().SelectMultipleFiles("Add Test Files", filter);
+            _view.DialogManager.Received().SelectMultipleFiles("New Project", filter);
         }
 
-        [Test]
-        public void AddTestFilesCommand_TellsModelToLoadTests()
-        {
-            var project = new TestCentricProject("MyProject", "FILE1", "FILE2");
-            _model.TestCentricProject.Returns(project);
+        // TODO: FIX or rewrite
+        //[Test]
+        //public void OpenTestFileCommand_FileSelected_CreatesNewProject()
+        //{
+        //    var files = new string[] { Path.GetFullPath("/path/to/test.dll") };
+        //    _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(files);
 
-            var filesToAdd = new string[] { Path.GetFullPath("/path/to/test.dll") };
-            _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(filesToAdd);
+        //    _view.OpenTestAssemblyCommand.Execute += Raise.Event<CommandHandler>();
 
-            _view.AddTestFilesCommand.Execute += Raise.Event<CommandHandler>();
-
-            _model.Received().AddTests(filesToAdd);
-        }
+        //    _model.Received().CreateNewProject(files);
+        //}
 
         [Test]
-        public void AddTestFilesCommand_WhenNothingIsSelected_DoesNotCreateProject()
+        public void OpenTestFileCommand_NoFileSelected_DoesNotCreateProject()
         {
             _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(NO_FILES_SELECTED);
 
-            _view.AddTestFilesCommand.Execute += Raise.Event<CommandHandler>();
+            _view.OpenTestFileCommand.Execute += Raise.Event<CommandHandler>();
 
-            _model.DidNotReceiveWithAnyArgs().CreateNewProject("anything");
+            _model.DidNotReceiveWithAnyArgs().CreateNewProject("name");
         }
+
+        [Test]
+        public void OpenTestFileCommand_IsEnabled()
+        {
+            bool isEnabled = _view.OpenTestFileCommand.Enabled;
+
+            Assert.That(isEnabled, Is.True);
+        }
+
+        #endregion
+
+        #region EditProjectCommand
+
+        // TODO: FIX
+        //[TestCase(false, false, "Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
+        //[TestCase(true, false, "Projects & Assemblies (*.nunit,*.dll,*.exe)|*.nunit;*.dll;*.exe|NUnit Projects (*.nunit)|*.nunit|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
+        //[TestCase(false, true, "Projects & Assemblies (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln,*.dll,*.exe)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln;*.dll;*.exe|Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
+        //[TestCase(true, true, "Projects & Assemblies (*.nunit,*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln,*.dll,*.exe)|*.nunit;*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln;*.dll;*.exe|NUnit Projects (*.nunit)|*.nunit|Visual Studio Projects (*.csproj,*.fsproj,*.vbproj,*.vjsproj,*.vcproj,*.sln)|*.csproj;*.fsproj;*.vbproj;*.vjsproj;*.vcproj;*.sln|Assemblies (*.dll,*.exe)|*.dll;*.exe|All Files (*.*)|*.*")]
+        //public void EditProjectCommand_DisplaysProjectEditor(bool nunitSupport, bool vsSupport, string filter)
+        //{
+        //    // Return no files so model is not called
+        //    _view.DialogManager.GetFileOpenPath(null, null).ReturnsForAnyArgs(NO_FILE_PATH);
+        //    _model.NUnitProjectSupport.Returns(nunitSupport);
+        //    _model.VisualStudioSupport.Returns(vsSupport);
+        //    _model.TestCentricProject.Returns(new TestCentricProject("MyProject.tcproj", "test1.dll", "test2.dll"));
+
+        //    _view.EditProjectCommand.Execute += Raise.Event<CommandHandler>();
+
+        //    _view.DialogManager.ReceivedWithAnyArgs().GetFileOpenPath(null, null);
+        //}
+
+        //[Test]
+        //public void EditProjectCommand_TellsModelToLoadTests()
+        //{
+        //    var project = new TestCentricProject("MyProject", "FILE1", "FILE2");
+        //    _model.TestCentricProject.Returns(project);
+
+        //    var filesToAdd = new string[] { Path.GetFullPath("/path/to/test.dll") };
+        //    _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(filesToAdd);
+
+        //    _view.AddTestFilesCommand.Execute += Raise.Event<CommandHandler>();
+
+        //    _model.Received().AddTests(filesToAdd);
+        //}
+
+        //[Test]
+        //public void EditProjectCommand_WhenNothingIsSelected_DoesNotCreateProject()
+        //{
+        //    _view.DialogManager.SelectMultipleFiles(null, null).ReturnsForAnyArgs(NO_FILES_SELECTED);
+
+        //    _view.AddTestFilesCommand.Execute += Raise.Event<CommandHandler>();
+
+        //    _model.DidNotReceiveWithAnyArgs().CreateNewProject("anything");
+        //}
+
+        #endregion
+
+        #region CloseProject
 
         [TestCase(false)]
         [TestCase(true)]
         public void CloseProjectCommand_CallsCloseProject(bool dirty)
         {
-            var project = new TestCentricProject("MyProject", "dummy.dll");
+            var project = new TestCentricProject(_model, "MyProject", "dummy.dll");
             if (dirty) project.AddSetting("SomeSetting", "VALUE");
             _model.TestCentricProject.Returns(project);
             _view.MessageDisplay.YesNo(Arg.Any<string>()).Returns(false);
@@ -174,13 +190,17 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().CloseProject();
         }
 
+        #endregion
+
+        #region SaveProject
+
         [TestCase("dummy.dll")]
         [TestCase("MyProject.nunit")]
         [TestCase("test1.dll", "test2.dll", "test3.dll")]
         public void SaveCommand_CallsSaveProject(params string[] files)
         {
             var projectPath = Path.GetFullPath("MyProject.tcproj");
-            var project = new TestCentricProject(projectPath, files);
+            var project = new TestCentricProject(_model, projectPath, files);
             _model.TestCentricProject.Returns(project);
 
             if(files.Length > 0)
@@ -191,6 +211,10 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().SaveProject(projectPath);
         }
 
+        #endregion
+
+        #region SaveProjectAs
+
         //[Test]
         //public void SaveAsCommand_CallsSaveProject()
         //{
@@ -198,6 +222,10 @@ namespace TestCentric.Gui.Presenters.Main
         //    // This is NYI, change when we implement it
         //    _model.DidNotReceive().SaveProject();
         //}
+
+        #endregion
+
+        #region SaveResults
 
         [Test]
         public void SaveResultsCommand_DisplaysDialogCorrectly()
@@ -232,6 +260,10 @@ namespace TestCentric.Gui.Presenters.Main
             _model.DidNotReceiveWithAnyArgs().SaveResults(null);
         }
 
+        #endregion
+
+        #region ReloadTests
+
         [Test]
         public void ReloadTestsCommand_CallsReloadTests()
         {
@@ -239,12 +271,16 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().ReloadTests();
         }
 
+        #endregion
+
+        #region RunAsX86
+
         [TestCase(true)]
         [TestCase(false)]
         public void RunAsX86CheckedChanged_SettingIsAppliedToProject(bool isChecked)
         {
             // 1. Arrange
-            var project = new TestCentricProject("MyProject", "FILE1", "FILE2");
+            var project = new TestCentricProject(_model, "MyProject", "FILE1", "FILE2");
             _model.TestCentricProject.Returns(project);
             _view.RunAsX86.Checked.Returns(isChecked);
 
@@ -256,17 +292,33 @@ namespace TestCentric.Gui.Presenters.Main
             Assert.That(project.TopLevelPackage.Settings.GetValueOrDefault(SettingDefinitions.RunAsX86), Is.EqualTo(isChecked));
         }
 
+        #endregion
+
+        #region SelectRuntimeCommand
+
         public void SelectRuntimeCommand_PopsUpMenu()
         {
         }
+
+        #endregion
+
+        #region RecentProjects
 
         public void RecentProjectsMenu_PopsUpMenu()
         {
         }
 
+        #endregion
+
+        #region ExitCommand
+
         public void ExitCommand_CallsExit()
         {
         }
+
+        #endregion
+
+        #region ChangeFontCommand
 
         [Test]
         public void ChangeFontCommand_DisplaysFontDialog()
@@ -306,6 +358,10 @@ namespace TestCentric.Gui.Presenters.Main
             Assert.That(_settings.Gui.Font, Is.EqualTo(newFont));
         }
 
+        #endregion
+
+        #region Run Commands
+
         [Test]
         public void RunAllButton_RunsAllTests()
         {
@@ -342,6 +398,21 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [Test]
+        public void RunSelectedTestCommand_NoTestsSelected_IsDisabled()
+        {
+            // Arrange
+            _model.HasTests.Returns(true);
+            _model.SelectedTests = null;
+
+            // Act + Assert
+            Assert.That(_view.RunSelectedButton.Enabled, Is.False);
+        }
+
+        #endregion
+
+        #region Test Grouping
+
+        [Test]
         public void DisplayFormatChange_Changes_TreeConfiguration()
         {
             _view.DisplayFormat.SelectedItem.Returns("TEST_LIST");
@@ -362,6 +433,10 @@ namespace TestCentric.Gui.Presenters.Main
             Assert.That(_model.TreeConfiguration.TestListGroupBy, Is.EqualTo("OUTCOME"));
         }
 
+        #endregion
+
+        #region StopRun
+
         [Test]
         public void StopRunButton_StopsTests()
         {
@@ -378,16 +453,7 @@ namespace TestCentric.Gui.Presenters.Main
             _model.Received().StopTestRun(true);
         }
 
-        [Test]
-        public void RunSelectedTestCommand_NoTestsSelected_IsDisabled()
-        {
-            // Arrange
-            _model.HasTests.Returns(true);
-            _model.SelectedTests = null;
-
-            // Act + Assert
-            Assert.That(_view.RunSelectedButton.Enabled, Is.False);
-        }
+        #endregion
 
         [Test]
         public void SelectedTestsChanged_NoTestSelected_CommandIsDisabled()

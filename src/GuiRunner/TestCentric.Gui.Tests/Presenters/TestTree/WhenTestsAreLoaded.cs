@@ -33,7 +33,7 @@ namespace TestCentric.Gui.Presenters.TestTree
             _presenter = new TreeViewPresenter(_view, _model, new TreeDisplayStrategyFactory());
             _model.HasTests.Returns(true);
             _model.IsTestRunning.Returns(false);
-            _model.TestCentricProject.Returns(new TestCentricProject("MyProject", TEST_FILE_NAME));
+            _model.TestCentricProject.Returns(new TestCentricProject(_model, "MyProject", TEST_FILE_NAME));
             _model.TreeConfiguration.Returns(new TreeConfiguration());
             _model.LoadedTests.Returns(TEST_NODE);
 

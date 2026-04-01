@@ -1,6 +1,6 @@
 namespace TestCentric.Gui.Dialogs
 {
-    partial class NewProjectDialog
+    partial class ProjectEditor
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace TestCentric.Gui.Dialogs
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewProjectDialog));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProjectEditor));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();

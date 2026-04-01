@@ -6,15 +6,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
+using NUnit;
 using NUnit.Common;
 using NUnit.Engine;
 
 namespace TestCentric.Gui.Model
 {
-    using System.Xml;
-    using NUnit;
-    using TestCentric.Gui.Model.Settings;
-
     public class TestCentricProject
     {
         public static bool IsProjectFile(string path) => Path.GetExtension(path).ToLower() == ".tcproj";
@@ -37,8 +35,9 @@ namespace TestCentric.Gui.Model
         /// </summary>
         /// <param name="projectPath"></param>
         /// <param name="testFiles"></param>
-        public TestCentricProject(string projectPath, params string[] testFiles)
+        public TestCentricProject(ITestModel model, string projectPath, params string[] testFiles)
         {
+            Guard.ArgumentNotNull(model, nameof(model));
             Guard.ArgumentNotNullOrEmpty(projectPath, nameof(projectPath));
 
             ProjectPath = Path.GetFullPath(projectPath);
@@ -69,8 +68,9 @@ namespace TestCentric.Gui.Model
         /// </summary>
         /// <param name="projectPath"></param>
         /// <param name="options"></param>
-        public TestCentricProject(string projectPath, GuiOptions options)
+        public TestCentricProject(ITestModel model, string projectPath, GuiOptions options)
         {
+            Guard.ArgumentNotNull(model, nameof(model));
             Guard.ArgumentNotNullOrEmpty(projectPath, nameof(projectPath));
 
             ProjectPath = Path.GetFullPath(projectPath);

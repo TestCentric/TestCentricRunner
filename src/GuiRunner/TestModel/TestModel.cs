@@ -61,11 +61,17 @@ namespace TestCentric.Gui.Model
 
             foreach (var node in _extensionService.GetExtensionNodes(PROJECT_LOADER_EXTENSION_PATH))
             {
+                SupportedProjectExtensions.AddRange(node.GetValues("FileExtension"));
                 if (node.TypeName == NUNIT_PROJECT_LOADER)
                     NUnitProjectSupport = true;
                 else if (node.TypeName == VISUAL_STUDIO_PROJECT_LOADER)
                     VisualStudioSupport = true;
             }
+
+            // NUnit and VisualStudio projects are considered "known" even if the
+            // extensions are not installed to avoid conflicts if installed later.
+            KnownProjectExtensions.AddRange(SupportedProjectExtensions
+                .Intersect([".nunit", ".sln", ".csproj", ".vbproj", ".fsproj", ".vjsproj", ".vcproj"]));
         }
 
         // Public for testing
@@ -121,8 +127,10 @@ namespace TestCentric.Gui.Model
         public IRecentFiles RecentFiles => Settings.Gui.RecentFiles;
 
         // Project Support
+        public List<string> SupportedProjectExtensions { get; } = new List<string>();
         public bool NUnitProjectSupport { get; }
         public bool VisualStudioSupport { get; }
+        public List<string> KnownProjectExtensions { get; } = new List<string>();
 
         // Runtime Support
         private List<NUnit.Engine.IRuntimeFramework> _runtimes;
@@ -293,7 +301,7 @@ namespace TestCentric.Gui.Model
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject(projectPath, filenames);
+            TestCentricProject = new TestCentricProject(this, projectPath, filenames);
 
             _events.FireTestCentricProjectLoaded();
 
@@ -313,11 +321,47 @@ namespace TestCentric.Gui.Model
             if (IsProjectLoaded)
                 CloseProject();
 
-            TestCentricProject = new TestCentricProject(projectPath, options);
+            TestCentricProject = new TestCentricProject(this, projectPath, options);
 
             _events.FireTestCentricProjectLoaded();
 
             LoadTests(options.InputFiles);
+        }
+
+        public void OpenOrCreateWrapperProject(string filePath)
+        {
+            var wrapperProjectPath = filePath + ".tcproj";
+            if (File.Exists(wrapperProjectPath))
+                OpenExistingProject(wrapperProjectPath);
+            else
+                CreateNewProject(wrapperProjectPath, [filePath]);
+        }
+
+        private HashSet<string>_knownTestFileExtensions;
+        private HashSet<string> KnownTestFileExtensions
+        {
+            get
+            {
+                // NUnit and VisualStudio projects are considered "known" even if the
+                // extensions are not installed to avoid conflicts if installed later.
+                if (_knownTestFileExtensions == null)
+                {
+                    _knownTestFileExtensions = new HashSet<string>(
+                        [".dll", ".exe", ".nunit", ".sln", ".csproj", ".vbproj", ".fsproj", ".vjsproj", ".vcproj"]);
+                    foreach (string ext in SupportedProjectExtensions)
+                        _knownTestFileExtensions.Add(ext);
+                }
+
+                return _knownTestFileExtensions;
+            }
+        }
+
+        public bool IsWrapperProjectPath(string projectPath)
+        {
+            if (projectPath == null) return false;
+
+            var ext = Path.GetExtension(Path.GetFileNameWithoutExtension(projectPath));
+            return ext is not null && KnownTestFileExtensions.Contains(ext.ToLower());
         }
 
         public void AddTests(IEnumerable<string> fileNames)
@@ -390,13 +434,12 @@ namespace TestCentric.Gui.Model
                 if (File.Exists(projectFilePath))
                     OpenExistingProject(projectFilePath);
                 else
-                    CreateNewProject(projectFilePath, new[] { filePath });
+                    OpenOrCreateWrapperProject(filePath);
             }
             else
                 throw new Exception("Invalid Test File type: {filename}");
         }
 
-        // TODO: Use project service?
         private bool IsSupportedTestFile(string filename)
         {
             switch (Path.GetExtension(filename))
@@ -414,6 +457,7 @@ namespace TestCentric.Gui.Model
                 case ".sln":
                     return VisualStudioSupport;
                 default:
+        // TODO: Use project service to exclude other installed project formats
                     return false;
             }
         }
@@ -427,6 +471,9 @@ namespace TestCentric.Gui.Model
                 TestCentricProject.SaveAs(filename);
             else
                 TestCentricProject.Save();
+
+            if (!IsWrapperProjectPath(TestCentricProject.ProjectPath))
+                RecentFiles.Latest = TestCentricProject.ProjectPath;
         }
 
         public void CloseProject()
@@ -473,14 +520,12 @@ namespace TestCentric.Gui.Model
 
             _events.FireTestLoaded(LoadedTests);
 
-            if (TestCentricProject.ProjectPath == null)
-                foreach (var subPackage in TopLevelPackage.SubPackages)
-                    RecentFiles.Latest = subPackage.FullName;
-            else if (TestCentricProject.ProjectPath.EndsWith(".dll.tcproj"))
-                RecentFiles.Latest = Path.Combine(Path.GetDirectoryName(TestCentricProject.ProjectPath),
-                                                  Path.GetFileNameWithoutExtension(TestCentricProject.ProjectPath));
-            else
-                RecentFiles.Latest = TestCentricProject.ProjectPath;
+            // TODO: Should we throw an exception if project path is null?
+            var projectPath = TestCentricProject.ProjectPath;
+            if (projectPath is not null)
+                RecentFiles.Latest = IsWrapperProjectPath(projectPath)
+                    ? Path.Combine(Path.GetDirectoryName(projectPath), Path.GetFileNameWithoutExtension(projectPath))
+                    : projectPath;
         }
 
         private Dictionary<string, TestNode> _testsById = new Dictionary<string, TestNode>();

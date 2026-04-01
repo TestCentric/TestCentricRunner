@@ -30,6 +30,7 @@ namespace TestCentric.Gui.Model
         ITreeConfiguration TreeConfiguration { get; }
 
         // Project Support
+        List<string> SupportedProjectExtensions { get; }
         bool NUnitProjectSupport { get; }
         bool VisualStudioSupport { get; }
 
@@ -69,7 +70,7 @@ namespace TestCentric.Gui.Model
         // Summary of last test run
         ResultSummary ResultSummary { get; }
 
-        // Is Resultsummary available?
+        // Is ResultSummary available?
         bool HasResults { get; }
 
         /// <summary>
@@ -120,6 +121,8 @@ namespace TestCentric.Gui.Model
         /// <param name="options">The command-line options</param>
         void CreateNewProject(string path, GuiOptions options);
 
+        bool IsWrapperProjectPath(string path);
+
         /// <summary>
         /// Add the test files to the current test project
         /// </summary>
@@ -156,6 +159,14 @@ namespace TestCentric.Gui.Model
         /// </remarks>
         /// <param name="filePath">Path to the file to be opened</param>
         void OpenExistingFile(string filePath);
+
+        /// <summary>
+        /// Open or create a wrapper project for a single test file. If an
+        /// existing wrapper project is found, it is opened. Otherwise a
+        /// new one is created.
+        /// </summary>
+        /// <param name="filePath">Path to the test file</param>
+        void OpenOrCreateWrapperProject(string filePath);
 
         /// <summary>
         /// Save the currently open TestCentricProject to the specified path,

@@ -115,7 +115,9 @@ namespace TestCentric.Gui.Presenters
             {
                 var projectPath = _model.TestCentricProject?.ProjectPath;
                 _view.Title = projectPath is not null
-                    ? $"TestCentric - {Path.GetFileNameWithoutExtension(projectPath)}"
+                    ? projectPath is not null && _model.IsWrapperProjectPath(projectPath)
+                        ? $"TestCentric - {Path.GetFileNameWithoutExtension(projectPath)}"
+                        : $"TestCentric - {Path.GetFileName(projectPath)}"
                     : "TestCentric Runner for NUnit";
             }
 
@@ -329,8 +331,14 @@ namespace TestCentric.Gui.Presenters
                 bool isPackageLoaded = _model.IsProjectLoaded;
                 bool isTestRunning = _model.IsTestRunning;
 
-                _view.OpenProjectCommand.Enabled = _view.OpenProjectCommand.Enabled = _view.OpenTestFileCommand.Enabled = !isTestRunning;
+                _view.OpenProjectCommand.Enabled = _view.OpenTestFileCommand.Enabled = !isTestRunning;
                 _view.CloseProjectCommand.Enabled = isPackageLoaded && !isTestRunning;
+
+                var projectPath = _model.TestCentricProject?.ProjectPath;
+                _view.EditProjectCommand.Enabled = projectPath is not null;
+                _view.EditProjectCommand.Text = projectPath is not null && _model.IsWrapperProjectPath(projectPath)
+                    ? "Add Test Files..."
+                    : "Edit Project...";
 
                 _view.ReloadTestsCommand.Enabled = isPackageLoaded && !isTestRunning;
 
@@ -349,11 +357,9 @@ namespace TestCentric.Gui.Presenters
 
             _view.OpenTestFileCommand.Execute += () =>
             {
-                string[] files = _view.DialogManager.SelectMultipleFiles("New Project", _view.DialogManager.CreateOpenTestFileFilter());
-                if (files.Length == 1)
-                    _model.OpenExistingFile(files[0]);
-                else if (files.Length > 1)
-                    CreateNewProject(files);
+                string file = _view.DialogManager.GetFileOpenPath("Open Test File", _view.DialogManager.CreateOpenTestFileFilter());
+                if (file != null)
+                    _model.OpenOrCreateWrapperProject(file);
             };
 
             _view.SaveProjectCommand.Execute += () =>
@@ -377,9 +383,8 @@ namespace TestCentric.Gui.Presenters
 
             _view.CloseProjectCommand.Execute += () => _model.CloseProject();
 
-            _view.AddTestFilesCommand.Execute += AddTestFiles;
-            _view.EditProjectCommand.Execute += () =>
-                _view.MessageDisplay.Error("Not Yet Implemented!");
+            _view.EditProjectCommand.Execute += () => EditProject();
+
             _view.ReloadTestsCommand.Execute += ReloadTests;
 
             _view.RunAsX86.CheckedChanged += OnRunAsX86Changed;
@@ -551,7 +556,7 @@ namespace TestCentric.Gui.Presenters
         /// </summary>
         private void CreateNewProject()
         {
-            var dlg = new NewProjectDialog(_view, _model);
+            var dlg = new ProjectEditor(_view, _model);
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
@@ -651,6 +656,18 @@ namespace TestCentric.Gui.Presenters
 
             if (filesToAdd.Length > 0)
                 _model.AddTests(filesToAdd);
+        }
+
+        public void EditProject()
+        {
+            var dlg = new ProjectEditor(_view, _model, _model.TestCentricProject);
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                var projectPath = dlg.ProjectPath;
+                var testFiles = dlg.TestFiles;
+                _model.CreateNewProject(projectPath, dlg.TestFiles);
+            }
         }
 
         #endregion
@@ -755,7 +772,7 @@ namespace TestCentric.Gui.Presenters
             _view.SaveAsCommand.Enabled = testLoaded && !testRunning;
 
             _view.CloseProjectCommand.Enabled = testLoaded & !testRunning;
-            _view.AddTestFilesCommand.Enabled = testLoaded && !testRunning;
+            _view.EditProjectCommand.Enabled = testLoaded && !testRunning;
             _view.ReloadTestsCommand.Enabled = testLoaded && !testRunning;
             _view.RecentFilesMenu.Enabled = !testRunning && !testLoading;
             _view.ExitCommand.Enabled = !testLoading;

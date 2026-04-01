@@ -9,6 +9,7 @@ using System.Xml;
 using NUnit.Engine;
 using NUnit.Framework;
 using Org.XmlUnit.Constraints;
+using TestCentric.Gui.Model.Fakes;
 
 namespace TestCentric.Gui.Model
 {
@@ -28,7 +29,7 @@ namespace TestCentric.Gui.Model
 		[Test]
 		public void SaveAndReloadTestProject()
 		{
-			var project = new TestCentricProject("MyProject", "test1.dll", "test2.dll");
+			var project = new TestCentricProject(new TestModel(new MockTestEngine()), "MyProject", "test1.dll", "test2.dll");
 			var package = project.TopLevelPackage;
 			var subPackages = package.SubPackages;
 			Assert.That(subPackages.Count, Is.EqualTo(2));
@@ -82,7 +83,7 @@ namespace TestCentric.Gui.Model
         [Test]
 		public void SaveAndReloadEmptyTestProject()
 		{
-			var project = new TestCentricProject("MyProject");
+			var project = new TestCentricProject(new TestModel(new MockTestEngine()), "MyProject");
 			project.SaveAs(TEMP_PATH);
 
             string expectedXml = $"""
