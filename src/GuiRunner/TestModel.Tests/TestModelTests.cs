@@ -12,6 +12,8 @@ using TestCentric.Gui.Model.Fakes;
 
 namespace TestCentric.Gui.Model
 {
+    using System.IO;
+
     [TestFixture]
     public class TestModelTests
     {
@@ -53,22 +55,6 @@ namespace TestCentric.Gui.Model
             Assert.That(projectLoadedCalled, Is.True);
         }
       
-        [Test]
-        public void SaveProject_RecentFiles_ContainsProjectName()
-        {
-            // Arrange
-            var engine = new MockTestEngine();
-            var options = new GuiOptions("dummy.dll");
-            var model = TestModel.CreateTestModel(engine, options);
-
-            // Act
-            model.CreateNewProject("TestCentric");
-            model.SaveProject("TestCentric.tcproj");
-
-            // Assert
-            Assert.That(model.Settings.Gui.RecentFiles.Latest, Is.EqualTo("TestCentric.tcproj"));
-        }
-
         [Test]
         public void OpenExistingFile_TestCentricProjectFile_IsLoaded()
         {
@@ -254,19 +240,71 @@ namespace TestCentric.Gui.Model
         }
 
         [Test]
-        public void CloseProject_LastProject_IsSet_AsRecentFileLatest()
+        public void CreateNewProject_LastProject_IsSet_AsRecentFileLatest()
         {
             // Arrange
-            var engine = new MockTestEngine();
+            var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' name='TestA' />");
+
+            var runner = Substitute.For<ITestRunner>();
+            runner.Explore(null).ReturnsForAnyArgs(xmlNode);
+            var engine = Substitute.For<ITestEngine>();
+            engine.GetRunner(null).ReturnsForAnyArgs(runner);
             var options = new GuiOptions("dummy.dll");
             var model = TestModel.CreateTestModel(engine, options);
-            model.CreateNewProject("CloseProject_LastProjectTest");
 
             // Act
-            model.CloseProject();
+            model.CreateNewProject("CreateProject_LastProjectTest", "dummy.dll");
 
             // Assert
-            Assert.That(model.Settings.Gui.RecentFiles.Latest, Contains.Substring("CloseProject_LastProjectTest"));
+            Assert.That(model.Settings.Gui.RecentFiles.Latest, Contains.Substring("CreateProject_LastProjectTest"));
+        }
+
+        [TestCase("OpenExistingFile_RecentFile.dll")]
+        [TestCase("OpenExistingFile_RecentFile.exe")]
+
+        public void OpenExistingFile_LastProject_IsSet_AsRecentFileLatest(string fileName)
+        {
+            // Arrange
+            var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' name='TestA' />");
+
+            var runner = Substitute.For<ITestRunner>();
+            runner.Explore(null).ReturnsForAnyArgs(xmlNode);
+            var engine = Substitute.For<ITestEngine>();
+            engine.GetRunner(null).ReturnsForAnyArgs(runner);
+            var options = new GuiOptions();
+            var model = TestModel.CreateTestModel(engine, options);
+
+            // Act
+            model.OpenExistingFile(fileName);
+
+            // Assert
+            Assert.That(model.Settings.Gui.RecentFiles.Latest, Contains.Substring(fileName));
+        }
+
+        [Test]
+
+        public void OpenExistingFile_TestCentricProject_IsSet_AsRecentFileLatest()
+        {
+            // Arrange
+            var xmlNode = XmlHelper.CreateXmlNode($"<test-case id='1' name='TestA' />");
+
+            var runner = Substitute.For<ITestRunner>();
+            runner.Explore(null).ReturnsForAnyArgs(xmlNode);
+            var engine = Substitute.For<ITestEngine>();
+            engine.GetRunner(null).ReturnsForAnyArgs(runner);
+            var options = new GuiOptions();
+
+            // Arrange a project file on disc for opening
+            var model = TestModel.CreateTestModel(engine, options);
+            model.CreateNewProject("OpenExistingFile_TestCentricProject.tcproj", "dummy.dll");
+            model.CloseProject();
+            model.Settings.Gui.RecentFiles.Entries.Clear();
+
+            // Act
+            model.OpenExistingFile("OpenExistingFile_TestCentricProject.tcproj");
+
+            // Assert
+            Assert.That(model.Settings.Gui.RecentFiles.Latest, Contains.Substring("OpenExistingFile_TestCentricProject.tcproj"));
         }
 
         [Test]
