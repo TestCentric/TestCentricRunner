@@ -69,7 +69,7 @@ namespace TestCentric.Gui.Presenters
         /// </remarks>
         public TestSelection TestNodes { get; } = new TestSelection();
 
-        public TestGroup ParentGroup { get; }
+        public TestGroup ParentGroup { get; set; }
 
         public IList<TestGroup> SubGroups { get; } = new List<TestGroup>();
 
@@ -128,7 +128,7 @@ namespace TestCentric.Gui.Presenters
 
             if (subGroup == null)
             {
-                subGroup = new TestGroup(name);
+                subGroup = new TestGroup(name) { ParentGroup = this };
                 subGroup.TreeNode = new TreeNode(name) { Tag = subGroup, Name = name };
                 SubGroups.Add(subGroup);
                 TreeNode.Nodes.Add(subGroup.TreeNode);

@@ -234,7 +234,10 @@ namespace TestCentric.Gui.Presenters
             var grouping = CreateTestGrouping(groupBy);
             grouping.LoadGroups(group.TestNodes);
             foreach (var subGroup in grouping.Groups)
+            {
                 group.SubGroups.Add(subGroup);
+                subGroup.ParentGroup = group;
+            }
         }
 
         private void RemoveEmptyParentNodes(TreeNode parentNode)
