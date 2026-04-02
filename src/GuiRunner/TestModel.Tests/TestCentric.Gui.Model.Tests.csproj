@@ -8,8 +8,12 @@
         <TargetFramework>net462</TargetFramework>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
-	
-    <ItemGroup>
+
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);DISABLE_MINI_GUI</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
       <Compile Include="..\TestCentric.Gui.Tests\TreeViewExtensions.cs" Link="TreeViewExtensions.cs" />
     </ItemGroup>
 	

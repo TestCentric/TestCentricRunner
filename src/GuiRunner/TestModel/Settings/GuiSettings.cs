@@ -57,8 +57,13 @@ namespace TestCentric.Gui.Model.Settings
         [DefaultSettingValue("Full")]
         public string GuiLayout
         {
+#if !DISABLE_MINI_GUI
             get { return (string)this[nameof(GuiLayout)]; }
             set { this[nameof(GuiLayout)] = value; }
+#else
+            get { return "MAIN"; }
+            set { }
+#endif
         }
 
         [UserScopedSetting]

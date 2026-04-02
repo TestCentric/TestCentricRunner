@@ -922,7 +922,7 @@ namespace TestCentric.Gui.Views
             e.Cancel = e.CloseReason == ToolStripDropDownCloseReason.ItemClicked;
         }
 
-        #endregion
+#endregion
 
         private System.Windows.Forms.Panel leftPanel;
         private System.Windows.Forms.Splitter treeSplitter;
