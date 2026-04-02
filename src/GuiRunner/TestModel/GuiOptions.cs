@@ -53,8 +53,10 @@ namespace TestCentric.Gui
             Add("full-gui", "Use the standard (full) GUI interface.", false,
                 v => GuiLayout = "Full");
 
+#if !DISABLE_MINI_GUI
             Add("mini-gui", "Use the mini-GUI interface.", false,
                 v => GuiLayout = "Mini");
+#endif
 
             Add("x86", "Run tests in an X86 process on 64-bit systems.", false,
                 v => RunAsX86 = true);
@@ -182,7 +184,7 @@ namespace TestCentric.Gui
         private void InvalidArgumentError(string arg) =>
             ErrorMessages.Add($"Invalid argument: {arg}");
 
-        #endregion
+#endregion
 
         #region Properties
 

@@ -58,6 +58,10 @@ namespace TestCentric.Gui.Views
             DecreaseFixedFontCommand = new CommandMenuElement(decreaseFixedFontMenuItem);
             RestoreFixedFontCommand = new CommandMenuElement(restoreFixedFontMenuItem);
 
+#if DISABLE_MINI_GUI
+            miniGuiMenuItem.Visible = fullGuiMenuItem.Visible = toolStripSeparator8.Visible = false;
+#endif
+
             // Initialize Tools Menu Comands
             ToolsMenu = new PopupMenuElement(toolsMenu);
             SaveResultsCommand = new PopupMenuElement(saveResultsMenuItem);
@@ -99,7 +103,7 @@ namespace TestCentric.Gui.Views
             DialogManager = new DialogManager();
         }
 
-        #endregion
+#endregion
 
         #region Events and Properties
 

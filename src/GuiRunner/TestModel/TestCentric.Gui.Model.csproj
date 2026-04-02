@@ -8,6 +8,10 @@
         <UseWindowsForms>true</UseWindowsForms>
     </PropertyGroup>
 	
+    <PropertyGroup>
+      <DefineConstants>$(DefineConstants);DISABLE_MINI_GUI</DefineConstants>
+    </PropertyGroup>
+	
     <ItemGroup>
 	    <PackageReference Include="NUnit.Common" Version="$(NUnitEngineVersion)" />
 	    <PackageReference Include="NUnit.Engine" Version="$(NUnitEngineVersion)" />
@@ -15,7 +19,7 @@
     </ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="TestCentric.Gui.Model.Tests, PublicKey=$(TestCentricPublicKey)"/>
+		<InternalsVisibleTo Include="TestCentric.Gui.Model.Tests, PublicKey=$(TestCentricPublicKey)" />
 	</ItemGroup>
 	
 </Project>

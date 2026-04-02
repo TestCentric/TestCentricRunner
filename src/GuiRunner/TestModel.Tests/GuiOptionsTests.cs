@@ -45,8 +45,10 @@ namespace TestCentric.Gui.Tests
         [TestCase("NoLoad", "--noload", true)]
         [TestCase("RunAllTests", "--run", true)]
         [TestCase("Unattended", "--unattended", true)]
+#if !DISABLE_MINI_GUI
         [TestCase("GuiLayout", "--full-gui", "Full")]
         [TestCase("GuiLayout", "--mini-gui", "Mini")]
+#endif
         [TestCase("WorkDirectory", "--work:PathToWorkDirectory")]
         [TestCase("RunAsX86", "--x86", true)]
         [TestCase("MaxAgents", "--agents:8", 8)]

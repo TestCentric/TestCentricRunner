@@ -9,7 +9,11 @@
         <Description>TestCentric GUI Implementation</Description>
         <UseWindowsForms>true</UseWindowsForms>
     </PropertyGroup>
-	
+
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);DISABLE_MINI_GUI</DefineConstants>
+	</PropertyGroup>
+
 	<ItemGroup>
         <ProjectReference Include="..\TestModel\TestCentric.Gui.Model.csproj" />
         <ProjectReference Include="..\NUnit.UiException\NUnit.UiException.csproj" />
