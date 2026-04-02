@@ -140,6 +140,22 @@ namespace TestCentric.Gui.Dialogs
             SelectInitialPage();
 
             treeView1.Select();
+
+            // Hide tree view if there is only one single page displayed
+            if (treeView1.GetNodeCount(true) == 1)
+            {
+                HideTreeView();
+            }
+        }
+
+        private void HideTreeView()
+        {
+            treeView1.Visible = false;
+
+            // Move remaining controls to left and resize dialog
+            panel1.Left = treeView1.Left;
+            groupBox1.Left = treeView1.Left;
+            Size = new System.Drawing.Size(Size.Width - treeView1.Width, Size.Height);
         }
 
         private void SelectInitialPage()
