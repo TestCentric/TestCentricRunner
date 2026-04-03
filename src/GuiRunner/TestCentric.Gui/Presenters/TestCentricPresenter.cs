@@ -379,7 +379,24 @@ namespace TestCentric.Gui.Presenters
             };
 
             _view.SaveAsCommand.Execute += () =>
-                _view.MessageDisplay.Error("Not Yet Implemented!");
+            {
+                string initialDirectory = _model.WorkDirectory;
+                string suggestedFileName = "";
+                if (_model.TestCentricProject.ProjectPath != null)
+                {
+                    initialDirectory = _model.TestCentricProject.ProjectPath;
+                    suggestedFileName = Path.GetFileNameWithoutExtension(_model.TestCentricProject.ProjectPath) + ".tcproj";
+                }
+
+                var projectPath = _view.DialogManager.GetFileSavePath(
+                        "Save As TestCentric Project", "TestCentric Project(*.tcproj) | *.tcproj", initialDirectory, suggestedFileName);
+                if (projectPath is not null)
+                {
+                    _model.SaveProject(projectPath);
+                    _model.Settings.Gui.RecentFiles.Latest = projectPath;
+                    UpdateTitleBar();
+                }
+            };
 
             _view.CloseProjectCommand.Execute += () => _model.CloseProject();
 
