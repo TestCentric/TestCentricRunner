@@ -81,16 +81,7 @@ namespace TestCentric.Gui.Views
         ICommand StopRunButton { get; }
         ICommand ForceStopButton { get; }
 
-        IPopup DisplayFormatButton { get; }
-        ISelection DisplayFormat { get; }
-
-        IChecked NUnitTreeShowNamespaces { get; }
-        IChecked NUnitTreeShowAssemblies { get; }
-        IChecked NUnitTreeShowFixtures { get; }
-        
-        IChecked TestListShowAssemblies { get; }
-        IChecked TestListShowFixtures { get; }
-        ISelection TestListGroupBy { get; }
+        ICommand DisplayFormatButton { get; }
 
         IChecked ShowHideFilterButton { get; }
         ICommand RunParametersButton { get; }

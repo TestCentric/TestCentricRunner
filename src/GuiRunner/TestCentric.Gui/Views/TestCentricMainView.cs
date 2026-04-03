@@ -83,20 +83,8 @@ namespace TestCentric.Gui.Views
             RunFailedButton = new ToolStripButtonElement(runFailedButton);
             StopRunButton = new ToolStripButtonElement(stopRunButton);
             ForceStopButton = new ToolStripButtonElement(forceStopButton);
-            DisplayFormatButton = new DisplayFormatButton(displayFormatButton);
-            DisplayFormat = new CheckedToolStripMenuGroup("displayFormat",
-                nunitTreeMenuItem, testListMenuItem);
+            DisplayFormatButton = new ToolStripButtonElement(displayFormatButton);
 
-            NUnitTreeShowNamespaces = new CheckedMenuElement(nunitTreeShowNamespacesMenuItem);
-            NUnitTreeShowAssemblies = new CheckedMenuElement(nunitTreeShowAssembliesMenuItem);
-            NUnitTreeShowFixtures = new CheckedMenuElement(nunitTreeShowFixturesMenuItem);
-
-            TestListShowAssemblies = new CheckedMenuElement(testListShowAssembliesMenuItem);
-            TestListShowFixtures = new CheckedMenuElement(testListShowFixturesMenuItem);
-            TestListGroupBy = new CheckedToolStripMenuGroup(
-                "TestListGroupBy",
-                testListUngroupedMenuItem, testListByCategoryMenuItem, testListByOutcomeMenuItem, testListByDurationMenuItem);
-            
             ShowHideFilterButton = new ToolStripButtonElement(showFilterButton);
             RunParametersButton = new ToolStripButtonElement(runParametersButton);
 
@@ -187,16 +175,7 @@ namespace TestCentric.Gui.Views
         public ICommand StopRunButton { get; private set; }
         public ICommand ForceStopButton { get; private set; }
 
-        public IPopup DisplayFormatButton { get; private set; }
-        public ISelection DisplayFormat { get; private set; }
-
-        public IChecked NUnitTreeShowNamespaces { get; private set; }
-        public IChecked NUnitTreeShowAssemblies { get; private set; }
-        public IChecked NUnitTreeShowFixtures { get; private set; }
-
-        public IChecked TestListShowAssemblies { get; private set; }
-        public IChecked TestListShowFixtures { get; private set; }
-        public ISelection TestListGroupBy { get; private set; }
+        public ICommand DisplayFormatButton { get; private set; }
 
         public IChecked ShowHideFilterButton { get; private set; }
         public ICommand RunParametersButton { get; private set; }

@@ -44,35 +44,6 @@ namespace TestCentric.Gui.Presenters.Main
         // created in MainPresenterTestBase, so that it will reflect different
         // values for user and package settings.
 
-        [TestCase("NUNIT_TREE")]
-        [TestCase("TEST_LIST")]
-        public void CheckMenu_DisplayFormat_SelectedItem_IsInitializedFromTreeConfiguration(string displayFormat)
-        {
-            // 1. Arrange
-            _model.TreeConfiguration.DisplayFormat = displayFormat;
-
-            // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model);
-
-            // 3. Assert
-            _view.DisplayFormat.Received().SelectedItem = displayFormat;
-        }
-
-        [TestCase("CATEGORY")]
-        [TestCase("OUTCOME")]
-        public void CheckMenu_TestListGroupBy_SelectedItem_TestList_IsInitializedFromTreeConfiguration(string groupBy)
-        {
-            // 1. Arrange
-            _model.TreeConfiguration.DisplayFormat = "TEST_LIST";
-            _model.TreeConfiguration.TestListGroupBy = groupBy;
-
-            // 2. Act
-            _presenter = new TestCentricPresenter(_view, _model);
-
-            // 3. Assert
-            _view.TestListGroupBy.Received().SelectedItem = groupBy;
-        }
-
         [TestCase(true)]
         [TestCase(false)]
         public void FilterButton_IsInitializedFromSettings(bool filterIsVisible)
