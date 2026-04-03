@@ -214,10 +214,10 @@ namespace TestCentric.Gui.Views
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 24);
             // 
-            // displayStrategyButton
+            // displayFormatButton
             // 
             this.displayFormatButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.displayFormatButton.Image = ((System.Drawing.Image)(resources.GetObject("displayStrategyButton.Image")));
+            this.displayFormatButton.Image = ((System.Drawing.Image)(resources.GetObject("displayFormatButton.Image")));
             this.displayFormatButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.displayFormatButton.Name = "displayFormatButton";
             this.displayFormatButton.Size = new System.Drawing.Size(23, 21);

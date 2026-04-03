@@ -80,7 +80,6 @@ namespace TestCentric.Gui.Dialogs
             this.exitButton.Size = new System.Drawing.Size(20, 23);
             this.exitButton.TabIndex = 6;
             this.exitButton.UseVisualStyleBackColor = false;
-            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
             // separatorPanel
             // 

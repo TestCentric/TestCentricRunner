@@ -146,7 +146,7 @@ namespace TestCentric.Gui.Presenters
             _view.RemoveTestPackageCommand.Execute += () => RemoveTestPackage();
             _view.TreeViewDeleteKeyCommand.KeyUp += () => RemoveTestPackage();
 
-            _view.DisplayFormatCommand.Execute += () => new DisplayStrategyDialog(_model).ShowDialog();
+            _view.DisplayFormatCommand.Execute += () => new DisplayStrategyDialog(TreeConfiguration).ShowDialog();
 
             _view.ShowCheckBoxes.CheckedChanged += () =>
             {
