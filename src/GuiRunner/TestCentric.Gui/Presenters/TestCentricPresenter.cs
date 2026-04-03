@@ -432,7 +432,7 @@ namespace TestCentric.Gui.Presenters
             _view.RunFailedButton.Execute += RunFailedTests;
 
             _view.DisplayFormatButton.Execute += () =>
-                new DisplayStrategyDialog(TreeConfiguration).ShowDialog();
+                new DisplayStrategyDialog(TreeConfiguration, _view.TreeView.TreeView).ShowDialog();
 
             _view.ShowHideFilterButton.CheckedChanged += () =>
                 _settings.Gui.TestTree.ShowFilter = _view.ShowHideFilterButton.Checked;

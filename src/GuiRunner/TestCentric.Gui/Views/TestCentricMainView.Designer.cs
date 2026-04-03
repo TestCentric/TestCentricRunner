@@ -653,7 +653,7 @@ namespace TestCentric.Gui.Views
             this.progressBar.Location = new System.Drawing.Point(0, 2);
             this.progressBar.Name = "progressBar";
             this.progressBar.Progress = 0;
-            this.progressBar.Size = new System.Drawing.Size(498, 24);
+            this.progressBar.Size = new System.Drawing.Size(996, 24);
             this.progressBar.Status = TestCentric.Gui.Views.ProgressBarStatus.Success;
             this.progressBar.TabIndex = 3;
             // 

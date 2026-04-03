@@ -146,13 +146,11 @@ namespace TestCentric.Gui.Presenters
             _view.RemoveTestPackageCommand.Execute += () => RemoveTestPackage();
             _view.TreeViewDeleteKeyCommand.KeyUp += () => RemoveTestPackage();
 
-            _view.DisplayFormatCommand.Execute += () => new DisplayStrategyDialog(TreeConfiguration).ShowDialog();
+            _view.DisplayFormatCommand.Execute += () =>
+                new DisplayStrategyDialog(TreeConfiguration, _view.TreeView).ShowDialog();
 
             _view.ShowCheckBoxes.CheckedChanged += () =>
-            {
-                TreeConfiguration.ShowCheckBoxes = _view.ShowCheckBoxes.Checked;
-                _view.CheckBoxes = TreeConfiguration.ShowCheckBoxes;
-            };
+                _view.CheckBoxes = TreeConfiguration.ShowCheckBoxes = _view.ShowCheckBoxes.Checked;
 
             _view.ShowTestDuration.CheckedChanged += () =>
             {

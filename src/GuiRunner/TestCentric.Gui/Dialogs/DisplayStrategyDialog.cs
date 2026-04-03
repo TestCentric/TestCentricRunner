@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using TestCentric.Gui.Model;
 using TestCentric.Gui.Presenters;
+using TestCentric.Gui.Views;
 
 namespace TestCentric.Gui.Dialogs
 {
@@ -16,11 +17,15 @@ namespace TestCentric.Gui.Dialogs
         private ITreeConfiguration _treeConfig;
         private List<string> _groupBy = new(["UNGROUPED", "CATEGORY", "OUTCOME", "DURATION"]);
 
-        public DisplayStrategyDialog(ITreeConfiguration treeConfig)
+        public DisplayStrategyDialog(ITreeConfiguration treeConfig, TreeView treeView)
         {
             InitializeComponent();
 
             _treeConfig = treeConfig;
+
+            var location = treeView.Location;
+            location.Offset(treeView.Width / 2, 5);
+            Location = treeView.PointToScreen(location);
 
             WireUpEvents();
         }

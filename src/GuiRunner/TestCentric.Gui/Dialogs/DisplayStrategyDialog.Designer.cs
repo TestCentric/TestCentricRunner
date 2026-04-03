@@ -71,6 +71,7 @@ namespace TestCentric.Gui.Dialogs
             // exitButton
             // 
             this.exitButton.BackColor = System.Drawing.SystemColors.Control;
+            this.exitButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.exitButton.FlatAppearance.BorderSize = 0;
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.ForeColor = System.Drawing.SystemColors.Window;
@@ -143,7 +144,7 @@ namespace TestCentric.Gui.Dialogs
             this.testListOptionsPanel.Size = new System.Drawing.Size(153, 73);
             this.testListOptionsPanel.TabIndex = 1;
             // 
-            // groupByComboBox
+            // testListGroupByComboBox
             // 
             this.testListGroupByComboBox.AllowDrop = true;
             this.testListGroupByComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -154,7 +155,7 @@ namespace TestCentric.Gui.Dialogs
             "By Outcome",
             "By Duration"});
             this.testListGroupByComboBox.Location = new System.Drawing.Point(15, 1);
-            this.testListGroupByComboBox.Name = "groupByComboBox";
+            this.testListGroupByComboBox.Name = "testListGroupByComboBox";
             this.testListGroupByComboBox.Size = new System.Drawing.Size(121, 21);
             this.testListGroupByComboBox.TabIndex = 9;
             // 
@@ -222,6 +223,7 @@ namespace TestCentric.Gui.Dialogs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.exitButton;
             this.ClientSize = new System.Drawing.Size(298, 113);
             this.ControlBox = false;
             this.Controls.Add(this.displayStrategyPanel);
@@ -231,6 +233,7 @@ namespace TestCentric.Gui.Dialogs
             this.Name = "DisplayStrategyDialog";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "DisplayStrategyDialog";
             this.displayStrategyPanel.ResumeLayout(false);
             this.displayStrategyPanel.PerformLayout();
