@@ -66,6 +66,8 @@ namespace TestCentric.Gui.Views
 
         ICommand ResetFilterCommand { get; }
 
+        ICommand DisplayFormatCommand { get; }
+
         void SetTestFilterVisibility(bool visible);
 
         void EnableTestFilter(bool enable);
