@@ -229,14 +229,20 @@ namespace TestCentric.Gui.Views
         }); 
         public void CollapseAll() => InvokeIfRequired(() => treeView.CollapseAll());
 
-        public void SetImageIndex(TreeNode treeNode, int imageIndex, bool applyToParent = false) 
+        public void SetImageIndex(TreeNode treeNode, int imageIndex, bool applyToParents = false) 
         {
             InvokeIfRequired(() => treeNode.ImageIndex = treeNode.SelectedImageIndex = imageIndex);
 
-            TreeNode parent = treeNode.Parent;
-            if (applyToParent && parent is not null)
-                if (imageIndex > parent.ImageIndex)
-                    SetImageIndex(parent, imageIndex, true);
+            if (applyToParents)
+            {
+                TreeNode parent = treeNode.Parent;
+                while (parent is not null)
+                {
+                    if (imageIndex > parent.ImageIndex)
+                        SetImageIndex(parent, imageIndex, true);
+                    parent = parent.Parent;
+                }
+            }
         }
 
         public void InvokeIfRequired(MethodInvoker _delegate)
