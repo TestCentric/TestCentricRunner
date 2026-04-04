@@ -70,7 +70,6 @@ namespace TestCentric.Gui.Views
             TextFilter = new ToolStripTextBoxElement(filterTextBox, "Filter...");
             CategoryFilter = new ToolStripCategoryFilterButton(filterByCategory);
             ResetFilterCommand = new ToolStripButtonElement(filterResetButton);
-            DisplayFormatCommand = new CommandMenuElement(displayFormatToolStripMenuItem);
             TreeView = treeView;
 
             // NOTE: We use MouseDown here rather than MouseUp because
@@ -174,8 +173,6 @@ namespace TestCentric.Gui.Views
         public IMultiSelection OutcomeFilter { get; private set; }
         public ICategoryFilterSelection CategoryFilter { get; private set; }
         public ICommand ResetFilterCommand { get; private set; }
-
-        public ICommand DisplayFormatCommand { get; private set; }
 
         public IChanged TextFilter { get; private set; }
 

@@ -68,7 +68,6 @@ namespace TestCentric.Gui.Views
             this.filterByCategory = new System.Windows.Forms.ToolStripDropDownButton();
             this.filterResetButton = new System.Windows.Forms.ToolStripButton();
             this.filterTextToolStrip = new System.Windows.Forms.ToolStrip();
-            this.displayFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterTextBox = new TestCentric.Gui.Controls.StretchToolStripTextBox();
             this.testTreeContextMenu.SuspendLayout();
             this.filterToolStrip.SuspendLayout();
@@ -100,7 +99,6 @@ namespace TestCentric.Gui.Views
             this.removeTestPackageMenuItem,
             this.activeConfigMenuItem,
             this.contextMenuSeparator2,
-            this.displayFormatToolStripMenuItem,
             this.showCheckboxesMenuItem,
             this.showTestDurationMenuItem,
             this.contextMenuSeparator3,
@@ -110,7 +108,7 @@ namespace TestCentric.Gui.Views
             this.collapseAllMenuItem,
             this.collapseToFixturesMenuItem});
             this.testTreeContextMenu.Name = "testTreeContextMenu";
-            this.testTreeContextMenu.Size = new System.Drawing.Size(181, 358);
+            this.testTreeContextMenu.Size = new System.Drawing.Size(181, 336);
             // 
             // runMenuItem
             // 
@@ -357,14 +355,9 @@ namespace TestCentric.Gui.Views
             this.filterTextToolStrip.TabIndex = 1;
             this.filterTextToolStrip.Visible = false;
             // 
-            // displayFormatToolStripMenuItem
-            // 
-            this.displayFormatToolStripMenuItem.Name = "displayFormatToolStripMenuItem";
-            this.displayFormatToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.displayFormatToolStripMenuItem.Text = "Display Format...";
-            // 
             // filterTextBox
             // 
+            this.filterTextBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.filterTextBox.Name = "filterTextBox";
             this.filterTextBox.Size = new System.Drawing.Size(179, 25);
             // 
@@ -425,6 +418,5 @@ namespace TestCentric.Gui.Views
         private System.Windows.Forms.ToolStripMenuItem viewAsXmlMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeTestPackageMenuItem;
         private StretchToolStripTextBox filterTextBox;
-        private System.Windows.Forms.ToolStripMenuItem displayFormatToolStripMenuItem;
     }
 }
