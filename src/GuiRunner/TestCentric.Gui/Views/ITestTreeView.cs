@@ -78,7 +78,7 @@ namespace TestCentric.Gui.Views
 
         void Sort();
         void Sort(IComparer comparer);
-        void SetImageIndex(TreeNode treeNode, int imageIndex, bool applyToParent=false);
+        void SetImageIndex(TreeNode treeNode, int imageIndex, bool applyToParents=false);
 
         /// <summary>
         /// Invoke a delegate if necessary, otherwise just call it
