@@ -252,7 +252,7 @@ namespace TestCentric.Gui.Presenters
             return testNode.Name;
         }
 
-        private string GetTreeNodeDisplayName(TestNode testNode)
+        protected string GetTreeNodeDisplayName(TestNode testNode)
         {
             string treeNodeName = GetTreeNodeName(testNode);
 

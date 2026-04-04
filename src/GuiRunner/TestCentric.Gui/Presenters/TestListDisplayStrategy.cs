@@ -181,19 +181,6 @@ namespace TestCentric.Gui.Presenters
             });
         }
 
-        public override void OnTestRunFinished()
-        {
-            base.OnTestRunFinished();
-
-            foreach (var group in _topLevelGrouping.Groups)
-                foreach (var subGroup in group.SubGroups)
-                {
-                    subGroup.TreeNode.ImageIndex = subGroup.TreeNode.SelectedImageIndex = group.TreeNode.ImageIndex;
-                    foreach (var subGroup2 in subGroup.SubGroups)
-                        subGroup2.TreeNode.ImageIndex = subGroup2.TreeNode.SelectedImageIndex = group.TreeNode.ImageIndex;
-                }
-        }
-
         #endregion
 
         #region Helper Methods

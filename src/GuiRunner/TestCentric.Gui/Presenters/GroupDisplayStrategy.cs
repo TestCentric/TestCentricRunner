@@ -41,8 +41,12 @@ namespace TestCentric.Gui.Presenters
         /// </summary>
         public override void OnTestFinished(ResultNode result)
         {
-            base.OnTestFinished(result);
-            _view.InvokeIfRequired(() => _topLevelGrouping?.OnTestFinished(result));
+            _view.InvokeIfRequired(() =>
+            {
+                _topLevelGrouping?.OnTestFinished(result);
+                
+                base.OnTestFinished(result);
+            });
         }
 
         // TODO: Move this to TestGroup? Would need access to results.
