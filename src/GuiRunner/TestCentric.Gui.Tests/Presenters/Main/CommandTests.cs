@@ -410,31 +410,6 @@ namespace TestCentric.Gui.Presenters.Main
 
         #endregion
 
-        #region Test Grouping
-
-        [Test]
-        public void DisplayFormatChange_Changes_TreeConfiguration()
-        {
-            _view.DisplayFormat.SelectedItem.Returns("TEST_LIST");
-            _view.DisplayFormat.SelectionChanged += Raise.Event<CommandHandler>();
-
-            // Assert
-            Assert.That(_model.TreeConfiguration.DisplayFormat, Is.EqualTo("TEST_LIST"));
-        }
-
-        [Test]
-        public void TestListGroupByChange_Changes_TreeConfiguration()
-        {
-            _view.DisplayFormat.SelectedItem.Returns("TEST_LIST");
-            _view.TestListGroupBy.SelectedItem.Returns("OUTCOME");
-            _view.TestListGroupBy.SelectionChanged += Raise.Event<CommandHandler>();
-
-            // Assert
-            Assert.That(_model.TreeConfiguration.TestListGroupBy, Is.EqualTo("OUTCOME"));
-        }
-
-        #endregion
-
         #region StopRun
 
         [Test]
@@ -485,48 +460,6 @@ namespace TestCentric.Gui.Presenters.Main
 
         [TestCase(true)]
         [TestCase(false)]
-        public void ShowNamespaceChanged_Changes_TreeConfiguration(bool showNamespace)
-        {
-            // Arrange
-            _view.NUnitTreeShowNamespaces.Checked .Returns(showNamespace);
-
-            // Act
-            _view.NUnitTreeShowNamespaces.CheckedChanged += Raise.Event<CommandHandler>();
-
-            // Assert
-            Assert.That(_model.TreeConfiguration.NUnitTreeShowNamespaces, Is.EqualTo(showNamespace));
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void ShowAssembliesChanged_Changes_TreeConfiguration(bool showAssemblies)
-        {
-            // Arrange
-            _view.NUnitTreeShowAssemblies.Checked.Returns(showAssemblies);
-
-            // Act
-            _view.NUnitTreeShowAssemblies.CheckedChanged += Raise.Event<CommandHandler>();
-
-            // Assert
-            Assert.That(_model.TreeConfiguration.NUnitTreeShowAssemblies, Is.EqualTo(showAssemblies));
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void ShowFixturesChanged_Changes_TreeConfiguration(bool showFixtures)
-        {
-            // Arrange
-            _view.NUnitTreeShowFixtures.Checked.Returns(showFixtures);
-
-            // Act
-            _view.NUnitTreeShowFixtures.CheckedChanged += Raise.Event<CommandHandler>();
-
-            // Assert
-            Assert.That(_model.TreeConfiguration.NUnitTreeShowFixtures, Is.EqualTo(showFixtures));
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
         public void ShowFilterChanged_ChangesModelSetting(bool show)
         {
             // Arrange
@@ -540,12 +473,12 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [TestCase("NUNIT_TREE", true)]
-        [TestCase("TEST_List", false)]
+        [TestCase("TEST_LIST", true)]
         public void ShowFilterIsEnabled_ForDisplayFormat(string displayFormat, bool expectedIsEnabled)
         {
             // Arrange
             _model.HasTests.Returns(true);
-            _view.DisplayFormat.SelectedItem = displayFormat;
+            _model.TreeConfiguration.DisplayFormat.Returns(displayFormat);
 
             // Act
             _model.Events.SelectedTestsChanged += Raise.Event<TestSelectionEventHandler>(new TestSelectionEventArgs(null));
@@ -555,12 +488,12 @@ namespace TestCentric.Gui.Presenters.Main
         }
 
         [TestCase("NUNIT_TREE", true)]
-        [TestCase("TEST_List", false)]
+        [TestCase("TEST_LIST", true)]
         public void ShowFilterIsVisible_ForDisplayFormat(string displayFormat, bool expectedIsVisible)
         {
             // Arrange
             _model.HasTests.Returns(true);
-            _view.DisplayFormat.SelectedItem = displayFormat;
+            _model.TreeConfiguration.DisplayFormat.Returns(displayFormat);
 
             // Act
             _model.Events.SelectedTestsChanged += Raise.Event<TestSelectionEventHandler>(new TestSelectionEventArgs(null));

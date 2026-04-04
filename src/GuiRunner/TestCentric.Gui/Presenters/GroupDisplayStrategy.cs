@@ -44,7 +44,7 @@ namespace TestCentric.Gui.Presenters
             _view.InvokeIfRequired(() =>
             {
                 _topLevelGrouping?.OnTestFinished(result);
-
+                
                 base.OnTestFinished(result);
             });
         }

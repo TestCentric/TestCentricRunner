@@ -24,90 +24,10 @@ namespace TestCentric.Gui.Views
         }
 
         [Test]
-        public void DisplayFormat_Toolstrip_ExistsWithSubItems()
+        public void DisplayFormatToolstripButtonExists()
         {
-            var displayFormatbutton = GetToolStripItem<ToolStripDropDownButton>("displayFormatButton");
-            Assert.That(displayFormatbutton, Is.Not.Null);
-
-            var menuItem = GetDropDownItem<ToolStripMenuItem>(displayFormatbutton, "nunitTreeMenuItem");
-            Assert.That(menuItem, Is.Not.Null);
-
-            menuItem = GetDropDownItem<ToolStripMenuItem>(displayFormatbutton, "testListMenuItem");
-            Assert.That(menuItem, Is.Not.Null);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void NUnitDisplayFormat_AllSubmenuItems_Exist(bool checkState)
-        {
-            var displayFormatbutton = GetToolStripItem<ToolStripDropDownButton>("displayFormatButton");
-            Assert.That(displayFormatbutton, Is.Not.Null);
-
-            var menuItem = GetDropDownItem<ToolStripMenuItem>(displayFormatbutton, "nunitTreeMenuItem");
-            Assert.That(menuItem, Is.Not.Null);
-
-            menuItem.Checked = checkState;
-            var subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "nunitTreeShowNamespacesMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "nunitTreeShowFixturesMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "nunitTreeShowAssembliesMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestListFormat_AllSubmenuItems_Exist(bool checkState)
-        {
-            var displayFormatbutton = GetToolStripItem<ToolStripDropDownButton>("displayFormatButton");
-            Assert.That(displayFormatbutton, Is.Not.Null);
-
-            var menuItem = GetDropDownItem<ToolStripMenuItem>(displayFormatbutton, "testListMenuItem");
-            Assert.That(menuItem, Is.Not.Null);
-
-            menuItem.Checked = checkState;
-
-            var subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListShowAssembliesMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListShowFixturesMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListUngroupedMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByDurationMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByCategoryMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-
-            subMenuItem = GetDropDownItem<ToolStripMenuItem>(menuItem, "testListByOutcomeMenuItem");
-            Assert.That(subMenuItem, Is.Not.Null);
-        }
-
-        T GetDropDownItem<T>(ToolStripMenuItem menuItem, string name) where T : ToolStripItem
-        {
-            foreach (ToolStripItem ctl in menuItem.DropDownItems)
-            {
-                if (ctl.Name == name)
-                    return ctl as T;
-            }
-
-            return null;
-        }
-
-        T GetDropDownItem<T>(ToolStripDropDownButton dropDownButton, string name) where T : ToolStripItem
-        {
-            foreach (ToolStripItem ctl in dropDownButton.DropDownItems)
-            {
-                if (ctl.Name == name)
-                    return ctl as T;
-            }
-
-            return null;
+            var displayFormatButton = GetToolStripItem<ToolStripButton>("displayFormatButton");
+            Assert.That(displayFormatButton, Is.Not.Null);
         }
 
         T GetToolStripItem<T>(string name) where T : ToolStripItem

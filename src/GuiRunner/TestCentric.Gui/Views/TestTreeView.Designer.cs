@@ -81,10 +81,10 @@ namespace TestCentric.Gui.Views
             this.treeView.HideSelection = false;
             this.treeView.ImageIndex = 0;
             this.treeView.ImageList = this.treeImages;
-            this.treeView.Location = new System.Drawing.Point(0, 25);
+            this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
             this.treeView.SelectedImageIndex = 0;
-            this.treeView.Size = new System.Drawing.Size(191, 221);
+            this.treeView.Size = new System.Drawing.Size(191, 246);
             this.treeView.TabIndex = 1;
             // 
             // testTreeContextMenu
@@ -108,78 +108,78 @@ namespace TestCentric.Gui.Views
             this.collapseAllMenuItem,
             this.collapseToFixturesMenuItem});
             this.testTreeContextMenu.Name = "testTreeContextMenu";
-            this.testTreeContextMenu.Size = new System.Drawing.Size(176, 292);
+            this.testTreeContextMenu.Size = new System.Drawing.Size(181, 336);
             // 
             // runMenuItem
             // 
             this.runMenuItem.Name = "runMenuItem";
-            this.runMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.runMenuItem.Size = new System.Drawing.Size(180, 22);
             this.runMenuItem.Text = "Run";
             // 
             // debugMenuItem
             // 
             this.debugMenuItem.Name = "debugMenuItem";
-            this.debugMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.debugMenuItem.Size = new System.Drawing.Size(180, 22);
             this.debugMenuItem.Text = "Debug";
             // 
             // clearResultsMenuItem
             // 
             this.clearResultsMenuItem.Name = "clearResultsMenuItem";
-            this.clearResultsMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.clearResultsMenuItem.Size = new System.Drawing.Size(180, 22);
             this.clearResultsMenuItem.Text = "Clear test results";
             // 
             // contextMenuSeparator1
             // 
             this.contextMenuSeparator1.Name = "contextMenuSeparator1";
-            this.contextMenuSeparator1.Size = new System.Drawing.Size(172, 6);
+            this.contextMenuSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // testPropertiesMenuItem
             // 
             this.testPropertiesMenuItem.Name = "testPropertiesMenuItem";
-            this.testPropertiesMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.testPropertiesMenuItem.Size = new System.Drawing.Size(180, 22);
             this.testPropertiesMenuItem.Text = "Properties...";
             // 
             // viewAsXmlMenuItem
             // 
             this.viewAsXmlMenuItem.Name = "viewAsXmlMenuItem";
-            this.viewAsXmlMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.viewAsXmlMenuItem.Size = new System.Drawing.Size(180, 22);
             this.viewAsXmlMenuItem.Text = "View as XML...";
             // 
             // removeTestPackageMenuItem
             // 
             this.removeTestPackageMenuItem.Name = "removeTestPackageMenuItem";
-            this.removeTestPackageMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.removeTestPackageMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeTestPackageMenuItem.Text = "Remove test file";
             // 
             // activeConfigMenuItem
             // 
             this.activeConfigMenuItem.Name = "activeConfigMenuItem";
-            this.activeConfigMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.activeConfigMenuItem.Size = new System.Drawing.Size(180, 22);
             this.activeConfigMenuItem.Text = "Active Config";
             // 
             // contextMenuSeparator2
             // 
             this.contextMenuSeparator2.Name = "contextMenuSeparator2";
-            this.contextMenuSeparator2.Size = new System.Drawing.Size(172, 6);
+            this.contextMenuSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // showCheckboxesMenuItem
             // 
             this.showCheckboxesMenuItem.CheckOnClick = true;
             this.showCheckboxesMenuItem.Name = "showCheckboxesMenuItem";
-            this.showCheckboxesMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.showCheckboxesMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showCheckboxesMenuItem.Text = "Show Checkboxes";
             // 
             // showTestDurationMenuItem
             // 
             this.showTestDurationMenuItem.CheckOnClick = true;
             this.showTestDurationMenuItem.Name = "showTestDurationMenuItem";
-            this.showTestDurationMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.showTestDurationMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showTestDurationMenuItem.Text = "Show Test Duration";
             // 
             // contextMenuSeparator3
             // 
             this.contextMenuSeparator3.Name = "contextMenuSeparator3";
-            this.contextMenuSeparator3.Size = new System.Drawing.Size(172, 6);
+            this.contextMenuSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // sortByMenuItem
             // 
@@ -190,7 +190,7 @@ namespace TestCentric.Gui.Views
             this.sortAscendingMenuItem,
             this.sortDescendingMenuItem});
             this.sortByMenuItem.Name = "sortByMenuItem";
-            this.sortByMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.sortByMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sortByMenuItem.Text = "Sort by ...";
             // 
             // sortByNameMenuItem
@@ -233,24 +233,24 @@ namespace TestCentric.Gui.Views
             // contextMenuSeparator4
             // 
             this.contextMenuSeparator4.Name = "contextMenuSeparator4";
-            this.contextMenuSeparator4.Size = new System.Drawing.Size(172, 6);
+            this.contextMenuSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // expandAllMenuItem
             // 
             this.expandAllMenuItem.Name = "expandAllMenuItem";
-            this.expandAllMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.expandAllMenuItem.Size = new System.Drawing.Size(180, 22);
             this.expandAllMenuItem.Text = "Expand All";
             // 
             // collapseAllMenuItem
             // 
             this.collapseAllMenuItem.Name = "collapseAllMenuItem";
-            this.collapseAllMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.collapseAllMenuItem.Size = new System.Drawing.Size(180, 22);
             this.collapseAllMenuItem.Text = "Collapse All";
             // 
             // collapseToFixturesMenuItem
             // 
             this.collapseToFixturesMenuItem.Name = "collapseToFixturesMenuItem";
-            this.collapseToFixturesMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.collapseToFixturesMenuItem.Size = new System.Drawing.Size(180, 22);
             this.collapseToFixturesMenuItem.Text = "Display Fixtures";
             // 
             // treeImages
@@ -338,9 +338,9 @@ namespace TestCentric.Gui.Views
             // filterResetButton
             // 
             this.filterResetButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.filterResetButton.Image = ((System.Drawing.Image)(resources.GetObject("ResetFilter.Image")));
+            this.filterResetButton.Image = ((System.Drawing.Image)(resources.GetObject("filterResetButton.Image")));
             this.filterResetButton.Name = "filterResetButton";
-            this.filterResetButton.Size = new System.Drawing.Size(23, 4);
+            this.filterResetButton.Size = new System.Drawing.Size(23, 20);
             this.filterResetButton.ToolTipText = "Reset all filters";
             // 
             // filterTextToolStrip
@@ -359,7 +359,7 @@ namespace TestCentric.Gui.Views
             // 
             this.filterTextBox.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.filterTextBox.Name = "filterTextBox";
-            this.filterTextBox.Size = new System.Drawing.Size(179, 23);
+            this.filterTextBox.Size = new System.Drawing.Size(179, 25);
             // 
             // TestTreeView
             // 

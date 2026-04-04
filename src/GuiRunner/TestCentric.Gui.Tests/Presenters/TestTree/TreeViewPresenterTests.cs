@@ -108,32 +108,6 @@ namespace TestCentric.Gui.Presenters.TestTree
             Assert.That(_model.TreeConfiguration.NUnitTreeShowTestDuration, Is.EqualTo(showTestDuration));
         }
 
-        [Test]
-        public void WhenContextMenuIsDisplayed_GuiMiniLayout_TestPropertiesContextMenu_IsVisible()
-        {
-            // 1. Arrange
-            _model.Settings.Gui.GuiLayout = "Mini";
-
-            // 2. Act
-            _view.ContextMenuOpening += Raise.Event<EventHandler>();
-
-            // 3. Assert
-            Assert.That(_view.TestPropertiesCommand.Visible, Is.True);
-        }
-
-        [Test]
-        public void WhenContextMenuIsDisplayed_GuiFullLayout_TestPropertiesContextMenu_IsNotVisible()
-        {
-            // 1. Arrange
-            _model.Settings.Gui.GuiLayout = "Full";
-
-            // 2. Act
-            _view.ContextMenuOpening += Raise.Event<EventHandler>();
-
-            // 3. Assert
-            Assert.That(_view.TestPropertiesCommand.Visible, Is.False);
-        }
-
         [TestCase(true, true, false)]
         [TestCase(true, false, true)]
         [TestCase(false, false, false)]

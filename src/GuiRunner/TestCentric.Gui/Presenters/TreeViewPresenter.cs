@@ -4,18 +4,20 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using NUnit.Common;
+using NUnit.Engine;
+using TestCentric.Gui.Controls;
+using TestCentric.Gui.Dialogs;
+using TestCentric.Gui.Model;
+using TestCentric.Gui.Model.Settings;
+using TestCentric.Gui.Views;
 
 namespace TestCentric.Gui.Presenters
 {
-    using System.Collections;
-    using System.IO;
-    using Dialogs;
-    using Model;
-    using TestCentric.Gui.Controls;
-    using TestCentric.Gui.Model.Settings;
-    using Views;
-
     /// <summary>
     /// TreeViewPresenter is the presenter for the TestTreeView
     /// </summary>
@@ -147,10 +149,7 @@ namespace TestCentric.Gui.Presenters
             _view.TreeViewDeleteKeyCommand.KeyUp += () => RemoveTestPackage();
 
             _view.ShowCheckBoxes.CheckedChanged += () =>
-            {
-                TreeConfiguration.ShowCheckBoxes = _view.ShowCheckBoxes.Checked;
-                _view.CheckBoxes = TreeConfiguration.ShowCheckBoxes;
-            };
+                _view.CheckBoxes = TreeConfiguration.ShowCheckBoxes = _view.ShowCheckBoxes.Checked;
 
             _view.ShowTestDuration.CheckedChanged += () =>
             {
@@ -535,25 +534,25 @@ namespace TestCentric.Gui.Presenters
         {
             // TODO: Config Menu is hidden until changing the config actually works
             bool displayConfigMenu = false;
-            //var test = _treeView.ContextNode?.Tag as TestNode;
+            //var test = _view.ContextNode?.Tag as TestNode;
             //if (test != null && test.IsProject)
             //{
-            //    NUnit.Engine.TestPackage package = _model.GetPackageForTest(test.Id);
-            //    string activeConfig = package.GetActiveConfig();
-            //    string[] configNames = package.GetConfigNames();
+            //    TestPackage package = _model.GetPackageForTest(test.Id);
+            //    string activeConfig = package.Settings.GetValueOrDefault(SettingDefinitions.ActiveConfig);
+            //    string[] configNames = package.Settings.GetValueOrDefault(SettingDefinitions.ConfigNames).Split([';']);
 
             //    if (configNames.Length > 0)
             //    {
-            //        _treeView.ActiveConfiguration.MenuItems.Clear();
+            //        _view.ActiveConfiguration.MenuItems.Clear();
             //        foreach (string config in configNames)
             //        {
             //            var configEntry = new ToolStripMenuItem(config);
             //            configEntry.Checked = config == activeConfig;
             //            configEntry.Click += (sender, e) => _model.ReloadPackage(package, ((ToolStripMenuItem)sender).Text);
-            //            _treeView.ActiveConfiguration.MenuItems.Add(configEntry);
+            //            _view.ActiveConfiguration.MenuItems.Add(configEntry);
             //        }
 
-            //        //displayConfigMenu = true;
+            //        displayConfigMenu = true;
             //    }
             //}
 
@@ -563,6 +562,7 @@ namespace TestCentric.Gui.Presenters
             _view.TestPropertiesCommand.Visible = layout == "Mini";
 
             var selectedNode = _view.ContextNode?.Tag as TestNode;
+            _view.ViewAsXmlCommand.Enabled = selectedNode != null;
             _view.RemoveTestPackageCommand.Visible = CanRemovePackageNode(selectedNode);
 
             // If a test is already running, no new test run should be started.
